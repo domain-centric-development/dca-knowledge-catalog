@@ -22,7 +22,7 @@ Declaring a `Repository` for an entity that lives inside an aggregate, for a val
 
 Reach entities and value objects through their aggregate root's repository. For persistence-shaped needs that are *not* an aggregate — recording an event, counting, checking existence, storing operational or projection data — use a **Store** (an `OutputPort`) instead: `record`/`count`/`exists`, no identity, no lifecycle.
 
-`OrderRepository` (root only); order lines loaded via the `Order`. `AuditEntryStore extends OutputPort` for append-only records — not `AuditEntryRepository`.
+`OrderRepository` (root only); order lines loaded via the `Order`. `AuditEntryStore extends Store` for append-only records — not `AuditEntryRepository`.
 
 - [Template: repository with in-memory adapter](/template/repository-with-in-memory-adapter.md) · [Recipe: add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Decisions: [Repository vs Store](/decision/repository-vs-store.md) · [Read model vs domain query](/decision/read-model-vs-domain-query.md)

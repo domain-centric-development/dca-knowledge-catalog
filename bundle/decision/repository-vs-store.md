@@ -22,7 +22,7 @@ Rule of thumb straight from the guidance: *need `findById()`? Repository. Need `
 |---|---|---|
 | What it persists | an **Aggregate Root** | Value Object / event / operational data |
 | Identity & lifecycle | yes — `findById`, `save`, `deleteById` | no — `record`, `count`, `exists` |
-| Marker | `extends Repository<T, ID>` | `extends Store` (or `extends OutputPort`) |
+| Marker | `extends Repository<T, ID>` | `extends Store` |
 | One per | Aggregate Root | concern (login attempts, audit trail, …) |
 | Return type | the Aggregate Root | answers about recorded data, not a managed entity |
 
