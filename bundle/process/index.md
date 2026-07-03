@@ -1,0 +1,3 @@
+# process
+
+- [How to write an ADR](creating-an-adr.md) — How to record an architectural decision in this project, so a new application keeps the same decision log format (Mic...

@@ -1,0 +1,53 @@
+---
+type: Recipe
+title: "Build a DCA application"
+tags: [recipe, bootstrap, bounded-context]
+---
+
+The task router: maps what you are building to the recipe that covers it. Start
+here when constructing anything in a Domain-Centric Architecture application —
+each recipe carries ordered steps, the ArchUnit rules to satisfy while
+generating, and the template to fill in.
+
+## Route by task
+
+| You want to… | Recipe |
+|---|---|
+| Start a fresh application (markers, skeleton, ArchUnit suite) | [Bootstrap a new application](/recipe/bootstrap-a-new-application.md) |
+| Add a bounded context | [Add a bounded context](/recipe/add-a-bounded-context.md) |
+| Add an aggregate (root entity + invariants) | [Add an aggregate](/recipe/add-an-aggregate.md) |
+| Add a value object | [Add a value object](/recipe/add-a-value-object.md) |
+| Add a use case (application service) | [Add a use case](/recipe/add-a-use-case.md) |
+| Add a repository (output port + adapter impl) | [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md) |
+| Expose a use case over HTTP | [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md) |
+| Raise and handle an in-context domain event | [Add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md) |
+| Notify another bounded context | [Publish a cross-context event](/recipe/publish-a-cross-context-event.md) |
+| Integrate a foreign model without polluting the domain | [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md) |
+
+## Decide first (design forks)
+
+When the task sits on a fork, resolve the decision before picking the recipe:
+
+- [Entity vs Value Object](/decision/entity-vs-value-object.md)
+- [Domain event vs integration event](/decision/domain-event-vs-integration-event.md)
+- [Event delivery: sync, async, and the outbox](/decision/event-delivery-sync-async-and-outbox.md)
+- [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) — not every context needs the full tactical set
+- [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)
+
+## Build loop (every recipe)
+
+1. **Decide** — resolve any design fork the recipe gates on.
+2. **Generate** — emit from the linked template; satisfy the recipe's
+   "Rules to satisfy" checklist *while* generating (each entry links a
+   [rule](/rule/index.md) whose `constraint:` is the one-line precondition).
+3. **Verify** — run `./gradlew test-architecture`; the ArchUnit suite enforces
+   what the checklist promised.
+4. **Record** — a non-trivial pattern choice gets an ADR
+   ([Creating an ADR](/process/creating-an-adr.md)).
+
+## Anchors
+
+- Contracts: [marker index](/marker/index.md) — the interfaces a new application implements
+- Layer map: [Package structure](/guide/readme/java-package-structure.md)
+- What NOT to do: [pitfall index](/pitfall/index.md)
+- Concepts in depth: [book index](/book/index.md)

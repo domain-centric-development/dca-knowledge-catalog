@@ -1,0 +1,82 @@
+---
+type: Template
+title: "Use case skeleton (InputPort + UseCase + Command/Query + Result)"
+tags: [template, application, use-case]
+---
+
+Domain-free skeleton for one application-layer use case. A use case is a self-contained folder `application/{usecasename}/` (lowercase) with four files. Replace `{Name}` (PascalCase), `{usecasename}` (lowercase), `{context}`, `{basePackage}`. Use `Command` for writes, `Query` for reads.
+
+## `{Name}InputPort.java` — the driving port
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+import {basePackage}.sharedkernel.marker.port.in.UseCase;
+
+/** Input port for the {Name} use case (driving/primary port). */
+public interface {Name}InputPort extends UseCase<{Name}Command, {Name}Result> {
+    @Override
+    {Name}Result execute({Name}Command input);
+}
+```
+
+## `{Name}Command.java` — input (writes)
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+/** Immutable command carrying the data needed to mutate state. */
+public record {Name}Command(
+    // domain-typed fields, e.g. CustomerId customerId, Money amount
+) {}
+```
+
+For a read use case, replace with `{Name}Query` and have the InputPort extend
+`UseCase<{Name}Query, {Name}Result>`.
+
+## `{Name}Result.java` — output
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+/** Application-layer output model. The adapter maps this to a *Response DTO. */
+public record {Name}Result(
+    // primitive/value fields the caller needs back
+) {}
+```
+
+## `{Name}UseCase.java` — implementation
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class {Name}UseCase implements {Name}InputPort {
+
+    private final /* OutputPort */ port;   // constructor-injected output ports only
+
+    public {Name}UseCase(/* OutputPort */ port) {
+        this.port = port;
+    }
+
+    @Override
+    public {Name}Result execute({Name}Command input) {
+        // 1. load aggregate(s) via output ports
+        // 2. apply business rules on the aggregate (logic lives in the domain)
+        // 3. save, then publish + clear domain events (writes) — see ADR-005
+        // 4. map to {Name}Result
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+}
+```
+
+## Realizes / governed by
+
+- Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
+- ADRs: [ADR-020 Result naming](/adr/adr-020-use-case-result-naming.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
+- Book: [Application Layer — Commands and Queries](/book/06-application-layer/commands-and-queries.md) · [DTOs and Results](/book/06-application-layer/dtos-and-results.md)
+- Recipe: [Add a use case](/recipe/add-a-use-case.md)

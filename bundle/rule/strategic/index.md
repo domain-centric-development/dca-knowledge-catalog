@@ -1,0 +1,11 @@
+# strategic
+
+- [Anti-Corruption Layer components must be in acl packages](anti-corruption-layer-components-must-be-in-acl-packages.md) — Anti-Corruption Layer components must be in 'acl' packages for clear architectural intent (DDD Strategic Pattern).
+- [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md) — Application layer of bounded context '<context>' must not access other contexts directly - define output ports and us...
+- [Diagnostic: Display discovered bounded contexts](diagnostic-display-discovered-bounded-contexts.md) — Diagnostic: Display discovered bounded contexts.
+- [Event Listeners consuming integration events should use Anti-Corruption Layer](event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md) — Event Listeners consuming integration events should use Anti-Corruption Layer.
+- [Integration Events must be in events or adapter outgoing event packages](integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md) — Integration Events must be in events/ packages (Spring Modulith @NamedInterface) or adapter.outgoing.event/ packages.
+- [Integration Events should be immutable records](integration-events-should-be-immutable-records.md) — Integration Events must be immutable to ensure event integrity across contexts (Event Sourcing best practice).
+- [Open Host Services must reside in api or adapter.incoming.openhost packages](open-host-services-must-reside-in-api-or-adapter-incoming-openhost-packages.md) — Open Host Services expose context capabilities via api/ packages (Spring Modulith @NamedInterface) or adapter.incomin...
+- [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md) — Outgoing adapters in '<context>' must not access domain layer of '<context>' - use api/ or events/ packages instead.
+- [Shared Kernel must not have dependencies on any bounded context](shared-kernel-must-not-have-dependencies-on-any-bounded-context.md) — Shared Kernel must not depend on bounded context '<context>' (<context>) - Shared Kernel must be context-independent.
