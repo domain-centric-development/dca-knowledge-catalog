@@ -41,3 +41,4 @@ A hard constraint sits under this fork: **a Repository may only exist for an Agg
 - ADRs: [ADR-004 Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md) · [ADR-008 Repository Interfaces as Output Ports in Application Layer](/adr/adr-008-repository-interfaces-as-output-ports.md)
 - Book: [Stores: persistence for non-aggregate data](/book/06-application-layer/stores-persistence-for-non-aggregate-data.md) · [Repository Interfaces](/book/06-application-layer/repository-interfaces.md) · [Repository Pattern](/book/15-persistence-patterns/repository-pattern.md)
 - Recipes: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md) · [Add an aggregate](/recipe/add-an-aggregate.md)
+- Note: [The Store marker has no governing ArchUnit rules](/note/store-marker-has-no-governing-rules.md) — doctrine documented, not yet enforced

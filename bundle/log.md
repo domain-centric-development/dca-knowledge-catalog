@@ -18,5 +18,5 @@ Generated bundle: the DCA book and implementation guide (full text, as Chapter/G
 - Decision: 15
 - Pitfall: 10
 - Template: 9
-- Note: 1
-- Total authored: 46
+- Note: 2
+- Total authored: 47
