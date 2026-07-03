@@ -16,7 +16,7 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 ## Steps (cross-context)
 
 1. **Raise the domain event** in the aggregate as usual ([Add an aggregate](/recipe/add-an-aggregate.md), [ADR-005](/adr/adr-005-domain-events-publishing.md)).
-2. **Define the integration event** in `adapter/outgoing/messaging/event/` — a versioned, serializable record of primitives only, implementing `IntegrationEvent` (`int version()`).
+2. **Define the integration event** in `adapter/outgoing/messaging/event/` — a serializable record of primitives only, implementing `IntegrationEvent` and annotated with `@IntegrationEventType(name, version)` — the contract identity as a class property ([ADR-027](/adr/adr-027-integration-event-contract-identity.md)).
 3. **Translate in an ACL adapter, inside the transaction** — a synchronous listener on the domain event maps it to the integration event and writes the transactional-outbox row in the publishing transaction ([ADR-026](/adr/adr-026-transactional-outbox-integration-events.md)). Never translate after commit.
 4. **Relay out of band** — a poller (plus an after-commit fast path) claims rows, sends to the broker, marks processed; retry with backoff. The outbox stores *your* integration event; the foreign wire payload is built at delivery by the outbound adapter (the ACL to the foreign contract).
 5. **Consume** on the other side in `adapter/incoming/messaging/`, translate back through that context's ACL, invoke its use case.
@@ -25,7 +25,8 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 ## Rules to satisfy (build-time checklist)
 
 - [Integration events must be in events or adapter-outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md)
-- [Integration events must have a version field](/rule/advanced/integration-events-must-have-a-version-field.md)
+- [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md)
+- [Integration Events must not have a version field](/rule/advanced/integration-events-must-not-have-a-version-field.md)
 - Do **not** serialize raw domain events across the boundary — see the [pitfall](/pitfall/storing-domain-events-in-an-external-outbox.md)
 
 ## Anchors

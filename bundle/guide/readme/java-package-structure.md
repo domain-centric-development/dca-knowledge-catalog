@@ -226,7 +226,9 @@ com.company.project
 │   │   │   ├── DomainEvent.java
 │   │   │   │   public interface DomainEvent { UUID eventId(); Instant occurredOn(); }
 │   │   │   ├── IntegrationEvent.java
-│   │   │   │   public interface IntegrationEvent extends DomainEvent { int version(); }
+│   │   │   │   public interface IntegrationEvent { UUID eventId(); Instant occurredOn(); }
+│   │   │   ├── IntegrationEventType.java
+│   │   │   │   @interface IntegrationEventType { String name(); int version() default 1; }  // contract identity as class property (ADR-027)
 │   │   │   ├── DomainService.java
 │   │   │   │   public interface DomainService {}
 │   │   │   ├── Factory.java
@@ -251,6 +253,10 @@ com.company.project
 │   │           ├── DomainEventPublisher.java
 │   │           │   public interface DomainEventPublisher extends OutputPort {
 │   │           │     void publish(DomainEvent event);
+│   │           │   }
+│   │           ├── IntegrationEventPublisher.java
+│   │           │   public interface IntegrationEventPublisher extends OutputPort {
+│   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts (see ADR-026/027)
 │   │           │   }
 │   │           └── IdentityProvider.java  // With nested Identity and IdentityType interfaces
 │   └── domain
@@ -358,6 +364,7 @@ APPLICATION LAYER
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [IdentityProvider](/marker/port-out/identityprovider.md)
+- [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
@@ -370,4 +377,10 @@ APPLICATION LAYER
 - [Entity<T, ID>](/marker/tactical/entity.md)
 - [Factory](/marker/tactical/factory.md)
 - [IntegrationEvent](/marker/tactical/integrationevent.md)
+- [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 - [Specification<T>](/marker/tactical/specification.md)
+
+## Related ADRs
+
+- [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
+- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)

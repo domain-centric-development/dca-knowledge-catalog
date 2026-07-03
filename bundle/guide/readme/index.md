@@ -11,5 +11,5 @@
 - [Quick Navigation](quick-navigation.md) — Quick Navigation
 - [References & Further Reading](references-further-reading.md) — Domain-Centric Architecture synthesizes ideas from multiple foundational works and thought leaders. Below are the key...
 - [Related Documentation](related-documentation.md) — This document describes the core Domain-Centric Architecture patterns and principles. For specific topics, see:
-- [RULES](rules.md) — Invariant in all styles: flat, serializable, versioned — never aggregate references.
+- [RULES](rules.md) — stable logical name are a **class property** via `@IntegrationEventType(name, version)` —
 - [Table of Contents](table-of-contents.md) — Table of Contents

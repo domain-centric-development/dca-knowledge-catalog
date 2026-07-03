@@ -23,6 +23,7 @@ Marker interface for Output Ports (Hexagonal Architecture).
 - [ADR-011: Bounded Context Isolation via Package Structure](/adr/adr-011-bounded-context-isolation.md)
 - [ADR-016: Shared Kernel Pattern for Cross-Context Value Objects](/adr/adr-016-shared-kernel-pattern.md)
 - [ADR-019: Open Host Service Pattern for Cross-Context Communication](/adr/adr-019-open-host-service-pattern.md)
+- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)
 
 ## Discussed in
 

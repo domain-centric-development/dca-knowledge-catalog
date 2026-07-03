@@ -4,14 +4,14 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 
 **Building something?** Start at [Build a DCA application](recipe/build-a-dca-application.md) — the task router mapping construction tasks to recipes.
 
-- [adr/](adr/index.md) (26) — Architecture Decision Records — the patterns used and why.
+- [adr/](adr/index.md) (27) — Architecture Decision Records — the patterns used and why.
 - [book/](book/index.md) (417) — The comprehensive DCA guide — chapters and appendices (full text).
 - [decision/](decision/index.md) (15) — Decision guides for design forks (which pattern, when).
 - [guide/](guide/index.md) (134) — The compact implementation guide — patterns, governance, supplementary guides (full text).
-- [marker/](marker/index.md) (22) — Architectural marker interfaces — the contracts a new application implements.
+- [marker/](marker/index.md) (24) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (2) — Compounded query answers — synthesis made permanent.
 - [pitfall/](pitfall/index.md) (10) — Anti-patterns and the rules/ADRs that forbid them.
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
 - [recipe/](recipe/index.md) (11) — Task playbooks — ordered steps to build a DCA construct.
-- [rule/](rule/index.md) (87) — ArchUnit rules — the enforceable, machine-checkable architecture.
+- [rule/](rule/index.md) (88) — ArchUnit rules — the enforceable, machine-checkable architecture.
 - [template/](template/index.md) (10) — Domain-free code skeletons to fill in.

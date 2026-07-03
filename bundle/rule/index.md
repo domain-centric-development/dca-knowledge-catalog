@@ -1,6 +1,6 @@
 # rule
 
-- [advanced/](advanced/index.md) (17)
+- [advanced/](advanced/index.md) (18)
 - [cycles/](cycles/index.md) (4)
 - [hexagonal/](hexagonal/index.md) (10)
 - [layered/](layered/index.md) (5)

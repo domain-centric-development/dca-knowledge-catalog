@@ -9,5 +9,6 @@
 - [Factory](factory.md) — Marker interface for Factories.
 - [Id](id.md) — Marker for Id.
 - [IntegrationEvent](integrationevent.md) — Marker interface for Integration Events — adapter-layer DTOs published across bounded contexts.
+- [@IntegrationEventType](integrationeventtype.md) — The mandatory contract identity every IntegrationEvent carries: a stable logical type name plus schema version, decou...
 - [Specification<T>](specification.md) — Marker interface for Specifications.
 - [Value](value.md) — Marker for Value.

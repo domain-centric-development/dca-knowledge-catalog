@@ -14,6 +14,7 @@
 - [Factories must reside in domain package](factories-must-reside-in-domain-package.md) — Factories are part of the domain layer (complex aggregate creation logic).
 - [Factories should be stateless (only final fields for dependencies)](factories-should-be-stateless-only-final-fields-for-dependencies.md) — Factories should be stateless (only final fields for dependencies).
 - [Factories should implement Factory Marker Interface](factories-should-implement-factory-marker-interface.md) — Classes implementing Factory marker should have 'Factory' in their name.
-- [Integration Events must have a version field](integration-events-must-have-a-version-field.md) — Integration Events must have a version field.
+- [Integration Events must be annotated with IntegrationEventType](integration-events-must-be-annotated-with-integrationeventtype.md) — @IntegrationEventType(name, version) is the contract identity of every .
+- [Integration Events must not have a version field](integration-events-must-not-have-a-version-field.md) — Integration Events must not have a version field.
 - [Specifications must end with 'Specification'](specifications-must-end-with-specification.md) — Specification implementations are part of the domain layer.
 - [Specifications must not have Spring annotations](specifications-must-not-have-spring-annotations.md) — Specifications should be framework-independent value objects.
