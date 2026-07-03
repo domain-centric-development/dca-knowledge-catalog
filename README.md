@@ -23,8 +23,14 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 | `Section` | ~500 | `##` headings of the above | one concept, **full verbatim text** |
 | `Marker` | 22 | `sharedkernel/marker/**/*.java` | the contract/interface to implement |
 | `Rule` | 87 | `*ArchUnitTest.groovy` | the enforceable, machine-checkable architecture |
-| `ADR` | 25 | `docs/architecture/adr/adr-*.md` | the patterns used + rationale + consequences |
+| `ADR` | 26 | `docs/architecture/adr/adr-*.md` | the patterns used + rationale + consequences |
 | `Process` | 1 | `adr-template.md` | how to record a new decision |
+| `Recipe` `Decision` `Pitfall` `Template` `Note` | ~24 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
+
+**Building something?** The bundle's entry point for construction tasks is the
+task router [`bundle/recipe/build-a-dca-application.md`](bundle/recipe/build-a-dca-application.md)
+— it maps "add an aggregate / use case / bounded context / …" to the recipe,
+its rule checklist, and its template.
 
 **Hybrid granularity:** each book/guide file is a container node plus one
 `Section` child per `##` heading (carrying the full text). Nodes cross-reference
@@ -62,6 +68,28 @@ bundle, so `git diff bundle/` after a regenerate shows exactly what changed.
 
 Options: `--repo-root PATH` (defaults to the repo root), `--out PATH` (defaults
 to `./bundle`).
+
+## Add knowledge — the four ways
+
+1. **Source knowledge** (a pattern, rule, ADR, book chapter, guide doc): edit the
+   *source* — `dca-book/`, `implementing-domain-centric-architecture/`, the marker
+   interfaces or ArchUnit tests or ADRs in `ai-architecture-sample/` — then
+   `make generate && make lint && make test`. Never hand-edit the generated zone.
+2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`
+   with frontmatter `type:` + `title:` + `tags:` (pick tags from the SPEC.md
+   [tag taxonomy](SPEC.md#tag-taxonomy)), body that *synthesizes*, and
+   bundle-relative links (leading `/`) into the skeleton. `make generate`
+   catalogues it into the indexes; `make lint` checks anchoring, links, and tags.
+   The node survives every regeneration.
+3. **In Obsidian**: `make obsidian`, author/edit in the vault (wikilinks fine —
+   the import converts them), then `make obsidian-import` (imports, regenerates,
+   lints in one go). See "Browse & author in Obsidian" below.
+4. **From a Claude session**: `/dca-knowledge save <note|decision|pitfall|recipe|template> <title>`
+   promotes a grounded query answer into a permanent extensible-zone node — the
+   catalog compounds instead of re-deriving.
+
+Whichever way: finish with a commit — the pre-commit hook (`make hooks`) runs the
+full gate, and the extensible zone has no other backup than this repo's history.
 
 ## Test
 
@@ -113,11 +141,13 @@ Frontmatter (`type`, `tags`, `status`) is plain YAML, so Dataview queries work o
 
 ```
 dca-knowledge-catalog/
-├── SPEC.md                  # OKF spec adopted for DCA (+ the 4 node types)
-├── src/dca_catalog/         # the generator (markers, rules, adrs, linker, okf)
+├── SPEC.md                  # OKF spec adopted for DCA (the 12 node types, tag taxonomy)
+├── src/dca_catalog/         # the generator (docs, markers, rules, adrs, linker, obsidian, lint)
 ├── tests/                   # conformance tests
-└── bundle/                  # GENERATED — the OKF knowledge graph
-    ├── index.md  log.md
-    ├── book/  guide/        # full text: container + section nodes
-    └── marker/  rule/  adr/  process/   # the anchoring skeleton
+├── bundle/                  # the OKF knowledge graph (canonical)
+│   ├── index.md  log.md
+│   ├── book/  guide/        # GENERATED — full text: container + section nodes
+│   ├── marker/  rule/  adr/  process/   # GENERATED — the anchoring skeleton
+│   └── recipe/  decision/  pitfall/  template/  note/   # AUTHORED — survives regeneration
+└── bundle-obsidian/         # gitignored Obsidian view (make obsidian / obsidian-import)
 ```
