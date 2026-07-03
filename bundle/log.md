@@ -15,8 +15,8 @@ Generated bundle: the DCA book and implementation guide (full text, as Chapter/G
 
 ### Extensible zone (authored, preserved across regeneration)
 - Recipe: 11
-- Decision: 5
-- Pitfall: 6
+- Decision: 15
+- Pitfall: 10
 - Template: 9
 - Note: 1
-- Total authored: 32
+- Total authored: 46

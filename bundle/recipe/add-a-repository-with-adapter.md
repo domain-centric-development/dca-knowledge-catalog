@@ -33,3 +33,4 @@ Give an aggregate root a persistence port: an interface in the application layer
 - ADRs: [ADR-004 Persistence-Oriented Repository](/adr/adr-004-persistence-oriented-repository.md) · [ADR-008 Repository Interfaces as Output Ports](/adr/adr-008-repository-interfaces-as-output-ports.md)
 - Book: [Repository interfaces](/book/06-application-layer/repository-interfaces.md) · [Outgoing adapters](/book/07-adapter-layer/outgoing-adapters.md)
 - The aggregate this repository serves: [Add an aggregate](/recipe/add-an-aggregate.md)
+- Pitfall: [A Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — non-aggregate data gets a Store ([Repository vs Store](/decision/repository-vs-store.md))

@@ -28,11 +28,29 @@ generating, and the template to fill in.
 
 When the task sits on a fork, resolve the decision before picking the recipe:
 
+**Modelling (tactical):**
+
 - [Entity vs Value Object](/decision/entity-vs-value-object.md)
+- [Aggregate boundary and size](/decision/aggregate-boundary-size.md)
+- [Where does the logic live](/decision/where-does-the-logic-live.md) — aggregate, domain service, or use case
+- [Factory vs constructor](/decision/factory-vs-constructor.md)
+- [ID generation strategy](/decision/id-generation-strategy.md)
+- [Specification vs query method](/decision/specification-vs-query-method.md)
+- [Repository vs Store](/decision/repository-vs-store.md)
+
+**Events & integration:**
+
 - [Domain event vs integration event](/decision/domain-event-vs-integration-event.md)
 - [Event delivery: sync, async, and the outbox](/decision/event-delivery-sync-async-and-outbox.md)
+- [Cross-context communication](/decision/cross-context-communication.md) — sync call vs event, orchestration vs choreography
+
+**Strategic & structure:**
+
+- [New context vs extend an existing one](/decision/new-context-vs-extend-existing.md)
 - [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) — not every context needs the full tactical set
 - [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)
+- [Read model vs domain query](/decision/read-model-vs-domain-query.md)
+- [Modulith vs microservice extraction](/decision/modulith-vs-microservice-extraction.md)
 
 ## Build loop (every recipe)
 

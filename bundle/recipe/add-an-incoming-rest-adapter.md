@@ -33,3 +33,4 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 - ADRs: [ADR-001 API/Web Package Separation](/adr/adr-001-api-web-package-separation.md) · [ADR-020 Use Case Result Naming](/adr/adr-020-use-case-result-naming.md) · [ADR-022 ViewModel Pattern](/adr/adr-022-viewmodel-pattern.md) · [ADR-023 Optional Results for Not-Found](/adr/adr-023-optional-results-not-found.md)
 - Book: [Incoming adapters](/book/07-adapter-layer/incoming-adapters.md) · [Mappers](/book/07-adapter-layer/mappers.md)
 - The use case this adapter drives: [Add a use case](/recipe/add-a-use-case.md)
+- Pitfalls: [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Exposing domain objects over REST](/pitfall/exposing-domain-objects-over-rest.md)

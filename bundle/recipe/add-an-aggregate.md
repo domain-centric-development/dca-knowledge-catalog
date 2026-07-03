@@ -32,3 +32,4 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 - ADRs: [ADR-003 Reference by Id](/adr/adr-003-aggregate-reference-by-id.md) · [ADR-006 Domain Events as Records](/adr/adr-006-domain-events-immutable-records.md)
 - Book: [Domain Layer](/book/05-domain-layer/overview.md)
 - Then expose behavior via [Add a use case](/recipe/add-a-use-case.md)
+- Pitfall: [Modifying two aggregates in one transaction](/pitfall/modifying-two-aggregates-in-one-transaction.md) — size the boundary first ([Aggregate boundary and size](/decision/aggregate-boundary-size.md))
