@@ -32,3 +32,4 @@ Stand up a fresh Domain-Centric Architecture app from nothing: the shared-kernel
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [ArchUnit adoption path](/guide/archunit-governance/adoption-path-tiers.md)
 - Then grow it: [Build a DCA application](/recipe/build-a-dca-application.md) (the task router) · [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
+- Starter files: [Project starter — CLAUDE.md + conventions](/template/project-starter-claude-md.md) — wires the coding agent to this catalog

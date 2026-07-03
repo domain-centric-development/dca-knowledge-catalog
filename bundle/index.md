@@ -14,4 +14,4 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
 - [recipe/](recipe/index.md) (11) — Task playbooks — ordered steps to build a DCA construct.
 - [rule/](rule/index.md) (87) — ArchUnit rules — the enforceable, machine-checkable architecture.
-- [template/](template/index.md) (9) — Domain-free code skeletons to fill in.
+- [template/](template/index.md) (10) — Domain-free code skeletons to fill in.
