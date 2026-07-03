@@ -6,10 +6,14 @@ tags: [template, bootstrap, governance]
 
 Drop-in files for a **new project** so a coding agent builds it *from this
 catalog* instead of from memory. Use together with
-[Bootstrap a new application](/recipe/bootstrap-a-new-application.md): install the
-dca-core plugin, run `/dca-bootstrap` (markers + ArchUnit suite), then add these
-two files. Replace `{catalog-path}` only if you want the live catalog instead of
-the plugin's vendored snapshot.
+[Bootstrap a new application](/recipe/bootstrap-a-new-application.md).
+
+> **Automated path:** `/dca-bootstrap` (dca-core plugin) installs these two files
+> itself — its "catalog wiring" decision appends the CLAUDE.md section and, for a
+> live catalog, writes `conventions.md`. This template is the **manual fallback**
+> for setups without the plugin's bootstrap run, and the canonical text the skill
+> installs. Replace `{catalog-path}` only if you want the live catalog instead of
+> the plugin's vendored snapshot.
 
 ## 1. One-time plugin install (per machine)
 
