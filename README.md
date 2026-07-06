@@ -60,8 +60,11 @@ PYTHONPATH=src python3 -m dca_catalog.lint        # health check (links, stale, 
 
 The run also mirrors the bundle into the dca-core plugin
 (`dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog/`) so the
-`/dca-knowledge` skill ships a vendored, always-fresh copy. Skip with
-`--no-default-mirror`; add targets with `--mirror PATH`.
+`/dca-knowledge` skill ships a vendored, always-fresh copy. Mirrors are
+**book-redacted by default** (the marketplace is public, the book is not):
+`book/` nodes keep metadata, description and graph links but lose their verbatim
+bodies. Skip mirroring with `--no-default-mirror`; add targets with
+`--mirror PATH`; tune with `--mirror-redact DIR|none`.
 
 Output is deterministic (no timestamps) — same sources produce a byte-identical
 bundle, so `git diff bundle/` after a regenerate shows exactly what changed.

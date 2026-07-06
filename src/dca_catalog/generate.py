@@ -69,8 +69,58 @@ def _repo_root_default() -> Path:
 _DEFAULT_MIRROR_REL = "dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog"
 
 
-def _mirror(out: Path, dests: list[Path]) -> None:
-    """Replace each dest with a fresh copy of the canonical bundle at ``out``."""
+# Link-section headings emitted by the generator at the end of a node body —
+# preserved verbatim during redaction so the graph edges keep resolving.
+_LINK_HEADINGS = ("## Sections", "## Related markers", "## Related ADRs")
+
+_REDACT_NOTICE = (
+    "> **Full text not included in this public bundle.** This node keeps its metadata and\n"
+    "> graph links; the verbatim text lives in the non-public source (see `resource:`). Use\n"
+    "> an in-repo or privately vendored full catalog for deep quotes."
+)
+
+
+def _redact_node(text: str) -> str:
+    """Strip a node's verbatim body, keeping frontmatter, a one-line description
+    (already public via the directory index) and the trailing link sections."""
+    if not text.startswith("---"):
+        return text
+    head_end = text.find("\n---\n", 3)
+    if head_end == -1:
+        return text
+    front, body = text[: head_end + 5], text[head_end + 5 :]
+
+    # keep everything from the first link-section heading on
+    link_idx = len(body)
+    for heading in _LINK_HEADINGS:
+        idx = body.find(f"\n{heading}\n")
+        if idx != -1:
+            link_idx = min(link_idx, idx)
+    links = body[link_idx:].rstrip("\n")
+
+    prose = body[:link_idx]
+    description = next(
+        (ln.strip() for ln in prose.splitlines()
+         if ln.strip() and not ln.lstrip().startswith(("#", ">", "|", "`", "-", "*", "!"))),
+        "",
+    )
+    parts = [front.rstrip("\n"), ""]
+    if description:
+        parts += [description, ""]
+    parts.append(_REDACT_NOTICE)
+    if links:
+        parts += ["", links.lstrip("\n")]
+    return "\n".join(parts).rstrip("\n") + "\n"
+
+
+def _mirror(out: Path, dests: list[Path], redact_dirs: tuple[str, ...] = ()) -> None:
+    """Replace each dest with a fresh copy of the canonical bundle at ``out``.
+
+    Nodes under ``redact_dirs`` (top-level bundle dirs) are copied with their
+    verbatim bodies stripped (frontmatter, description and link sections stay),
+    so mirrors meant for publication don't ship non-public full text. Reserved
+    files (``index.md``/``log.md``) are navigation and stay as-is.
+    """
     for dest in dests:
         dest = dest.resolve()
         if dest == out:
@@ -79,6 +129,14 @@ def _mirror(out: Path, dests: list[Path]) -> None:
             shutil.rmtree(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(out, dest)
+        for d in redact_dirs:
+            directory = dest / d
+            if not directory.exists():
+                continue
+            for path in sorted(directory.rglob("*.md")):
+                if path.name in RESERVED:
+                    continue
+                path.write_text(_redact_node(path.read_text(encoding="utf-8")), encoding="utf-8")
 
 
 def _parse_front(text: str) -> tuple[dict, str]:
@@ -316,6 +374,12 @@ def main(argv: list[str] | None = None) -> int:
         "--no-default-mirror", action="store_true",
         help="skip the vendored copy shipped with the dca-core plugin",
     )
+    parser.add_argument(
+        "--mirror-redact", action="append", default=None, metavar="DIR",
+        help="top-level bundle dir whose node bodies are stripped in mirrors "
+             "(repeatable; default: book — the book is not public). "
+             "Pass --mirror-redact none to disable.",
+    )
     args = parser.parse_args(argv)
     repo_root = args.repo_root.resolve()
     out = (args.out or (Path(__file__).resolve().parents[2] / "bundle")).resolve()
@@ -329,10 +393,14 @@ def main(argv: list[str] | None = None) -> int:
     if not args.no_default_mirror:
         mirrors.append(repo_root / _DEFAULT_MIRROR_REL)
     mirrors = [m for m in mirrors if m.resolve() != out]
+    redact = tuple(args.mirror_redact) if args.mirror_redact is not None else ("book",)
+    if redact == ("none",):
+        redact = ()
     if mirrors:
-        _mirror(out, mirrors)
+        _mirror(out, mirrors, redact_dirs=redact)
         for m in mirrors:
-            print(f"Mirrored -> {m}")
+            suffix = f" (redacted: {', '.join(redact)})" if redact else ""
+            print(f"Mirrored -> {m}{suffix}")
     return 0
 
 

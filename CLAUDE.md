@@ -61,9 +61,12 @@ edits, regenerates indexes, lints).
 `generate` mirrors the freshly built bundle into the dca-core plugin at
 `dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog/` so the
 `/dca-knowledge` skill ships a catalog that works in any project with no setup.
-That copy is **also a derived artifact — never hand-edit it**; it's byte-identical
-to `bundle/` after every run. Disable with `--no-default-mirror`; add more targets
-with `--mirror PATH`.
+That copy is **also a derived artifact — never hand-edit it**. Because the
+marketplace repo is public and the book is not, mirrors are **book-redacted by
+default**: `book/` nodes keep frontmatter, one-line description and link sections
+(the graph stays intact) but lose their verbatim bodies. Control with
+`--mirror-redact DIR` (repeatable) or `--mirror-redact none`; disable mirroring
+with `--no-default-mirror`; add targets with `--mirror PATH`.
 
 ## Generator structure (`src/dca_catalog/`)
 

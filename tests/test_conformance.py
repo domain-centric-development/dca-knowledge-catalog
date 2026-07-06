@@ -295,6 +295,32 @@ def test_lint_flags_unknown_tag(tmp_path):
     assert not any(k == "unknown-tag" and "'note'" in d for _s, k, _r, d in findings)
 
 
+def test_mirror_redacts_book_bodies(bundle: Path, tmp_path):
+    dest = tmp_path / "mirror"
+    generate._mirror(bundle, [dest], redact_dirs=("book",))
+
+    # a book section: verbatim body gone, frontmatter + description + links stay
+    src_rel = "book/06-application-layer/stores-persistence-for-non-aggregate-data.md"
+    original = (bundle / src_rel).read_text(encoding="utf-8")
+    redacted = (dest / src_rel).read_text(encoding="utf-8")
+    assert "Full text not included" in redacted
+    assert len(redacted) < len(original) / 2
+    assert redacted.startswith("---\ntype: Section")
+    assert "resource:" in redacted
+    # graph edges preserved
+    for heading in ("## Related markers",):
+        if heading in original:
+            assert heading in redacted
+    # the redacted body must not contain the full prose (spot check a mid-file line)
+    assert "record LoginAttempt" not in redacted
+
+    # guide is public — mirrored verbatim
+    guide_rel = "guide/readme/java-package-structure.md"
+    assert (dest / guide_rel).read_text(encoding="utf-8") == (bundle / guide_rel).read_text(encoding="utf-8")
+    # navigation stays intact
+    assert (dest / "book" / "index.md").read_text(encoding="utf-8") == (bundle / "book" / "index.md").read_text(encoding="utf-8")
+
+
 def test_idempotent(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     generate.generate(REPO_ROOT, a)
