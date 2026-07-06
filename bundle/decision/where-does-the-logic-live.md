@@ -42,4 +42,6 @@ A quick tell: if the "service" reads an aggregate's fields, computes, and writes
 - Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Use Case Implementation](/book/06-application-layer/use-case-implementation.md)
 - Guide: [Default rule: pure domain services](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md) · [When to use which approach](/guide/domain-services-with-data-dependencies/vergleich-wann-welchen-ansatz-nutzen.md)
 - Recipes: [Add a use case](/recipe/add-a-use-case.md) · [Add an aggregate](/recipe/add-an-aggregate.md)
+- Related decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md) — the companion fork for *guards* (validation / authorization / invariants) rather than behaviour
+- Related decision: [Domain service data access](/decision/domain-service-data-access.md) — once the logic lives in a domain service, how it gets the data it needs
 - Related pitfall: [Anemic domain model](/pitfall/anemic-domain-model.md)

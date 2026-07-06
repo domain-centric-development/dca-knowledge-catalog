@@ -41,4 +41,5 @@ A quick tell: if you are copy-pasting the same multi-step assembly into several 
 - ADRs: [ADR-014 Factory Pattern for Complex Aggregate Creation](/adr/adr-014-factory-pattern.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
 - Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md)
+- Template: [Factory skeleton](/template/factory.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

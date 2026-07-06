@@ -39,4 +39,5 @@ A separate query side with its own read model and projections. Three escalating 
 - Rules: [Queries must end with `Query` and reside in the application package](/rule/usecase/use-case-queries-must-end-with-query-and-reside-in-application-package.md)
 - Book: [When to Use CQRS](/book/16-cqrs-patterns/when-to-use-cqrs.md) · [When NOT to Use CQRS](/book/16-cqrs-patterns/when-not-to-use-cqrs.md) · [CQRS Levels](/book/16-cqrs-patterns/cqrs-levels.md) · [Eventual Consistency](/book/16-cqrs-patterns/eventual-consistency.md) · [Commands and Queries](/book/06-application-layer/commands-and-queries.md)
 - Recipes: [Add a use case](/recipe/add-a-use-case.md)
+- Templates: [Enriched domain model](/template/enriched-domain-model.md) · [ViewModel](/template/view-model.md)
 - Related decisions: [Specification vs. query method](/decision/specification-vs-query-method.md) · [Repository vs. store](/decision/repository-vs-store.md)

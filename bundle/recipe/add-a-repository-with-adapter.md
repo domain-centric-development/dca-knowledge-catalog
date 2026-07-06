@@ -28,9 +28,10 @@ Give an aggregate root a persistence port: an interface in the application layer
 
 ## Anchors
 
-- Template: [Repository + in-memory adapter skeleton](/template/repository-with-in-memory-adapter.md)
+- Template: [Repository + in-memory adapter skeleton](/template/repository-with-in-memory-adapter.md) — JPA variant: [JPA repository adapter](/template/jpa-repository-adapter.md)
 - Markers: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
 - ADRs: [ADR-004 Persistence-Oriented Repository](/adr/adr-004-persistence-oriented-repository.md) · [ADR-008 Repository Interfaces as Output Ports](/adr/adr-008-repository-interfaces-as-output-ports.md)
 - Book: [Repository interfaces](/book/06-application-layer/repository-interfaces.md) · [Outgoing adapters](/book/07-adapter-layer/outgoing-adapters.md)
 - The aggregate this repository serves: [Add an aggregate](/recipe/add-an-aggregate.md)
+- Going to a database later: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md)
 - Pitfall: [A Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — non-aggregate data gets a Store ([Repository vs Store](/decision/repository-vs-store.md))
