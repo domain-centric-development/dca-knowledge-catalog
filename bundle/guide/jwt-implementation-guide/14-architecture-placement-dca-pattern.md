@@ -37,7 +37,7 @@ account/application/revokeallsessions/
 
 ### Shared Auth Module Pattern
 
-All three reference implementations (see [`jwt-analysis-c1.md`](jwt-analysis-c1.md), [`jwt-analysis-c2.md`](jwt-analysis-c2.md), [`jwt-analysis-c3.md`](jwt-analysis-c3.md)) encapsulate JWT parsing and validation in a **shared internal library** — consuming services never call the JWT library directly. The consuming service:
+Every production implementation this guide was distilled from encapsulates JWT parsing and validation in a **shared internal library** — consuming services never call the JWT library directly. The consuming service:
 
 1. Passes the raw cookie value (plus environment and rotation configuration) to the library
 2. Receives a typed result object (e.g. `AccountInfo`) back

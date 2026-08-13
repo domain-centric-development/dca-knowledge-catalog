@@ -6,8 +6,8 @@ Generated bundle: the DCA book and implementation guide (full text, as Chapter/G
 
 ### Generated zone (rebuilt from sources)
 - Chapters (book): 31
-- Guides: 13
-- Sections: 507
+- Guides: 10
+- Sections: 490
 - Markers: 24
 - Rules: 90
 - ADRs: 30

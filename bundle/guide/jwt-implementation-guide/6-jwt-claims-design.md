@@ -120,3 +120,44 @@ Claims embedded in the token are valid for its lifetime (15 min). For most profi
 Revocation on email/role change: the relevant use case raises a domain event → event listener calls `refreshTokenRepository.revokeAllForUser(userId, reason)`. The access token remains valid for up to 15 minutes — this is the cost of stateless validation. For zero-tolerance scenarios, add the `jti` denylist (see Section 16, Optional Enhancements).
 
 ---
+
+### 6.4 Encrypting a Claim (defense in depth)
+
+A signed JWT is integrity-protected but **not confidential**: anyone holding it can base64-decode
+the payload. Where a claim carries an identifier that should not be readable by whoever obtains the
+token, encrypt the value at application level and carry the ciphertext as a custom claim:
+
+- **Cipher:** AES-256-GCM with a random 12-byte IV and a 128-bit auth tag
+- **AAD:** the key id — this binds the ciphertext to the key that produced it, so tampering with the
+  key prefix fails the GCM tag instead of silently decrypting under another key
+- **Wire format:** `keyId:base64(IV ‖ ciphertext ‖ tag)`, so the reader learns which key to use
+  without a lookup table on the wire
+- **Rotation:** keep a key map (id → key); encrypt with the active key, decrypt with whichever key
+  the prefix names. This is what makes rotation possible without a flag day
+- **Failure mode:** a decryption failure degrades to an *absent value*, never an exception — a token
+  encrypted under a retired key must not take down the request
+
+Two **independent** key systems then coexist: the EC key pair signs the token, an AES key encrypts
+the claim. Different algorithms, different rotation lifecycles, different secrets — the claim is
+protected twice, by the GCM tag inside and the signature outside.
+
+> Encrypt claims sparingly. Every encrypted claim is one a consumer cannot route or filter on
+> without holding the key, and it moves a key-distribution problem into every service that needs
+> the value.
+
+### 6.5 Staff Tokens Are a Separate Token Type
+
+Internal staff authentication does not belong in the customer token. A separate type keeps the
+audiences apart — a customer token can never satisfy a staff endpoint even if roles were forged
+into it — and lets the two evolve independently:
+
+| Claim | Type | Purpose |
+|-------|------|---------|
+| `sub` | string | employee identifier |
+| `exp` | date | expiry, typically much shorter than a customer session |
+| `grp` | string[] | group memberships for authorization |
+
+The same reasoning applies to admin and machine-to-machine access: prefer a distinct token type
+with its own `aud` over adding privileged roles to the customer token.
+
+---

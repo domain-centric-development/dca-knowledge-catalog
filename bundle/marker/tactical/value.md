@@ -26,7 +26,7 @@ Marker for Value.
 - [Outgoing Adapters](/book/07-adapter-layer/outgoing-adapters.md)
 - [Shared Value Objects](/book/11-shared-kernel/shared-value-objects.md)
 - [Beginner Path (Weeks 1-4)](/book/appendix-c-learning-path/beginner-path-weeks-1-4.md)
-- [1. Session Web Token (SWT)](/guide/jwt-analysis-c1/1-session-web-token-swt.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

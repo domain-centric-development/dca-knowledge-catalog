@@ -7,7 +7,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 - [adr/](adr/index.md) (30) — Architecture Decision Records — the patterns used and why.
 - [book/](book/index.md) (417) — The comprehensive DCA guide — chapters and appendices (full text).
 - [decision/](decision/index.md) (17) — Decision guides for design forks (which pattern, when).
-- [guide/](guide/index.md) (134) — The compact implementation guide — patterns, governance, supplementary guides (full text).
+- [guide/](guide/index.md) (114) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (24) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (2) — Compounded query answers — synthesis made permanent.
 - [pitfall/](pitfall/index.md) (12) — Anti-patterns and the rules/ADRs that forbid them.

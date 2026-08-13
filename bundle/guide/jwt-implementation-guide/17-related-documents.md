@@ -7,9 +7,17 @@ resource: implementing-domain-centric-architecture/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 
-- [`jwt-analysis-c1.md`](jwt-analysis-c1.md) — Analyzed implementation: HS256 session token + OIDC bearer, AES field encryption
-- [`jwt-analysis-c2.md`](jwt-analysis-c2.md) — Analyzed implementation: RS512, soft/full login levels, JKS key rotation
-- [`jwt-analysis-c3.md`](jwt-analysis-c3.md) — Analyzed implementation: ES256 + JWKS, watermark revocation, encrypted PII claim, framework-free shared library
 - [`spring-modulith.md`](spring-modulith.md) — Spring Boot integration patterns
 - [`archunit-governance.md`](archunit-governance.md) — Enforcing architectural rules
-- [`ai-architecture-sample/docs/architecture/design-decisions.md`](../ai-architecture-sample/docs/architecture/design-decisions.md) — ADRs for the reference implementation
+- [`ai-architecture-sample/docs/architecture/adr/`](../ai-architecture-sample/docs/architecture/adr/) — ADRs for the reference implementation, in particular
+  **ADR-029** (session expiry ends the session, not the identity) and **ADR-030** (separate cookies
+  for identity, session and renewal)
+
+> This guide was distilled from analyses of three production JWT implementations. Those analyses
+> described third-party systems and are deliberately not part of this repository; what they taught is
+> in the sections above.
+
+## Related ADRs
+
+- [ADR-029: Session Expiry Ends the Session, Not the Identity](/adr/adr-029-expiry-is-not-logout.md)
+- [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)
