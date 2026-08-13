@@ -19,6 +19,7 @@ Base interface for Repositories.
 ## Governed by
 
 - [Controllers and Resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md)
+- [Output ports must not reside in the domain layer](/rule/hexagonal/output-ports-must-not-reside-in-the-domain-layer.md)
 - [Repository Implementations must reside in portadapter.outgoing package](/rule/hexagonal/repository-implementations-must-reside-in-portadapter-outgoing-package.md)
 - [sharedkernel.application.port should only contain interfaces (Outbound Ports)](/rule/layered/sharedkernel-application-port-should-only-contain-interfaces-outbound-ports.md)
 - [Repository Interfaces must end with 'Repository'](/rule/naming/repository-interfaces-must-end-with-repository.md)

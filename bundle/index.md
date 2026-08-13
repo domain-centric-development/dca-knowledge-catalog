@@ -13,5 +13,5 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 - [pitfall/](pitfall/index.md) (12) — Anti-patterns and the rules/ADRs that forbid them.
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
 - [recipe/](recipe/index.md) (17) — Task playbooks — ordered steps to build a DCA construct.
-- [rule/](rule/index.md) (89) — ArchUnit rules — the enforceable, machine-checkable architecture.
+- [rule/](rule/index.md) (90) — ArchUnit rules — the enforceable, machine-checkable architecture.
 - [template/](template/index.md) (21) — Domain-free code skeletons to fill in.

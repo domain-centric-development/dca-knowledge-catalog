@@ -9,7 +9,7 @@ Generated bundle: the DCA book and implementation guide (full text, as Chapter/G
 - Guides: 13
 - Sections: 507
 - Markers: 24
-- Rules: 89
+- Rules: 90
 - ADRs: 28
 - Process: 1
 
