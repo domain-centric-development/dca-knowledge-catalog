@@ -15,7 +15,7 @@ tags: [guide, section]
 
 ### Visitor Token (`shop-identity`)
 
-Purpose: persists an anonymous `UserId` so the shopping cart survives browser restarts without requiring an account. Preserved through login and logout (see Section 13).
+Purpose: persists an anonymous `UserId` so the shopping cart survives browser restarts without requiring an account. Preserved through login and through session expiry; rotated on explicit logout (see Section 13).
 
 Contains: `sub` (random UUID), `iat`, `exp`. No PII.
 

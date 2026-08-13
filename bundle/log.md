@@ -10,7 +10,7 @@ Generated bundle: the DCA book and implementation guide (full text, as Chapter/G
 - Sections: 507
 - Markers: 24
 - Rules: 90
-- ADRs: 28
+- ADRs: 30
 - Process: 1
 
 ### Extensible zone (authored, preserved across regeneration)

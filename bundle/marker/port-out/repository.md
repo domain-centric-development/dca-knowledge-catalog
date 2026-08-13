@@ -45,6 +45,7 @@ Base interface for Repositories.
 - [ADR-016: Shared Kernel Pattern for Cross-Context Value Objects](/adr/adr-016-shared-kernel-pattern.md)
 - [ADR-019: Open Host Service Pattern for Cross-Context Communication](/adr/adr-019-open-host-service-pattern.md)
 - [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
+- [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)
 
 ## Discussed in
 

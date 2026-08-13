@@ -16,7 +16,7 @@ tags: [guide, section]
 | `MaxAge` | 900 s | 2 592 000 s (30 days) | 2 592 000 s (30 days) |
 
 **Three-cookie design:**
-- `shop-identity` — visitor JWT (existing; preserved through login/logout)
+- `shop-identity` — visitor JWT (existing; survives session expiry, rotated on explicit logout — see §13)
 - `shop-session` — access token JWT (replaces current all-in-one cookie)
 - `shop-refresh` — opaque refresh token (**path-scoped to `/auth/refresh`**)
 
@@ -35,10 +35,25 @@ ResponseCookie.from("shop-session", token)
     .build();
 ```
 
-**Current gaps in `ai-architecture-sample`:**
-- `Secure=false` hardcoded in `JwtIdentitySession` and `JwtAuthenticationFilter`
-- No `SameSite` attribute on authenticated cookies
-- No path-scoped refresh cookie (no refresh token exists yet)
-- `clearIdentity()` clears only the visitor cookie; logout should also clear `shop-session` and `shop-refresh`
+**Status in `ai-architecture-sample`:**
+
+| | |
+|---|---|
+| `shop-identity` / `shop-session` split | ✅ done (ADR-030) |
+| Session expiry keeps the visitor identity | ✅ done (ADR-029) |
+| Logout rotates the identity, clears the session | ✅ done |
+| `Secure` from configuration instead of hardcoded `false` | ✅ done (`app.security.jwt.secure-cookies`) |
+| `SameSite` on every cookie the subsystem writes | ✅ done (`Lax`) |
+| Path-scoped `shop-refresh` and the renewal flow | ❌ **deferred** — no refresh token exists |
+
+The deferral is deliberate and recorded in ADR-030: without a refresh token there is no revocation
+and no theft detection, so **the session cookie's lifetime is the blast radius of a stolen token**.
+A renewal flow needs a persistent token store, rotation with reuse detection, and an endpoint to
+scope the cookie to — larger than everything above combined.
 
 ---
+
+## Related ADRs
+
+- [ADR-029: Session Expiry Ends the Session, Not the Identity](/adr/adr-029-expiry-is-not-logout.md)
+- [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)

@@ -4,7 +4,7 @@
 - [10. Brute-Force Protection and Login Attempt Tracking](10-brute-force-protection-and-login-attempt-tracking.md) — On every login attempt: insert a row into `login_attempts` (success or failure).
 - [11. Account Status and Login Flow](11-account-status-and-login-flow.md) — Always return the same generic message for unauthenticated failures:
 - [12. Refresh Token Rotation Flow](12-refresh-token-rotation-flow.md) — 1. POST /auth/refresh → Browser sends Cookie: shop-refresh=<raw>
-- [13. Customer Tracking: Visitor Identity After Logout](13-customer-tracking-visitor-identity-after-logout.md) — Cart loss on logout is a significant UX friction point in e-commerce. The visitor token contains only a random UUID —...
+- [13. Customer Tracking: Visitor Identity After Logout](13-customer-tracking-visitor-identity-after-logout.md) — The visitor identity answers "whose cart is this", not "is this person authenticated". Those two
 - [14. Architecture Placement (DCA Pattern)](14-architecture-placement-dca-pattern.md) — New ports and use cases consistent with existing patterns:
 - [15. Must-Haves Checklist](15-must-haves-checklist.md) — [ ] Switch from HS256 to ES256 (asymmetric signing)
 - [16. Optional Enhancements](16-optional-enhancements.md) — [ ] Multi-level authentication (soft login / full login) with loginTyp claim
