@@ -48,8 +48,8 @@ def test_counts(bundle: Path):
         types[fm["type"]] = types.get(fm["type"], 0) + 1
     # skeleton from the sample app — exact (regression guard)
     assert types["Marker"] == 24
-    assert types["Rule"] == 88
-    assert types["ADR"] == 27
+    assert types["Rule"] == 89
+    assert types["ADR"] == 28
     assert types["Process"] == 1
     # book + guide full text — lower bounds (content evolves)
     assert types.get("Chapter", 0) >= 25

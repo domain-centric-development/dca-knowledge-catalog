@@ -19,6 +19,7 @@ Outbound port for publishing domain events.
 ## Governed by
 
 - [sharedkernel.application.port should only contain interfaces (Outbound Ports)](/rule/layered/sharedkernel-application-port-should-only-contain-interfaces-outbound-ports.md)
+- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
 ## Referenced by ADRs
 

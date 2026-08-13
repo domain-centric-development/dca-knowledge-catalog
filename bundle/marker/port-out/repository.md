@@ -29,6 +29,7 @@ Base interface for Repositories.
 - [Repository Interfaces must reside in application output port package](/rule/tactical/repository-interfaces-must-reside-in-application-output-port-package.md)
 - [Repository Interfaces should extend Repository Marker Interface](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md)
 - [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
+- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
 ## Referenced by ADRs
 
@@ -47,12 +48,12 @@ Base interface for Repositories.
 ## Discussed in
 
 - [Step 5: Adapter Layer - Repository](/book/03-getting-started/step-5-adapter-layer-repository.md)
-- [Step 8: Testing](/book/03-getting-started/step-8-testing.md)
 - [Repository Interfaces](/book/06-application-layer/repository-interfaces.md)
 - [In-Memory Repository](/book/15-persistence-patterns/in-memory-repository.md)
 - [JPA Repository Implementation](/book/15-persistence-patterns/jpa-repository-implementation.md)
 - [Repository Pattern](/book/15-persistence-patterns/repository-pattern.md)
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [RULES](/guide/readme/rules.md)

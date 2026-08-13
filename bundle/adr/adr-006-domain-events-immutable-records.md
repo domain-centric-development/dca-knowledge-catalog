@@ -15,6 +15,7 @@ All Domain Events MUST be implemented as Java records with immutable data.
 ## Applies to markers
 
 - [DomainEvent](/marker/tactical/domainevent.md)
+- [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 
 ## Enforced by
 

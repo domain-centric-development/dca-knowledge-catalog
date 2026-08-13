@@ -18,4 +18,5 @@ The mandatory contract identity every IntegrationEvent carries: a stable logical
 
 ## Referenced by ADRs
 
+- [ADR-006: Domain Events as Immutable Records](/adr/adr-006-domain-events-immutable-records.md)
 - [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)

@@ -8,4 +8,4 @@
 - [onion/](onion/index.md) (3)
 - [strategic/](strategic/index.md) (9)
 - [tactical/](tactical/index.md) (18)
-- [usecase/](usecase/index.md) (10)
+- [usecase/](usecase/index.md) (11)

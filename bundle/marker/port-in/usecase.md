@@ -20,6 +20,7 @@ Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Arc
 
 - [Application layer InputPort implementations must end with 'UseCase'](/rule/naming/application-layer-inputport-implementations-must-end-with-usecase.md)
 - [Use case classes must be annotated with @Service](/rule/naming/use-case-classes-must-be-annotated-with-service.md)
+- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
 ## Referenced by ADRs
 
