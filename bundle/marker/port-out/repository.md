@@ -46,6 +46,7 @@ Base interface for Repositories.
 - [ADR-019: Open Host Service Pattern for Cross-Context Communication](/adr/adr-019-open-host-service-pattern.md)
 - [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
 - [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)
+- [ADR-031: A Repository Hands Out Copies — Real Persistence Is the Default](/adr/adr-031-persistence-adapters-as-the-default.md)
 
 ## Discussed in
 

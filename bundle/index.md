@@ -4,7 +4,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 
 **Building something?** Start at [Build a DCA application](recipe/build-a-dca-application.md) — the task router mapping construction tasks to recipes.
 
-- [adr/](adr/index.md) (30) — Architecture Decision Records — the patterns used and why.
+- [adr/](adr/index.md) (31) — Architecture Decision Records — the patterns used and why.
 - [book/](book/index.md) (417) — The comprehensive DCA guide — chapters and appendices (full text).
 - [decision/](decision/index.md) (17) — Decision guides for design forks (which pattern, when).
 - [guide/](guide/index.md) (114) — The compact implementation guide — patterns, governance, supplementary guides (full text).

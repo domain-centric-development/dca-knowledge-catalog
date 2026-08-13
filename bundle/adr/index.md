@@ -30,3 +30,4 @@
 - [ADR-028: The Account Owner's Name Is Immutable by Type, Not by Rule](adr-028-immutable-owner-name.md) — Open question — `reconstitute` is not covered by this.
 - [ADR-029: Session Expiry Ends the Session, Not the Identity](adr-029-expiry-is-not-logout.md) — Expiry ends the *session*. Only an explicit logout ends the *identity*.
 - [ADR-030: Separate Cookies for Identity, Session and Renewal](adr-030-three-cookie-session-design.md) — Split by lifetime and by purpose. Four identifiers, three of them in the auth subsystem.
+- [ADR-031: A Repository Hands Out Copies — Real Persistence Is the Default](adr-031-persistence-adapters-as-the-default.md) — A repository hands out copies. An adapter that cannot honour that is not the default.
