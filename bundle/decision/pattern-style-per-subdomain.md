@@ -32,7 +32,6 @@ Classify the subdomain first, then the pattern style follows:
 
 ## Anchors
 
-- ADRs: [ADR-025 Pattern Selection per Subdomain Type](/adr/adr-025-pattern-selection-per-subdomain.md)
-- Book: [Subdomain Types and Pattern Selection](/book/10-bounded-contexts/subdomain-types-and-pattern-selection.md) · [Why Bounded Contexts Matter](/book/10-bounded-contexts/why-bounded-contexts-matter.md)
+- Guide: [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Related recipe: [Add a bounded context](/recipe/add-a-bounded-context.md)
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

@@ -35,6 +35,6 @@ For the full layer split of validation vs. authorization vs. invariants, see [Wh
 
 - Markers: [IdentityProvider](/marker/port-out/identityprovider.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) · [The Domain Model should be framework independent](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
-- Book: [Security by Layer](/book/18-security-patterns/security-by-layer.md) · [Common Mistakes](/book/18-security-patterns/common-mistakes.md) · [Authorization Patterns](/book/18-security-patterns/authorization-patterns.md)
+- Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
 - Related pitfalls: [Framework leak in the domain](/pitfall/framework-leak-in-domain.md) · [Anemic domain model](/pitfall/anemic-domain-model.md)

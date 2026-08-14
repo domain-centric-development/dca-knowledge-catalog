@@ -13,7 +13,7 @@ package {basePackage}.{context}.domain.{name};
 
 import java.util.UUID;
 
-/** Typed identity. Reference other aggregates by their Id, never by object (ADR-003). */
+/** Typed identity. Reference other aggregates by their Id, never by object. */
 public record {Name}Id(UUID value) {
     public {Name}Id {
         if (value == null) throw new IllegalArgumentException("id required");
@@ -67,10 +67,10 @@ public class {Name} extends BaseAggregateRoot<{Name}Id> {
 }
 ```
 
-The use case persists the aggregate, then publishes and clears its domain events (ADR-005). Repository for this aggregate: see the use-case template's output ports and [ADR-008](/adr/adr-008-repository-interfaces-as-output-ports.md).
+The use case persists the aggregate, then publishes and clears its domain events. Repository for this aggregate: see the use-case template's output ports and [Deviations from the literature](/guide/readme/deviations-from-the-literature.md).
 
 ## Realizes / governed by
 
 - Markers: [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md) · [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md) · [Repository<T, ID>](/marker/port-out/repository.md)
-- ADRs: [ADR-003 Reference by Id](/adr/adr-003-aggregate-reference-by-id.md) · [ADR-006 Domain Events as Records](/adr/adr-006-domain-events-immutable-records.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
 - Recipe: [Add an aggregate](/recipe/add-an-aggregate.md)

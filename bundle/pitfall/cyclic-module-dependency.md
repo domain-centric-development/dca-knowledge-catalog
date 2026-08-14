@@ -24,7 +24,7 @@ Where [raw cross-context import](/pitfall/raw-cross-context-import.md) is the *s
 
 Break the loop so the dependency flows one way, or not at all:
 
-- **Invert with events.** Instead of both contexts calling each other, one publishes a versioned [IntegrationEvent](/marker/tactical/integrationevent.md) and the other consumes and translates it — decoupling the direct reference. When the cycle is specifically between event listeners, apply the Interface Inversion pattern (see ADR-024) to move the contract to a neutral abstraction.
+- **Invert with events.** Instead of both contexts calling each other, one publishes a versioned [IntegrationEvent](/marker/tactical/integrationevent.md) and the other consumes and translates it — decoupling the direct reference. When the cycle is specifically between event listeners, apply the Interface Inversion pattern ([Module communication](/guide/spring-modulith/module-communication.md)) to move the contract to a neutral abstraction.
 - **Pick a direction and use an Open Host Service.** Let one context be the upstream that others call via its [@OpenHostService](/marker/strategic/openhostservice.md); the downstream translates the response through an Anti-Corruption Layer. Only one arrow, no loop.
 - **Extract a shared upstream.** If both genuinely need the same concept, the shared part may belong in a third context (or the Shared Kernel) that both depend on — never on each other. See [shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md).
 
@@ -32,8 +32,7 @@ See [Recipe: publish a cross-context event](/recipe/publish-a-cross-context-even
 
 ## Anchors
 
-- ADRs: [ADR-011 Bounded Context Isolation via Package Structure](/adr/adr-011-bounded-context-isolation.md) · [ADR-024 Interface Inversion Pattern for Spring Modulith Event Listeners](/adr/adr-024-interface-inversion-spring-modulith.md)
+- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Module communication](/guide/spring-modulith/module-communication.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [IntegrationEvent](/marker/tactical/integrationevent.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- Book: [Module Communication](/book/spring-modulith/module-communication.md) · [Testing (module verification)](/book/spring-modulith/testing.md) · [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md)
 - Related pitfall: [Raw cross-context import](/pitfall/raw-cross-context-import.md) — the single-direction import this cycle is built from
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

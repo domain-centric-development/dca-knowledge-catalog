@@ -118,5 +118,4 @@ The fake repository is a real `Map` store, so `save` then `findById` round-trips
 
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [Repository<T, ID>](/marker/port-out/repository.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - Recipe: [Test a use case](/recipe/test-a-use-case.md) · [Add a use case](/recipe/add-a-use-case.md)
-- Book: [Application-layer testing](/book/12-testing-strategy/application-layer-testing.md) · [Test doubles](/book/12-testing-strategy/test-doubles.md)
 - Reference tests: `cart/application/mergecarts/MergeCartsUseCaseTest`, `pricing/application/getpricesforproducts/GetPricesForProductsUseCaseTest`

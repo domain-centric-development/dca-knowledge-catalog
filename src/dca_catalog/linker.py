@@ -1,7 +1,7 @@
 """Cross-link nodes into a navigable graph.
 
-Deterministic, string-based: scan rule/ADR bodies for marker type references and
-rule titles, then emit reciprocal bundle-relative link sections. Over-linking is
+Deterministic, string-based: scan rule bodies and guide sections for marker type
+references, then emit reciprocal bundle-relative link sections. Over-linking is
 tolerated (OKF treats links as soft); links are sorted for stable output.
 """
 
@@ -51,14 +51,11 @@ def _marker_refs(text: str, markers: dict[str, Node], prose: bool) -> set[str]:
     return found
 
 
-def link(markers: list[Node], rules: list[Node], adrs: list[Node]) -> None:
+def link(markers: list[Node], rules: list[Node]) -> None:
     by_name = {n.meta["name"]: n for n in markers}
     rule_nodes = [n for n in rules if n.meta.get("kind") == "rule"]
-    adr_nodes = [n for n in adrs if n.meta.get("kind") == "adr"]
-    process = next((n for n in adrs if n.meta.get("kind") == "process"), None)
 
     governed_by: dict[str, list[Node]] = {name: [] for name in by_name}
-    referenced_by_adr: dict[str, list[Node]] = {name: [] for name in by_name}
 
     # Rule -> markers
     for rule in rule_nodes:
@@ -68,30 +65,12 @@ def link(markers: list[Node], rules: list[Node], adrs: list[Node]) -> None:
         for n in names:
             governed_by[n].append(rule)
 
-    # ADR -> markers, rules, process
-    rule_titles = {r.meta["name"]: r for r in rule_nodes}
-    for adr in adr_nodes:
-        text = adr.meta["scan_text"]
-        names = _marker_refs(text, by_name, prose=True)
-        mtargets = sorted((by_name[n] for n in names), key=lambda x: x.path)
-        adr.add_section("Applies to markers", [_link(m) for m in mtargets])
-        for n in names:
-            referenced_by_adr[n].append(adr)
-
-        enforced = sorted(
-            (r for title, r in rule_titles.items() if title in text),
-            key=lambda x: x.path,
-        )
-        adr.add_section("Enforced by", [_link(r) for r in enforced])
-        if process is not None:
-            adr.add_section("Decision process", [_link(process)])
-
-    _link_markers_back(markers, governed_by, referenced_by_adr)
+    _link_markers_back(markers, governed_by)
 
 
-def _link_markers_back(markers, governed_by, referenced_by_adr):
+def _link_markers_back(markers, governed_by):
     by_name = {n.meta["name"]: n for n in markers}
-    # Marker -> extends / governed-by / referenced-by-ADR
+    # Marker -> extends / governed-by
     for marker in markers:
         extends = [by_name[e] for e in marker.meta.get("extends", []) if e in by_name]
         marker.add_section(
@@ -99,11 +78,6 @@ def _link_markers_back(markers, governed_by, referenced_by_adr):
         )
         govs = sorted(governed_by[marker.meta["name"]], key=lambda x: x.path)
         marker.add_section("Governed by", [_link(r) for r in govs])
-        refs = sorted(referenced_by_adr[marker.meta["name"]], key=lambda x: x.path)
-        marker.add_section("Referenced by ADRs", [_link(a) for a in refs])
-
-
-_ADR_REF_RE = re.compile(r"ADR-0*(\d+)")
 
 
 def _title_pattern(name: str) -> re.Pattern:
@@ -129,12 +103,11 @@ _DISCUSS_MIN_MENTIONS = 4
 _DISCUSS_MAX_LINKS = 10
 
 
-def link_docs(docs: list[Node], markers: list[Node], rules: list[Node], adrs: list[Node]) -> None:
-    """Anchor book/guide Section nodes to the skeleton: link the markers they
-    name and the ADRs they cite. Markers link back to the sections that
-    primarily discuss them ("Discussed in") — title match or dense mentions."""
+def link_docs(docs: list[Node], markers: list[Node]) -> None:
+    """Anchor guide Section nodes to the skeleton by linking the markers they
+    name. Markers link back to the sections that primarily discuss them
+    ("Discussed in") — title match or dense mentions."""
     by_name = {n.meta["name"]: n for n in markers}
-    adr_by_num = {n.frontmatter["adr"]: n for n in adrs if n.meta.get("kind") == "adr"}
     name_res = {name: _title_pattern(name) for name in by_name}
     # marker name -> list of (title_matched, mention_count, section node)
     discussed_in: dict[str, list[tuple[bool, int, Node]]] = {name: [] for name in by_name}
@@ -146,10 +119,6 @@ def link_docs(docs: list[Node], markers: list[Node], rules: list[Node], adrs: li
         names = _marker_refs(text, by_name, prose=True)
         mtargets = sorted((by_name[n] for n in names), key=lambda x: x.path)
         node.add_section("Related markers", [_link(m) for m in mtargets])
-
-        nums = {int(m) for m in _ADR_REF_RE.findall(text) if int(m) in adr_by_num}
-        atargets = sorted((adr_by_num[n] for n in nums), key=lambda x: x.path)
-        node.add_section("Related ADRs", [_link(a) for a in atargets])
 
         title = str(node.frontmatter.get("title", ""))
         for name in by_name:

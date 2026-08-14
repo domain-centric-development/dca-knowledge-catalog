@@ -32,31 +32,15 @@ Base interface for Repositories.
 - [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
 - [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
-## Referenced by ADRs
-
-- [ADR-002: Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- [ADR-003: Aggregate Reference by Identity Only](/adr/adr-003-aggregate-reference-by-id.md)
-- [ADR-004: Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md)
-- [ADR-007: Hexagonal Architecture with Explicit Port/Adapter Separation](/adr/adr-007-hexagonal-architecture.md)
-- [ADR-008: Repository Interfaces as Output Ports in Application Layer](/adr/adr-008-repository-interfaces-as-output-ports.md)
-- [ADR-011: Bounded Context Isolation via Package Structure](/adr/adr-011-bounded-context-isolation.md)
-- [ADR-013: Specification Pattern for Business Rules](/adr/adr-013-specification-pattern.md)
-- [ADR-015: ArchUnit for Architecture Governance](/adr/adr-015-archunit-governance.md)
-- [ADR-016: Shared Kernel Pattern for Cross-Context Value Objects](/adr/adr-016-shared-kernel-pattern.md)
-- [ADR-019: Open Host Service Pattern for Cross-Context Communication](/adr/adr-019-open-host-service-pattern.md)
-- [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
-- [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)
-- [ADR-031: A Repository Hands Out Copies — Real Persistence Is the Default](/adr/adr-031-persistence-adapters-as-the-default.md)
-
 ## Discussed in
 
-- [Step 5: Adapter Layer - Repository](/book/03-getting-started/step-5-adapter-layer-repository.md)
-- [Repository Interfaces](/book/06-application-layer/repository-interfaces.md)
-- [In-Memory Repository](/book/15-persistence-patterns/in-memory-repository.md)
-- [JPA Repository Implementation](/book/15-persistence-patterns/jpa-repository-implementation.md)
-- [Repository Pattern](/book/15-persistence-patterns/repository-pattern.md)
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
+- [Interface vs Implementation Placement](/guide/architecture-reference-guide/interface-vs-implementation-placement.md)
+- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

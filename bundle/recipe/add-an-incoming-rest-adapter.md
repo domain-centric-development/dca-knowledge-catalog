@@ -8,10 +8,10 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 
 ## Steps
 
-1. **Place it in `adapter/incoming/`** — REST resources under the api package, web controllers under the web package (they are separated on purpose — [ADR-001](/adr/adr-001-api-web-package-separation.md)).
+1. **Place it in `adapter/incoming/`** — REST resources under the api package, web controllers under the web package (they are separated on purpose — [Java package structure](/guide/readme/java-package-structure.md)).
 2. **Name by role** — a REST endpoint class ends with `Resource`; an MVC class ends with `Controller` (a `*PageController`).
 3. **Depend on the input port only** — inject the `{Name}InputPort`, build the `{Name}Command`/`{Name}Query` from the request, call `execute`. Never inject a repository or another adapter. Generate from the [REST resource template](/template/rest-resource.md).
-4. **Map at the edge** — translate the use case `{Name}Result` into a `*Response` DTO (or a view model for web) in the adapter; DTOs and view models live here, never in domain or application. Handle an empty `Optional` result as the not-found case ([ADR-023](/adr/adr-023-optional-results-not-found.md)).
+4. **Map at the edge** — translate the use case `{Name}Result` into a `*Response` DTO (or a view model for web) in the adapter; DTOs and view models live here, never in domain or application. Handle an empty `Optional` result as the not-found case.
 5. **Stay in your context** — an incoming adapter accesses only its own bounded context (event consumers and Open Host Services are the sanctioned exceptions).
 6. **Verify** — `./gradlew test-architecture`.
 
@@ -30,7 +30,6 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 
 - Template: [REST resource skeleton](/template/rest-resource.md) · AI-facing sibling: [MCP tool provider skeleton](/template/mcp-tool-provider.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
-- ADRs: [ADR-001 API/Web Package Separation](/adr/adr-001-api-web-package-separation.md) · [ADR-020 Use Case Result Naming](/adr/adr-020-use-case-result-naming.md) · [ADR-022 ViewModel Pattern](/adr/adr-022-viewmodel-pattern.md) · [ADR-023 Optional Results for Not-Found](/adr/adr-023-optional-results-not-found.md)
-- Book: [Incoming adapters](/book/07-adapter-layer/incoming-adapters.md) · [Mappers](/book/07-adapter-layer/mappers.md)
+- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Layer rules](/guide/readme/rules.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - The use case this adapter drives: [Add a use case](/recipe/add-a-use-case.md)
 - Pitfalls: [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Exposing domain objects over REST](/pitfall/exposing-domain-objects-over-rest.md)

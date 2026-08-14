@@ -17,13 +17,11 @@ Marks a package as the Shared Kernel in Domain-Driven Design.
 
 ## Discussed in
 
-- [Common Mistakes](/book/11-shared-kernel/common-mistakes.md)
-- [Complete Examples](/book/11-shared-kernel/complete-examples.md)
-- [Shared Kernel Structure](/book/11-shared-kernel/shared-kernel-structure.md)
-- [What Belongs in Shared Kernel](/book/11-shared-kernel/what-belongs-in-shared-kernel.md)
-- [When to Use Shared Kernel](/book/11-shared-kernel/when-to-use-shared-kernel.md)
-- [Shared Kernel in Spring Modulith](/book/spring-modulith/shared-kernel-in-spring-modulith.md)
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
+- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
+- [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [Ansatz 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/ansatz-2-strategy-callback-pattern.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [Shared Kernel in Spring Modulith](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)

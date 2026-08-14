@@ -15,9 +15,9 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 
 ## Steps (cross-context)
 
-1. **Raise the domain event** in the aggregate as usual ([Add an aggregate](/recipe/add-an-aggregate.md), [ADR-005](/adr/adr-005-domain-events-publishing.md)).
-2. **Define the integration event** in `adapter/outgoing/messaging/event/` — a serializable record of primitives only, implementing `IntegrationEvent` and annotated with `@IntegrationEventType(name, version)` — the contract identity as a class property ([ADR-027](/adr/adr-027-integration-event-contract-identity.md)).
-3. **Translate in an ACL adapter, inside the transaction** — a synchronous listener on the domain event maps it to the integration event and writes the transactional-outbox row in the publishing transaction ([ADR-026](/adr/adr-026-transactional-outbox-integration-events.md)). Never translate after commit.
+1. **Raise the domain event** in the aggregate as usual ([Add an aggregate](/recipe/add-an-aggregate.md)).
+2. **Define the integration event** in `adapter/outgoing/messaging/event/` — a serializable record of primitives only, implementing `IntegrationEvent` and annotated with `@IntegrationEventType(name, version)` — the contract identity as a class property ([Integration patterns](/guide/readme/integration-patterns.md)).
+3. **Translate in an ACL adapter, inside the transaction** — a synchronous listener on the domain event maps it to the integration event and writes the transactional-outbox row in the publishing transaction. Never translate after commit.
 4. **Relay out of band** — a poller (plus an after-commit fast path) claims rows, sends to the broker, marks processed; retry with backoff. The outbox stores *your* integration event; the foreign wire payload is built at delivery by the outbound adapter (the ACL to the foreign contract).
 5. **Consume** on the other side in `adapter/incoming/messaging/`, translate back through that context's ACL, invoke its use case.
 6. **Verify** — `./gradlew test-architecture`.
@@ -35,5 +35,4 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 - Note: [Domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)
 - Pitfall: [Storing domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- ADRs: [ADR-026 Transactional Outbox](/adr/adr-026-transactional-outbox-integration-events.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
-- Book: [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md) · [Transactional Outbox Pattern](/book/14-events-integration/common-patterns.md)
+- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Layer rules](/guide/readme/rules.md)

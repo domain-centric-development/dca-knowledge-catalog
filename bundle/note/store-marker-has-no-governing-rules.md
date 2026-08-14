@@ -5,7 +5,7 @@ tags: [note, governance, archunit, port-out, persistence]
 ---
 
 The [Store marker](/marker/port-out/store.md) (`Store extends OutputPort`) is documented in the book
-([Stores: persistence for non-aggregate data](/book/06-application-layer/stores-persistence-for-non-aggregate-data.md))
+([Repository vs. Store](/guide/readme/elements.md))
 and in the guide's Repository-vs-Store section, and it is used in the reference
 implementation (`EventPublicationLogStore extends Store`). But unlike
 [Repository](/marker/port-out/repository.md) — which carries a full rule set — **no ArchUnit rule

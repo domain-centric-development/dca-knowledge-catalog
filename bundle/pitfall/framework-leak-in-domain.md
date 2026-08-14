@@ -27,7 +27,6 @@ Domain: `public final class Money { … }` with no annotations. Persistence: a s
 
 ## Anchors
 
-- ADRs: [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
+- Guide: [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Layer elements](/guide/readme/elements.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [DomainService](/marker/tactical/domainservice.md) · [Value](/marker/tactical/value.md)
-- Book: [Domain Layer — Common Mistakes](/book/05-domain-layer/common-mistakes.md) · [Domain Layer Structure](/book/05-domain-layer/domain-layer-structure.md)
 - Related pitfall: [DTO in the application layer](/pitfall/dto-in-application-layer.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md)

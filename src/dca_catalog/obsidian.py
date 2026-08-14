@@ -49,11 +49,9 @@ _SCHEME_RE = re.compile(r"^[a-z][a-z0-9+.-]*:", re.IGNORECASE)
 
 # graph-view color per node type directory (Obsidian graph.json colorGroups)
 _GRAPH_COLORS = {
-    "book": 0x4C78A8,      # blue
     "guide": 0x72B7B2,     # teal
     "marker": 0xF58518,    # orange
     "rule": 0xE45756,      # red
-    "adr": 0xB279A2,       # purple
     "process": 0x9D755D,   # brown
     "recipe": 0x54A24B,    # green
     "decision": 0xEECA3B,  # yellow

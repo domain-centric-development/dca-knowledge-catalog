@@ -57,8 +57,6 @@ cross-context data. For presentation, map it to a [ViewModel](/template/view-mod
 ## Realizes / governed by
 
 - Marker: [Value](/marker/tactical/value.md)
-- ADRs: [ADR-021 Enriched Domain Model Pattern](/adr/adr-021-enriched-domain-model-pattern.md) · [ADR-009 Value Objects as Java Records](/adr/adr-009-value-objects-as-records.md) · [ADR-019 Open Host Service Pattern](/adr/adr-019-open-host-service-pattern.md)
-- Book: [Common Patterns — Enriched Read Model Pattern](/book/10-bounded-contexts/common-patterns.md)
-- Guide: [Enriched Read Model Pattern](/guide/readme/integration-patterns.md)
+- Guide: [Enriched Read Model Pattern](/guide/readme/integration-patterns.md) · [Layer elements](/guide/readme/elements.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Related template: [ViewModel](/template/view-model.md)
 - Related decision: [Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md)

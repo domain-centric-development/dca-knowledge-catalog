@@ -39,21 +39,17 @@ ResponseCookie.from("shop-session", token)
 
 | | |
 |---|---|
-| `shop-identity` / `shop-session` split | ✅ done (ADR-030) |
-| Session expiry keeps the visitor identity | ✅ done (ADR-029) |
+| `shop-identity` / `shop-session` split | ✅ done |
+| Session expiry keeps the visitor identity | ✅ done |
 | Logout rotates the identity, clears the session | ✅ done |
 | `Secure` from configuration instead of hardcoded `false` | ✅ done (`app.security.jwt.secure-cookies`) |
 | `SameSite` on every cookie the subsystem writes | ✅ done (`Lax`) |
 | Path-scoped `shop-refresh` and the renewal flow | ❌ **deferred** — no refresh token exists |
 
-The deferral is deliberate and recorded in ADR-030: without a refresh token there is no revocation
-and no theft detection, so **the session cookie's lifetime is the blast radius of a stolen token**.
+The deferral is deliberate, and it has a price worth naming: without a refresh token there is no
+revocation and no theft detection, so **the session cookie's lifetime is the blast radius of a
+stolen token**.
 A renewal flow needs a persistent token store, rotation with reuse detection, and an endpoint to
 scope the cookie to — larger than everything above combined.
 
 ---
-
-## Related ADRs
-
-- [ADR-029: Session Expiry Ends the Session, Not the Identity](/adr/adr-029-expiry-is-not-logout.md)
-- [ADR-030: Separate Cookies for Identity, Session and Renewal](/adr/adr-030-three-cookie-session-design.md)

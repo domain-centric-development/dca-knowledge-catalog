@@ -31,6 +31,5 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 
 - Decision: [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
 - Markers: [DomainGateway](/marker/tactical/domaingateway.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- ADRs: [ADR-019 Open Host Service Pattern](/adr/adr-019-open-host-service-pattern.md) · [ADR-011 Bounded Context Isolation](/adr/adr-011-bounded-context-isolation.md)
-- Book: [Anti-corruption layer](/book/07-adapter-layer/anti-corruption-layer.md) · [Context relationships](/book/10-bounded-contexts/context-relationships.md) · [Cross-context communication](/book/10-bounded-contexts/cross-context-communication.md)
+- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - To emit events across the boundary from the other side: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)

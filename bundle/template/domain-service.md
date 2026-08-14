@@ -53,7 +53,6 @@ domain layer wireable without a container and unit-testable with plain `new`.
 
 - Marker: [DomainService](/marker/tactical/domainservice.md)
 - Rules: [Domain Services must implement DomainService Marker Interface and reside in domain.service](/rule/advanced/domain-services-must-implement-domainservice-marker-interface-and-reside-in-domain-service.md) · [Domain Services must reside in domain package](/rule/advanced/domain-services-must-reside-in-domain-package.md) · [Domain Services must not have Spring annotations](/rule/advanced/domain-services-must-not-have-spring-annotations.md) · [Domain Services should be stateless (only final fields for dependencies)](/rule/advanced/domain-services-should-be-stateless-only-final-fields-for-dependencies.md)
-- ADRs: [ADR-010 Domain Services Only for Multi-Aggregate Operations](/adr/adr-010-domain-services-multi-aggregate.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
+- Guide: [Pure domain services](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Layer elements](/guide/readme/elements.md)
 - Decisions: [Where does the logic live](/decision/where-does-the-logic-live.md)
 - Related template: [Domain Gateway](/template/domain-gateway.md) — when the service needs external facts

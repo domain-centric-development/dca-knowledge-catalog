@@ -93,6 +93,6 @@ database adapter without touching the port.
 - Decisions: [Repository or Store: which output port persists this](/decision/repository-vs-store.md)
 - Note: [The Store marker has no governing ArchUnit rules](/note/store-marker-has-no-governing-rules.md) — doctrine documented, not yet mechanically enforced
 - Pitfall: [Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — the mistake this template avoids
-- Book: [Stores: persistence for non-aggregate data](/book/06-application-layer/stores-persistence-for-non-aggregate-data.md)
+- Guide: [Layer elements](/guide/readme/elements.md)
 - Sibling template: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
 - Recipe: [Add a store](/recipe/add-a-store.md)

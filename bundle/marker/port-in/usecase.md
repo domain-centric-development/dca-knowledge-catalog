@@ -22,19 +22,15 @@ Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Arc
 - [Use case classes must be annotated with @Service](/rule/naming/use-case-classes-must-be-annotated-with-service.md)
 - [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
-## Referenced by ADRs
-
-- [ADR-020: Use Case Output Naming Convention (*Result instead of *Response)](/adr/adr-020-use-case-result-naming.md)
-
 ## Discussed in
 
-- [Step 4: Application Layer - Use Case](/book/03-getting-started/step-4-application-layer-use-case.md)
-- [Application Layer](/book/04-the-four-layers/application-layer.md)
-- [Use Case Implementation](/book/06-application-layer/use-case-implementation.md)
-- [Use Case Pattern](/book/06-application-layer/use-case-pattern.md)
-- [Use Case Organization](/book/09-package-structure/use-case-organization.md)
-- [Application Layer Testing](/book/12-testing-strategy/application-layer-testing.md)
+- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
+- [DEPENDENCY STRUCTURE](/guide/readme/dependency-structure.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)
+- [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

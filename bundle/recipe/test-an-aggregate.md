@@ -22,14 +22,13 @@ Value objects and domain services are tested the same way (state-based, no mocks
 - Pure unit test — no mocks, no infrastructure, milliseconds to run.
 - Test business rules, invariants, and state transitions.
 - Assert domain-event emission (type + payload).
-- Test observable behaviour, never private methods ([common mistakes](/book/12-testing-strategy/common-mistakes.md)).
+- Test observable behaviour, never private methods.
 - One scenario per test.
 
 ## Anchors
 
 - Markers: [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md) · [Value](/marker/tactical/value.md) · [DomainService](/marker/tactical/domainservice.md)
 - Rules: [Aggregate roots must not hold references to output ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- Book: [Domain-layer testing](/book/12-testing-strategy/domain-layer-testing.md) · [Testing pyramid](/book/12-testing-strategy/testing-pyramid.md)
 - The aggregate under test: [Add an aggregate](/recipe/add-an-aggregate.md) · [Add a value object](/recipe/add-a-value-object.md)
 - Testing the use case that orchestrates it: [Test a use case](/recipe/test-a-use-case.md)
 - Pitfall this guards against: [Anemic domain model](/pitfall/anemic-domain-model.md) — an anemic aggregate has no behaviour to test

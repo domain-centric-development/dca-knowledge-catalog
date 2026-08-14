@@ -26,7 +26,6 @@ Give a context a persistence port for operational data that has **no aggregate o
 - Markers: [Store](/marker/port-out/store.md) · [OutputPort](/marker/port-out/outputport.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Decision: [Repository or Store: which output port persists this](/decision/repository-vs-store.md)
 - Note: [The Store marker has no governing ArchUnit rules](/note/store-marker-has-no-governing-rules.md)
-- ADRs: [ADR-008 Repository Interfaces as Output Ports](/adr/adr-008-repository-interfaces-as-output-ports.md) · [ADR-004 Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md)
-- Book: [Stores: persistence for non-aggregate data](/book/06-application-layer/stores-persistence-for-non-aggregate-data.md) · [Outgoing Adapters](/book/07-adapter-layer/outgoing-adapters.md)
+- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - Sibling recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Pitfall: [A Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md)

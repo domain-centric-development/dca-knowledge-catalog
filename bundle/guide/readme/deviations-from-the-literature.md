@@ -11,7 +11,9 @@ DCA deliberately deviates from classic DDD literature in a few places. The devia
 
 ### Repository Interfaces in the Application Layer
 
-Classic DDD (Evans, Vernon, Millett/Tune) places repository interfaces in the domain layer. DCA places them in the application layer as **output ports**: the use case owns the contract for what it needs from the outside world, the domain stays free of persistence concerns entirely. This follows Hexagonal/Clean Architecture port ownership consistently. See [ADR-008 in the reference implementation](https://github.com/chbloemer/ai-architecture-sample/blob/main/docs/architecture/adr/adr-008-repository-interfaces-as-output-ports.md) for the full rationale and rejected alternatives.
+Classic DDD (Evans, Vernon, Millett/Tune) places repository interfaces in the domain layer. DCA places them in the application layer as **output ports**: the use case owns the contract for what it needs from the outside world, the domain stays free of persistence concerns entirely. This follows Hexagonal/Clean Architecture port ownership consistently.
+
+The rejected alternative is worth naming: keeping the interface in the domain layer means the domain declares what it wants from persistence, which reads as independence but is not. The signature — what can be looked up, by what, returning what — is shaped by the use cases that call it, so the domain would be declaring a contract on someone else's behalf and would have to change whenever a use case's needs change.
 
 ### Repository vs. Store
 
@@ -24,7 +26,3 @@ The literature knows only the Repository (one per aggregate root). DCA refines t
 ## Related markers
 
 - [Repository<T, ID>](/marker/port-out/repository.md)
-
-## Related ADRs
-
-- [ADR-008: Repository Interfaces as Output Ports in Application Layer](/adr/adr-008-repository-interfaces-as-output-ports.md)

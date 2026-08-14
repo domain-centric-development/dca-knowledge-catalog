@@ -38,6 +38,5 @@ Value Objects are the **default** — reach for a Value Object unless identity o
 
 - Markers: [Entity&lt;T, ID&gt;](/marker/tactical/entity.md) · [Value](/marker/tactical/value.md)
 - Rules: [Value Object classes should be final](/rule/tactical/value-object-classes-should-be-final-immutability.md) · [Value Object fields must be final](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md) · [Value Objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md) · [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md) · [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md)
-- ADRs: [ADR-009 Value Objects as Records](/adr/adr-009-value-objects-as-records.md) · [ADR-003 Aggregate Reference by ID](/adr/adr-003-aggregate-reference-by-id.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Common Patterns](/book/05-domain-layer/common-patterns.md)
+- Guide: [Layer elements](/guide/readme/elements.md)
 - Related pitfall: [Anemic domain model](/pitfall/anemic-domain-model.md)

@@ -31,5 +31,4 @@ One input port per use case, each extending `UseCase<Command|Query, Result>` wit
 ## Anchors
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- ADRs: [ADR-007 Hexagonal Architecture](/adr/adr-007-hexagonal-architecture.md) · [ADR-012 Use Case Input/Output Models](/adr/adr-012-use-case-input-output-models.md)
-- Book: [Use Case Pattern](/book/06-application-layer/use-case-pattern.md) · [Ports and Adapters](/book/06-application-layer/ports-adapters.md)
+- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md) · [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)

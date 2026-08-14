@@ -8,7 +8,7 @@ Carve out a new top-level context package with its own domain / application / ad
 
 ## Step 0 — decide (do this first)
 
-Classify the subdomain: **core** (full tactical set — rich model, ports & adapters), **supporting** (simpler layering, transaction script is legitimate), or **generic** (buy, don't build). The choice drives which rule subset applies — see [pattern style per subdomain](/decision/pattern-style-per-subdomain.md) and record it in an ADR ([ADR-025](/adr/adr-025-pattern-selection-per-subdomain.md), [How to write an ADR](/process/creating-an-adr.md)).
+Classify the subdomain: **core** (full tactical set — rich model, ports & adapters), **supporting** (simpler layering, transaction script is legitimate), or **generic** (buy, don't build). The choice drives which rule subset applies — see [pattern style per subdomain](/decision/pattern-style-per-subdomain.md) and record it in an ADR ([How to write an ADR](/process/creating-an-adr.md)).
 
 ## Steps
 
@@ -32,7 +32,5 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- ADRs: [ADR-011 Bounded Context Isolation](/adr/adr-011-bounded-context-isolation.md) · [ADR-025 Pattern Selection per Subdomain](/adr/adr-025-pattern-selection-per-subdomain.md) · [ADR-001 API/Web Package Separation](/adr/adr-001-api-web-package-separation.md)
-- Book: [Identifying context boundaries](/book/10-bounded-contexts/identifying-context-boundaries.md) · [Subdomain types and pattern selection](/book/10-bounded-contexts/subdomain-types-and-pattern-selection.md) · [Cross-context communication](/book/10-bounded-contexts/cross-context-communication.md)
-- Guide: [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Then bootstrap the shared kernel and rule suite first if this is a greenfield app: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md)

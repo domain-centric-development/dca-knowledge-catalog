@@ -34,7 +34,7 @@ public record {Name}{PastTense}Event(
 
 `IntegrationEvent` requires `eventId()` and `occurredOn()`. The contract identity —
 stable logical `name` + schema `version` — is declared in `@IntegrationEventType`
-([ADR-027](/adr/adr-027-integration-event-contract-identity.md)): bump `version` on a
+([Integration patterns](/guide/readme/integration-patterns.md)): bump `version` on a
 breaking change; ship it as a new class keeping the old `name`.
 
 ## `{Name}{PastTense}EventPublisher.java` — outgoing adapter
@@ -67,13 +67,12 @@ The publisher lives in the adapter layer (`adapter/outgoing/event/`) and does th
 domain→integration translation; the integration event record itself is the
 context's published language in `{context}.events`. A consumer in another context
 receives it — see the event-consumer template. For at-least-once delivery across
-a transaction boundary, see [ADR-026](/adr/adr-026-transactional-outbox-integration-events.md).
+a transaction boundary, see [Integration patterns](/guide/readme/integration-patterns.md).
 
 ## Realizes / governed by
 
 - Markers: [IntegrationEvent](/marker/tactical/integrationevent.md) · [DomainEvent](/marker/tactical/domainevent.md)
 - Rules: [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md) · [Integration Events must not have a version field](/rule/advanced/integration-events-must-not-have-a-version-field.md) · [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md) · [Integration Events should be immutable records](/rule/strategic/integration-events-should-be-immutable-records.md) · [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)
-- ADRs: [ADR-026 Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md) · [ADR-024 Interface Inversion for Spring Modulith Listeners](/adr/adr-024-interface-inversion-spring-modulith.md)
-- Book: [Events & Integration — Integration Events](/book/14-events-integration/integration-events.md) · [Domain Events vs. Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)
+- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md)
 - Decision: [Domain event vs. integration event](/decision/domain-event-vs-integration-event.md)
 - Recipe: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md) · [Add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md)

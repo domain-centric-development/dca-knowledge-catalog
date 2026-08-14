@@ -75,4 +75,4 @@ When the task sits on a fork, resolve the decision before picking the recipe:
 - Contracts: [marker index](/marker/index.md) — the interfaces a new application implements
 - Layer map: [Package structure](/guide/readme/java-package-structure.md)
 - What NOT to do: [pitfall index](/pitfall/index.md)
-- Concepts in depth: [book index](/book/index.md)
+- Concepts in depth: [guide index](/guide/index.md)

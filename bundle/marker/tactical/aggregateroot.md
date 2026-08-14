@@ -27,21 +27,8 @@ Marker interface for Aggregate Roots.
 - [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
 - [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
 
-## Referenced by ADRs
-
-- [ADR-002: Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- [ADR-004: Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md)
-- [ADR-005: Domain Events Publishing Strategy](/adr/adr-005-domain-events-publishing.md)
-- [ADR-008: Repository Interfaces as Output Ports in Application Layer](/adr/adr-008-repository-interfaces-as-output-ports.md)
-- [ADR-011: Bounded Context Isolation via Package Structure](/adr/adr-011-bounded-context-isolation.md)
-- [ADR-016: Shared Kernel Pattern for Cross-Context Value Objects](/adr/adr-016-shared-kernel-pattern.md)
-
 ## Discussed in
 
-- [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
-- [Complete Examples](/book/11-shared-kernel/complete-examples.md)
-- [Marker Interfaces](/book/11-shared-kernel/marker-interfaces.md)
-- [Key Differences](/book/clean-architecture-comparison/key-differences.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [ELEMENTS](/guide/readme/elements.md)

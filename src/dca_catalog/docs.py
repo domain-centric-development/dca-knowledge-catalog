@@ -1,12 +1,14 @@
-"""Extract Chapter/Guide + Section nodes from the book and the implementation guide.
+"""Extract Guide + Section nodes from the implementation guide.
 
-These two are the *main* body of the catalog; the marker/rule/ADR nodes are the
-concrete anchoring beneath them.
+The guide is the *main* body of the catalog; the marker and rule nodes are the
+concrete anchoring beneath it.
 
-Hybrid granularity: each markdown file becomes a container node (``Chapter`` for
-``dca-book/``, ``Guide`` for ``implementing-domain-centric-architecture/``) plus
+Hybrid granularity: each markdown file becomes a ``Guide`` container node plus
 one ``Section`` child node per ``##`` heading. Section bodies carry the **full
 verbatim text** so the bundle is self-contained.
+
+``_process_dir`` stays parameterised even with a single caller: it is the seam
+that made adding a second prose source free, and would be the seam again.
 """
 
 from __future__ import annotations
@@ -16,7 +18,6 @@ from pathlib import Path
 
 from .okf import Node, bundle_link, slugify
 
-BOOK_REL = "dca-book"
 GUIDE_REL = "implementing-domain-centric-architecture"
 
 # files that are meta/tooling, not knowledge content
@@ -134,7 +135,4 @@ def _process_dir(repo_root: Path, rel_dir: str, source: str, container_type: str
 
 
 def extract(repo_root: Path) -> list[Node]:
-    return (
-        _process_dir(repo_root, BOOK_REL, "book", "Chapter", "book")
-        + _process_dir(repo_root, GUIDE_REL, "guide", "Guide", "guide")
-    )
+    return _process_dir(repo_root, GUIDE_REL, "guide", "Guide", "guide")

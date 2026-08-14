@@ -31,4 +31,4 @@ Reach entities and value objects through their aggregate root's repository. For 
 
 - Rules: [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
 - Markers: [Repository&lt;T, ID&gt;](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md) · [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md)
-- Book: [Stores: persistence for non-aggregate data](/book/06-application-layer/stores-persistence-for-non-aggregate-data.md) · [Repository Pattern](/book/15-persistence-patterns/repository-pattern.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)

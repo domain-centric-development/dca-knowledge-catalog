@@ -77,7 +77,7 @@ tags: [guide, section]
 - Integration Events must be serializable (JSON, Protobuf, Avro)
 - Integration Events include: event ID, timestamp, correlation ID; the schema version and
   stable logical name are a **class property** via `@IntegrationEventType(name, version)` —
-  never a `version` data field on the instance (ADR-027)
+  never a `version` data field on the instance
 - Integration Events created by Event Mappers in outgoing adapters
 - Domain events never cross bounded context boundaries directly
 - Event Mapper converts domain event → integration event DTO
@@ -464,7 +464,3 @@ Customer Aggregate notified → Loyalty points updated
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
-
-## Related ADRs
-
-- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)

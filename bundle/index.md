@@ -1,11 +1,9 @@
 # DCA Knowledge Catalog
 
-Knowledge for building Domain-Centric Architecture applications. **Generated zone** (book, guide, marker, rule, adr, process) is derived from the sources and rebuilt on every run; the book and guide (full text) are the main body, the marker contracts, ArchUnit rules and ADRs the skeleton they anchor to. **Extensible zone** (recipe, decision, pitfall, template, note) is authored by a human or an LLM and survives regeneration. See `log.md`.
+Knowledge for building Domain-Centric Architecture applications. **Generated zone** (guide, marker, rule, process) is derived from the sources and rebuilt on every run; the implementation guide (full text) is the main body, the marker contracts and ArchUnit rules the skeleton it anchors to. **Extensible zone** (recipe, decision, pitfall, template, note) is authored by a human or an LLM and survives regeneration. See `log.md`.
 
 **Building something?** Start at [Build a DCA application](recipe/build-a-dca-application.md) — the task router mapping construction tasks to recipes.
 
-- [adr/](adr/index.md) (31) — Architecture Decision Records — the patterns used and why.
-- [book/](book/index.md) (417) — The comprehensive DCA guide — chapters and appendices (full text).
 - [decision/](decision/index.md) (17) — Decision guides for design forks (which pattern, when).
 - [guide/](guide/index.md) (114) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (24) — Architectural marker interfaces — the contracts a new application implements.

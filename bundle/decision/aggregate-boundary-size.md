@@ -37,7 +37,6 @@ Ask, in order:
 
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md) · [Id](/marker/tactical/id.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) · [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
-- ADRs: [ADR-003 Aggregate Reference by Identity Only](/adr/adr-003-aggregate-reference-by-id.md) · [ADR-004 Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Domain Layer — Common Patterns](/book/05-domain-layer/common-patterns.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

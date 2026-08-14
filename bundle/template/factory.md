@@ -51,7 +51,6 @@ constructed with plain `new` by the use case, not injected.
 
 - Marker: [Factory](/marker/tactical/factory.md)
 - Rules: [Factories should implement Factory Marker Interface](/rule/advanced/factories-should-implement-factory-marker-interface.md) · [Factories must reside in domain package](/rule/advanced/factories-must-reside-in-domain-package.md) · [Factories must not have Spring annotations](/rule/advanced/factories-must-not-have-spring-annotations.md) · [Factories should be stateless (only final fields for dependencies)](/rule/advanced/factories-should-be-stateless-only-final-fields-for-dependencies.md)
-- ADRs: [ADR-014 Factory Pattern for Complex Aggregate Creation](/adr/adr-014-factory-pattern.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
 - Decisions: [Factory or constructor](/decision/factory-vs-constructor.md)
 - Related template: [Aggregate root](/template/aggregate-root.md)

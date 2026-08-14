@@ -16,13 +16,11 @@ Should an outbox store domain events or integration events? The short answer: an
 
 ## State of the reference implementation
 
-The sample implements the **internal** registry only — surfaced read-only as `EventPublicationLogStore` / `JdbcEventPublicationLogStore` in the `backoffice` context (reads Spring Modulith's `EVENT_PUBLICATION` table). The **external** broker outbox is documented as the target pattern ([ADR-026](/adr/adr-026-transactional-outbox-integration-events.md)) but not yet built — no `@Externalized` / broker config. So storing **domain** events in the sample is correct: it is the internal registry, not a boundary-crossing outbox.
+The sample implements the **internal** registry only — surfaced read-only as `EventPublicationLogStore` / `JdbcEventPublicationLogStore` in the `backoffice` context (reads Spring Modulith's `EVENT_PUBLICATION` table). The **external** broker outbox is documented as the target pattern but not yet built — no `@Externalized` / broker config. So storing **domain** events in the sample is correct: it is the internal registry, not a boundary-crossing outbox.
 
 ## Anchors
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- ADRs: [ADR-026 Transactional Outbox](/adr/adr-026-transactional-outbox-integration-events.md) · [ADR-024 Interface Inversion](/adr/adr-024-interface-inversion-spring-modulith.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
-- Book: [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md) · [Transactional Outbox Pattern](/book/14-events-integration/common-patterns.md)
-- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Integration patterns](/guide/readme/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Layer rules](/guide/readme/rules.md)
 - Decision: [Event delivery: sync, async, and when you need an outbox](/decision/event-delivery-sync-async-and-outbox.md)
 - Pitfall: [Storing domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

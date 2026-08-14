@@ -31,5 +31,5 @@ Map at the edge. The use case returns a `Result` (application type, no domain ob
 
 - Rules: [HTTP response models must end with 'Response'](/rule/usecase/http-response-models-must-end-with-response-and-reside-in-adapter-incoming-package.md) · [DTOs must reside in portadapter package](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md) · [DTOs must not be used in the application layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
-- Book: [Mappers](/book/07-adapter-layer/mappers.md) · [Incoming Adapters](/book/07-adapter-layer/incoming-adapters.md)
+- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - Sibling pitfall: [DTO in the application layer](/pitfall/dto-in-application-layer.md)

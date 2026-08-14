@@ -1,16 +1,15 @@
 # DCA Knowledge Catalog
 
 An **[Open Knowledge Format](SPEC.md) (OKF)** bundle for Domain-Centric
-Architecture. Its **main body is the full text of the DCA book and the
-implementation guide**; that knowledge is *anchored* to the reference
-implementation's skeleton — the marker contracts you implement, the ArchUnit
-rules you must obey, and the ADRs (used patterns) behind them.
+Architecture. Its **main body is the full text of the implementation guide**;
+that knowledge is *anchored* to the reference implementation's skeleton — the
+marker contracts you implement and the ArchUnit rules you must obey.
 
 It is designed to be **consumed by an LLM / agentic coding factory**: point an
 agent at [`bundle/index.md`](bundle/index.md), give it a task ("add an aggregate
 root", "design a bounded context"), and it navigates the typed, cross-linked
-nodes — from a book/guide section down to the exact marker contract, the rules
-that govern it, and the decisions that justify them.
+nodes — from a guide section down to the exact marker contract and the rules
+that govern it.
 
 Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf).
 
@@ -18,35 +17,38 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 
 | Type | ~Count | Source | What it gives an agent |
 |------|-------|--------|------------------------|
-| `Chapter` | 32 | `dca-book/*.md` | a book chapter (container + sections) |
-| `Guide` | 13 | `implementing-domain-centric-architecture/*.md` | an implementation-guide doc |
-| `Section` | ~500 | `##` headings of the above | one concept, **full verbatim text** |
-| `Marker` | 22 | `sharedkernel/marker/**/*.java` | the contract/interface to implement |
-| `Rule` | 87 | `*ArchUnitTest.groovy` | the enforceable, machine-checkable architecture |
-| `ADR` | 26 | `docs/architecture/adr/adr-*.md` | the patterns used + rationale + consequences |
+| `Guide` | 10 | `implementing-domain-centric-architecture/*.md` | an implementation-guide doc |
+| `Section` | ~104 | `##` headings of the above | one concept, **full verbatim text** |
+| `Marker` | 24 | `sharedkernel/marker/**/*.java` | the contract/interface to implement |
+| `Rule` | 90 | `*ArchUnitTest.groovy` | the enforceable, machine-checkable architecture |
 | `Process` | 1 | `adr-template.md` | how to record a new decision |
-| `Recipe` `Decision` `Pitfall` `Template` `Note` | ~24 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
+| `Recipe` `Decision` `Pitfall` `Template` `Note` | ~69 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
+
+**Neither the book nor the sample's ADRs are in the bundle.** An ADR records a
+decision *one* project made — a reader building their own application has no
+`adr-030-…md` to open, so a citation would point at nothing. Knowledge worth
+keeping from either belongs in the implementation guide, which is a source.
 
 **Building something?** The bundle's entry point for construction tasks is the
 task router [`bundle/recipe/build-a-dca-application.md`](bundle/recipe/build-a-dca-application.md)
 — it maps "add an aggregate / use case / bounded context / …" to the recipe,
 its rule checklist, and its template.
 
-**Hybrid granularity:** each book/guide file is a container node plus one
-`Section` child per `##` heading (carrying the full text). Nodes cross-reference
-each other: sections link the markers/ADRs they mention; every marker lists the
-rules that *govern* it and the ADRs that *reference* it; every rule lists the
-markers it *applies to*; every ADR lists the rules that *enforce* it.
+**Hybrid granularity:** each guide file is a container node plus one `Section`
+child per `##` heading (carrying the full text). Nodes cross-reference each
+other: sections link the markers they mention; every marker lists the rules that
+*govern* it and the sections that *discuss* it; every rule lists the markers it
+*applies to*.
 
 **The skeleton layer is about the architecture, not the sample's domain.** The
 e-commerce domain model (Cart, Product, …) is deliberately excluded from the
-marker/rule/ADR nodes — only the contracts and the decisions that shape them.
+marker/rule nodes — only the contracts and the rules that shape them.
 
 ## Regenerate
 
-The `bundle/` has **two zones** (see `SPEC.md`). The **generated zone** (`book/ guide/
-marker/ rule/ adr/ process/`) is a derived artifact — **never hand-edit it**; edit the
-source (marker interfaces / ArchUnit tests / ADRs) and regenerate. The **extensible zone**
+The `bundle/` has **two zones** (see `SPEC.md`). The **generated zone** (`guide/
+marker/ rule/ process/`) is a derived artifact — **never hand-edit it**; edit the
+source (the guide / marker interfaces / ArchUnit tests) and regenerate. The **extensible zone**
 (`recipe/ decision/ pitfall/ template/ note/`) is authored by hand or by an LLM and
 **survives regeneration**.
 
@@ -60,11 +62,9 @@ PYTHONPATH=src python3 -m dca_catalog.lint        # health check (links, stale, 
 
 The run also mirrors the bundle into the dca-core plugin
 (`dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog/`) so the
-`/dca-knowledge` skill ships a vendored, always-fresh copy. Mirrors are
-**book-redacted by default** (the marketplace is public, the book is not):
-`book/` nodes keep metadata, description and graph links but lose their verbatim
-bodies. Skip mirroring with `--no-default-mirror`; add targets with
-`--mirror PATH`; tune with `--mirror-redact DIR|none`.
+`/dca-knowledge` skill ships a vendored, always-fresh copy. The mirror is
+verbatim — every node type in the bundle is public. Skip mirroring with
+`--no-default-mirror`; add targets with `--mirror PATH`.
 
 Output is deterministic (no timestamps) — same sources produce a byte-identical
 bundle, so `git diff bundle/` after a regenerate shows exactly what changed.
@@ -74,9 +74,9 @@ to `./bundle`).
 
 ## Add knowledge — the four ways
 
-1. **Source knowledge** (a pattern, rule, ADR, book chapter, guide doc): edit the
-   *source* — `dca-book/`, `implementing-domain-centric-architecture/`, the marker
-   interfaces or ArchUnit tests or ADRs in `ai-architecture-sample/` — then
+1. **Source knowledge** (a pattern, a rule, a guide doc): edit the
+   *source* — `implementing-domain-centric-architecture/`, the marker
+   interfaces or ArchUnit tests in `ai-architecture-sample/` — then
    `make generate && make lint && make test`. Never hand-edit the generated zone.
 2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`
    with frontmatter `type:` + `title:` + `tags:` (pick tags from the SPEC.md
@@ -145,12 +145,12 @@ Frontmatter (`type`, `tags`, `status`) is plain YAML, so Dataview queries work o
 ```
 dca-knowledge-catalog/
 ├── SPEC.md                  # OKF spec adopted for DCA (the 12 node types, tag taxonomy)
-├── src/dca_catalog/         # the generator (docs, markers, rules, adrs, linker, obsidian, lint)
+├── src/dca_catalog/         # the generator (docs, markers, rules, process, linker, obsidian, lint)
 ├── tests/                   # conformance tests
 ├── bundle/                  # the OKF knowledge graph (canonical)
 │   ├── index.md  log.md
-│   ├── book/  guide/        # GENERATED — full text: container + section nodes
-│   ├── marker/  rule/  adr/  process/   # GENERATED — the anchoring skeleton
+│   ├── guide/               # GENERATED — full text: container + section nodes
+│   ├── marker/  rule/  process/         # GENERATED — the anchoring skeleton
 │   └── recipe/  decision/  pitfall/  template/  note/   # AUTHORED — survives regeneration
 └── bundle-obsidian/         # gitignored Obsidian view (make obsidian / obsidian-import)
 ```

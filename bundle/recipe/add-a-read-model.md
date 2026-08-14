@@ -29,7 +29,5 @@ Build a view for a query without going through the full aggregate write journey.
 - Templates: [Enriched domain model](/template/enriched-domain-model.md) · [ViewModel](/template/view-model.md) · [REST resource](/template/rest-resource.md)
 - Decisions: [Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md) · [Cross-context communication](/decision/cross-context-communication.md)
 - Markers: [Value](/marker/tactical/value.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
-- ADRs: [ADR-021 Enriched Domain Model Pattern](/adr/adr-021-enriched-domain-model-pattern.md) · [ADR-022 ViewModel Pattern for Web Adapters](/adr/adr-022-viewmodel-pattern.md)
-- Book: [When to Use CQRS](/book/16-cqrs-patterns/when-to-use-cqrs.md) · [CQRS Levels](/book/16-cqrs-patterns/cqrs-levels.md) · [Read Model Projections](/book/16-cqrs-patterns/read-model-projections.md) · [Common Patterns — Enriched Read Model](/book/10-bounded-contexts/common-patterns.md)
-- Guide: [Integration Patterns](/guide/readme/integration-patterns.md)
+- Guide: [Integration Patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Related recipes: [Add a use case](/recipe/add-a-use-case.md) · [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

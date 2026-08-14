@@ -8,7 +8,7 @@
 - [14. Architecture Placement (DCA Pattern)](14-architecture-placement-dca-pattern.md) — New ports and use cases consistent with existing patterns:
 - [15. Must-Haves Checklist](15-must-haves-checklist.md) — [ ] Switch from HS256 to ES256 (asymmetric signing)
 - [16. Optional Enhancements](16-optional-enhancements.md) — [ ] Multi-level authentication (soft login / full login) with loginTyp claim
-- [17. Related Documents](17-related-documents.md) — for identity, session and renewal)
+- [17. Related Documents](17-related-documents.md) — 17. Related Documents
 - [2. Core Concepts: Two Separate Concerns](2-core-concepts-two-separate-concerns.md) — 2. Core Concepts: Two Separate Concerns
 - [3. Token Types and Their Roles](3-token-types-and-their-roles.md) — Purpose: persists an anonymous `UserId` so the shopping cart survives browser restarts without requiring an account. ...
 - [4. Token Lifetime Strategy](4-token-lifetime-strategy.md) — 4. Token Lifetime Strategy

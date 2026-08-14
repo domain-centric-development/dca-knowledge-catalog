@@ -228,7 +228,7 @@ com.company.project
 │   │   │   ├── IntegrationEvent.java
 │   │   │   │   public interface IntegrationEvent { UUID eventId(); Instant occurredOn(); }
 │   │   │   ├── IntegrationEventType.java
-│   │   │   │   @interface IntegrationEventType { String name(); int version() default 1; }  // contract identity as class property (ADR-027)
+│   │   │   │   @interface IntegrationEventType { String name(); int version() default 1; }  // contract identity as class property
 │   │   │   ├── DomainService.java
 │   │   │   │   public interface DomainService {}
 │   │   │   ├── Factory.java
@@ -256,7 +256,7 @@ com.company.project
 │   │           │   }
 │   │           ├── IntegrationEventPublisher.java
 │   │           │   public interface IntegrationEventPublisher extends OutputPort {
-│   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts (see ADR-026/027)
+│   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts
 │   │           │   }
 │   │           └── IdentityProvider.java  // With nested Identity and IdentityType interfaces
 │   └── domain
@@ -379,8 +379,3 @@ APPLICATION LAYER
 - [IntegrationEvent](/marker/tactical/integrationevent.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 - [Specification<T>](/marker/tactical/specification.md)
-
-## Related ADRs
-
-- [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
-- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)

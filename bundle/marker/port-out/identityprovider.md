@@ -18,6 +18,5 @@ Port for retrieving the current user's identity.
 
 ## Discussed in
 
-- [Base Port Interfaces](/book/11-shared-kernel/base-port-interfaces.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [ELEMENTS](/guide/readme/elements.md)

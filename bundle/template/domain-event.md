@@ -46,7 +46,7 @@ public void change(/* args */) {
 
 `registerEvent(...)` (from `BaseAggregateRoot`) queues the event. The use case
 then persists the aggregate and, only after a successful save, publishes and
-clears its events — see [ADR-005](/adr/adr-005-domain-events-publishing.md). To
+clears its events — see [Event publishing rules](/guide/readme/rules.md). To
 carry this fact to another context, an outgoing adapter translates it into an
 integration event (see the integration-event template).
 
@@ -54,7 +54,6 @@ integration event (see the integration-event template).
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)
 - Rules: [Domain Events must implement DomainEvent Marker Interface and be records](/rule/advanced/domain-events-must-implement-domainevent-marker-interface-and-be-records.md) · [Domain Events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md) · [Domain Events must not have Spring annotations](/rule/advanced/domain-events-must-not-have-spring-annotations.md) · [Domain Events must reside in domain package](/rule/advanced/domain-events-must-reside-in-domain-package.md) · [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)
-- ADRs: [ADR-006 Domain Events as Immutable Records](/adr/adr-006-domain-events-immutable-records.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
-- Book: [Events & Integration — Domain Events](/book/14-events-integration/domain-events.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Decision: [Domain event vs. integration event](/decision/domain-event-vs-integration-event.md)
 - Recipe: [Add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md)

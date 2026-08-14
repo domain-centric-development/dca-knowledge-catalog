@@ -64,6 +64,6 @@ field of an aggregate-root type; reference other aggregates by their Id.
 
 - Marker: [Entity<T, ID>](/marker/tactical/entity.md) · [Id](/marker/tactical/id.md)
 - Rules: [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md) · [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md) · [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md) · [Domain model classes must not have public setter methods](/rule/tactical/domain-model-classes-must-not-have-public-setter-methods.md)
-- Book: [Domain Layer — Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
+- Guide: [Layer elements](/guide/readme/elements.md)
 - Decision: [Entity vs. Value Object](/decision/entity-vs-value-object.md)
 - Recipe: [Add an aggregate](/recipe/add-an-aggregate.md)

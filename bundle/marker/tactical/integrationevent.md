@@ -19,20 +19,10 @@ Marker interface for Integration Events — adapter-layer DTOs published across 
 - [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md)
 - [Integration Events should be immutable records](/rule/strategic/integration-events-should-be-immutable-records.md)
 
-## Referenced by ADRs
-
-- [ADR-026: Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
-- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)
-
 ## Discussed in
 
-- [Outgoing Adapters](/book/07-adapter-layer/outgoing-adapters.md)
-- [Common Patterns](/book/14-events-integration/common-patterns.md)
-- [Complete Event Flow](/book/14-events-integration/complete-event-flow.md)
-- [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)
-- [Event Consumption](/book/14-events-integration/event-consumption.md)
-- [Integration Events](/book/14-events-integration/integration-events.md)
-- [Service Decomposition](/book/deployment-patterns/service-decomposition.md)
-- [Event-Driven Architecture in Spring Modulith](/book/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
+- [ELEMENTS](/guide/readme/elements.md)
+- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

@@ -9,11 +9,11 @@ Move an aggregate from in-memory storage to a relational database **without touc
 ## Steps
 
 1. **Leave the port and the domain alone** — `{Name}Repository` in `application/shared/` and the `{Name}` aggregate do not change. If you find yourself editing either to make JPA fit, stop: that leak defeats the point (see [framework-leak-in-domain](/pitfall/framework-leak-in-domain.md)).
-2. **Add a JPA entity** in `adapter/outgoing/persistence/jpa/` — a `@Entity` class distinct from the aggregate. Map aggregate parts as child tables cascaded from the root (`cascade = ALL`, `orphanRemoval = true`); embed value objects (`@Embeddable`) or flatten them to columns. Never cascade across an aggregate boundary. See [object-relational mapping](/book/15-persistence-patterns/object-relational-mapping.md).
+2. **Add a JPA entity** in `adapter/outgoing/persistence/jpa/` — a `@Entity` class distinct from the aggregate. Map aggregate parts as child tables cascaded from the root (`cascade = ALL`, `orphanRemoval = true`); embed value objects (`@Embeddable`) or flatten them to columns. Never cascade across an aggregate boundary.
 3. **Add a Spring Data interface** `SpringData{Name}Repository extends JpaRepository<{Name}JpaEntity, ...>` — it speaks entities and primitives, and stays behind the boundary (never injected into a use case).
 4. **Write the adapter** `Jpa{Name}RepositoryAdapter implements {Name}Repository`, from the [JPA repository adapter template](/template/jpa-repository-adapter.md). It owns the entity↔aggregate mapping and delegates persistence to the Spring Data interface. Keep the mapper pure — no business logic ([business-logic-in-adapter](/pitfall/business-logic-in-adapter.md)).
-5. **Select the adapter by configuration, not by code change** — the reference implementation marks the JPA adapter `@Primary` and guards the in-memory one with `@Profile("inmemory")`, so the wiring switches with a profile and the use cases never notice. Persistence stays explicit-`save()` (persistence-oriented, [ADR-004](/adr/adr-004-persistence-oriented-repository.md)), not a live-collection illusion.
-6. **Set transaction boundaries** — annotate the adapter (or the use case) `@Transactional`; use `readOnly = true` for finders. See [transaction management](/book/15-persistence-patterns/transaction-management.md).
+5. **Select the adapter by configuration, not by code change** — gate the two adapters on complementary profiles (`@Profile("!inmemory")` and `@Profile("inmemory")`), so exactly one bean exists and the use cases never notice. `@Primary` is the wrong tool here: it selects among *registered* beans, so it silently wins even when the profile says otherwise. Persistence stays explicit-`save()` (persistence-oriented, [Layer rules](/guide/readme/rules.md)), not a live-collection illusion.
+6. **Set transaction boundaries** — annotate the adapter (or the use case) `@Transactional`; use `readOnly = true` for finders.
 7. **Verify nothing above the port changed** — the existing use-case and domain tests must pass untouched; then `./gradlew test-architecture`.
 
 ## Rules to satisfy (build-time checklist)
@@ -31,8 +31,7 @@ Move an aggregate from in-memory storage to a relational database **without touc
 
 - Templates: [JPA repository adapter](/template/jpa-repository-adapter.md) · [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
 - Markers: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
-- ADRs: [ADR-004 Persistence-Oriented Repository](/adr/adr-004-persistence-oriented-repository.md) · [ADR-008 Repository Interfaces as Output Ports](/adr/adr-008-repository-interfaces-as-output-ports.md) · [ADR-025 Pattern Selection per Subdomain](/adr/adr-025-pattern-selection-per-subdomain.md)
-- Book: [JPA Repository Implementation](/book/15-persistence-patterns/jpa-repository-implementation.md) · [Object-Relational Mapping](/book/15-persistence-patterns/object-relational-mapping.md) · [Common Mistakes](/book/15-persistence-patterns/common-mistakes.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Pitfalls: [Framework leak in domain](/pitfall/framework-leak-in-domain.md) · [Business logic in adapter](/pitfall/business-logic-in-adapter.md)
 - The base recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md) — where the port and in-memory adapter come from
 - Decision: [Repository vs Store](/decision/repository-vs-store.md)

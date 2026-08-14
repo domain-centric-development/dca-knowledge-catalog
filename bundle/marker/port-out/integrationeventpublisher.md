@@ -15,7 +15,3 @@ Outbound port for publishing integration events across bounded-context boundarie
 ## Extends
 
 - [OutputPort](/marker/port-out/outputport.md)
-
-## Referenced by ADRs
-
-- [ADR-027: Integration-Event Contract Identity via @IntegrationEventType](/adr/adr-027-integration-event-contract-identity.md)

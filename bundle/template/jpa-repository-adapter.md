@@ -44,7 +44,7 @@ public class {Name}JpaEntity {
 }
 ```
 
-This class is a plain persistence structure: no invariants, no domain methods. Aggregate parts (child entities) cascade from the root with `orphanRemoval = true`; **never** cascade across an aggregate boundary. Value objects can be flattened to columns or mapped `@Embeddable` (see [object-relational mapping](/book/15-persistence-patterns/object-relational-mapping.md)).
+This class is a plain persistence structure: no invariants, no domain methods. Aggregate parts (child entities) cascade from the root with `orphanRemoval = true`; **never** cascade across an aggregate boundary. Value objects can be flattened to columns or mapped `@Embeddable`.
 
 ## `SpringData{Name}Repository.java` — Spring Data interface (outgoing adapter)
 
@@ -126,7 +126,7 @@ public class Jpa{Name}RepositoryAdapter implements {Name}Repository {
 }
 ```
 
-`@Repository` is Spring's stereotype on the *adapter* (a wired bean), never on the port. `@Primary` lets this bean win over an in-memory sibling when both are on the classpath (the reference implementation guards the in-memory one with `@Profile("inmemory")` and marks JPA `@Primary`). Transaction boundaries can also sit at the use-case level ([transaction management](/book/15-persistence-patterns/transaction-management.md)); reads use `readOnly = true`.
+`@Repository` is Spring's stereotype on the *adapter* (a wired bean), never on the port. Gate this adapter and its in-memory sibling on complementary profiles (`@Profile("!inmemory")` here, `@Profile("inmemory")` there) so exactly one bean exists — `@Primary` would select this one even under the in-memory profile, because it ranks *registered* beans rather than gating registration. Transaction boundaries can also sit at the use-case level; reads use `readOnly = true`.
 
 **Mapping keeps the domain persistence-free.** The aggregate carries no JPA annotations; the entity carries no invariants. If the aggregate has no setters (it usually shouldn't), reconstitution rebuilds it through its factory/constructor rather than mutating the entity. The mapper must contain *no* business logic — computing state during a save is a [business-logic-in-adapter](/pitfall/business-logic-in-adapter.md) smell. Putting `@Entity`/`jakarta.persistence` on the aggregate itself is a [framework-leak-in-domain](/pitfall/framework-leak-in-domain.md).
 
@@ -134,7 +134,6 @@ public class Jpa{Name}RepositoryAdapter implements {Name}Repository {
 
 - Marker: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
 - Rules: [Repository Interfaces should extend Repository Marker Interface](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md) · [Repository Interfaces must reside in application output port package](/rule/tactical/repository-interfaces-must-reside-in-application-output-port-package.md) · [Repository Implementations must reside in adapter.outgoing package](/rule/tactical/repository-implementations-must-reside-in-adapter-outgoing-package.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must return aggregate roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md) · [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/outgoing-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
-- ADRs: [ADR-008 Repository Interfaces as Output Ports](/adr/adr-008-repository-interfaces-as-output-ports.md) · [ADR-004 Persistence-Oriented Repository Pattern](/adr/adr-004-persistence-oriented-repository.md)
-- Book: [JPA Repository Implementation](/book/15-persistence-patterns/jpa-repository-implementation.md) · [Object-Relational Mapping](/book/15-persistence-patterns/object-relational-mapping.md) · [Transaction Management](/book/15-persistence-patterns/transaction-management.md)
+- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/readme/rules.md)
 - Sibling template: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
 - Recipe: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)

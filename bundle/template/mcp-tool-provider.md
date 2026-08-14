@@ -55,7 +55,6 @@ not an enforced ArchUnit rule** — hold it by discipline.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Rules: [Incoming adapters must only access their own bounded context](/rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md) · [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/incoming-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md) · [DTOs must reside in portadapter package (not in domain or application)](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md)
-- Book: [The Four Layers — Adapter Layer](/book/04-the-four-layers/adapter-layer.md) · [External Reference Implementation](/book/appendix-b-reference-implementation/external-reference-implementation.md)
-- Guide: [Java Package Structure](/guide/readme/java-package-structure.md)
+- Guide: [Java Package Structure](/guide/readme/java-package-structure.md) · [Layer structure](/guide/architecture-reference-guide/layer-structure.md)
 - Sibling template: [REST resource](/template/rest-resource.md)
 - Recipe: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

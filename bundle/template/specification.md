@@ -70,6 +70,5 @@ decision link.
 
 - Marker: [Specification<T>](/marker/tactical/specification.md)
 - Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md)
-- ADRs: [ADR-013 Specification Pattern for Business Rules](/adr/adr-013-specification-pattern.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- Book: [Specification Pattern](/book/11-shared-kernel/specification-pattern.md) · [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Decisions: [Specification or query method](/decision/specification-vs-query-method.md)

@@ -18,11 +18,11 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from . import adrs, docs, linker, markers, rules
+from . import docs, linker, markers, process, rules
 from .okf import Node, RESERVED
 
 # Generated zone — derived from the sources, wiped and rebuilt on every run.
-_GENERATED_DIRS = ("book", "guide", "marker", "rule", "adr", "process")
+_GENERATED_DIRS = ("guide", "marker", "rule", "process")
 
 # Extensible zone — authored (by a human or an LLM), survives regeneration.
 # Each entry: (dir, OKF node type, blurb). Node *files* are authored; their
@@ -37,11 +37,9 @@ _EXTENSIBLE_ZONE = (
 
 # Human-readable blurb per top-level category, shown in the root index.
 _CATEGORY_BLURB = {
-    "book": "The comprehensive DCA guide — chapters and appendices (full text).",
     "guide": "The compact implementation guide — patterns, governance, supplementary guides (full text).",
     "marker": "Architectural marker interfaces — the contracts a new application implements.",
     "rule": "ArchUnit rules — the enforceable, machine-checkable architecture.",
-    "adr": "Architecture Decision Records — the patterns used and why.",
     "process": "How-to processes for keeping the architecture's conventions.",
     **{name: blurb for name, _type, blurb in _EXTENSIBLE_ZONE},
 }
@@ -69,57 +67,11 @@ def _repo_root_default() -> Path:
 _DEFAULT_MIRROR_REL = "dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog"
 
 
-# Link-section headings emitted by the generator at the end of a node body —
-# preserved verbatim during redaction so the graph edges keep resolving.
-_LINK_HEADINGS = ("## Sections", "## Related markers", "## Related ADRs")
-
-_REDACT_NOTICE = (
-    "> **Full text not included in this public bundle.** This node keeps its metadata and\n"
-    "> graph links; the verbatim text lives in the non-public source (see `resource:`). Use\n"
-    "> an in-repo or privately vendored full catalog for deep quotes."
-)
-
-
-def _redact_node(text: str) -> str:
-    """Strip a node's verbatim body, keeping frontmatter, a one-line description
-    (already public via the directory index) and the trailing link sections."""
-    if not text.startswith("---"):
-        return text
-    head_end = text.find("\n---\n", 3)
-    if head_end == -1:
-        return text
-    front, body = text[: head_end + 5], text[head_end + 5 :]
-
-    # keep everything from the first link-section heading on
-    link_idx = len(body)
-    for heading in _LINK_HEADINGS:
-        idx = body.find(f"\n{heading}\n")
-        if idx != -1:
-            link_idx = min(link_idx, idx)
-    links = body[link_idx:].rstrip("\n")
-
-    prose = body[:link_idx]
-    description = next(
-        (ln.strip() for ln in prose.splitlines()
-         if ln.strip() and not ln.lstrip().startswith(("#", ">", "|", "`", "-", "*", "!"))),
-        "",
-    )
-    parts = [front.rstrip("\n"), ""]
-    if description:
-        parts += [description, ""]
-    parts.append(_REDACT_NOTICE)
-    if links:
-        parts += ["", links.lstrip("\n")]
-    return "\n".join(parts).rstrip("\n") + "\n"
-
-
-def _mirror(out: Path, dests: list[Path], redact_dirs: tuple[str, ...] = ()) -> None:
+def _mirror(out: Path, dests: list[Path]) -> None:
     """Replace each dest with a fresh copy of the canonical bundle at ``out``.
 
-    Nodes under ``redact_dirs`` (top-level bundle dirs) are copied with their
-    verbatim bodies stripped (frontmatter, description and link sections stay),
-    so mirrors meant for publication don't ship non-public full text. Reserved
-    files (``index.md``/``log.md``) are navigation and stay as-is.
+    No redaction: every node type in the bundle is public. The book used to need
+    stripping and no longer ships here at all.
     """
     for dest in dests:
         dest = dest.resolve()
@@ -129,14 +81,6 @@ def _mirror(out: Path, dests: list[Path], redact_dirs: tuple[str, ...] = ()) -> 
             shutil.rmtree(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(out, dest)
-        for d in redact_dirs:
-            directory = dest / d
-            if not directory.exists():
-                continue
-            for path in sorted(directory.rglob("*.md")):
-                if path.name in RESERVED:
-                    continue
-                path.write_text(_redact_node(path.read_text(encoding="utf-8")), encoding="utf-8")
 
 
 def _parse_front(text: str) -> tuple[dict, str]:
@@ -242,12 +186,12 @@ def _build_indexes(nodes: list[Node], extra_dirs: tuple[str, ...] = ()) -> dict[
         if d == "":
             lines.append(
                 "Knowledge for building Domain-Centric Architecture applications. "
-                "**Generated zone** (book, guide, marker, rule, adr, process) is derived "
-                "from the sources and rebuilt on every run; the book and guide (full text) "
-                "are the main body, the marker contracts, ArchUnit rules and ADRs the "
-                "skeleton they anchor to. **Extensible zone** (recipe, decision, pitfall, "
-                "template, note) is authored by a human or an LLM and survives "
-                "regeneration. See `log.md`."
+                "**Generated zone** (guide, marker, rule, process) is derived from the "
+                "sources and rebuilt on every run; the implementation guide (full text) "
+                "is the main body, the marker contracts and ArchUnit rules the skeleton "
+                "it anchors to. **Extensible zone** (recipe, decision, pitfall, template, "
+                "note) is authored by a human or an LLM and survives regeneration. "
+                "See `log.md`."
             )
             lines.append("")
             router = "recipe/build-a-dca-application.md"
@@ -287,17 +231,15 @@ def _log_md(counts: dict[str, int]) -> str:
         "",
         "## v0.1",
         "",
-        "Generated bundle: the DCA book and implementation guide (full text, as "
-        "Chapter/Guide containers + Section nodes), anchored to the reference "
-        "implementation's marker interfaces, ArchUnit rules and ADRs.",
+        "Generated bundle: the DCA implementation guide (full text, as Guide "
+        "containers + Section nodes), anchored to the reference implementation's "
+        "marker interfaces and ArchUnit rules.",
         "",
         "### Generated zone (rebuilt from sources)",
-        f"- Chapters (book): {counts.get('Chapter', 0)}",
         f"- Guides: {counts.get('Guide', 0)}",
         f"- Sections: {counts.get('Section', 0)}",
         f"- Markers: {counts.get('Marker', 0)}",
         f"- Rules: {counts.get('Rule', 0)}",
-        f"- ADRs: {counts.get('ADR', 0)}",
         f"- Process: {counts.get('Process', 0)}",
         "",
         "### Extensible zone (authored, preserved across regeneration)",
@@ -311,12 +253,12 @@ def _log_md(counts: dict[str, int]) -> str:
 def generate(repo_root: Path, out: Path) -> dict[str, int]:
     marker_nodes = markers.extract(repo_root)
     rule_nodes = rules.extract(repo_root)
-    adr_nodes = adrs.extract(repo_root)
+    process_nodes = process.extract(repo_root)
     doc_nodes = docs.extract(repo_root)
-    linker.link(marker_nodes, rule_nodes, adr_nodes)
-    linker.link_docs(doc_nodes, marker_nodes, rule_nodes, adr_nodes)
+    linker.link(marker_nodes, rule_nodes)
+    linker.link_docs(doc_nodes, marker_nodes)
 
-    nodes = marker_nodes + rule_nodes + adr_nodes + doc_nodes
+    nodes = marker_nodes + rule_nodes + process_nodes + doc_nodes
 
     paths = [n.path for n in nodes]
     if len(set(paths)) != len(paths):
@@ -374,33 +316,23 @@ def main(argv: list[str] | None = None) -> int:
         "--no-default-mirror", action="store_true",
         help="skip the vendored copy shipped with the dca-core plugin",
     )
-    parser.add_argument(
-        "--mirror-redact", action="append", default=None, metavar="DIR",
-        help="top-level bundle dir whose node bodies are stripped in mirrors "
-             "(repeatable; default: book — the book is not public). "
-             "Pass --mirror-redact none to disable.",
-    )
     args = parser.parse_args(argv)
     repo_root = args.repo_root.resolve()
     out = (args.out or (Path(__file__).resolve().parents[2] / "bundle")).resolve()
     counts = generate(repo_root, out)
     total = sum(counts.values())
     print(f"Generated {total} nodes -> {out}")
-    for kind in ("Chapter", "Guide", "Section", "Marker", "Rule", "ADR", "Process"):
+    for kind in ("Guide", "Section", "Marker", "Rule", "Process"):
         print(f"  {kind}: {counts.get(kind, 0)}")
 
     mirrors = list(args.mirror)
     if not args.no_default_mirror:
         mirrors.append(repo_root / _DEFAULT_MIRROR_REL)
     mirrors = [m for m in mirrors if m.resolve() != out]
-    redact = tuple(args.mirror_redact) if args.mirror_redact is not None else ("book",)
-    if redact == ("none",):
-        redact = ()
     if mirrors:
-        _mirror(out, mirrors, redact_dirs=redact)
+        _mirror(out, mirrors)
         for m in mirrors:
-            suffix = f" (redacted: {', '.join(redact)})" if redact else ""
-            print(f"Mirrored -> {m}{suffix}")
+            print(f"Mirrored -> {m}")
     return 0
 
 

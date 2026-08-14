@@ -38,8 +38,7 @@ A quick tell: if you are copy-pasting the same multi-step assembly into several 
 
 - Markers: [Factory](/marker/tactical/factory.md) · [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Id](/marker/tactical/id.md)
 - Rules: [Factories should implement Factory Marker Interface](/rule/advanced/factories-should-implement-factory-marker-interface.md) · [Factories must reside in domain package](/rule/advanced/factories-must-reside-in-domain-package.md) · [Factories should be stateless (only final fields for dependencies)](/rule/advanced/factories-should-be-stateless-only-final-fields-for-dependencies.md) · [Factories must not have Spring annotations](/rule/advanced/factories-must-not-have-spring-annotations.md) · [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md)
-- ADRs: [ADR-014 Factory Pattern for Complex Aggregate Creation](/adr/adr-014-factory-pattern.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md)
 - Template: [Factory skeleton](/template/factory.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

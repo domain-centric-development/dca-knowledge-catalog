@@ -17,12 +17,12 @@ A single use case that loads two aggregate roots, mutates both, and saves both i
 
 - [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) — the no-direct-reference rule; if roots can't hold each other, one operation shouldn't be co-mutating both either.
 - [Aggregate Roots must not hold references to repositories or other output ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md) — an aggregate can't reach out to load and change a second root; it changes only its own state.
-- [ADR-005: Domain Events Publishing Strategy](/adr/adr-005-domain-events-publishing.md) — aggregates register events during mutation and publish after persistence, so the second aggregate reacts *after* the first commits, not within the same transaction.
-- [ADR-003: Aggregate Reference by Identity Only](/adr/adr-003-aggregate-reference-by-id.md) — roots reference each other by ID, reinforcing one root per transaction.
+- [Event publishing rules](/guide/readme/rules.md) — aggregates register events during mutation and publish after persistence, so the second aggregate reacts *after* the first commits, not within the same transaction.
+- [Aggregate rules](/guide/readme/rules.md) — roots reference each other by ID, reinforcing one root per transaction.
 
 ## Do instead
 
-Change one aggregate per transaction. Let it raise a domain event on commit; a handler (in-process listener, or another context's consumer) loads the second aggregate and changes it in its own transaction — eventual consistency. When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare domain service (see ADR-010), but the default is one write per transaction.
+Change one aggregate per transaction. Let it raise a domain event on commit; a handler (in-process listener, or another context's consumer) loads the second aggregate and changes it in its own transaction — eventual consistency. When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare [domain service](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md), but the default is one write per transaction.
 
 `order.confirm()` → `OrderConfirmed` → handler → `inventory.reserve()` in a separate transaction.
 
@@ -32,6 +32,5 @@ Change one aggregate per transaction. Let it raise a domain event on commit; a h
 ## Anchors
 
 - Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) · [Aggregate Roots must not hold references to repositories or other output ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- ADRs: [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md) · [ADR-003 Aggregate Reference by Identity](/adr/adr-003-aggregate-reference-by-id.md) · [ADR-010 Domain Services for Multi-Aggregate Operations](/adr/adr-010-domain-services-multi-aggregate.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Pure domain services](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md)
-- Book: [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)

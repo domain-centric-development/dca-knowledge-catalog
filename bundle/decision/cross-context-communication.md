@@ -25,7 +25,7 @@ The provider publishes an **Open Host Service**: a REST API (`adapter/incoming/a
 
 - **When:** the consumer needs data to proceed; immediate consistency; a query with a caller waiting for the answer.
 - Provider marker: [@OpenHostService](/marker/strategic/openhostservice.md) · consumer port: [OutputPort](/marker/port-out/outputport.md)
-- Governed by [ADR-019 Open Host Service Pattern](/adr/adr-019-open-host-service-pattern.md)
+- Governed by [Open Host Service pattern](/guide/readme/integration-patterns.md)
 
 ### Synchronous call through a domain gateway / anti-corruption layer
 
@@ -48,8 +48,6 @@ The provider raises a `DomainEvent` internally; an ACL translates it to a versio
 
 - Markers: [@OpenHostService](/marker/strategic/openhostservice.md) · [OutputPort](/marker/port-out/outputport.md) · [DomainGateway](/marker/tactical/domaingateway.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
 - Rules: [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md) · [Bounded contexts must not directly access each other in the application layer](/rule/strategic/bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md) · [Event listeners consuming integration events should use an ACL](/rule/strategic/event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md)
-- ADRs: [ADR-019 Open Host Service Pattern](/adr/adr-019-open-host-service-pattern.md) · [ADR-011 Bounded Context Isolation](/adr/adr-011-bounded-context-isolation.md) · [ADR-026 Transactional Outbox](/adr/adr-026-transactional-outbox-integration-events.md)
-- Book: [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md) · [Context Relationships](/book/10-bounded-contexts/context-relationships.md) · [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)
-- Guide: [Integration Patterns](/guide/readme/integration-patterns.md)
+- Guide: [Integration Patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Recipes: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)
 - Related decisions: [Event delivery: sync, async, and when you need an outbox](/decision/event-delivery-sync-async-and-outbox.md) · [Domain event vs integration event](/decision/domain-event-vs-integration-event.md)

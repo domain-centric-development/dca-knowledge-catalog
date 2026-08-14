@@ -40,6 +40,6 @@ A quick tell: if removing the check would let malformed JSON through → adapter
 
 - Markers: [IdentityProvider](/marker/port-out/identityprovider.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
-- Book: [Security by Layer](/book/18-security-patterns/security-by-layer.md) · [Input Validation](/book/18-security-patterns/input-validation.md) · [Authorization Patterns](/book/18-security-patterns/authorization-patterns.md) · [Common Mistakes](/book/18-security-patterns/common-mistakes.md)
+- Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Related decision: [Where does the logic live](/decision/where-does-the-logic-live.md)
 - Related pitfalls: [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [Business logic in an adapter](/pitfall/business-logic-in-adapter.md)

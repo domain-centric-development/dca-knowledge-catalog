@@ -12,7 +12,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 
 ## Steps
 
-1. **Model it as a record** implementing `Value`, in the owning aggregate's `domain/{concept}/` package (or the shared kernel if it is genuinely universal — [ADR-016](/adr/adr-016-shared-kernel-pattern.md)). Generate from the [value-object template](/template/value-object.md).
+1. **Model it as a record** implementing `Value`, in the owning aggregate's `domain/{concept}/` package (or the shared kernel if it is genuinely universal — [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)). Generate from the [value-object template](/template/value-object.md).
 2. **Validate in the compact constructor** — reject invalid state at construction so an instance is always valid; throw on bad input rather than storing it.
 3. **Keep it immutable** — records give you final fields and value equality for free. No setters; derive new values by returning new instances.
 4. **Name from the ubiquitous language** — no technical suffixes (`Manager`, `Helper`, `Util`, `Impl`) and no primitive obsession (wrap the primitive, don't pass a bare `String`).
@@ -33,6 +33,5 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 - Template: [Value object skeleton](/template/value-object.md)
 - Decision: [Entity vs. value object](/decision/entity-vs-value-object.md)
 - Marker: [Value](/marker/tactical/value.md)
-- ADRs: [ADR-009 Value Objects as Records](/adr/adr-009-value-objects-as-records.md) · [ADR-016 Shared Kernel Pattern](/adr/adr-016-shared-kernel-pattern.md)
-- Book: [Tactical building blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Shared value objects](/book/11-shared-kernel/shared-value-objects.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Used inside an [aggregate](/recipe/add-an-aggregate.md)

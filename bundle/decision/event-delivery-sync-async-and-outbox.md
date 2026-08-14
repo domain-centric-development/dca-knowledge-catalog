@@ -38,7 +38,5 @@ Crossing the boundary forces the translation: a cross-context consumer needs a s
 ## Anchors
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- ADRs: [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md) · [ADR-024 Interface Inversion (SM listeners)](/adr/adr-024-interface-inversion-spring-modulith.md) · [ADR-026 Transactional Outbox](/adr/adr-026-transactional-outbox-integration-events.md)
-- Book: [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md) · [Domain Events — when durable delivery is needed](/book/14-events-integration/domain-events.md) · [Transactional Outbox Pattern](/book/14-events-integration/common-patterns.md)
-- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Layer rules](/guide/readme/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Related: [Note: domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)

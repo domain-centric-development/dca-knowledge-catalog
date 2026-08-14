@@ -20,13 +20,13 @@ Marker for Value.
 
 ## Discussed in
 
-- [Step 2: Domain Layer - Value Objects](/book/03-getting-started/step-2-domain-layer-value-objects.md)
-- [Common Patterns](/book/05-domain-layer/common-patterns.md)
-- [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
-- [Outgoing Adapters](/book/07-adapter-layer/outgoing-adapters.md)
-- [Shared Value Objects](/book/11-shared-kernel/shared-value-objects.md)
-- [Beginner Path (Weeks 1-4)](/book/appendix-c-learning-path/beginner-path-weeks-1-4.md)
+- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
+- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
+- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [16. Optional Enhancements](/guide/jwt-implementation-guide/16-optional-enhancements.md)
+- [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
+- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

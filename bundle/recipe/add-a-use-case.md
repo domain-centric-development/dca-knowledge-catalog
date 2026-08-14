@@ -12,7 +12,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 2. **Pick write or read** — a write takes a `{Name}Command`; a read takes a `{Name}Query`.
 3. **Generate the four files** from the [use-case template](/template/use-case.md): `{Name}InputPort`, `{Name}Command`/`{Name}Query`, `{Name}Result`, `{Name}UseCase`.
 4. **Declare output ports** the use case needs (repositories, publishers) as constructor parameters — interfaces only, defined in `application/shared/` or the marker package; never reference adapters.
-5. **Implement `execute`** — load aggregate(s) via ports, run business logic *on the aggregate* (not in the service), persist, then publish + clear domain events for writes (see [ADR-005](/adr/adr-005-domain-events-publishing.md)), map to `{Name}Result`.
+5. **Implement `execute`** — load aggregate(s) via ports, run business logic *on the aggregate* (not in the service), persist, then publish + clear domain events for writes, map to `{Name}Result`.
 6. **Expose it** from an incoming adapter (`*Resource`/`*PageController`) that maps `{Name}Result` → a `*Response` DTO at the edge.
 7. **Verify** — run `./gradlew test-architecture`; the rules below are checked.
 
@@ -30,7 +30,6 @@ Add one application-layer use case (a single intention: place an order, add an i
 
 - Template: [Use case skeleton](/template/use-case.md)
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
-- ADRs: [ADR-020 Result naming](/adr/adr-020-use-case-result-naming.md) · [ADR-008 Repository interfaces as output ports](/adr/adr-008-repository-interfaces-as-output-ports.md)
-- Book: [Application Layer — Commands and Queries](/book/06-application-layer/commands-and-queries.md) · [Ports and Adapters](/book/06-application-layer/ports-adapters.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/readme/elements.md)
 - If the use case must notify another context: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)
 - Pitfall: [The god port](/pitfall/god-port.md) — one InputPort per use case, never one fat interface for many

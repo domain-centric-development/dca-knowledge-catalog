@@ -39,7 +39,6 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md)
 - Rules: [Bounded contexts must not directly access each other in the application layer](/rule/strategic/bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md)
-- ADRs: [ADR-011 Bounded Context Isolation](/adr/adr-011-bounded-context-isolation.md) · [ADR-025 Pattern Selection per Subdomain](/adr/adr-025-pattern-selection-per-subdomain.md)
-- Book: [Identifying Context Boundaries](/book/10-bounded-contexts/identifying-context-boundaries.md) · [When to Split Contexts](/book/10-bounded-contexts/when-to-split-contexts.md) · [Subdomain Types and Pattern Selection](/book/10-bounded-contexts/subdomain-types-and-pattern-selection.md)
+- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Recipes: [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Related decisions: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) · [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)

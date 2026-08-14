@@ -28,7 +28,6 @@ Define the use case's input and output as its **own** models — immutable `Comm
 
 ## Anchors
 
-- ADRs: [ADR-012 Use Case Input/Output Models](/adr/adr-012-use-case-input-output-models.md) · [ADR-020 Use Case Result Naming](/adr/adr-020-use-case-result-naming.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
 - Markers: [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Book: [DTOs and Results](/book/06-application-layer/dtos-and-results.md) · [Commands and Queries](/book/06-application-layer/commands-and-queries.md)
 - Related pitfall: [Framework leak in the domain layer](/pitfall/framework-leak-in-domain.md)

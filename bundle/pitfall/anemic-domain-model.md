@@ -29,7 +29,6 @@ Put the behaviour where the data is. Expose intention-revealing methods that mut
 
 ## Anchors
 
-- ADRs: [ADR-021 Enriched Domain Model Pattern](/adr/adr-021-enriched-domain-model-pattern.md)
+- Guide: [Layer elements](/guide/readme/elements.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
-- Book: [Domain Layer — Common Mistakes](/book/05-domain-layer/common-mistakes.md) · [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

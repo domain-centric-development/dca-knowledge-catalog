@@ -43,6 +43,6 @@ instead of a bounded context's `domain/` package.
 
 - Marker: [Value](/marker/tactical/value.md)
 - Rules: [Value Object classes should be final (immutability)](/rule/tactical/value-object-classes-should-be-final-immutability.md) · [Value Object fields must be final (deep immutability)](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md) · [Value Objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md) · [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- Book: [Domain Layer — Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md)
+- Guide: [Layer elements](/guide/readme/elements.md)
 - Decision: [Entity vs. Value Object](/decision/entity-vs-value-object.md)
 - Recipe: [Add a value object](/recipe/add-a-value-object.md)

@@ -70,7 +70,6 @@ differs from yours, an [anti-corruption layer](/recipe/add-an-anti-corruption-la
 
 - Marker: [@OpenHostService](/marker/strategic/openhostservice.md)
 - Rules: [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-reside-in-api-or-adapter-incoming-openhost-packages.md) · [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
-- ADRs: [ADR-019 Open Host Service Pattern for Cross-Context Communication](/adr/adr-019-open-host-service-pattern.md)
-- Book: [Context Relationships](/book/10-bounded-contexts/context-relationships.md) · [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md)
+- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Decisions: [Cross-context communication: synchronous call or integration event](/decision/cross-context-communication.md)
 - Recipe: [Expose an Open Host Service](/recipe/expose-an-open-host-service.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)

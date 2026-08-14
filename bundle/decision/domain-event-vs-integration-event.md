@@ -35,6 +35,5 @@ Delivery (sync vs async, and whether you need an outbox) is a **separate** quest
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
 - Rules: [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md) · [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md) · [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md)
-- ADRs: [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md) · [ADR-006 Domain Events as Immutable Records](/adr/adr-006-domain-events-immutable-records.md) · [ADR-026 Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
-- Book: [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Related: [Event delivery: sync, async, and outbox](/decision/event-delivery-sync-async-and-outbox.md) · [Pitfall: storing raw domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

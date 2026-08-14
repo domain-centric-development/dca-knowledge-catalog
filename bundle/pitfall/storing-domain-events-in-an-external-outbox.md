@@ -28,7 +28,7 @@ Forcing every domain event through an external outbox at all. Most domain events
 ## Anchors
 
 - Forbidden by intent of: [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md) · [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md)
-- Decision recorded in: [ADR-026 Transactional Outbox for Integration Events](/adr/adr-026-transactional-outbox-integration-events.md)
+- Grounded in: [Integration patterns](/guide/readme/integration-patterns.md)
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- Book: [Transactional Outbox Pattern](/book/14-events-integration/common-patterns.md) · [Domain Events vs Integration Events](/book/14-events-integration/domain-events-vs-integration-events.md)
+- Guide: [Integration patterns](/guide/readme/integration-patterns.md)
 - Note: [Domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)

@@ -67,7 +67,7 @@ public class {Name}UseCase implements {Name}InputPort {
     public {Name}Result execute({Name}Command input) {
         // 1. load aggregate(s) via output ports
         // 2. apply business rules on the aggregate (logic lives in the domain)
-        // 3. save, then publish + clear domain events (writes) — see ADR-005
+        // 3. save, then publish + clear domain events (writes)
         // 4. map to {Name}Result
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -77,6 +77,5 @@ public class {Name}UseCase implements {Name}InputPort {
 ## Realizes / governed by
 
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
-- ADRs: [ADR-020 Result naming](/adr/adr-020-use-case-result-naming.md) · [ADR-005 Domain Events Publishing](/adr/adr-005-domain-events-publishing.md)
-- Book: [Application Layer — Commands and Queries](/book/06-application-layer/commands-and-queries.md) · [DTOs and Results](/book/06-application-layer/dtos-and-results.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
 - Recipe: [Add a use case](/recipe/add-a-use-case.md)

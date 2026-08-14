@@ -49,12 +49,13 @@ def test_counts(bundle: Path):
     # skeleton from the sample app — exact (regression guard)
     assert types["Marker"] == 24
     assert types["Rule"] == 90
-    assert types["ADR"] == 31
     assert types["Process"] == 1
-    # book + guide full text — lower bounds (content evolves)
-    assert types.get("Chapter", 0) >= 25
+    # the book and the sample's ADRs are deliberately not in the bundle
+    assert "Chapter" not in types
+    assert "ADR" not in types
+    # guide full text — lower bounds (content evolves)
     assert types.get("Guide", 0) >= 10
-    assert types.get("Section", 0) >= 300
+    assert types.get("Section", 0) >= 100
 
 
 def test_every_concept_has_nonempty_type(bundle: Path):
@@ -73,12 +74,9 @@ def test_required_fields_per_type(bundle: Path):
             assert fm.get("rule"), f"{p} rule missing rule"
             assert fm.get("constraint"), f"{p} rule missing constraint"
             assert fm.get("enforced_by"), f"{p} rule missing enforced_by"
-        elif t == "ADR":
-            assert fm.get("pattern"), f"{p} adr missing pattern"
-            assert fm.get("status"), f"{p} adr missing status"
-        elif t in ("Chapter", "Guide", "Section"):
+        elif t in ("Guide", "Section"):
             assert fm.get("title"), f"{p} {t} missing title"
-            assert fm.get("source") in ("book", "guide"), f"{p} {t} bad source"
+            assert fm.get("source") == "guide", f"{p} {t} bad source"
 
 
 def test_reserved_indexes_present(bundle: Path):
@@ -91,9 +89,9 @@ def test_reserved_indexes_present(bundle: Path):
 
 
 def test_bundle_relative_links_resolve(bundle: Path):
-    # Only validate links into our own top-level dirs; copied book/guide prose may
+    # Only validate links into our own top-level dirs; copied guide prose may
     # carry unrelated absolute links that are not part of the OKF graph.
-    prefixes = ("/book/", "/guide/", "/marker/", "/rule/", "/adr/", "/process/")
+    prefixes = ("/guide/", "/marker/", "/rule/", "/process/")
     link_re = re.compile(r"\]\((/[^)]+)\)")
     broken = []
     for p in bundle.rglob("*.md"):
@@ -101,6 +99,18 @@ def test_bundle_relative_links_resolve(bundle: Path):
             if target.startswith(prefixes) and not (bundle / target.lstrip("/")).exists():
                 broken.append((str(p.relative_to(bundle)), target))
     assert not broken, f"broken bundle-relative links: {broken}"
+
+
+def test_no_links_into_removed_zones(bundle: Path):
+    """The resolve check above only sees prefixes it knows about, so a link into
+    a dir that left ``_GENERATED_DIRS`` would be dangling *and* invisible."""
+    gone = []
+    for p in bundle.rglob("*.md"):
+        text = p.read_text(encoding="utf-8")
+        for prefix in ("](/book/", "](/adr/"):
+            if prefix in text:
+                gone.append((str(p.relative_to(bundle)), prefix))
+    assert not gone, f"links into removed zones: {gone}"
 
 
 def test_extensible_dirs_scaffolded(bundle: Path):
@@ -155,7 +165,7 @@ def test_lint_catches_problems(tmp_path):
 
 
 def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
-    graph_dirs = ("book", "guide", "marker", "rule", "adr", "process",
+    graph_dirs = ("guide", "marker", "rule", "process",
                   "recipe", "decision", "pitfall", "template", "note")
     leading = re.compile(r"\]\((/(?:" + "|".join(graph_dirs) + r")/[^)]+)\)")
 
@@ -169,7 +179,7 @@ def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
     obsidian.export(bundle, out)
 
     # a generated node with cross-links (present in the fixture build)
-    node_rel = "adr/adr-026-transactional-outbox-integration-events.md"
+    node_rel = "marker/port-out/repository.md"
     # canonical bundle keeps OKF leading-slash links (export is non-destructive)
     assert leading.search((bundle / node_rel).read_text())
 
@@ -179,7 +189,7 @@ def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
 
     # spot-check: that node's rewritten graph links resolve on disk
     node = out / node_rel
-    rel = re.compile(r"\]\((\.\./(?:marker|rule|process)/[^)]+\.md)\)")
+    rel = re.compile(r"\]\(((?:\.\./)+(?:guide|marker|rule|process)/[^)]+\.md)\)")
     targets = rel.findall(node.read_text(encoding="utf-8"))
     assert targets, "expected rewritten relative graph links"
     for target in targets:
@@ -191,7 +201,7 @@ def test_marker_discussed_in(bundle: Path):
     # reverse edge: markers link the sections that primarily discuss them
     text = (bundle / "marker" / "port-out" / "repository.md").read_text(encoding="utf-8")
     assert "## Discussed in" in text
-    links = re.findall(r"\]\((/(?:book|guide)/[^)]+\.md)\)",
+    links = re.findall(r"\]\((/guide/[^)]+\.md)\)",
                        text.split("## Discussed in", 1)[1])
     assert 0 < len(links) <= 10, f"expected 1..10 discussed-in links, got {len(links)}"
     for target in links:
@@ -239,7 +249,7 @@ def test_obsidian_import_authored_edit(bundle: Path, tmp_path):
     # authored in the vault: wikilink + relative link + missing-type reject
     (vault / "note" / "from-vault.md").write_text(
         "---\ntype: Note\ntitle: \"From Vault\"\ntags: [note]\n---\n\n"
-        "See [[usecase|the marker]] and [adr](../adr/index.md).\n",
+        "See [[usecase|the marker]] and [process](../process/index.md).\n",
         encoding="utf-8",
     )
     (vault / "note" / "no-type.md").write_text(
@@ -253,7 +263,7 @@ def test_obsidian_import_authored_edit(bundle: Path, tmp_path):
 
     imported = (b / "note" / "from-vault.md").read_text(encoding="utf-8")
     assert "[the marker](/marker/port-in/usecase.md)" in imported  # wikilink converted
-    assert "](/adr/index.md)" in imported  # relative -> bundle-relative
+    assert "](/process/index.md)" in imported  # relative -> bundle-relative
     assert changed == 1
     assert not (b / "note" / "no-type.md").exists()
     assert any("no-type.md" in m and "REJECTED" in m for m in problems)
@@ -293,32 +303,6 @@ def test_lint_flags_unknown_tag(tmp_path):
     findings = lint.lint(b, REPO_ROOT)
     assert any(k == "unknown-tag" and "made-up-synonym" in d for _s, k, _r, d in findings)
     assert not any(k == "unknown-tag" and "'note'" in d for _s, k, _r, d in findings)
-
-
-def test_mirror_redacts_book_bodies(bundle: Path, tmp_path):
-    dest = tmp_path / "mirror"
-    generate._mirror(bundle, [dest], redact_dirs=("book",))
-
-    # a book section: verbatim body gone, frontmatter + description + links stay
-    src_rel = "book/06-application-layer/stores-persistence-for-non-aggregate-data.md"
-    original = (bundle / src_rel).read_text(encoding="utf-8")
-    redacted = (dest / src_rel).read_text(encoding="utf-8")
-    assert "Full text not included" in redacted
-    assert len(redacted) < len(original) / 2
-    assert redacted.startswith("---\ntype: Section")
-    assert "resource:" in redacted
-    # graph edges preserved
-    for heading in ("## Related markers",):
-        if heading in original:
-            assert heading in redacted
-    # the redacted body must not contain the full prose (spot check a mid-file line)
-    assert "record LoginAttempt" not in redacted
-
-    # guide is public — mirrored verbatim
-    guide_rel = "guide/readme/java-package-structure.md"
-    assert (dest / guide_rel).read_text(encoding="utf-8") == (bundle / guide_rel).read_text(encoding="utf-8")
-    # navigation stays intact
-    assert (dest / "book" / "index.md").read_text(encoding="utf-8") == (bundle / "book" / "index.md").read_text(encoding="utf-8")
 
 
 def test_idempotent(tmp_path):

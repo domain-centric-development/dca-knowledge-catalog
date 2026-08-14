@@ -30,8 +30,7 @@ Either way the foreign model stops at the boundary; only a translated, owned rep
 
 ## Anchors
 
-- ADRs: [ADR-011 Bounded Context Isolation via Package Structure](/adr/adr-011-bounded-context-isolation.md) · [ADR-019 Open Host Service Pattern](/adr/adr-019-open-host-service-pattern.md)
+- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [IntegrationEvent](/marker/tactical/integrationevent.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- Book: [Cross-Context Communication](/book/10-bounded-contexts/cross-context-communication.md) · [Bounded Contexts — Common Mistakes](/book/10-bounded-contexts/common-mistakes.md)
 - Related pitfall: [Cyclic module dependency](/pitfall/cyclic-module-dependency.md) — the structural failure when this raw import goes both ways between two contexts
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

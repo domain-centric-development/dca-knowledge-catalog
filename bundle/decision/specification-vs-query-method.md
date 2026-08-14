@@ -38,8 +38,7 @@ A quick tell: if the same rule appears in a use-case guard *and* in a filter *an
 
 - Markers: [Specification&lt;T&gt;](/marker/tactical/specification.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md) · [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
-- ADRs: [ADR-013 Specification Pattern for Business Rules](/adr/adr-013-specification-pattern.md) · [ADR-002 Framework-Independent Domain Layer](/adr/adr-002-framework-independent-domain.md)
-- Book: [Specification Pattern](/book/11-shared-kernel/specification-pattern.md) · [Tactical Building Blocks](/book/05-domain-layer/tactical-building-blocks.md) · [Repository Interfaces](/book/06-application-layer/repository-interfaces.md)
+- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Recipes: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Template: [Specification skeleton](/template/specification.md)
 - Related decision: [Repository vs Store](/decision/repository-vs-store.md)

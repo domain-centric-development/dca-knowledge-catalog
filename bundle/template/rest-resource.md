@@ -73,6 +73,5 @@ suffix and keep DTOs in the adapter package, not in `domain/` or `application/`.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - Rules: [REST controllers must end with 'Resource'](/rule/naming/rest-controllers-must-end-with-resource-rest-best-practice.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md) · [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/incoming-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md) · [DTOs must reside in portadapter package (not in domain or application)](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md)
-- ADR: [ADR-007 Hexagonal Architecture with Explicit Port/Adapter Separation](/adr/adr-007-hexagonal-architecture.md)
-- Book: [Adapter Layer — Incoming Adapters](/book/07-adapter-layer/incoming-adapters.md)
+- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - Recipe: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

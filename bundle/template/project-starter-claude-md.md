@@ -59,6 +59,6 @@ catalog_path: {catalog-path}/bundle
 ## Anchors
 
 - Recipe: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md) · [Build a DCA application](/recipe/build-a-dca-application.md) (task router)
-- Governance: [ADR-015 ArchUnit Governance](/adr/adr-015-archunit-governance.md)
+- Governance: [Core rule categories](/guide/archunit-governance/core-rule-categories.md)
 - Structure the agent will build: [Java package structure](/guide/readme/java-package-structure.md)
 - Recording decisions along the way: [Creating an ADR](/process/creating-an-adr.md)

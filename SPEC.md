@@ -25,7 +25,7 @@ file you can read it; if you can `git clone` a repo you can ship it.*
 
 The bundle is one OKF graph split into two zones:
 
-- **Generated zone** — `book/`, `guide/`, `marker/`, `rule/`, `adr/`, `process/`.
+- **Generated zone** — `guide/`, `marker/`, `rule/`, `process/`.
   Derived from the sources, **wiped and rebuilt on every `generate` run**. Never
   hand-edit (changes are overwritten); edit the source and regenerate.
 - **Extensible zone** — `recipe/`, `decision/`, `pitfall/`, `template/`, `note/`.
@@ -39,23 +39,22 @@ freely into each other with bundle-relative links.
 
 ## DCA node types
 
-This profile defines twelve `type` values. All carry `title` and `tags`;
+This profile defines ten `type` values. All carry `title` and `tags`;
 generated-zone nodes also carry `resource` (the canonical source URI).
 
-### `Chapter` / `Guide`
-A container node for one source file — a book chapter (`Chapter`) or an
-implementation-guide doc (`Guide`).
-- `source`: `book | guide`
+### `Guide`
+A container node for one implementation-guide file.
+- `source`: `guide`
 - Body: the file's preamble (text before the first `##`).
 - Link section: **Sections** (its child section nodes).
 
 ### `Section`
-One `##` heading of a book/guide file — the unit of knowledge, carrying the
+One `##` heading of a guide file — the unit of knowledge, carrying the
 **full verbatim text** of that section.
-- `source`: `book | guide`
+- `source`: `guide`
 - `chapter`: the parent container title
 - Body: the section's complete markdown (sub-headings, code, lists).
-- Link sections: **Related markers**, **Related ADRs** (anchoring to the skeleton).
+- Link section: **Related markers** (anchoring to the skeleton).
 
 ### `Marker`
 A marker interface / annotation from `sharedkernel/marker` — a contract a new
@@ -65,9 +64,9 @@ application implements.
 - `signature`: the Java declaration (generics + supertypes)
 - `extends`: supertype marker names (optional)
 - `methods`: declared method signatures (optional)
-- Link sections: **Extends**, **Governed by** (rules), **Referenced by ADRs**,
-  **Discussed in** (the book/guide sections that primarily discuss the marker —
-  title match or dense mentions, capped at 10 to stay low-noise).
+- Link sections: **Extends**, **Governed by** (rules), **Discussed in** (the
+  guide sections that primarily discuss the marker — title match or dense
+  mentions, capped at 10 to stay low-noise).
 
 ### `Rule`
 One ArchUnit feature method — an enforceable architecture rule.
@@ -79,14 +78,6 @@ One ArchUnit feature method — an enforceable architecture rule.
 - `test_class`: the ArchUnit test class
 - Body: the rule's Groovy expression, verbatim, in a fenced block.
 - Link section: **Applies to markers**.
-
-### `ADR`
-One Architecture Decision Record — a *used pattern* and its rationale. Domain
-examples and code are stripped; only the pattern-level decision survives.
-- `adr`: the number
-- `status`: `accepted | proposed | deprecated | superseded`
-- `pattern`: the one-line decision statement
-- Link sections: **Applies to markers**, **Enforced by** (rules), **Decision process**.
 
 ### `Process`
 A how-to for sustaining the architecture's conventions (currently: how to write
@@ -104,8 +95,8 @@ All require `type` + `title`; `resource` is optional (they synthesize, not mirro
 - **`Decision`** (`decision/`) — a guide for a design fork (which pattern when —
   e.g. sync vs async event, domain vs integration event), with the discriminator
   and links to the chosen targets.
-- **`Pitfall`** (`pitfall/`) — an anti-pattern and the rule(s)/ADR(s) that forbid
-  it; powers "is X allowed?" lookups.
+- **`Pitfall`** (`pitfall/`) — an anti-pattern and the rule(s) that forbid it;
+  powers "is X allowed?" lookups.
 - **`Template`** (`template/`) — a domain-free code skeleton to fill in.
 - **`Note`** (`note/`) — a compounded query answer: synthesis worth keeping,
   promoted from a one-off `/dca-knowledge` response into a permanent node.

@@ -33,6 +33,5 @@ When two contexts both need a concept — a `Money`, a `UserId`, an `Address` �
 
 - Markers: [@SharedKernel](/marker/strategic/sharedkernel.md)
 - Rules: [Shared Kernel must not have dependencies on any bounded context](/rule/strategic/shared-kernel-must-not-have-dependencies-on-any-bounded-context.md)
-- ADRs: [ADR-016 Shared Kernel Pattern for Cross-Context Value Objects](/adr/adr-016-shared-kernel-pattern.md)
-- Book: [What Belongs in the Shared Kernel](/book/11-shared-kernel/what-belongs-in-shared-kernel.md) · [When to Use a Shared Kernel](/book/11-shared-kernel/when-to-use-shared-kernel.md) · [Shared Value Objects](/book/11-shared-kernel/shared-value-objects.md)
+- Guide: [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Related pitfall: [Raw cross-context import](/pitfall/raw-cross-context-import.md)

@@ -33,5 +33,5 @@ Keep the adapter thin: map the request to a `Command`/`Query`, call the input po
 
 - Rules: [Controllers and Resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md) · [Classes from the domain should not access port adapters](/rule/hexagonal/classes-from-the-domain-should-not-access-port-adapters.md) · [Transaction boundaries belong to the application layer](/rule/layered/transaction-boundaries-belong-to-the-application-layer.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Book: [Adapter Layer — Common Mistakes](/book/07-adapter-layer/common-mistakes.md) · [Incoming Adapters](/book/07-adapter-layer/incoming-adapters.md)
+- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - Sibling pitfall: [Anemic domain model](/pitfall/anemic-domain-model.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md)
