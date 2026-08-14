@@ -7,6 +7,5 @@ resource: implementing-domain-centric-architecture/e2e-testing.md
 tags: [guide, section]
 ---
 
-- [Testing Strategy](../dca-book/12-testing-strategy.md) - Overall testing approach
-- [ArchUnit Governance](./archunit-governance.md) - Architecture testing
+- [ArchUnit Governance](/guide/archunit-governance.md) - Architecture testing
 - [Reference Implementation](https://github.com/chbloemer/ai-architecture-sample) - Complete examples in `src/test-e2e/`

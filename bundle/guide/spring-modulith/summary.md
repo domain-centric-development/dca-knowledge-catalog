@@ -7,7 +7,7 @@ resource: implementing-domain-centric-architecture/spring-modulith.md
 tags: [guide, section]
 ---
 
-**Spring Modulith implements [Domain-Centric Architecture](./README.md) by:**
+**Spring Modulith implements [Domain-Centric Architecture](/guide/readme.md) by:**
 
 1. **Enforcing Boundaries** - Modules = Bounded Contexts with verified boundaries
 2. **Event-Driven** - Domain Events and Integration Events with guaranteed delivery
@@ -21,6 +21,6 @@ tags: [guide, section]
 - Event-based integration survives extraction
 
 **Cross-References:**
-- Core architecture: [Domain-Centric Architecture](./README.md)
-- Deployment options: [Deployment Patterns](./deployment-patterns.md)
-- Team alignment: [Team Topologies Integration](./team-topologies.md)
+- Core architecture: [Domain-Centric Architecture](/guide/readme.md)
+- Deployment options: [Deployment Patterns](/guide/deployment-patterns.md)
+- Team alignment: [Team Topologies Integration](/guide/team-topologies.md)

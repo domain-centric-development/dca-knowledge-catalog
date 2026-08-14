@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 **Clean Architecture, DDD, and Hexagonal Architecture Principles**
 
-> **Purpose:** This is a **quick lookup reference** for developers who already understand Domain-Centric Architecture. For conceptual understanding and detailed explanations, see [README.md](./README.md).
+> **Purpose:** This is a **quick lookup reference** for developers who already understand Domain-Centric Architecture. For conceptual understanding and detailed explanations, see [README.md](/guide/readme.md).
 
 ---
 

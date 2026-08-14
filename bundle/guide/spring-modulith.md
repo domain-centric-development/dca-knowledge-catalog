@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 *Practical Implementation of Domain-Centric Architecture using Spring Modulith*
 
-> **📘 Prerequisites:** This document shows how to implement [Domain-Centric Architecture](./README.md) using Spring Modulith. Read the main document first for core patterns and rules.
+> **📘 Prerequisites:** This document shows how to implement [Domain-Centric Architecture](/guide/readme.md) using Spring Modulith. Read the main document first for core patterns and rules.
 
 ## Sections
 

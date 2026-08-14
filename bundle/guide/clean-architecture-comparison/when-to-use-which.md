@@ -56,4 +56,4 @@ tags: [guide, section]
 - Need clear boundaries for extraction
 - May evolve to microservices
 
-> **See:** [Deployment Patterns](./deployment-patterns.md) for evolution strategies
+> **See:** [Deployment Patterns](/guide/deployment-patterns.md) for evolution strategies

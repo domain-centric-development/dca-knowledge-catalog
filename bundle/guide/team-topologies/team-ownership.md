@@ -12,7 +12,7 @@ tags: [guide, section]
 **Rule:** One stream-aligned team owns one bounded context
 
 **Ownership Includes:**
-- All layers: domain, application, adapters, infrastructure (see [Domain-Centric Architecture Layers](./README.md#layer-dependency-flow))
+- All layers: domain, application, adapters, infrastructure (see [Domain-Centric Architecture Layers](/guide/readme/dependency-structure.md))
 - Code, tests, deployment, monitoring, support
 - Autonomy over internal implementation
 - Responsibility for published interfaces/APIs
@@ -30,7 +30,7 @@ Order Team owns Order Bounded Context
 └── On-call rotation
 ```
 
-> **For bounded context technical structure:** See [Domain-Centric Architecture](./README.md#java-package-structure)
+> **For bounded context technical structure:** See [Domain-Centric Architecture](/guide/readme/java-package-structure.md)
 
 ### Code Ownership
 
@@ -43,7 +43,7 @@ Order Team owns Order Bounded Context
 **Shared Kernel Exception:**
 - Requires explicit team agreement
 - Coordinate changes via architecture guild
-- Use sparingly (see [Domain-Centric Architecture - Shared Kernel](./README.md#packaging-rules))
+- Use sparingly (see [Domain-Centric Architecture - Shared Kernel](/guide/readme/rules.md))
 
 ### API/Interface Ownership
 
@@ -68,4 +68,4 @@ Order Team's APIs:
     └── v2 maintains backward compatibility with v1
 ```
 
-> **For adapter and API technical patterns:** See [Domain-Centric Architecture - Adapter Layer](./README.md#adapter-layer-rules)
+> **For adapter and API technical patterns:** See [Domain-Centric Architecture - Adapter Layer](/guide/readme/rules.md)

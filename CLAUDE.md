@@ -74,6 +74,12 @@ mirroring with `--no-default-mirror`; add targets with `--mirror PATH`.
 - `okf.py` — `Node` model + deterministic markdown/frontmatter writer.
 - `docs.py` — parses the guide `.md` into Guide containers + Section
   children (fence-aware `##` splitter; full verbatim text in section bodies).
+  Relative links in that text (`./spring-modulith.md#packaging-rules`) are
+  rewritten onto bundle nodes — an `#anchor` resolves to the section node that
+  carries the heading, an unknown one to the container; `adr-template.md` lands
+  on the Process node (`_ALIASES`). A link left un-rewritten fails the tests: it
+  means the guide points at a document the bundle has no node for (the book),
+  which is a **guide** bug — fix the guide, not the generator.
 - `markers.py` — parses marker `.java` (declaration anchored at column 0 to avoid
   matching javadoc example code).
 - `rules.py` — parses Spock `def "<rule>"()` methods; body carried verbatim.

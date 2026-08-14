@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 *Extending Domain-Centric Architecture with Deployment Strategies*
 
-> **📘 Prerequisites:** This document extends [Domain-Centric Architecture](./README.md). Read the main document first for core architectural patterns, layers, and rules.
+> **📘 Prerequisites:** This document extends [Domain-Centric Architecture](/guide/readme.md). Read the main document first for core architectural patterns, layers, and rules.
 
 ## Sections
 

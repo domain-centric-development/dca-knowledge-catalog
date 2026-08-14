@@ -9,8 +9,8 @@ tags: [guide, section]
 
 - **ArchUnit User Guide:** https://www.archunit.org/userguide/html/000_Index.html
 - **ArchUnit Examples:** https://github.com/TNG/ArchUnit-Examples
-- **Domain-Centric Architecture:** [./README.md](./README.md)
-- **Architecture Reference Guide:** [./architecture-reference-guide.md](./architecture-reference-guide.md)
+- **Domain-Centric Architecture:** [./README.md](/guide/readme.md)
+- **Architecture Reference Guide:** [./architecture-reference-guide.md](/guide/architecture-reference-guide.md)
 
 ---
 

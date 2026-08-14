@@ -29,7 +29,7 @@ Order Team Deployment:
 └── Strategy: Blue/green deployment
 ```
 
-> **For deployment patterns:** See [Deployment Patterns](./deployment-patterns.md)
+> **For deployment patterns:** See [Deployment Patterns](/guide/deployment-patterns.md)
 
 ### Monitoring & Observability
 

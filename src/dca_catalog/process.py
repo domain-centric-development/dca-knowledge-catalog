@@ -15,6 +15,9 @@ from pathlib import Path
 from .okf import Node
 
 TEMPLATE_REL = "implementing-domain-centric-architecture/adr-template.md"
+# The template is not a Guide node, so guide links to it are rewritten here
+# instead (see ``docs._ALIASES``).
+NODE_PATH = "process/creating-an-adr.md"
 
 
 def _process_node(repo_root: Path) -> Node:
@@ -43,7 +46,7 @@ def _process_node(repo_root: Path) -> Node:
         "patterns used across the codebase. Skip trivial or easily reversible details."
     )
     return Node(
-        path="process/creating-an-adr.md",
+        path=NODE_PATH,
         frontmatter={
             "type": "Process",
             "title": "How to write an ADR",

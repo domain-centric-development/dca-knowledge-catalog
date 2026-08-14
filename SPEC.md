@@ -53,7 +53,9 @@ One `##` heading of a guide file — the unit of knowledge, carrying the
 **full verbatim text** of that section.
 - `source`: `guide`
 - `chapter`: the parent container title
-- Body: the section's complete markdown (sub-headings, code, lists).
+- Body: the section's complete markdown (sub-headings, code, lists). Its
+  relative links are rewritten onto bundle nodes so the text stays navigable
+  inside the bundle; prose and code are otherwise byte-identical to the source.
 - Link section: **Related markers** (anchoring to the skeleton).
 
 ### `Marker`

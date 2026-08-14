@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 *Understanding the Differences and When to Use Each*
 
-> **📘 Prerequisites:** This document compares Domain-Centric Architecture with Clean Architecture. Read [Domain-Centric Architecture](./README.md) first to understand the approach being compared.
+> **📘 Prerequisites:** This document compares Domain-Centric Architecture with Clean Architecture. Read [Domain-Centric Architecture](/guide/readme.md) first to understand the approach being compared.
 
 ## Sections
 

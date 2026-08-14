@@ -7,7 +7,7 @@ resource: implementing-domain-centric-architecture/clean-architecture-comparison
 tags: [guide, section]
 ---
 
-- **Core patterns:** [Domain-Centric Architecture](./README.md)
-- **Deployment strategies:** [Deployment Patterns](./deployment-patterns.md)
-- **Spring implementation:** [Spring Modulith Implementation](./spring-modulith.md)
-- **Team structure:** [Team Topologies Integration](./team-topologies.md)
+- **Core patterns:** [Domain-Centric Architecture](/guide/readme.md)
+- **Deployment strategies:** [Deployment Patterns](/guide/deployment-patterns.md)
+- **Spring implementation:** [Spring Modulith Implementation](/guide/spring-modulith.md)
+- **Team structure:** [Team Topologies Integration](/guide/team-topologies.md)

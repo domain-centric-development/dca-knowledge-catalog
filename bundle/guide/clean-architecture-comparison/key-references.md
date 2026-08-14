@@ -19,4 +19,4 @@ tags: [guide, section]
 - **[Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)** by Alistair Cockburn (2005)
 - **[Get Your Hands Dirty on Clean Architecture](https://thombergs.gumroad.com/l/gyhdoca)** by Tom Hombergs (2019)
 
-For comprehensive references, see [Domain-Centric Architecture - References & Further Reading](./README.md#references--further-reading).
+For comprehensive references, see [Domain-Centric Architecture - References & Further Reading](/guide/readme/references-further-reading.md).

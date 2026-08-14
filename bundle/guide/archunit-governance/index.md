@@ -10,4 +10,4 @@
 - [Core Rule Categories](core-rule-categories.md) — Enforce that dependencies only point inward toward the domain.
 - [Introduction](introduction.md) — 1. **Prevents Architectural Drift** - Rules enforced automatically on every build
 - [Setup and Configuration](setup-and-configuration.md) — <dependency>
-- [Table of Contents](table-of-contents.md) — 1. [Introduction](#introduction)
+- [Table of Contents](table-of-contents.md) — 1. Introduction

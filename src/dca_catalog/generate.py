@@ -13,6 +13,7 @@ plugin so /dca-knowledge ships a vendored copy that never drifts from source.
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import sys
 from collections import defaultdict
@@ -150,7 +151,10 @@ def _description(node: Node) -> str:
             (ln for ln in node.body.splitlines() if ln.strip() and not ln.lstrip().startswith(("#", ">", "|", "`", "-", "*"))),
             str(fm["title"]),
         )
-    text = " ".join(text.split())
+    # Flatten links to their text: an index entry is a one-line blurb, and
+    # truncating a line that still carries link markup can cut mid-target and
+    # emit a mangled, dangling link.
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", " ".join(text.split()))
     return (text[:117] + "...") if len(text) > 120 else text
 
 

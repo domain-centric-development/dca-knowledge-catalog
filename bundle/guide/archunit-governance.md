@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 **Automated Architectural Testing and Enforcement**
 
-> **Prerequisites:** This document shows how to implement automated architecture testing for [Domain-Centric Architecture](./README.md) using ArchUnit. Read the main document first for core patterns and rules.
+> **Prerequisites:** This document shows how to implement automated architecture testing for [Domain-Centric Architecture](/guide/readme.md) using ArchUnit. Read the main document first for core patterns and rules.
 
 ---
 

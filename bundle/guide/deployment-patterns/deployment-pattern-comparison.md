@@ -39,7 +39,7 @@ Single Deployment Unit
 - Single team or co-located teams
 - Clear module boundaries exist
 
-**Implementation:** See [Spring Modulith Implementation](./spring-modulith.md)
+**Implementation:** See [Spring Modulith Implementation](/guide/spring-modulith.md)
 
 ### Pattern 2: Self-Contained Systems (Multiple SCS)
 

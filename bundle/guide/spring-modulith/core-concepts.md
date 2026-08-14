@@ -21,7 +21,7 @@ com.company.ecommerce
 **Alignment:**
 - One module = one bounded context (typical)
 - One team owns one module (recommended)
-- Module follows [Domain-Centric Architecture layers](./README.md#layer-dependency-flow)
+- Module follows [Domain-Centric Architecture layers](/guide/readme/dependency-structure.md)
 
 ### Module Types
 
@@ -71,5 +71,5 @@ package com.company.ecommerce.order.events;
 
 **Internal Package (`internal/`):**
 - Hidden implementation
-- Contains domain, application, adapter layers (see [Domain-Centric Architecture](./README.md#java-package-structure))
+- Contains domain, application, adapter layers (see [Domain-Centric Architecture](/guide/readme/java-package-structure.md))
 - Other modules CANNOT access

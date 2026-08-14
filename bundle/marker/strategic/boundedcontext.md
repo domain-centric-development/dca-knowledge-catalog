@@ -30,6 +30,6 @@ Marks a package as a Bounded Context in Domain-Driven Design.
 - [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
+- [Key Points](/guide/readme/key-points.md)
 - [RULES](/guide/readme/rules.md)
 - [Table of Contents](/guide/readme/table-of-contents.md)
-- [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

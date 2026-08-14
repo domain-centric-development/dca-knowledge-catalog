@@ -64,4 +64,4 @@ tags: [guide, section]
 - Well-defined API
 - Complicated subsystem hides complexity
 
-> **For technical integration patterns:** See [Domain-Centric Architecture - Integration Patterns](./README.md#integration-patterns)
+> **For technical integration patterns:** See [Domain-Centric Architecture - Integration Patterns](/guide/readme/integration-patterns.md)

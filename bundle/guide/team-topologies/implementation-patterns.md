@@ -38,7 +38,7 @@ Single Deployment, Multiple Teams
 └─────────────────────────────────────────┘
 ```
 
-> **For Spring Modulith details:** See [Spring Modulith Implementation](./spring-modulith.md)
+> **For Spring Modulith details:** See [Spring Modulith Implementation](/guide/spring-modulith.md)
 
 ### With Microservices
 
@@ -54,4 +54,4 @@ Single Deployment, Multiple Teams
                └──────────────────────┘     └────────┘
 ```
 
-> **For service decomposition:** See [Deployment Patterns](./deployment-patterns.md)
+> **For service decomposition:** See [Deployment Patterns](/guide/deployment-patterns.md)

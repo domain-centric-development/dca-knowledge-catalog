@@ -156,7 +156,7 @@ public class AddItemToCartUseCase {
 - ❌ Use cases never import OHS directly (violates hexagonal architecture)
 - ❌ Application layer never imports from other bounded contexts
 
-> **Note:** For multi-service integration patterns, see [Deployment Patterns](./deployment-patterns.md)
+> **Note:** For multi-service integration patterns, see [Deployment Patterns](/guide/deployment-patterns.md)
 
 ### Composite Adapter Pattern
 

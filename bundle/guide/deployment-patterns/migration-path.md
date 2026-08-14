@@ -35,4 +35,4 @@ Phase 4: Multi-Service BC (rarely needed)
 
 **Best Practice:** Start simple (modular monolith), extract services when pain points emerge.
 
-> **Implementation Note:** Spring Modulith provides excellent support for Phase 1 (modular monolith) with clear extraction paths to Phase 2. See [Spring Modulith Implementation](./spring-modulith.md).
+> **Implementation Note:** Spring Modulith provides excellent support for Phase 1 (modular monolith) with clear extraction paths to Phase 2. See [Spring Modulith Implementation](/guide/spring-modulith.md).

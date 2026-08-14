@@ -9,7 +9,7 @@ tags: [guide, section]
 
 The Shared Kernel is a **small, carefully controlled** `shared/` module containing code used across multiple modules.
 
-> **Important:** For general Shared Kernel concepts and when to use it, see [Domain-Centric Architecture](./README.md#packaging-rules).
+> **Important:** For general Shared Kernel concepts and when to use it, see [Domain-Centric Architecture](/guide/readme/rules.md).
 
 ### Spring Modulith Configuration
 

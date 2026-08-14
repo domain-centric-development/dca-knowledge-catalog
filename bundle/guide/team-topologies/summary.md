@@ -23,6 +23,6 @@ tags: [guide, section]
 - Use platform team to reduce cognitive load
 
 **Cross-References:**
-- Technical architecture: [Domain-Centric Architecture](./README.md)
-- Deployment strategies: [Deployment Patterns](./deployment-patterns.md)
-- Modular monolith: [Spring Modulith Implementation](./spring-modulith.md)
+- Technical architecture: [Domain-Centric Architecture](/guide/readme.md)
+- Deployment strategies: [Deployment Patterns](/guide/deployment-patterns.md)
+- Modular monolith: [Spring Modulith Implementation](/guide/spring-modulith.md)

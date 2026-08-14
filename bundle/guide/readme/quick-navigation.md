@@ -17,18 +17,18 @@ tags: [guide, section]
 
 ### Ready to Implement?
 - **[Java Package Structure](#java-package-structure)** - Copy-paste templates
-- **[Spring Modulith](./spring-modulith.md)** - Framework implementation guide
-- **[ArchUnit Governance](./archunit-governance.md)** - Enforce rules automatically
+- **[Spring Modulith](/guide/spring-modulith.md)** - Framework implementation guide
+- **[ArchUnit Governance](/guide/archunit-governance.md)** - Enforce rules automatically
 
 ### Deep Dive Topics
 | Topic | Guide | When to Read |
 |-------|-------|--------------|
-| Clean Architecture comparison | [clean-architecture-comparison.md](./clean-architecture-comparison.md) | Understand differences |
-| Deployment strategies | [deployment-patterns.md](./deployment-patterns.md) | Planning production |
-| Team organization | [team-topologies.md](./team-topologies.md) | Scaling teams |
-| Architecture decisions | [adr-template.md](./adr-template.md) | Documenting choices |
-| E2E Testing | [e2e-testing.md](./e2e-testing.md) | Browser-based testing |
-| Quick lookup | [architecture-reference-guide.md](./architecture-reference-guide.md) | Already know DCA, need quick reference |
+| Clean Architecture comparison | [clean-architecture-comparison.md](/guide/clean-architecture-comparison.md) | Understand differences |
+| Deployment strategies | [deployment-patterns.md](/guide/deployment-patterns.md) | Planning production |
+| Team organization | [team-topologies.md](/guide/team-topologies.md) | Scaling teams |
+| Architecture decisions | [adr-template.md](/process/creating-an-adr.md) | Documenting choices |
+| E2E Testing | [e2e-testing.md](/guide/e2e-testing.md) | Browser-based testing |
+| Quick lookup | [architecture-reference-guide.md](/guide/architecture-reference-guide.md) | Already know DCA, need quick reference |
 
 ### Cross-Context Integration Patterns
 | Pattern | Section | When to Use |

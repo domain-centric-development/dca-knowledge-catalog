@@ -11,7 +11,7 @@ When creating a Spring Modulith module (bounded context), **start with minimal s
 
 > **Core Principle:** The full package structure shown in this document is for **mature modules**. Don't start there!
 
-For general progressive complexity guidelines, see [Domain-Centric Architecture](./README.md#progressive-complexity-principle).
+For general progressive complexity guidelines, see [Domain-Centric Architecture](/guide/readme/java-package-structure.md).
 
 ### Phase 1: Minimal Module Structure (Starting Out)
 

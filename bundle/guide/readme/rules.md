@@ -280,7 +280,7 @@ including the assertion that an unsaved mutation is invisible to the next reader
 - Teams own Bounded Contexts
 - One Bounded Context per deployment unit (preferred)
 
-> **Note:** For deployment variations including multi-service bounded contexts, see [Deployment Patterns](./deployment-patterns.md)
+> **Note:** For deployment variations including multi-service bounded contexts, see [Deployment Patterns](/guide/deployment-patterns.md)
 
 #### Context Integration Rules
 - Make all context relationships explicit
@@ -310,7 +310,7 @@ DCA's full pattern set is not mandatory for every bounded context. Apply tactica
 
 Rules:
 - Each bounded context declares its chosen pattern style in an ADR
-- Architecture tests activate the matching rule subset per context: domain-model contexts get the full tactical rules; transaction-script contexts only the structural baseline (layer dependencies, no cycles, context isolation) — see [ArchUnit Governance](./archunit-governance.md)
+- Architecture tests activate the matching rule subset per context: domain-model contexts get the full tactical rules; transaction-script contexts only the structural baseline (layer dependencies, no cycles, context isolation) — see [ArchUnit Governance](/guide/archunit-governance.md)
 - Consistency within a context matters; uniformity across contexts does not
 - Reclassify when a subdomain's importance changes (supporting → core happens) and upgrade the pattern with it — this is Progressive Complexity at the strategic level
 
@@ -457,7 +457,7 @@ Customer Aggregate notified → Loyalty points updated
 - Infrastructure module depends on adapters
 - Modules can be independently deployed
 
-> **Note:** For Spring Modulith module organization, see [Spring Modulith Implementation](./spring-modulith.md)
+> **Note:** For Spring Modulith module organization, see [Spring Modulith Implementation](/guide/spring-modulith.md)
 
 ## Related markers
 

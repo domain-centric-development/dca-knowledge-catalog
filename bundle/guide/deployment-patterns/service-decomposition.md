@@ -32,7 +32,7 @@ When you split a Bounded Context into multiple services, you need **two types of
   - Represent public contracts
 - **Example:** `OrderCreatedEvent` published by Order BC, consumed by Inventory BC
 
-For core event patterns, see [Domain-Centric Architecture - Event Rules](./README.md#domain-event-rules-internal-to-bounded-context).
+For core event patterns, see [Domain-Centric Architecture - Event Rules](/guide/readme/rules.md).
 
 #### Internal Events (Within Bounded Context, Across Services)
 - **Purpose:** Communication between services within same bounded context
@@ -88,7 +88,7 @@ DECISION: Split into multiple services within same Bounded Context
 
 **Default Recommendation:** Start with **one service per bounded context** (modular monolith or single SCS). Extract services later when needed.
 
-> **Note:** For Spring Modulith modular monolith patterns, see [Spring Modulith Implementation](./spring-modulith.md).
+> **Note:** For Spring Modulith modular monolith patterns, see [Spring Modulith Implementation](/guide/spring-modulith.md).
 
 ### Multi-Service Package Structure Example
 

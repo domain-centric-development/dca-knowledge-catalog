@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from dca_catalog import generate, lint, obsidian
+from dca_catalog import docs, generate, lint, obsidian, process
 from dca_catalog.okf import RESERVED
 
 # tests/test_conformance.py -> tests -> dca-knowledge-catalog -> repo root
@@ -99,6 +99,57 @@ def test_bundle_relative_links_resolve(bundle: Path):
             if target.startswith(prefixes) and not (bundle / target.lstrip("/")).exists():
                 broken.append((str(p.relative_to(bundle)), target))
     assert not broken, f"broken bundle-relative links: {broken}"
+
+
+def test_relative_links_are_rewritten_onto_bundle_nodes(bundle: Path):
+    """Verbatim guide text carries source-relative links; they must be rewritten.
+
+    A leftover means the guide links a document the bundle has no node for —
+    e.g. the book, which is not a source and not public. Fix the guide, not this.
+    """
+    link_re = re.compile(r"\]\((?!/|\w+:|#)([^)\s#]+\.md)(#[^)\s]*)?\)")
+    dangling = []
+    for p in bundle.rglob("*.md"):
+        for target, _anchor in link_re.findall(p.read_text(encoding="utf-8")):
+            if not (p.parent / target).exists():
+                dangling.append((str(p.relative_to(bundle)), target))
+
+    assert not dangling, f"unrewritten relative links: {dangling}"
+
+
+def test_adr_template_links_land_on_the_process_node(bundle: Path):
+    # the template is _SKIPped as a Guide, but the bundle has it as a Process node
+    text = (bundle / "guide" / "readme" / "quick-navigation.md").read_text(encoding="utf-8")
+    assert f"](/{process.NODE_PATH})" in text
+
+
+def test_anchored_links_resolve_to_the_section_node(bundle: Path):
+    # H2 anchor -> that section's node; sub-heading anchor -> its enclosing section
+    text = (bundle / "guide" / "spring-modulith" / "core-concepts.md").read_text(encoding="utf-8")
+    assert "](/guide/readme/java-package-structure.md)" in text
+
+    # dialect divergence: GitHub keeps the '&' spacing as '--', slugify collapses it
+    refs = (bundle / "guide" / "clean-architecture-comparison" / "key-references.md")
+    assert "](/guide/readme/references-further-reading.md)" in refs.read_text(encoding="utf-8")
+
+
+def test_rewrite_leaves_code_alone_and_handles_backticked_link_text(tmp_path):
+    guide = tmp_path / docs.GUIDE_REL
+    guide.mkdir(parents=True)
+    (guide / "README.md").write_text("# Main\n\n## Packaging Rules\n\nrules.\n", encoding="utf-8")
+    (guide / "other.md").write_text(
+        "# Other\n\n## Links\n\n"
+        "See [`README.md`](README.md) and [rules](./README.md#packaging-rules).\n\n"
+        "```\nsee [x](./README.md)\n```\n\n"
+        "Inline `[y](./README.md)` stays.\n",
+        encoding="utf-8",
+    )
+
+    body = next(n for n in docs.extract(tmp_path) if n.path == "guide/other/links.md").body
+    assert "[`README.md`](/guide/readme.md)" in body, "backticked link text broke the rewrite"
+    assert "[rules](/guide/readme/packaging-rules.md)" in body
+    assert "see [x](./README.md)" in body, "rewrote inside a code fence"
+    assert "`[y](./README.md)`" in body, "rewrote inside an inline code span"
 
 
 def test_no_links_into_removed_zones(bundle: Path):

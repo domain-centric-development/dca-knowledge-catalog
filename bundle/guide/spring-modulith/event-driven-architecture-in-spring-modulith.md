@@ -9,7 +9,7 @@ tags: [guide, section]
 
 ### Domain Events vs Integration Events
 
-Spring Modulith supports two types of events that align with [Domain-Driven Design principles](./README.md#domain-event-rules-internal-to-bounded-context):
+Spring Modulith supports two types of events that align with [Domain-Driven Design principles](/guide/readme/rules.md):
 
 #### Domain Events (Internal to Module)
 

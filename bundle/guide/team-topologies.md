@@ -8,7 +8,7 @@ tags: [guide, guide]
 
 *Aligning Team Structure with Domain-Centric Architecture*
 
-> **📘 Prerequisites:** This document integrates Team Topologies organizational patterns with [Domain-Centric Architecture](./README.md). Read the main document first for technical architecture patterns.
+> **📘 Prerequisites:** This document integrates Team Topologies organizational patterns with [Domain-Centric Architecture](/guide/readme.md). Read the main document first for technical architecture patterns.
 
 ## Sections
 
