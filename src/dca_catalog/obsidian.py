@@ -126,12 +126,29 @@ def _vault_config(out: Path) -> None:
             data = json.loads(graph.read_text(encoding="utf-8"))
         except ValueError:
             data = {}
-    if not data.get("colorGroups"):
+    groups = data.get("colorGroups")
+    if not groups:
         data["colorGroups"] = [
             {"query": f'path:"{d}"', "color": {"a": 1, "rgb": rgb}}
             for d, rgb in _GRAPH_COLORS.items()
         ]
         graph.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        return
+    # Existing groups are the user's to tune, so they are never overwritten — but a
+    # group for a directory the bundle no longer has colors nothing, and a vault that
+    # keeps listing it suggests the zone is still there.
+    kept = [g for g in groups if not _names_missing_dir(g.get("query"), vault.parent)]
+    if len(kept) != len(groups):
+        data["colorGroups"] = kept
+        graph.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+
+def _names_missing_dir(query: object, out: Path) -> bool:
+    """True for a plain ``path:"<dir>"`` query whose directory is gone from the vault."""
+    if not isinstance(query, str):
+        return False
+    m = re.fullmatch(r'path:"([^"/]+)"', query.strip())
+    return bool(m) and not (out / m.group(1)).is_dir()
 
 
 def export(bundle: Path, out: Path) -> int:
