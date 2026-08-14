@@ -152,6 +152,23 @@ def test_rewrite_leaves_code_alone_and_handles_backticked_link_text(tmp_path):
     assert "`[y](./README.md)`" in body, "rewrote inside an inline code span"
 
 
+def test_process_node_carries_the_fillable_adr_template(bundle: Path):
+    """The knowledge base must hand out the template itself, not just describe it.
+
+    ``template/`` is the authored zone, so the copyable text lives in the generated
+    Process node — sourced from adr-template.md, hence never stale.
+    """
+    text = (bundle / process.NODE_PATH).read_text(encoding="utf-8")
+    assert "## The template" in text
+    fenced = text.split("## The template", 1)[1]
+    assert "````markdown" in fenced, "template not wrapped in a longer fence than its own"
+    assert fenced.count("````") == 2, "unbalanced wrapper fence"
+    for heading in ("# ADR-NNN:", "## Context", "## Decision", "## Consequences"):
+        assert heading in fenced, f"template missing {heading}"
+    # the meta sections are distilled into Steps/When-to-write, not duplicated
+    assert "## Template Metadata" not in fenced
+
+
 def test_bundle_never_links_out_to_a_sibling_project(bundle: Path):
     """The catalog stands on its own: it is *generated from* the guide and the
     sample, and must not link back at either (nor at the non-public book)."""

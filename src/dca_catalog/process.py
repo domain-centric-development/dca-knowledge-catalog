@@ -20,11 +20,25 @@ TEMPLATE_REL = "implementing-domain-centric-architecture/adr-template.md"
 NODE_PATH = "process/creating-an-adr.md"
 
 
+def _fillable_template(text: str) -> str:
+    """The copyable part of the template: everything before its meta sections.
+
+    ``## Template Metadata`` and what follows explain how to *use* the template;
+    those are already distilled into the Steps and When-to-write sections below.
+    """
+    cut = text.find("\n## Template Metadata")
+    body = (text[:cut] if cut != -1 else text).rstrip()
+    return body.removesuffix("---").rstrip()
+
+
 def _process_node(repo_root: Path) -> Node:
     template = (repo_root / TEMPLATE_REL).read_text(encoding="utf-8")
     headings = re.findall(r"^##\s+(.+?)\s*$", template, flags=re.MULTILINE)
     skip = {"template metadata", "how to use this template", "notes"}
     skeleton = [h.strip() for h in headings if h.strip().lower() not in skip]
+    # the template's own fences are ``` — the wrapper needs a longer marker
+    fillable = _fillable_template(template)
+    fence = "`" * max(4, max((len(m) for m in re.findall(r"^`{3,}", fillable, re.M)), default=3) + 1)
 
     body = (
         "How to record an architectural decision in this project, so a new "
@@ -43,7 +57,11 @@ def _process_node(repo_root: Path) -> Node:
         + "\n".join(f"- **{h}**" for h in skeleton)
         + "\n\n## When to write an ADR\n\n"
         "Significant, hard-to-reverse decisions; choices between viable alternatives; "
-        "patterns used across the codebase. Skip trivial or easily reversible details."
+        "patterns used across the codebase. Skip trivial or easily reversible details.\n\n"
+        "## The template\n\n"
+        "Copy this into `adr-XXX-short-title.md` and fill it in. The `**Example:**` "
+        "blocks show the expected depth — replace them, don't keep them.\n\n"
+        f"{fence}markdown\n{fillable}\n{fence}"
     )
     return Node(
         path=NODE_PATH,
