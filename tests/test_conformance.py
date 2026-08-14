@@ -152,6 +152,39 @@ def test_rewrite_leaves_code_alone_and_handles_backticked_link_text(tmp_path):
     assert "`[y](./README.md)`" in body, "rewrote inside an inline code span"
 
 
+def test_bundle_never_links_out_to_a_sibling_project(bundle: Path):
+    """The catalog stands on its own: it is *generated from* the guide and the
+    sample, and must not link back at either (nor at the non-public book)."""
+    outward = re.compile(r"\]\([^)]*(ai-architecture-sample|dca-book|implementing-domain-centric-architecture)[^)]*\)")
+    hits = []
+    for p in bundle.rglob("*.md"):
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if outward.search(line):
+                hits.append((str(p.relative_to(bundle)), line.strip()[:80]))
+    assert not hits, f"links out of the bundle: {hits}"
+
+
+def test_mirror_drops_the_resource_frontmatter(tmp_path):
+    """The vendored copy ships to projects that do not have the source repos, so
+    a ``resource:`` path there points at nothing. The canonical bundle keeps it."""
+    out = tmp_path / "bundle"
+    generate.generate(REPO_ROOT, out)
+    assert any("\nresource:" in p.read_text(encoding="utf-8") for p in out.rglob("*.md"))
+
+    mirror = tmp_path / "mirror"
+    generate._mirror(out, [mirror])
+    for p in mirror.rglob("*.md"):
+        text = p.read_text(encoding="utf-8")
+        front = text.split("\n---\n", 1)[0] if text.startswith("---\n") else ""
+        assert "resource:" not in front, f"{p} still carries resource:"
+
+    # body text is untouched — a YAML example in a fence keeps its resource: line
+    node = mirror / "note" / "_fence.md"
+    node.write_text("---\ntype: Note\nresource: x\n---\n\n```yaml\nresource: keep-me\n```\n", encoding="utf-8")
+    assert "resource: keep-me" in generate._strip_resource(node.read_text(encoding="utf-8"))
+    assert "\nresource: x" not in generate._strip_resource(node.read_text(encoding="utf-8"))
+
+
 def test_no_links_into_removed_zones(bundle: Path):
     """The resolve check above only sees prefixes it knows about, so a link into
     a dir that left ``_GENERATED_DIRS`` would be dangling *and* invisible."""

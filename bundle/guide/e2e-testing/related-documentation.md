@@ -8,4 +8,3 @@ tags: [guide, section]
 ---
 
 - [ArchUnit Governance](/guide/archunit-governance.md) - Architecture testing
-- [Reference Implementation](https://github.com/chbloemer/ai-architecture-sample) - Complete examples in `src/test-e2e/`

@@ -9,9 +9,6 @@ tags: [guide, section]
 
 This document describes the core Domain-Centric Architecture patterns and principles. For specific topics, see:
 
-### Reference Implementation
-- **[AI Architecture Sample](https://github.com/chbloemer/ai-architecture-sample)** - Complete reference implementation in Java/Spring Boot demonstrating all concepts in practice
-
 > **📝 Note on Examples:** This documentation uses **generic examples** (Order, Customer, Inventory contexts) for educational clarity. The actual reference implementation uses **Product Catalog**, **Shopping Cart**, and **Portal** contexts. Both approaches are valid - use examples that match your domain. Package names shown as `com.company.project.*` are placeholders; the reference implementation uses `de.sample.aiarchitecture.*`
 
 ### Supplementary Documentation

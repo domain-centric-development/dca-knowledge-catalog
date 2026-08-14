@@ -65,9 +65,24 @@ edits, regenerates indexes, lints).
 `generate` mirrors the freshly built bundle into the dca-core plugin at
 `dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog/` so the
 `/dca-knowledge` skill ships a catalog that works in any project with no setup.
-That copy is **also a derived artifact — never hand-edit it**. It is a verbatim
-copy: every node type in the bundle is public, so nothing is redacted. Disable
-mirroring with `--no-default-mirror`; add targets with `--mirror PATH`.
+That copy is **also a derived artifact — never hand-edit it**. Every node type is
+public, so no node is dropped, but the `resource:` frontmatter is: the mirror
+travels into projects that do not have the source repositories, where a path like
+`ai-architecture-sample/src/main/java/…` names nothing. The canonical `bundle/`
+keeps `resource:` as provenance and as the basis for the lint's stale-resource
+check. Disable mirroring with `--no-default-mirror`; add targets with
+`--mirror PATH`.
+
+### ⚠️ The bundle stands alone — no links out
+
+The catalog is *generated from* the guide and the sample and must never link back
+at either (nor at the non-public book). A consumer has the bundle and nothing
+else, so `../implementing-domain-centric-architecture/…`, a sample source path or
+the sample's GitHub URL all point at nothing. Content is copied; pointers are
+rewritten onto bundle nodes or dropped. Two conformance tests enforce this —
+`test_bundle_never_links_out_to_a_sibling_project` and
+`test_mirror_drops_the_resource_frontmatter`. A leftover link means a **source**
+document acquired an outward reference: fix it there.
 
 ## Generator structure (`src/dca_catalog/`)
 

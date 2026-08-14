@@ -345,8 +345,6 @@ APPLICATION LAYER
 - **Results**: `*Result` (e.g., `CreateOrderResult`)
 - **Adapters**: `*Adapter` or specific suffixes (e.g., `InMemoryOrderRepository`, `OrderPageController`, `OrderMcpToolProvider`)
 
-> **Reference Implementation:** See [ai-architecture-sample](https://github.com/chbloemer/ai-architecture-sample) for concrete examples of this structure in practice.
-
 **Benefits:**
 - ✅ **High Cohesion** - All files for one use case are together
 - ✅ **Single Responsibility** - One folder = one business operation

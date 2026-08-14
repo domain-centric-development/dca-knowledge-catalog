@@ -68,11 +68,30 @@ def _repo_root_default() -> Path:
 _DEFAULT_MIRROR_REL = "dca-marketplace/plugins/dca-core/skills/dca-knowledge/catalog"
 
 
+def _strip_resource(text: str) -> str:
+    """Drop the ``resource:`` frontmatter key, leaving the body untouched.
+
+    Body text may legitimately contain a ``resource:`` line (a YAML example in a
+    code fence), so this only rewrites the frontmatter block.
+    """
+    if not text.startswith("---\n") or text.count("\n---\n", 3) == 0:
+        return text
+    end = text.index("\n---\n", 3) + 1
+    front = "".join(
+        line for line in text[:end].splitlines(keepends=True)
+        if not line.startswith("resource:")
+    )
+    return front + text[end:]
+
+
 def _mirror(out: Path, dests: list[Path]) -> None:
     """Replace each dest with a fresh copy of the canonical bundle at ``out``.
 
-    No redaction: every node type in the bundle is public. The book used to need
-    stripping and no longer ships here at all.
+    The mirror is what ships to other projects, where a source path like
+    ``ai-architecture-sample/src/main/java/...`` names a repository the reader
+    does not have. It must stand on its own, so ``resource:`` is dropped on the
+    way out; the canonical bundle keeps it as provenance (and as the basis for
+    the lint's stale-resource check).
     """
     for dest in dests:
         dest = dest.resolve()
@@ -82,6 +101,11 @@ def _mirror(out: Path, dests: list[Path]) -> None:
             shutil.rmtree(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(out, dest)
+        for node in dest.rglob("*.md"):
+            text = node.read_text(encoding="utf-8")
+            stripped = _strip_resource(text)
+            if stripped != text:
+                node.write_text(stripped, encoding="utf-8")
 
 
 def _parse_front(text: str) -> tuple[dict, str]:

@@ -13,7 +13,6 @@ tags: [guide, section]
 | 1 | [Key Points](#key-points) | Core concepts and benefits |
 | 2 | [Four Layers](#key-points) | Layer diagram and dependency flow |
 | 3 | [Use Case Pattern](#use-case-pattern-with-input-ports) | Application layer organization |
-| 4 | [Reference Implementation](https://github.com/chbloemer/ai-architecture-sample) | Working code examples |
 
 ### Ready to Implement?
 - **[Java Package Structure](#java-package-structure)** - Copy-paste templates
