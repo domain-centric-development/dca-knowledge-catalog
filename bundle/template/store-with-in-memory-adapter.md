@@ -91,7 +91,7 @@ database adapter without touching the port.
 
 - Marker: [Store](/marker/port-out/store.md) · [OutputPort](/marker/port-out/outputport.md)
 - Decisions: [Repository or Store: which output port persists this](/decision/repository-vs-store.md)
-- Note: [The Store marker has no governing ArchUnit rules](/note/store-marker-has-no-governing-rules.md) — doctrine documented, not yet mechanically enforced
+- Rules: [extends the Store marker](/rule/tactical/store-interfaces-must-extend-the-store-marker-not-repository.md) · [interface in application.shared](/rule/tactical/store-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) · [implementation in adapter.outgoing](/rule/tactical/store-implementations-must-reside-in-the-adapter-outgoing-package.md) · [no findById/save](/rule/tactical/store-interfaces-must-not-declare-findbyid-or-save-methods.md)
 - Pitfall: [Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — the mistake this template avoids
 - Guide: [Layer elements](/guide/readme/elements.md)
 - Sibling template: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)

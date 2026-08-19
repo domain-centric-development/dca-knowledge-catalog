@@ -7,5 +7,5 @@
 - [naming/](naming/index.md) (11)
 - [onion/](onion/index.md) (3)
 - [strategic/](strategic/index.md) (9)
-- [tactical/](tactical/index.md) (18)
+- [tactical/](tactical/index.md) (22)
 - [usecase/](usecase/index.md) (11)
