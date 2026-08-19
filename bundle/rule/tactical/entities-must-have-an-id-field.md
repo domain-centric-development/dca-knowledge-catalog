@@ -20,20 +20,22 @@ def entityClasses = allClasses.stream()
 
 def violations = []
 entityClasses.each { entityClass ->
+  // Matched by type, not by name: the old check accepted any field whose lowercased name
+  // ended in "id", so valid, paid and uuid satisfied it while no identity existed. An
+  // identity is a value object implementing the Id marker.
   def hasIdField = entityClass.getAllFields().any { field ->
-    def fieldName = field.getName().toLowerCase()
-    fieldName == "id" || fieldName.endsWith("id")
+    field.getRawType().isAssignableTo(ID_MARKER)
   }
 
   if (!hasIdField) {
-    violations.add("${entityClass.getName()} appears to have no ID field")
+    violations.add("${entityClass.getName()} has no field whose type implements ${ID_MARKER.simpleName}")
   }
 }
 
 then:
 if (!violations.isEmpty()) {
   throw new AssertionError(
-  "Entities must have an identity field (DDD pattern).\n" +
+  "Entities must have an identity field typed as an Id value object (DDD pattern).\n" +
   "Violations found:\n" + violations.join("\n"))
 }
 true
