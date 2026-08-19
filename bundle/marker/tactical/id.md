@@ -10,6 +10,10 @@ tags: [tactical, marker]
 
 Marker for Id.
 
+## Governed by
+
+- [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
+
 ## Discussed in
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)

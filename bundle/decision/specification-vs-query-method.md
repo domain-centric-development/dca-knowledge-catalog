@@ -37,7 +37,7 @@ A quick tell: if the same rule appears in a use-case guard *and* in a filter *an
 ## Anchors
 
 - Markers: [Specification&lt;T&gt;](/marker/tactical/specification.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
-- Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md) · [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
+- Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md) · [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
 - Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Recipes: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Template: [Specification skeleton](/template/specification.md)

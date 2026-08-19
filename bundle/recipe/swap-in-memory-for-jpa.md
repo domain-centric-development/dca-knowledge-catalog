@@ -21,7 +21,7 @@ Move an aggregate from in-memory storage to a relational database **without touc
 - [Repository interfaces must reside in the application output-port package](/rule/tactical/repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) — the port stays put
 - [Repository implementations must reside in the adapter.outgoing package](/rule/tactical/repository-implementations-must-reside-in-adapter-outgoing-package.md) — the new JPA adapter lives here
 - [Repository interfaces should extend the Repository marker](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md)
-- [Repository methods must return aggregate roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md) — the adapter maps entities back to the aggregate, never leaks entities
+- [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md) — the adapter maps entities back to the aggregate, never leaks entities
 - [Repository interfaces must end with `Repository`](/rule/naming/repository-interfaces-must-end-with-repository.md)
 - [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/outgoing-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
 - [Controllers and resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md)

@@ -36,7 +36,7 @@ Ask, in order:
 ## Anchors
 
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md) · [Id](/marker/tactical/id.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
-- Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) · [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must return Aggregate Roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
+- Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) · [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
 - Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

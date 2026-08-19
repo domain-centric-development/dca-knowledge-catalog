@@ -22,7 +22,7 @@ Marker for Value.
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
-- [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [ELEMENTS](/guide/readme/elements.md)
