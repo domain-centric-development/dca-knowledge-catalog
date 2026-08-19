@@ -12,9 +12,9 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 
 ## Steps
 
-1. **Model it as a record** implementing `Value`, in the owning aggregate's `domain/{concept}/` package (or the shared kernel if it is genuinely universal — [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)). Generate from the [value-object template](/template/value-object.md).
+1. **Model it as a record** implementing `Value`, in the owning aggregate's `domain/{concept}/` package (or the shared kernel if it is genuinely universal — [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)). Generate from the [value-object template](/template/value-object.md). A final class is a permitted alternative if the team prefers it — it must then override `equals`/`hashCode` for attribute equality.
 2. **Validate in the compact constructor** — reject invalid state at construction so an instance is always valid; throw on bad input rather than storing it.
-3. **Keep it immutable** — records give you final fields and value equality for free. No setters; derive new values by returning new instances.
+3. **Keep it immutable** — records give you final fields and value equality for free; a class must be final, hold only final fields, and implement `equals`/`hashCode` itself. No setters; derive new values by returning new instances.
 4. **Name from the ubiquitous language** — no technical suffixes (`Manager`, `Helper`, `Util`, `Impl`) and no primitive obsession (wrap the primitive, don't pass a bare `String`).
 5. **Never embed an aggregate root or entity** inside a value object; hold their `Id` if a reference is needed.
 6. **Verify** — `./gradlew test-architecture`.
@@ -25,7 +25,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 - [Value object fields must be final (deep immutability)](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md)
 - [Value objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md)
 - [Value objects must not contain aggregate roots or entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- [Value Objects must be records](/rule/tactical/value-objects-must-be-records.md)
+- [Value Objects must be records or immutable classes with attribute equality](/rule/tactical/value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md)
 - [Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)](/rule/naming/domain-classes-must-not-use-technical-suffixes-manager-helper-util-impl.md)
 
 ## Anchors

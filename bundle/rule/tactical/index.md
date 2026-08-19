@@ -19,6 +19,6 @@
 - [Store interfaces must reside in the application layer's shared output-port package](store-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) — Store interfaces are output ports in the application layer (Hexagonal Architecture).
 - [Value Object classes should be final (immutability)](value-object-classes-should-be-final-immutability.md) — Value objects should be immutable (final classes) - Vernon's DDD recommendation.
 - [Value Object fields must be final (deep immutability)](value-object-fields-must-be-final-deep-immutability.md) — Value Object fields must be final (deep immutability).
-- [Value Objects must be records](value-objects-must-be-records.md) — A Value Object is defined by its attributes, which a record gives for free: .
+- [Value Objects must be records or immutable classes with attribute equality](value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md) — Value Objects must be records or immutable classes with attribute equality.
 - [Value Objects must not contain Aggregate Roots or Entities](value-objects-must-not-contain-aggregate-roots-or-entities.md) — Value Objects must not contain Aggregate Roots or Entities.
 - [Value Objects must not have setter methods](value-objects-must-not-have-setter-methods.md) — Value Objects must not have setter methods.

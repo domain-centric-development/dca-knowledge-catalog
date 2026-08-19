@@ -24,7 +24,7 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 - [Anti-corruption layer components must be in acl packages](/rule/strategic/anti-corruption-layer-components-must-be-in-acl-packages.md)
 - [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
 - [Event listeners consuming integration events should use an anti-corruption layer](/rule/strategic/event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md)
-- [Outgoing adapters may access Open Host Services from other contexts](/rule/hexagonal/outgoing-adapters-may-access-open-host-services-from-other-contexts.md)
+- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
 - [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/outgoing-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
 
 ## Anchors
