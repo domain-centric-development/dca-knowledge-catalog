@@ -22,7 +22,7 @@ Build a view for a query without going through the full aggregate write journey.
 - [Enriched domain models must be Value Object records](/rule/tactical/enriched-domain-models-must-be-value-object-records.md)
 - [Value objects must not contain aggregate roots or entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
 - [View models must reside in adapter.incoming.web packages](/rule/naming/viewmodels-must-reside-in-adapter-incoming-web-packages.md)
-- [DTOs must reside in the adapter package, not in domain or application](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md)
+- [DTOs must reside in the adapter package, not in domain or application](/rule/naming/dtos-must-reside-in-the-adapter-layer-not-in-domain-or-application.md)
 
 ## Anchors
 

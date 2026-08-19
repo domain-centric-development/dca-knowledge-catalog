@@ -16,7 +16,7 @@ Passing a presentation or transport DTO — a REST request body, a JSON-bound `*
 ## What forbids it
 
 - [DTOs must not be used in the Application Layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md) — the direct, mechanical prohibition.
-- [DTOs must reside in portadapter package (not in domain or application)](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md) — pins DTOs to the adapter layer where they belong.
+- [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dtos-must-reside-in-the-adapter-layer-not-in-domain-or-application.md) — pins DTOs to the adapter layer where they belong.
 
 ## Do instead
 

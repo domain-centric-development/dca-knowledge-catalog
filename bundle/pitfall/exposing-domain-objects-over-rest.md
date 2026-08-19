@@ -16,7 +16,7 @@ A REST controller that returns an aggregate or entity directly — `return order
 ## What forbids it
 
 - [HTTP response models must end with 'Response' and reside in adapter incoming package](/rule/usecase/http-response-models-must-end-with-response-and-reside-in-adapter-incoming-package.md) — the outbound wire type is a distinct `*Response` at the edge, not the domain object.
-- [DTOs must reside in portadapter package (not in domain or application)](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md) — the request/response shapes are adapter concerns; the domain never holds them, and the reverse — the domain object never reaches the wire.
+- [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dtos-must-reside-in-the-adapter-layer-not-in-domain-or-application.md) — the request/response shapes are adapter concerns; the domain never holds them, and the reverse — the domain object never reaches the wire.
 - [DTOs must not be used in the application layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md) — the use case speaks `Command`/`Query`/`Result`; the adapter maps `Result` → `Response`, so a domain type never has a legitimate path to the controller's return value.
 
 ## Do instead
@@ -29,7 +29,7 @@ Map at the edge. The use case returns a `Result` (application type, no domain ob
 
 ## Anchors
 
-- Rules: [HTTP response models must end with 'Response'](/rule/usecase/http-response-models-must-end-with-response-and-reside-in-adapter-incoming-package.md) · [DTOs must reside in portadapter package](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md) · [DTOs must not be used in the application layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md)
+- Rules: [HTTP response models must end with 'Response'](/rule/usecase/http-response-models-must-end-with-response-and-reside-in-adapter-incoming-package.md) · [DTOs must reside in the adapter layer](/rule/naming/dtos-must-reside-in-the-adapter-layer-not-in-domain-or-application.md) · [DTOs must not be used in the application layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
 - Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - Sibling pitfall: [DTO in the application layer](/pitfall/dto-in-application-layer.md)

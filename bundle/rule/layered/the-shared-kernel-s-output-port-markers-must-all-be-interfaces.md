@@ -1,9 +1,9 @@
 ---
 type: Rule
-title: "sharedkernel.application.port should only contain interfaces (Outbound Ports)"
+title: The shared kernel's output-port markers must all be interfaces
 rule: "sharedkernel.marker.port.out contains outbound port interfaces (Repository, OutputPort, DomainEventPublisher) ."
-constraint: "sharedkernel.application.port should only contain interfaces (Outbound Ports)."
-enforced_by: "LayeredArchitectureArchUnitTest#sharedkernel.application.port should only contain interfaces (Outbound Ports)"
+constraint: The shared kernel's output-port markers must all be interfaces.
+enforced_by: "LayeredArchitectureArchUnitTest#The shared kernel's output-port markers must all be interfaces"
 status: enforced
 test_class: LayeredArchitectureArchUnitTest
 resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy

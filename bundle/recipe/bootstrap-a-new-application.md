@@ -20,7 +20,7 @@ Stand up a fresh Domain-Centric Architecture app from nothing: the shared-kernel
 - [The base InputPort interface must be in the sharedkernel marker port-in package](/rule/usecase/base-inputport-interface-must-be-in-sharedkernel-marker-port-in-package.md)
 - [The rules of the layered architecture should be followed](/rule/layered/the-rules-of-the-layered-architecture-should-be-followed.md)
 - [Shared Kernel must not have dependencies on any bounded context](/rule/strategic/shared-kernel-must-not-have-dependencies-on-any-bounded-context.md)
-- [sharedkernel.application.port should only contain interfaces (outbound ports)](/rule/layered/sharedkernel-application-port-should-only-contain-interfaces-outbound-ports.md)
+- [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
 - [No technical bucket packages — package by domain concept](/rule/naming/no-technical-bucket-packages-package-by-domain-concept.md)
 
 ## Anchors

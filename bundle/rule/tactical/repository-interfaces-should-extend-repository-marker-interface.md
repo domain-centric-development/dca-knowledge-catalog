@@ -13,7 +13,7 @@ tags: [tactical, archunit]
 ```groovy
 expect:
 classes()
-  .that().resideInAnyPackage(PRODUCT_APPLICATION_PACKAGE, CART_APPLICATION_PACKAGE, CHECKOUT_APPLICATION_PACKAGE, ACCOUNT_APPLICATION_PACKAGE, INVENTORY_APPLICATION_PACKAGE, PRICING_APPLICATION_PACKAGE)
+  .that().resideInAPackage(APPLICATION_PACKAGE)
   .and().areInterfaces()
   .and().haveSimpleNameEndingWith("Repository")
   .and().doNotHaveSimpleName("Repository")

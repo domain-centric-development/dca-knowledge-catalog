@@ -1,9 +1,9 @@
 ---
 type: Rule
-title: Repository Implementations must reside in portadapter.outgoing package
+title: "Classes named *Repository must reside in the outgoing adapter package"
 rule: "Repository implementations are secondary adapters (outgoing ports)."
-constraint: Repository Implementations must reside in portadapter.outgoing package.
-enforced_by: "HexagonalArchitectureArchUnitTest#Repository Implementations must reside in portadapter.outgoing package"
+constraint: "Classes named *Repository must reside in the outgoing adapter package."
+enforced_by: "HexagonalArchitectureArchUnitTest#Classes named *Repository must reside in the outgoing adapter package"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
 resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy

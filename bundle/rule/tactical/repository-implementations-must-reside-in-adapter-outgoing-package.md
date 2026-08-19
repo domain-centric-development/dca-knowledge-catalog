@@ -13,9 +13,9 @@ tags: [tactical, archunit]
 ```groovy
 expect:
 classes()
-  .that().implement(Repository.class)
-  .and().areNotInterfaces()
-  .should().resideInAnyPackage(PRODUCT_ADAPTER_PACKAGE, CART_ADAPTER_PACKAGE, CHECKOUT_ADAPTER_PACKAGE, ACCOUNT_ADAPTER_PACKAGE, INVENTORY_ADAPTER_PACKAGE, PRICING_ADAPTER_PACKAGE)
+  .that().areNotInterfaces()
+  .and().areAssignableTo(Repository.class)
+  .should().resideInAPackage(OUTGOING_ADAPTER_PACKAGE)
   .because("Repository implementations are outgoing adapters in bounded contexts")
   .allowEmptyShould(true)
   .check(allClasses)

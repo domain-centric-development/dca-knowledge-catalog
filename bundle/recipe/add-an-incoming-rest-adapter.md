@@ -23,7 +23,7 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 - [Controllers and resources must never access repositories directly](/rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md)
 - [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/incoming-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
 - [Incoming adapters must only access their own bounded context](/rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md)
-- [DTOs must reside in the adapter package, not in domain or application](/rule/naming/dtos-must-reside-in-portadapter-package-not-in-domain-or-application.md)
+- [DTOs must reside in the adapter package, not in domain or application](/rule/naming/dtos-must-reside-in-the-adapter-layer-not-in-domain-or-application.md)
 - [View models must reside in adapter.incoming.web packages](/rule/naming/viewmodels-must-reside-in-adapter-incoming-web-packages.md)
 
 ## Anchors

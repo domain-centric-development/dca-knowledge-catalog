@@ -19,7 +19,7 @@ Give an aggregate root a persistence port: an interface in the application layer
 
 - [Repositories must only exist for aggregate roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md)
 - [Repository interfaces should extend the Repository marker](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md)
-- [Repository interfaces must reside in the application output-port package](/rule/tactical/repository-interfaces-must-reside-in-application-output-port-package.md)
+- [Repository interfaces must reside in the application output-port package](/rule/tactical/repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md)
 - [Repository implementations must reside in the adapter.outgoing package](/rule/tactical/repository-implementations-must-reside-in-adapter-outgoing-package.md)
 - [Repository methods must return aggregate roots](/rule/tactical/repository-methods-must-return-aggregate-roots.md)
 - [Repository interfaces must end with `Repository`](/rule/naming/repository-interfaces-must-end-with-repository.md)
