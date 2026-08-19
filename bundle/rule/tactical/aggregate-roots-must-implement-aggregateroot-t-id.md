@@ -13,7 +13,7 @@ tags: [tactical, archunit]
 ```groovy
 expect:
 classes()
-  .that().resideInAnyPackage(PRODUCT_DOMAIN_MODEL_PACKAGE, CART_DOMAIN_MODEL_PACKAGE, CHECKOUT_DOMAIN_MODEL_PACKAGE, ACCOUNT_DOMAIN_MODEL_PACKAGE, INVENTORY_DOMAIN_MODEL_PACKAGE, PRICING_DOMAIN_MODEL_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+  .that().resideInAnyPackage(DOMAIN_MODEL_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
   .and().haveSimpleNameEndingWith("AggregateRoot")
   .and().areNotInterfaces()
   .and().doNotHaveSimpleName("AggregateRoot") // Exclude the marker interface itself

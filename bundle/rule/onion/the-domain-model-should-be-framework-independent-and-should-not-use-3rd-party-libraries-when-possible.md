@@ -16,14 +16,11 @@ final JavaClasses importedClasses = new ClassFileImporter()
 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
 .importPackages(BASE_PACKAGE)
 
+// Matched by pattern, never by context name: a context added tomorrow is covered without
+// being registered here. DOMAIN_PACKAGE is "${BASE_PACKAGE}.*.domain..", which also covers
+// the shared kernel's own domain package.
 final String[] domainPackagePatterns = [
-  "${BASE_PACKAGE}.product.domain..",
-  "${BASE_PACKAGE}.cart.domain..",
-  "${BASE_PACKAGE}.checkout.domain..",
-  "${BASE_PACKAGE}.account.domain..",
-  "${BASE_PACKAGE}.inventory.domain..",
-  "${BASE_PACKAGE}.pricing.domain..",
-  "${BASE_PACKAGE}.sharedkernel.domain..",
+  DOMAIN_PACKAGE,
   "${BASE_PACKAGE}.sharedkernel.marker.tactical..",   // Allow DDD marker interfaces
   "${BASE_PACKAGE}.sharedkernel.marker.port.out.."    // Allow output port interfaces (e.g., Repository)
 ] as String[]

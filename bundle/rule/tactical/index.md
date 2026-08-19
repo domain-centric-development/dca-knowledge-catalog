@@ -8,7 +8,6 @@
 - [Entities must have an ID field](entities-must-have-an-id-field.md) — Entities must have an ID field.
 - [Entities must not be instantiated directly from outside the aggregate](entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md) — Entities must not be instantiated directly from outside the aggregate.
 - [Entities must not have fields with Aggregate Root types](entities-must-not-have-fields-with-aggregate-root-types.md) — Entities must not have fields with Aggregate Root types.
-- [Records for Value Objects are allowed (preferred pattern for simple Value Objects)](records-for-value-objects-are-allowed-preferred-pattern-for-simple-value-objects.md) — Records are a valid pattern for immutable value objects (Java 14+).
 - [Repositories must only exist for Aggregate Roots](repositories-must-only-exist-for-aggregate-roots.md) — Repositories must only exist for Aggregate Roots.
 - [Repository Implementations must reside in adapter.outgoing package](repository-implementations-must-reside-in-adapter-outgoing-package.md) — Repository implementations are outgoing adapters in bounded contexts.
 - [Repository interfaces must reside in the application layer's shared output-port package](repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) — Repository interfaces are output ports in the application layer (Hexagonal Architecture).
@@ -16,5 +15,6 @@
 - [Repository methods must return Aggregate Roots](repository-methods-must-return-aggregate-roots.md) — Repository methods must return Aggregate Roots.
 - [Value Object classes should be final (immutability)](value-object-classes-should-be-final-immutability.md) — Value objects should be immutable (final classes) - Vernon's DDD recommendation.
 - [Value Object fields must be final (deep immutability)](value-object-fields-must-be-final-deep-immutability.md) — Value Object fields must be final (deep immutability).
+- [Value Objects must be records](value-objects-must-be-records.md) — A Value Object is defined by its attributes, which a record gives for free: .
 - [Value Objects must not contain Aggregate Roots or Entities](value-objects-must-not-contain-aggregate-roots-or-entities.md) — Value Objects must not contain Aggregate Roots or Entities.
 - [Value Objects must not have setter methods](value-objects-must-not-have-setter-methods.md) — Value Objects must not have setter methods.

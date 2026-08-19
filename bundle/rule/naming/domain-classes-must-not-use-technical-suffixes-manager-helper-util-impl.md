@@ -15,7 +15,7 @@ expect:
 // Domain concepts carry ubiquitous-language names. 'Manager'/'Helper'/'Util' signal
 // a missing domain concept; 'Impl' signals naming by pattern instead of by specialty.
 noClasses()
-  .that().resideInAnyPackage(allDomainPatternsWithSharedKernel())
+  .that().resideInAPackage(DOMAIN_PACKAGE)
   .should().haveSimpleNameEndingWith("Manager")
   .orShould().haveSimpleNameEndingWith("Helper")
   .orShould().haveSimpleNameEndingWith("Util")

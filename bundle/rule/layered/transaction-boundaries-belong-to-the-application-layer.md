@@ -20,14 +20,14 @@ expect:
 def transactionalMethods = methods()
   .that().areAnnotatedWith(Transactional.class)
   .should().beDeclaredInClassesThat().resideInAnyPackage(
-    (allApplicationPatterns().toList() + ["..adapter.outgoing.."]) as String[])
+    [APPLICATION_PACKAGE, "..adapter.outgoing.."] as String[])
   .because("Transactions are an application-layer concern - domain and incoming adapters must not manage them")
   .allowEmptyShould(true)
 
 def transactionalClasses = classes()
   .that().areAnnotatedWith(Transactional.class)
   .should().resideInAnyPackage(
-    (allApplicationPatterns().toList() + ["..adapter.outgoing.."]) as String[])
+    [APPLICATION_PACKAGE, "..adapter.outgoing.."] as String[])
   .because("Transactions are an application-layer concern - domain and incoming adapters must not manage them")
   .allowEmptyShould(true)
 

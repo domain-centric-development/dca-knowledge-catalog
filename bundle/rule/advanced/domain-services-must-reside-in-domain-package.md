@@ -14,7 +14,7 @@ tags: [advanced, archunit]
 expect:
 classes()
   .that().implement(DomainService.class)
-  .should().resideInAnyPackage(PRODUCT_DOMAIN_PACKAGE, CART_DOMAIN_PACKAGE, CHECKOUT_DOMAIN_PACKAGE, ACCOUNT_DOMAIN_PACKAGE, INVENTORY_DOMAIN_PACKAGE, PRICING_DOMAIN_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+  .should().resideInAnyPackage(DOMAIN_PACKAGE)
   .because("Domain services are part of the domain layer, not application layer")
   .allowEmptyShould(true)
   .check(allClasses)

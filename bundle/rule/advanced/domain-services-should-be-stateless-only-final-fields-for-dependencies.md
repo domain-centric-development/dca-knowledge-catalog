@@ -14,7 +14,7 @@ tags: [advanced, archunit]
 expect:
 classes()
   .that().implement(DomainService.class)
-  .and().resideInAnyPackage(PRODUCT_DOMAIN_PACKAGE, CART_DOMAIN_PACKAGE, CHECKOUT_DOMAIN_PACKAGE, ACCOUNT_DOMAIN_PACKAGE, INVENTORY_DOMAIN_PACKAGE, PRICING_DOMAIN_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+  .and().resideInAnyPackage(DOMAIN_PACKAGE)
   .should().haveOnlyFinalFields()
   .because("Domain services should be stateless (only final fields for dependencies)")
   .allowEmptyShould(true)

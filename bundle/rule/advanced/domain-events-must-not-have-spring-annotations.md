@@ -13,7 +13,7 @@ tags: [advanced, archunit]
 ```groovy
 expect:
 noClasses()
-  .that().resideInAnyPackage(PRODUCT_DOMAIN_PACKAGE, CART_DOMAIN_PACKAGE, CHECKOUT_DOMAIN_PACKAGE, ACCOUNT_DOMAIN_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+  .that().resideInAnyPackage(DOMAIN_PACKAGE)
   .and().implement(DomainEvent.class)
   .should().beAnnotatedWith(Component.class)
   .orShould().beAnnotatedWith(Service.class)

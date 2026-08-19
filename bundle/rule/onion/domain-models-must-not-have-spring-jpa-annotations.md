@@ -13,7 +13,7 @@ tags: [onion, archunit]
 ```groovy
 expect:
 noClasses()
-.that().resideInAnyPackage(PRODUCT_DOMAIN_MODEL_PACKAGE, CART_DOMAIN_MODEL_PACKAGE, CHECKOUT_DOMAIN_MODEL_PACKAGE, ACCOUNT_DOMAIN_MODEL_PACKAGE, INVENTORY_DOMAIN_MODEL_PACKAGE, PRICING_DOMAIN_MODEL_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+.that().resideInAnyPackage(DOMAIN_MODEL_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
 .should().beAnnotatedWith(Component.class)
 .orShould().beAnnotatedWith(Service.class)
 .orShould().beAnnotatedWith("jakarta.persistence.Entity")

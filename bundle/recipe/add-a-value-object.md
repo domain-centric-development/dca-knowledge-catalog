@@ -25,7 +25,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 - [Value object fields must be final (deep immutability)](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md)
 - [Value objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md)
 - [Value objects must not contain aggregate roots or entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- [Records for value objects are the preferred pattern](/rule/tactical/records-for-value-objects-are-allowed-preferred-pattern-for-simple-value-objects.md)
+- [Value Objects must be records](/rule/tactical/value-objects-must-be-records.md)
 - [Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)](/rule/naming/domain-classes-must-not-use-technical-suffixes-manager-helper-util-impl.md)
 
 ## Anchors

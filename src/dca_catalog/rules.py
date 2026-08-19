@@ -63,22 +63,41 @@ def _dedent(body: str) -> str:
     return "\n".join(ln[pad:] if len(ln) >= pad else ln for ln in lines)
 
 
-def _status(body: str) -> str:
+def _assertion_block(body: str) -> str:
+    """The executable content of the feature's assertion block (``expect:`` or ``then:``).
+
+    Setup in ``given:``/``when:`` is not an assertion, so it must not count towards deciding
+    whether a rule checks anything. A feature whose ``given:`` computes two unread variables
+    and whose ``expect:`` is the literal ``true`` enforces nothing, however busy it looks.
+    """
     stripped = re.sub(r"//.*", "", body)
     stripped = re.sub(r"/\*.*?\*/", "", stripped, flags=re.DOTALL)
-    executable = "\n".join(
-        ln for ln in stripped.splitlines() if ln.strip() and ln.strip() not in ("expect:", "given:", "when:", "then:")
-    ).strip()
+    lines, collecting = [], False
+    for ln in stripped.splitlines():
+        label = ln.strip()
+        if label in ("expect:", "then:"):
+            collecting = True
+            continue
+        if label in ("given:", "when:", "where:", "cleanup:", "setup:"):
+            collecting = False
+            continue
+        if collecting and label:
+            lines.append(label)
+    return "\n".join(lines).strip()
+
+
+def _status(body: str) -> str:
     if "disabled" in body.lower():
         return "disabled"
+    assertion = _assertion_block(body)
+    # A feature whose only assertion is the literal `true` documents a pattern rather than
+    # enforcing one — checked before check(), since setup may call anything.
+    if re.fullmatch(r"true\b.*", assertion, re.DOTALL):
+        return "informational"
     # Anything that actually runs an ArchUnit rule against the classes is enforced,
     # regardless of diagnostics/prints alongside it.
-    if "check(" in body:
+    if "check(" in assertion or "check(" in body:
         return "enforced"
-    # A feature whose only executable statement is the literal `true` documents a
-    # pattern rather than enforcing one at runtime.
-    if executable == "true" or re.fullmatch(r"true\b.*", executable, re.DOTALL):
-        return "informational"
     # A diagnostic/print-only feature (no .check()) documents rather than enforces.
     if "Diagnostic" in body or "println" in body:
         return "informational"

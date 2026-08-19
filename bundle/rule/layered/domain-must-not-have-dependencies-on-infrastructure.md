@@ -13,7 +13,7 @@ tags: [layered, archunit]
 ```groovy
 expect:
 noClasses()
-  .that().resideInAnyPackage(PRODUCT_DOMAIN_PACKAGE, CART_DOMAIN_PACKAGE, CHECKOUT_DOMAIN_PACKAGE, ACCOUNT_DOMAIN_PACKAGE, INVENTORY_DOMAIN_PACKAGE, PRICING_DOMAIN_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
+  .that().resideInAnyPackage(DOMAIN_PACKAGE)
   .should().dependOnClassesThat().resideInAPackage(INFRASTRUCTURE_PACKAGE)
   .because("Domain should not depend on infrastructure concerns (Dependency Inversion Principle)")
   .check(allClasses)

@@ -12,14 +12,14 @@ tags: [usecase, archunit]
 
 ```groovy
 expect:
-// Use allIncomingAdapterPatterns() — covers all bounded contexts via @BoundedContext
+// Matched by pattern: every incoming adapter, in any context or none.
 // discovery PLUS the @SharedKernel-annotated module's adapter, where cross-cutting
 // Response classes (ErrorResponse, base Response, SimpleResponse) typically live.
 // Hardcoded context lists are fragile — they break the moment a new context is added.
 classes()
   .that().haveSimpleNameEndingWith("Response")
   .and().resideInAnyPackage(BASE_PACKAGE + "..")
-  .should().resideInAnyPackage(allIncomingAdapterPatterns())
+  .should().resideInAPackage(INCOMING_ADAPTER_PACKAGE)
   .because("HTTP response models should be in adapter incoming layer (ADR-020: Adapter layer uses *Response)")
   .allowEmptyShould(true)
   .check(allClasses)
@@ -27,5 +27,4 @@ classes()
 
 ## Applies to markers
 
-- [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)

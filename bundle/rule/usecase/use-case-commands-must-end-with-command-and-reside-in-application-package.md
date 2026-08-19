@@ -15,7 +15,7 @@ expect:
 classes()
   .that().haveSimpleNameEndingWith("Command")
   .and().resideInAnyPackage(BASE_PACKAGE + "..")
-  .should().resideInAnyPackage(PRODUCT_APPLICATION_PACKAGE, CART_APPLICATION_PACKAGE, CHECKOUT_APPLICATION_PACKAGE, ACCOUNT_APPLICATION_PACKAGE, INVENTORY_APPLICATION_PACKAGE, PRICING_APPLICATION_PACKAGE, BACKOFFICE_APPLICATION_PACKAGE)
+  .should().resideInAnyPackage(APPLICATION_PACKAGE)
   .because("Use case commands should be in application layer (CQRS pattern)")
   .allowEmptyShould(true)
   .check(allClasses)
