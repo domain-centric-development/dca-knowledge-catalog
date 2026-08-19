@@ -33,7 +33,7 @@ contextPackages.each { contextPackage ->
     noClasses()
       .that().resideInAPackage("${contextPackage}.adapter.incoming..")
         .and().resideOutsideOfPackage("..adapter.incoming.event..")
-      .should().accessClassesThat().resideInAnyPackage(otherContextPatterns)
+      .should().dependOnClassesThat().resideInAnyPackage(otherContextPatterns)
       .allowEmptyShould(true)
       .because("Incoming adapters in '${contextName}' must only orchestrate use cases from their own bounded context - use domain events for cross-context integration")
       .check(allClasses)

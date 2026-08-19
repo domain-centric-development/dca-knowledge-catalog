@@ -6,6 +6,6 @@
 - [layered/](layered/index.md) (5)
 - [naming/](naming/index.md) (11)
 - [onion/](onion/index.md) (3)
-- [strategic/](strategic/index.md) (9)
+- [strategic/](strategic/index.md) (10)
 - [tactical/](tactical/index.md) (22)
 - [usecase/](usecase/index.md) (11)

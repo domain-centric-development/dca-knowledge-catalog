@@ -41,7 +41,9 @@ contextPackages.each { sourceContext ->
     // Use allowEmptyShould(true) for contexts that may not have an application layer yet
     noClasses()
       .that().resideInAPackage(sourceContext + ".application..")
-      .should().accessClassesThat().resideInAnyPackage(forbiddenContextPatterns)
+      // dependOnClassesThat, not accessClassesThat: "access" is a method call or field
+      // access, so a field, parameter or record component of a foreign type slips past it.
+      .should().dependOnClassesThat().resideInAnyPackage(forbiddenContextPatterns)
       .allowEmptyShould(true)
       .because("Application layer of bounded context '${sourceName}' must not access other contexts directly - define output ports and use adapters instead")
       .check(allClasses)

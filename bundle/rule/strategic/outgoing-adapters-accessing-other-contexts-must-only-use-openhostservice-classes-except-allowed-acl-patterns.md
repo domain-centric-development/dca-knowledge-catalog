@@ -42,7 +42,7 @@ contextPackages.each { sourceContext ->
       // Forbid access to domain layers of other contexts
       noClasses()
         .that().resideInAPackage("${sourceContext}.adapter.outgoing..")
-        .should().accessClassesThat()
+        .should().dependOnClassesThat()
           .resideInAPackage("${targetContext}.domain..")
         .allowEmptyShould(true)
         .because("Outgoing adapters in '${sourceName}' must not access domain layer of '${targetName}' - use api/ or events/ packages instead")
@@ -51,7 +51,7 @@ contextPackages.each { sourceContext ->
       // Forbid access to application layers of other contexts
       noClasses()
         .that().resideInAPackage("${sourceContext}.adapter.outgoing..")
-        .should().accessClassesThat()
+        .should().dependOnClassesThat()
           .resideInAPackage("${targetContext}.application..")
         .allowEmptyShould(true)
         .because("Outgoing adapters in '${sourceName}' must not access application layer of '${targetName}' - use api/ or events/ packages instead")

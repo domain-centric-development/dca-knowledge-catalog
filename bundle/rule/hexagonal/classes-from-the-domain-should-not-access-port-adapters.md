@@ -14,7 +14,7 @@ tags: [hexagonal, archunit]
 expect:
 noClasses()
   .that().resideInAPackage(DOMAIN_MODEL_PACKAGE)
-  .should().accessClassesThat().resideInAPackage(ADAPTER_PACKAGE)
+  .should().dependOnClassesThat().resideInAPackage(ADAPTER_PACKAGE)
   .because("Domain should not depend on adapters (ports and adapters pattern)")
   .check(allClasses)
 ```

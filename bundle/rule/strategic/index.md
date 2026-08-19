@@ -1,6 +1,7 @@
 # strategic
 
 - [Anti-Corruption Layer components must be in acl packages](anti-corruption-layer-components-must-be-in-acl-packages.md) — Anti-Corruption Layer components must be in 'acl' packages for clear architectural intent (DDD Strategic Pattern).
+- [Bounded contexts must not access each other in the domain layer](bounded-contexts-must-not-access-each-other-in-the-domain-layer.md) — The domain layer of bounded context '<context>' must depend on nothing outside its own context and the shared kernel.
 - [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md) — Application layer of bounded context '<context>' must not access other contexts directly - define output ports and us...
 - [Diagnostic: Display discovered bounded contexts](diagnostic-display-discovered-bounded-contexts.md) — Diagnostic: Display discovered bounded contexts.
 - [Event Listeners consuming integration events should use Anti-Corruption Layer](event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md) — Event Listeners consuming integration events should use Anti-Corruption Layer.

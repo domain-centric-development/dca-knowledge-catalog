@@ -21,7 +21,7 @@ expect:
 boundedContexts.each { contextPackage, annotation ->
   noClasses()
     .that().resideInAPackage(sharedKernelPackage + "..")
-    .should().accessClassesThat().resideInAPackage(contextPackage + "..")
+    .should().dependOnClassesThat().resideInAPackage(contextPackage + "..")
     .allowEmptyShould(true)
     .because("Shared Kernel must not depend on bounded context '${annotation.name()}' (${contextPackage}) - Shared Kernel must be context-independent")
     .check(allClasses)

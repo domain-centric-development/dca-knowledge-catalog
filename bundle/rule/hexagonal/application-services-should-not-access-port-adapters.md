@@ -14,7 +14,7 @@ tags: [hexagonal, archunit]
 expect:
 noClasses()
   .that().resideInAPackage(APPLICATION_PACKAGE)
-  .should().accessClassesThat().resideInAPackage(ADAPTER_PACKAGE)
+  .should().dependOnClassesThat().resideInAPackage(ADAPTER_PACKAGE)
   .because("Application services should only depend on domain and outbound ports, not adapters")
   .check(allClasses)
 ```
