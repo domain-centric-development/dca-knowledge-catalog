@@ -695,20 +695,20 @@ static final ArchRule domain_events_should_be_immutable =
 @ArchTest
 static final ArchRule input_ports_should_have_correct_suffix =
     classes()
-        .that().resideInAPackage("..application..port.in..")
-        .or().resideInAPackage("..application..*..")
-            .and().areInterfaces()
-            .and().arePublic()
+        .that().resideInAPackage("..application..")
+        .and().areInterfaces()
+        .and().areAssignableTo(InputPort.class)
+        .and().doNotHaveSimpleName("InputPort")
+        .and().doNotHaveSimpleName("UseCase")
         .should().haveSimpleNameEndingWith("InputPort")
-        .orShould().haveSimpleNameEndingWith("UseCase")
-        .orShould().haveSimpleNameEndingWith("Query")
-        .because("Input ports should follow naming conventions");
+        .because("Input ports are matched by marker, not by package: DCA places each input port "
+               + "in its own use-case folder, so there is no ..application.port.in.. to point at");
 
 @ArchTest
 static final ArchRule use_case_implementations_should_have_suffix =
     classes()
-        .that().resideInAPackage("..application..usecase..")
-        .or().implement(InputPort.class)
+        .that().implement(InputPort.class)
+        .and().areNotInterfaces()
         .should().haveSimpleNameEndingWith("UseCase")
         .orShould().haveSimpleNameEndingWith("Service")
         .because("Use case implementations should follow naming conventions");
@@ -727,17 +727,17 @@ static final ArchRule repositories_should_have_correct_suffix =
 @ArchTest
 static final ArchRule input_ports_should_be_interfaces =
     classes()
-        .that().resideInAPackage("..application..port.in..")
+        .that().haveSimpleNameEndingWith("InputPort")
         .should().beInterfaces()
         .because("Input ports must be interfaces");
 
 @ArchTest
 static final ArchRule output_ports_should_be_interfaces =
     classes()
-        .that().resideInAPackage("..application..port.out..")
-        .or().resideInAPackage("..application..shared..")
+        .that().resideInAPackage("..application.shared..")
+        .and().areNotRecords()
         .should().beInterfaces()
-        .because("Output ports must be interfaces");
+        .because("Output ports live in application.shared and must be interfaces");
 
 @ArchTest
 static final ArchRule input_adapters_should_not_be_accessed_by_output_adapters =
@@ -846,19 +846,17 @@ public class DomainCentricArchitectureTest {
     @ArchTest
     static final ArchRule input_ports_are_interfaces =
         classes()
-            .that().resideInAPackage("..application..port.in..")
-            .or().haveSimpleNameEndingWith("InputPort")
+            .that().haveSimpleNameEndingWith("InputPort")
             .should().beInterfaces()
             .because("Input ports must be interfaces");
 
     @ArchTest
     static final ArchRule output_ports_are_interfaces =
         classes()
-            .that().resideInAPackage("..application..port.out..")
-            .or().resideInAPackage("..application..shared..")
+            .that().resideInAPackage("..application.shared..")
             .and().areNotRecords()
             .should().beInterfaces()
-            .because("Output ports must be interfaces");
+            .because("Output ports live in application.shared and must be interfaces");
 }
 ```
 
