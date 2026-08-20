@@ -6,7 +6,7 @@ constraint: "Application Services must only use outbound ports (not infrastructu
 enforced_by: "LayeredArchitectureArchUnitTest#Application Services must only use outbound ports (not infrastructure implementations)"
 status: enforced
 test_class: LayeredArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
 tags: [layered, archunit]
 ---
 

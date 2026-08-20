@@ -6,7 +6,7 @@ constraint: Repository Implementations must reside in adapter.outgoing package.
 enforced_by: "DddTacticalPatternsArchUnitTest#Repository Implementations must reside in adapter.outgoing package"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

@@ -6,7 +6,7 @@ constraint: Application layer InputPort implementations must end with 'UseCase'.
 enforced_by: "NamingConventionsArchUnitTest#Application layer InputPort implementations must end with 'UseCase'"
 status: enforced
 test_class: NamingConventionsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
 tags: [naming, archunit]
 ---
 

@@ -5,7 +5,7 @@ category: tactical
 kind: interface
 signature: public interface DomainEvent
 methods: ["UUID eventId()", "Instant occurredOn()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/DomainEvent.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/DomainEvent.java
 tags: [tactical, marker]
 ---
 

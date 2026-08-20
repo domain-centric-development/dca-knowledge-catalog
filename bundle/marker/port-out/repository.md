@@ -6,7 +6,7 @@ kind: interface
 signature: "public interface Repository<T extends AggregateRoot<T, ID>, ID extends Id> extends OutputPort"
 extends: [OutputPort]
 methods: ["Optional<T> findById(ID id)", "T save(T aggregate)", "void deleteById(ID id)"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/Repository.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/Repository.java
 tags: [port-out, marker]
 ---
 

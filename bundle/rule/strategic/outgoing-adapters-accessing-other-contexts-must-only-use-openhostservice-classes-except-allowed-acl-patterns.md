@@ -6,7 +6,7 @@ constraint: "Outgoing adapters accessing other contexts must only use OpenHostSe
 enforced_by: "DddStrategicPatternsArchUnitTest#Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

@@ -6,7 +6,7 @@ constraint: Output Ports in application.shared must extend OutputPort.
 enforced_by: "HexagonalArchitectureArchUnitTest#Output Ports in application.shared must extend OutputPort"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
 tags: [hexagonal, archunit]
 ---
 

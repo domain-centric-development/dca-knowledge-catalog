@@ -6,7 +6,7 @@ constraint: DTOs must not be used in the Domain Layer.
 enforced_by: "UseCasePatternsArchUnitTest#DTOs must not be used in the Domain Layer"
 status: enforced
 test_class: UseCasePatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
 tags: [usecase, archunit]
 ---
 

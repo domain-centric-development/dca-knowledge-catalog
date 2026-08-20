@@ -6,7 +6,7 @@ constraint: Output ports must not reside in the domain layer.
 enforced_by: "HexagonalArchitectureArchUnitTest#Output ports must not reside in the domain layer"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
 tags: [hexagonal, archunit]
 ---
 

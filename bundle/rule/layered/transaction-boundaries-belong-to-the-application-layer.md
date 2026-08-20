@@ -6,7 +6,7 @@ constraint: Transaction boundaries belong to the application layer.
 enforced_by: "LayeredArchitectureArchUnitTest#Transaction boundaries belong to the application layer"
 status: enforced
 test_class: LayeredArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
 tags: [layered, archunit]
 ---
 

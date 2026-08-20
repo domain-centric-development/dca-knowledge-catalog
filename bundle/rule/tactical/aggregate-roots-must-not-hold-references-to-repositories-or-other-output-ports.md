@@ -6,7 +6,7 @@ constraint: Aggregate Roots must not hold references to Repositories or other Ou
 enforced_by: "DddTacticalPatternsArchUnitTest#Aggregate Roots must not hold references to Repositories or other Output Ports"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

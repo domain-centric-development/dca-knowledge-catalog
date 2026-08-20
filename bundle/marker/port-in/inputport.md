@@ -4,7 +4,7 @@ title: InputPort
 category: port-in
 kind: interface
 signature: public interface InputPort
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/in/InputPort.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/in/InputPort.java
 tags: [port-in, marker]
 ---
 

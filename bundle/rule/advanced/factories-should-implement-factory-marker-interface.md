@@ -6,7 +6,7 @@ constraint: Factories should implement Factory Marker Interface.
 enforced_by: "DddAdvancedPatternsArchUnitTest#Factories should implement Factory Marker Interface"
 status: enforced
 test_class: DddAdvancedPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
 tags: [advanced, archunit]
 ---
 

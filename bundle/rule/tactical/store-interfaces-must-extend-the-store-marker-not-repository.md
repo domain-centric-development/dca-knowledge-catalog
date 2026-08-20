@@ -6,7 +6,7 @@ constraint: "Store interfaces must extend the Store marker, not Repository."
 enforced_by: "DddTacticalPatternsArchUnitTest#Store interfaces must extend the Store marker, not Repository"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

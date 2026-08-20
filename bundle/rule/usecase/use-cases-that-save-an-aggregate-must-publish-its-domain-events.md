@@ -6,7 +6,7 @@ constraint: Use cases that save an aggregate must publish its domain events.
 enforced_by: "UseCasePatternsArchUnitTest#Use cases that save an aggregate must publish its domain events"
 status: enforced
 test_class: UseCasePatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
 tags: [usecase, archunit]
 ---
 

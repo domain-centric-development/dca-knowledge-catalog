@@ -6,7 +6,7 @@ constraint: Domain model classes must not have public setter methods.
 enforced_by: "DddTacticalPatternsArchUnitTest#Domain model classes must not have public setter methods"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

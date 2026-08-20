@@ -6,7 +6,7 @@ constraint: "Classes named *Repository must reside in the outgoing adapter packa
 enforced_by: "HexagonalArchitectureArchUnitTest#Classes named *Repository must reside in the outgoing adapter package"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
 tags: [hexagonal, archunit]
 ---
 

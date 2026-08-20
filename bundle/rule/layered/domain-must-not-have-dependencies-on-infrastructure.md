@@ -6,7 +6,7 @@ constraint: Domain must not have dependencies on Infrastructure.
 enforced_by: "LayeredArchitectureArchUnitTest#Domain must not have dependencies on Infrastructure"
 status: enforced
 test_class: LayeredArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
 tags: [layered, archunit]
 ---
 

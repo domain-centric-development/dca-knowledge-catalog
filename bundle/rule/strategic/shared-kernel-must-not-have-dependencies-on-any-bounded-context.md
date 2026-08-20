@@ -6,7 +6,7 @@ constraint: Shared Kernel must not have dependencies on any bounded context.
 enforced_by: "DddStrategicPatternsArchUnitTest#Shared Kernel must not have dependencies on any bounded context"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

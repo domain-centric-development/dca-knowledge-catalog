@@ -5,7 +5,7 @@ category: tactical
 kind: interface
 signature: "public interface Specification<T>"
 methods: ["boolean isSatisfiedBy(T candidate)"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Specification.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Specification.java
 tags: [tactical, marker]
 ---
 

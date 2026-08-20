@@ -88,7 +88,7 @@ def _mirror(out: Path, dests: list[Path]) -> None:
     """Replace each dest with a fresh copy of the canonical bundle at ``out``.
 
     The mirror is what ships to other projects, where a source path like
-    ``ai-architecture-sample/src/main/java/...`` names a repository the reader
+    ``dca-ecommerce-sample/src/main/java/...`` names a repository the reader
     does not have. It must stand on its own, so ``resource:`` is dropped on the
     way out; the canonical bundle keeps it as provenance (and as the basis for
     the lint's stale-resource check).

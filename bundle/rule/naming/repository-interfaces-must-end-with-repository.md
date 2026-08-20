@@ -6,7 +6,7 @@ constraint: Repository Interfaces must end with 'Repository'.
 enforced_by: "NamingConventionsArchUnitTest#Repository Interfaces must end with 'Repository'"
 status: enforced
 test_class: NamingConventionsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
 tags: [naming, archunit]
 ---
 

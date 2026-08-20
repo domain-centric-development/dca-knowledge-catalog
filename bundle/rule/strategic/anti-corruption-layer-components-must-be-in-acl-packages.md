@@ -6,7 +6,7 @@ constraint: Anti-Corruption Layer components must be in acl packages.
 enforced_by: "DddStrategicPatternsArchUnitTest#Anti-Corruption Layer components must be in acl packages"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

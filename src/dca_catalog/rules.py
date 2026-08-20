@@ -1,6 +1,6 @@
 """Extract Rule nodes from the reference implementation's ArchUnit tests.
 
-Source: ``ai-architecture-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy``
+Source: ``dca-ecommerce-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy``
 Each Spock feature method (``def "<rule statement>"() { ... }``) becomes one OKF
 ``Rule`` node. The method name is already a human-readable rule statement; the
 body is carried verbatim as a fenced code block (lossless, no semantic parsing).
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .okf import Node, slugify
 
-RULES_REL = "ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture"
+RULES_REL = "dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture"
 
 # test class -> bundle category directory
 _CATEGORY = {

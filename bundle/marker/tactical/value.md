@@ -4,7 +4,7 @@ title: Value
 category: tactical
 kind: interface
 signature: public interface Value
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Value.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Value.java
 tags: [tactical, marker]
 ---
 

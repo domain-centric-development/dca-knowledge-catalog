@@ -5,7 +5,7 @@ category: tactical
 kind: annotation
 signature: "public @interface IntegrationEventType"
 methods: ["String name()", "int version()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/IntegrationEventType.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/IntegrationEventType.java
 tags: [tactical, marker]
 ---
 

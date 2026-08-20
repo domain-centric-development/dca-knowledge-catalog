@@ -6,7 +6,7 @@ constraint: The shared kernel's output-port markers must all be interfaces.
 enforced_by: "LayeredArchitectureArchUnitTest#The shared kernel's output-port markers must all be interfaces"
 status: enforced
 test_class: LayeredArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
 tags: [layered, archunit]
 ---
 

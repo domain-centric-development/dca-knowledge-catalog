@@ -6,7 +6,7 @@ constraint: "Incoming adapters must only access their own bounded context (excep
 enforced_by: "HexagonalArchitectureArchUnitTest#Incoming adapters must only access their own bounded context (except event consumers and Open Host Services)"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
 tags: [hexagonal, archunit]
 ---
 

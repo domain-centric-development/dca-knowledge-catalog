@@ -6,7 +6,7 @@ constraint: Domain Events that are not Integration Events must not have a versio
 enforced_by: "DddAdvancedPatternsArchUnitTest#Domain Events that are not Integration Events must not have a version field"
 status: enforced
 test_class: DddAdvancedPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
 tags: [advanced, archunit]
 ---
 

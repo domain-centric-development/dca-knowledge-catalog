@@ -5,7 +5,7 @@ category: infrastructure
 kind: annotation
 signature: "public @interface AsyncInitialize"
 methods: ["int priority()", "String description()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/infrastructure/AsyncInitialize.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/infrastructure/AsyncInitialize.java
 tags: [infrastructure, marker]
 ---
 

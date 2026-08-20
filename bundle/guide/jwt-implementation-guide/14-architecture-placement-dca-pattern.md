@@ -68,7 +68,7 @@ Each consuming service wires these into beans and provides its own `JwksEndpoint
 
 ### Principal Modeling: Adapter View vs Domain View
 
-Model the authenticated principal as a **sealed type** so anonymous vs. authenticated is exhaustive and type-checked, rather than a nullable user object (the `ai-architecture-sample` already follows this with its sealed `JwtIdentity`):
+Model the authenticated principal as a **sealed type** so anonymous vs. authenticated is exhaustive and type-checked, rather than a nullable user object (the `dca-ecommerce-sample` already follows this with its sealed `JwtIdentity`):
 
 ```java
 sealed interface User permits Guest, Registered {

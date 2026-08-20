@@ -1,6 +1,6 @@
 """Extract Marker nodes from the reference implementation's marker package.
 
-Source: ``ai-architecture-sample/src/main/java/.../sharedkernel/marker/**/*.java``
+Source: ``dca-ecommerce-sample/src/main/java/.../sharedkernel/marker/**/*.java``
 Each marker interface / annotation becomes one OKF ``Marker`` node carrying the
 contract a new application implements (signature, methods, what it extends).
 """
@@ -13,7 +13,7 @@ from pathlib import Path
 
 from .okf import Node, slugify
 
-MARKER_REL = "ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker"
+MARKER_REL = "dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker"
 
 # package sub-path (under marker/) -> bundle category directory
 _CATEGORY = {

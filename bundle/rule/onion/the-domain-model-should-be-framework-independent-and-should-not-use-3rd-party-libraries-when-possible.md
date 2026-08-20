@@ -6,7 +6,7 @@ constraint: The Domain Model should be framework independent and should not use 
 enforced_by: "OnionArchitectureArchUnitTest#The Domain Model should be framework independent and should not use 3rd party libraries when possible"
 status: enforced
 test_class: OnionArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/OnionArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/OnionArchitectureArchUnitTest.groovy
 tags: [onion, archunit]
 ---
 

@@ -6,7 +6,7 @@ constraint: Aggregate Roots must not have fields with other Aggregate Root types
 enforced_by: "DddTacticalPatternsArchUnitTest#Aggregate Roots must not have fields with other Aggregate Root types"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

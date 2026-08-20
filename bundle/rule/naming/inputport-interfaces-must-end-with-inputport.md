@@ -6,7 +6,7 @@ constraint: InputPort interfaces must end with 'InputPort'.
 enforced_by: "NamingConventionsArchUnitTest#InputPort interfaces must end with 'InputPort'"
 status: enforced
 test_class: NamingConventionsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
 tags: [naming, archunit]
 ---
 

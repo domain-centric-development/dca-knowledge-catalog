@@ -6,7 +6,7 @@ kind: interface
 signature: "public interface UseCase<INPUT, OUTPUT> extends InputPort"
 extends: [InputPort]
 methods: ["OUTPUT execute(INPUT input)"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/in/UseCase.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/in/UseCase.java
 tags: [port-in, marker]
 ---
 

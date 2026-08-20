@@ -6,7 +6,7 @@ constraint: Domain Services must implement DomainService Marker Interface and re
 enforced_by: "DddAdvancedPatternsArchUnitTest#Domain Services must implement DomainService Marker Interface and reside in domain.service"
 status: enforced
 test_class: DddAdvancedPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
 tags: [advanced, archunit]
 ---
 

@@ -6,7 +6,7 @@ constraint: The rules of the Layered Architecture should be followed.
 enforced_by: "LayeredArchitectureArchUnitTest#The rules of the Layered Architecture should be followed"
 status: disabled
 test_class: LayeredArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
 tags: [layered, archunit]
 ---
 

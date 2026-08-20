@@ -6,7 +6,7 @@ constraint: Open Host Services must reside in api or adapter.incoming.openhost p
 enforced_by: "DddStrategicPatternsArchUnitTest#Open Host Services must reside in api or adapter.incoming.openhost packages"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

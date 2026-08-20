@@ -6,7 +6,7 @@ constraint: "Aggregate Roots must implement AggregateRoot<T, ID>."
 enforced_by: "DddTacticalPatternsArchUnitTest#Aggregate Roots must implement AggregateRoot<T, ID>"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

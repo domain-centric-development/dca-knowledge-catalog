@@ -6,7 +6,7 @@ constraint: Integration Events must be in events or adapter outgoing event packa
 enforced_by: "DddStrategicPatternsArchUnitTest#Integration Events must be in events or adapter outgoing event packages"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

@@ -172,7 +172,7 @@ def test_process_node_carries_the_fillable_adr_template(bundle: Path):
 def test_bundle_never_links_out_to_a_sibling_project(bundle: Path):
     """The catalog stands on its own: it is *generated from* the guide and the
     sample, and must not link back at either (nor at the non-public book)."""
-    outward = re.compile(r"\]\([^)]*(ai-architecture-sample|dca-book|implementing-domain-centric-architecture)[^)]*\)")
+    outward = re.compile(r"\]\([^)]*(dca-ecommerce-sample|dca-book|implementing-domain-centric-architecture)[^)]*\)")
     hits = []
     for p in bundle.rglob("*.md"):
         for line in p.read_text(encoding="utf-8").splitlines():
@@ -270,7 +270,7 @@ def test_lint_catches_problems(tmp_path):
     (bundle / "marker").mkdir(parents=True)
     (bundle / "note").mkdir()
     (bundle / "marker" / "x.md").write_text(
-        "---\ntype: Marker\ntitle: X\nresource: ai-architecture-sample/GONE.java\n---\n\n"
+        "---\ntype: Marker\ntitle: X\nresource: dca-ecommerce-sample/GONE.java\n---\n\n"
         "broken [link](/rule/nope/none.md)\n",
         encoding="utf-8",
     )

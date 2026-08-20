@@ -76,7 +76,7 @@ to `./bundle`).
 
 1. **Source knowledge** (a pattern, a rule, a guide doc): edit the
    *source* — `implementing-domain-centric-architecture/`, the marker
-   interfaces or ArchUnit tests in `ai-architecture-sample/` — then
+   interfaces or ArchUnit tests in `dca-ecommerce-sample/` — then
    `make generate && make lint && make test`. Never hand-edit the generated zone.
 2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`
    with frontmatter `type:` + `title:` + `tags:` (pick tags from the SPEC.md

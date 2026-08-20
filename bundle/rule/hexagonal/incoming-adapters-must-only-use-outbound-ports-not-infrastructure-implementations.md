@@ -6,7 +6,7 @@ constraint: "Incoming Adapters must only use outbound ports (not infrastructure 
 enforced_by: "HexagonalArchitectureArchUnitTest#Incoming Adapters must only use outbound ports (not infrastructure implementations)"
 status: enforced
 test_class: HexagonalArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
 tags: [hexagonal, archunit]
 ---
 

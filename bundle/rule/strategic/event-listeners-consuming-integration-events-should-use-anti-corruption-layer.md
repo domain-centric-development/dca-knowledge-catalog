@@ -6,7 +6,7 @@ constraint: Event Listeners consuming integration events should use Anti-Corrupt
 enforced_by: "DddStrategicPatternsArchUnitTest#Event Listeners consuming integration events should use Anti-Corruption Layer"
 status: informational
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

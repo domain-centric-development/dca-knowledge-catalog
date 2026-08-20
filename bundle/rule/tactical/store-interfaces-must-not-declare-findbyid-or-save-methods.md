@@ -6,7 +6,7 @@ constraint: Store interfaces must not declare findById or save methods.
 enforced_by: "DddTacticalPatternsArchUnitTest#Store interfaces must not declare findById or save methods"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

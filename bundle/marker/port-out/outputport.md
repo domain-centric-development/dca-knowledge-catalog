@@ -4,7 +4,7 @@ title: OutputPort
 category: port-out
 kind: interface
 signature: public interface OutputPort
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/OutputPort.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/OutputPort.java
 tags: [port-out, marker]
 ---
 

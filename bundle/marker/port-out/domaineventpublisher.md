@@ -6,7 +6,7 @@ kind: interface
 signature: public interface DomainEventPublisher extends OutputPort
 extends: [OutputPort]
 methods: ["void publish(DomainEvent event)", "void publishAndClearEvents(AggregateRoot<?, ?> aggregate)"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/DomainEventPublisher.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/DomainEventPublisher.java
 tags: [port-out, marker]
 ---
 

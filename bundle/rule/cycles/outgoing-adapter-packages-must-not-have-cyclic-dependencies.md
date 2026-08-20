@@ -6,7 +6,7 @@ constraint: Outgoing Adapter Packages must not have cyclic dependencies.
 enforced_by: "PackageCyclesArchUnitTest#Outgoing Adapter Packages must not have cyclic dependencies"
 status: enforced
 test_class: PackageCyclesArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/PackageCyclesArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/PackageCyclesArchUnitTest.groovy
 tags: [cycles, archunit]
 ---
 

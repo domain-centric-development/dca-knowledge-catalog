@@ -6,7 +6,7 @@ kind: interface
 signature: public interface IntegrationEventPublisher extends OutputPort
 extends: [OutputPort]
 methods: ["void publish(IntegrationEvent event)"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/IntegrationEventPublisher.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/IntegrationEventPublisher.java
 tags: [port-out, marker]
 ---
 

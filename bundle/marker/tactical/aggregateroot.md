@@ -6,7 +6,7 @@ kind: interface
 signature: "public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> extends Entity<T, ID>"
 extends: [Entity]
 methods: ["List<DomainEvent> domainEvents()", "void clearDomainEvents()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/AggregateRoot.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/AggregateRoot.java
 tags: [tactical, marker]
 ---
 

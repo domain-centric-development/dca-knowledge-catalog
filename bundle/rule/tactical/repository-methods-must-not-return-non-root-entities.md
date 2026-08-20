@@ -6,7 +6,7 @@ constraint: Repository methods must not return non-root Entities.
 enforced_by: "DddTacticalPatternsArchUnitTest#Repository methods must not return non-root Entities"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

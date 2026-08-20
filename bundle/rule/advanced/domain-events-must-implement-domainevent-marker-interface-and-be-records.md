@@ -6,7 +6,7 @@ constraint: Domain Events must implement DomainEvent Marker Interface and be rec
 enforced_by: "DddAdvancedPatternsArchUnitTest#Domain Events must implement DomainEvent Marker Interface and be records"
 status: enforced
 test_class: DddAdvancedPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
 tags: [advanced, archunit]
 ---
 

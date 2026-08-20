@@ -6,7 +6,7 @@ constraint: "Bounded contexts must not directly access each other in application
 enforced_by: "DddStrategicPatternsArchUnitTest#Bounded contexts must not directly access each other in application layer (except allowed dependencies)"
 status: enforced
 test_class: DddStrategicPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
 tags: [strategic, archunit]
 ---
 

@@ -6,7 +6,7 @@ constraint: "Domain must not access Application Services (Onion Architecture - D
 enforced_by: "OnionArchitectureArchUnitTest#Domain must not access Application Services (Onion Architecture - Domain is innermost layer)"
 status: enforced
 test_class: OnionArchitectureArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/OnionArchitectureArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/OnionArchitectureArchUnitTest.groovy
 tags: [onion, archunit]
 ---
 

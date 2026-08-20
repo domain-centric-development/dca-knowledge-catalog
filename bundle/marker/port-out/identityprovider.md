@@ -6,7 +6,7 @@ kind: interface
 signature: public interface IdentityProvider extends OutputPort
 extends: [OutputPort]
 methods: ["Identity getCurrentIdentity()", "UserId userId()", "IdentityType type()", "Optional<String> email()", "Set<String> roles()", "String name()", "boolean isAnonymous()", "boolean isRegistered()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/IdentityProvider.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/IdentityProvider.java
 tags: [port-out, marker]
 ---
 

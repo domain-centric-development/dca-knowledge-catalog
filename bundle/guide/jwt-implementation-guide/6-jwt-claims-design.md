@@ -59,7 +59,7 @@ Using these names instead of ad-hoc equivalents (`userId`, `firstName`, `custome
 | `softLoginId` | String | Effective user identifier in soft login tokens — present only when `loginTyp == "SOFT"` |
 | `tenant` | String | Tenant/country scope (e.g. `"DE"`, `"AT"`, `"CH"`). Required for multi-country platforms. Verifying services MUST reject tokens whose `tenant` value does not match the service's configured scope |
 
-**`cid` vs `sub`:** `sub` is the immutable technical identity (a UUID that never changes, even if the email changes). `cid` is the customer-facing identifier that may appear on order confirmations and support tickets. In the `ai-architecture-sample`, `UserId` currently serves both roles; a production system may issue them separately.
+**`cid` vs `sub`:** `sub` is the immutable technical identity (a UUID that never changes, even if the email changes). `cid` is the customer-facing identifier that may appear on order confirmations and support tickets. In the `dca-ecommerce-sample`, `UserId` currently serves both roles; a production system may issue them separately.
 
 **`tenant` / multi-country:** In platforms serving multiple countries or storefronts, the `tenant` claim (sometimes called `mandant`) prevents a token issued for one country's shop from being accepted by another country's services. Validation logic: `if (!token.tenant().equals(serviceConfig.tenant())) throw new InvalidTenantException()`.
 

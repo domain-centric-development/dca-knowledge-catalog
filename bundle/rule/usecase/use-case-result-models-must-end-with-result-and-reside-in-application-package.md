@@ -6,7 +6,7 @@ constraint: Use Case Result Models must end with 'Result' and reside in applicat
 enforced_by: "UseCasePatternsArchUnitTest#Use Case Result Models must end with 'Result' and reside in application package"
 status: enforced
 test_class: UseCasePatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
 tags: [usecase, archunit]
 ---
 

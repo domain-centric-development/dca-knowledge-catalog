@@ -6,7 +6,7 @@ constraint: Use Case Commands must end with 'Command' and reside in application 
 enforced_by: "UseCasePatternsArchUnitTest#Use Case Commands must end with 'Command' and reside in application package"
 status: enforced
 test_class: UseCasePatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
 tags: [usecase, archunit]
 ---
 

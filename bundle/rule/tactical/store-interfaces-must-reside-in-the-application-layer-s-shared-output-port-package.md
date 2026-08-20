@@ -6,7 +6,7 @@ constraint: Store interfaces must reside in the application layer's shared outpu
 enforced_by: "DddTacticalPatternsArchUnitTest#Store interfaces must reside in the application layer's shared output-port package"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

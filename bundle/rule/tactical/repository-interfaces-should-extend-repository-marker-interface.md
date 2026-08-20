@@ -6,7 +6,7 @@ constraint: Repository Interfaces should extend Repository Marker Interface.
 enforced_by: "DddTacticalPatternsArchUnitTest#Repository Interfaces should extend Repository Marker Interface"
 status: enforced
 test_class: DddTacticalPatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
 tags: [tactical, archunit]
 ---
 

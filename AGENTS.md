@@ -16,8 +16,8 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 | Bundle content | Generated from |
 |----------------|----------------|
 | `bundle/guide/**` | `implementing-domain-centric-architecture/*.md` (full text, container + section nodes) |
-| `bundle/marker/**` | `ai-architecture-sample/src/main/java/.../sharedkernel/marker/**/*.java` |
-| `bundle/rule/**` | `ai-architecture-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy` |
+| `bundle/marker/**` | `dca-ecommerce-sample/src/main/java/.../sharedkernel/marker/**/*.java` |
+| `bundle/rule/**` | `dca-ecommerce-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy` |
 | `bundle/process/creating-an-adr.md` | `implementing-domain-centric-architecture/adr-template.md` |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
@@ -68,7 +68,7 @@ edits, regenerates indexes, lints).
 That copy is **also a derived artifact — never hand-edit it**. Every node type is
 public, so no node is dropped, but the `resource:` frontmatter is: the mirror
 travels into projects that do not have the source repositories, where a path like
-`ai-architecture-sample/src/main/java/…` names nothing. The canonical `bundle/`
+`dca-ecommerce-sample/src/main/java/…` names nothing. The canonical `bundle/`
 keeps `resource:` as provenance and as the basis for the lint's stale-resource
 check. Disable mirroring with `--no-default-mirror`; add targets with
 `--mirror PATH`.
@@ -131,7 +131,7 @@ document acquired an outward reference: fix it there.
 ## Cross-project consistency
 
 This sub-project is downstream of `implementing-domain-centric-architecture` and
-of `ai-architecture-sample`'s marker interfaces and ArchUnit tests. When any of
+of `dca-ecommerce-sample`'s marker interfaces and ArchUnit tests. When any of
 those change, regenerate the bundle (see the root `AGENTS.md` cross-project
 checklist). Changing the sample's ADRs or a book chapter does **not** affect the
 bundle. All persisted content is English.

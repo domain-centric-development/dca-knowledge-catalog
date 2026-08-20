@@ -6,7 +6,7 @@ constraint: Converters must reside in the adapter layer.
 enforced_by: "NamingConventionsArchUnitTest#Converters must reside in the adapter layer"
 status: enforced
 test_class: NamingConventionsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
 tags: [naming, archunit]
 ---
 

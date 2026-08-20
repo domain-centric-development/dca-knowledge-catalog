@@ -5,7 +5,7 @@ category: tactical
 kind: interface
 signature: "public interface Entity<T extends Entity<T, ID>, ID extends Id>"
 methods: ["ID id()"]
-resource: ai-architecture-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Entity.java
+resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Entity.java
 tags: [tactical, marker]
 ---
 

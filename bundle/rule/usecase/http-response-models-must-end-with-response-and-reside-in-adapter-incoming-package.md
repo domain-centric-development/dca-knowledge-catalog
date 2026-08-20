@@ -6,7 +6,7 @@ constraint: HTTP Response Models must end with 'Response' and reside in adapter 
 enforced_by: "UseCasePatternsArchUnitTest#HTTP Response Models must end with 'Response' and reside in adapter incoming package"
 status: enforced
 test_class: UseCasePatternsArchUnitTest
-resource: ai-architecture-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
 tags: [usecase, archunit]
 ---
 
