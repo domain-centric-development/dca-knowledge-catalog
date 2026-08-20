@@ -1,7 +1,7 @@
 ---
 type: Rule
 title: HTTP Response Models must end with 'Response' and reside in adapter incoming package
-rule: "HTTP response models should be in adapter incoming layer (ADR-020: Adapter layer uses *Response)."
+rule: HTTP response models should be in adapter incoming layer.
 constraint: HTTP Response Models must end with 'Response' and reside in adapter incoming package.
 enforced_by: "UseCasePatternsArchUnitTest#HTTP Response Models must end with 'Response' and reside in adapter incoming package"
 status: enforced
@@ -20,7 +20,7 @@ classes()
   .that().haveSimpleNameEndingWith("Response")
   .and().resideInAnyPackage(BASE_PACKAGE + "..")
   .should().resideInAPackage(INCOMING_ADAPTER_PACKAGE)
-  .because("HTTP response models should be in adapter incoming layer (ADR-020: Adapter layer uses *Response)")
+  .because("HTTP response models should be in adapter incoming layer")
   .allowEmptyShould(true)
   .check(allClasses)
 ```

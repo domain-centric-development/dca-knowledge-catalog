@@ -181,6 +181,22 @@ def test_bundle_never_links_out_to_a_sibling_project(bundle: Path):
     assert not hits, f"links out of the bundle: {hits}"
 
 
+def test_bundle_never_cites_specific_adr_records(bundle: Path):
+    """A reader building their own application has no ADR-0xx files, so a citation
+    would point at nothing. Only the Process node (built from the ADR template) may
+    carry ADR numbers — they are fictional examples teaching the practice. A hit
+    means a *source* (guide text, marker javadoc, ArchUnit `.because()`) acquired
+    an ADR reference: fix it there."""
+    adr_ref = re.compile(r"ADR-\d+")
+    hits = []
+    for zone in ("guide", "marker", "rule"):
+        for p in (bundle / zone).rglob("*.md"):
+            for line in p.read_text(encoding="utf-8").splitlines():
+                if adr_ref.search(line):
+                    hits.append((str(p.relative_to(bundle)), line.strip()[:80]))
+    assert not hits, f"ADR citations in the bundle: {hits}"
+
+
 def test_mirror_drops_the_resource_frontmatter(tmp_path):
     """The vendored copy ships to projects that do not have the source repos, so
     a ``resource:`` path there points at nothing. The canonical bundle keeps it."""

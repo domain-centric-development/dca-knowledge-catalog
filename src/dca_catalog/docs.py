@@ -31,7 +31,7 @@ from .process import NODE_PATH as _ADR_PROCESS_NODE, TEMPLATE_REL as _ADR_TEMPLA
 GUIDE_REL = "implementing-domain-centric-architecture"
 
 # files that are meta/tooling, not knowledge content
-_SKIP = {"CLAUDE.md", "adr-template.md", "RESTRUCTURING-PLAN.md"}
+_SKIP = {"CLAUDE.md", "AGENTS.md", "adr-template.md", "RESTRUCTURING-PLAN.md"}
 
 # Guide files that carry no Guide node of their own but *are* represented in the
 # bundle by another node type. Links to them are rewritten onto that node.
