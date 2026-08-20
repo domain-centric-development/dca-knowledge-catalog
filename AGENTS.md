@@ -27,7 +27,10 @@ are the **skeleton** it anchors to.
 decision *one* project made; a reader building their own application has no such
 file, so citing "ADR-030" would point at nothing. The book is not public. What
 either taught belongs in the guide — fold it in there, and it reaches the bundle
-on the next run.
+on the next run. The precise rule: **bundle knowledge nodes must not cite
+reference-implementation ADRs; the ADR process node may contain explicitly
+fictional example identifiers** (enforced by
+`test_bundle_never_cites_specific_adr_records`, which exempts the process node).
 
 To change the catalog, **edit the source above, then regenerate**:
 
