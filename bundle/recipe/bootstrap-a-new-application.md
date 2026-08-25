@@ -4,7 +4,7 @@ title: "Bootstrap a new application"
 tags: [recipe, strategic, bootstrap]
 ---
 
-Stand up a fresh Domain-Centric Architecture app from nothing: the shared-kernel marker contracts, the package skeleton, the ArchUnit governance suite, and the first bounded context. Get the guardrails in place *before* the domain code, so the rules are green from commit one. (The `dca-bootstrap` plugin skill automates this, but the steps are tool-agnostic.)
+Stand up a fresh Domain-Centric Architecture app from nothing: the shared-kernel marker contracts, the package skeleton, the ArchUnit governance suite, and the first bounded context. Get the guardrails in place *before* the domain code, so the rules are green from commit one.
 
 ## Steps
 
@@ -30,4 +30,4 @@ Stand up a fresh Domain-Centric Architecture app from nothing: the shared-kernel
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [ArchUnit adoption path](/guide/archunit-governance/adoption-path-tiers.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md) · [Core rule categories](/guide/archunit-governance/core-rule-categories.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Layer elements](/guide/readme/elements.md)
 - Then grow it: [Build a DCA application](/recipe/build-a-dca-application.md) (the task router) · [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
-- Starter files: [Project starter — CLAUDE.md + conventions](/template/project-starter-claude-md.md) — wires the coding agent to this catalog
+- Starter files: [Project starter — agent instructions](/template/project-starter-agent-instructions.md) — wires the coding agent to this catalog

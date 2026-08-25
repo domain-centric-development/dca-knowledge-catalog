@@ -72,6 +72,31 @@ bundle, so `git diff bundle/` after a regenerate shows exactly what changed.
 Options: `--repo-root PATH` (defaults to the repo root), `--out PATH` (defaults
 to `./bundle`).
 
+## Consume the catalog in another project
+
+Any project can pull a **standalone, read-only copy** of the graph — no source
+repositories, no install, no agent tooling required (the graph is pure,
+tool-agnostic DCA doctrine; see `SPEC.md`). The mirror drops the `resource:`
+provenance frontmatter, which points at repositories the consumer does not have.
+
+```bash
+# from this repo's remote (shallow clone, cleaned up afterwards)
+python3 -m dca_catalog.mirror --from <git-url> --to docs/dca-catalog
+
+# or from a local checkout / a built bundle dir
+python3 -m dca_catalog.mirror --from ../dca-knowledge-catalog --to docs/dca-catalog
+```
+
+(Without an install, run it from a checkout with `PYTHONPATH=src`; with
+`pip install`, the `dca-mirror` console script does the same. `--ref TAG`
+pins a version when `--from` is a git URL.)
+
+**Do not commit the mirror** — add the target to `.gitignore` and refresh on
+demand. It is a read-only copy of the doctrine; project-specific knowledge
+belongs in the project, not inside the mirrored graph. The one committed
+mirror is the vendored copy inside the dca-core plugin, which `generate`
+maintains.
+
 ## Add knowledge — the four ways
 
 1. **Source knowledge** (a pattern, a rule, a guide doc): edit the

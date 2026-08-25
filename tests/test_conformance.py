@@ -197,6 +197,22 @@ def test_bundle_never_cites_specific_adr_records(bundle: Path):
     assert not hits, f"ADR citations in the bundle: {hits}"
 
 
+def test_bundle_is_tool_agnostic():
+    """The catalog is pure doctrine — how DCA is used, enforced by markers and
+    ArchUnit — for *any* LLM or harness. Tooling (Claude Code, the dca-core
+    plugin, slash commands) consumes the graph; the graph never mentions the
+    tooling. Scans the committed bundle so authored extensible-zone nodes are
+    covered too (the generated fixture would miss them)."""
+    committed = Path(__file__).resolve().parents[1] / "bundle"
+    tool_ref = re.compile(r"claude|dca-core|dca-marketplace|slash command|plugin skill|/dca-\w", re.IGNORECASE)
+    hits = []
+    for p in committed.rglob("*.md"):
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if tool_ref.search(line):
+                hits.append((str(p.relative_to(committed)), line.strip()[:80]))
+    assert not hits, f"tool-specific references in the bundle: {hits}"
+
+
 def test_mirror_drops_the_resource_frontmatter(tmp_path):
     """The vendored copy ships to projects that do not have the source repos, so
     a ``resource:`` path there points at nothing. The canonical bundle keeps it."""
@@ -216,6 +232,45 @@ def test_mirror_drops_the_resource_frontmatter(tmp_path):
     node.write_text("---\ntype: Note\nresource: x\n---\n\n```yaml\nresource: keep-me\n```\n", encoding="utf-8")
     assert "resource: keep-me" in generate._strip_resource(node.read_text(encoding="utf-8"))
     assert "\nresource: x" not in generate._strip_resource(node.read_text(encoding="utf-8"))
+
+
+def test_mirror_cli_resolves_local_and_git_sources(tmp_path):
+    """``dca_catalog.mirror`` is the consumer-facing entry point: it mirrors an
+    already-built bundle (no source repos needed) from a local bundle dir, a
+    local catalog repo, or a git URL into another project."""
+    import subprocess
+
+    from dca_catalog import mirror
+
+    repo = tmp_path / "src-repo"
+    (repo / "bundle").mkdir(parents=True)
+    (repo / "bundle" / "index.md").write_text("# root\n", encoding="utf-8")
+    (repo / "bundle" / "node.md").write_text(
+        "---\ntype: Note\ntitle: N\nresource: gone\n---\n\nbody\n", encoding="utf-8"
+    )
+
+    # local catalog repo (bundle/ inside)
+    dest = tmp_path / "via-repo"
+    assert mirror.main(["--from", str(repo), "--to", str(dest)]) == 0
+    assert (dest / "index.md").exists()
+    assert "resource:" not in (dest / "node.md").read_text(encoding="utf-8")
+
+    # local bundle dir directly
+    dest2 = tmp_path / "via-bundle"
+    assert mirror.main(["--from", str(repo / "bundle"), "--to", str(dest2)]) == 0
+    assert (dest2 / "node.md").exists()
+
+    # git URL (shallow clone of a local file:// repo)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x"],
+        cwd=repo, check=True,
+    )
+    dest3 = tmp_path / "via-git"
+    assert mirror.main(["--from", f"file://{repo}", "--to", str(dest3)]) == 0
+    assert (dest3 / "index.md").exists()
+    assert "resource:" not in (dest3 / "node.md").read_text(encoding="utf-8")
 
 
 def test_no_links_into_removed_zones(bundle: Path):

@@ -14,6 +14,7 @@ dev = ["pytest>=7", "pyyaml>=6"]
 
 [project.scripts]
 dca-catalog = "dca_catalog.generate:main"
+dca-mirror = "dca_catalog.mirror:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

@@ -130,6 +130,15 @@ document acquired an outward reference: fix it there.
   contain illustrative domain examples — that's the source text.)
 - **OKF conformance** — every concept has a non-empty `type`; `index.md`/`log.md`
   are reserved; links are bundle-relative (leading `/`).
+- **Tool-agnostic doctrine** — the graph is pure DCA doctrine for *any* LLM or
+  agent harness. Tooling consumes the graph; the graph never mentions the
+  tooling: no node (either zone) may reference Claude Code, the dca-core plugin,
+  the marketplace, slash commands, or any other specific agent product. Enforced
+  by `test_bundle_is_tool_agnostic` (scans the committed bundle, both zones).
+- **Mirrors are never committed** — a mirror is regenerated on demand
+  (`python3 -m dca_catalog.mirror`, see below) and belongs in the consuming
+  project's `.gitignore`. The single exception is the vendored copy inside the
+  dca-core plugin, which `generate` maintains.
 
 ## Cross-project consistency
 

@@ -37,6 +37,17 @@ The bundle is one OKF graph split into two zones:
 Both zones are OKF-conformant (every node carries a non-empty `type`) and link
 freely into each other with bundle-relative links.
 
+## Tool-agnostic doctrine
+
+The catalog captures the *pure doctrine* of Domain-Centric Architecture — how
+DCA is applied, how marker interfaces make the architecture explicit, what the
+rules are and how ArchUnit enforces them — as an instrument for *any* LLM or
+agent harness to build and evolve a project by DCA principles with little
+context. Tooling consumes the graph; the graph never mentions the tooling: no
+node (either zone) may reference Claude Code, the dca-core plugin, the
+marketplace, slash commands, or any other specific agent product. Enforced by
+`test_bundle_is_tool_agnostic`.
+
 ## DCA node types
 
 This profile defines ten `type` values. All carry `title` and `tags`;
