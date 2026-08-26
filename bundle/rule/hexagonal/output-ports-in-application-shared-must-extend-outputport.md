@@ -1,7 +1,7 @@
 ---
 type: Rule
 title: Output Ports in application.shared must extend OutputPort
-rule: Interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy.
+rule: Top-level interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy. .
 constraint: Output Ports in application.shared must extend OutputPort.
 enforced_by: "HexagonalArchitectureArchUnitTest#Output Ports in application.shared must extend OutputPort"
 status: enforced
@@ -15,8 +15,11 @@ expect:
 classes()
   .that().resideInAPackage("..application.shared..")
   .and().areInterfaces()
+  .and().areTopLevelClasses()
+  .and().haveSimpleNameNotEndingWith("package-info")
   .should().beAssignableTo(OutputPort.class)
-  .because("Interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy")
+  .because("Top-level interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy. " +
+  "Nested interfaces (e.g. IdentityProvider.Identity) are part of their enclosing port's contract, not ports themselves")
   .check(allClasses)
 ```
 

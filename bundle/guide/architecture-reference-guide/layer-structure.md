@@ -213,7 +213,8 @@ infrastructure/
   - **`tactical/`** - tactical DDD pattern interfaces (AggregateRoot, Entity, Value, DomainEvent, etc.)
   - **`strategic/`** - strategic DDD pattern interfaces (BoundedContext, SharedKernel, OpenHostService, etc.)
   - **`port.in/`** - Input port interfaces (InputPort, UseCase)
-  - **`port.out/`** - Output port interfaces (OutputPort, Repository, DomainEventPublisher, IdentityProvider)
+  - **`port.out/`** - Output port interfaces (OutputPort, Repository, DomainEventPublisher)
+- **`sharedkernel.application.shared`** - Application-specific ports shared by several bounded contexts (e.g. an `IdentityProvider`); not part of the generic marker set
 
 **Dependencies**: NONE (framework-independent)
 
@@ -223,9 +224,8 @@ Input Ports (Driving/Primary)        Output Ports (Driven/Secondary)
 ┌────────────────────────────┐       ┌────────────────────────────┐
 │ InputPort (marker)         │       │ OutputPort (marker)        │
 │   └── UseCase<INPUT,OUTPUT>│       │   ├── Repository<T, ID>    │
-│         └── *InputPort     │       │   ├── DomainEventPublisher │
-└────────────────────────────┘       │   └── IdentityProvider     │
-                                     └────────────────────────────┘
+│         └── *InputPort     │       │   └── DomainEventPublisher │
+└────────────────────────────┘       └────────────────────────────┘
 ```
 
 **Example Structure**:
@@ -251,8 +251,7 @@ sharedkernel/
 │   │   └── out/                 ← Output port interfaces
 │   │       ├── OutputPort.java  # public interface OutputPort {} (marker)
 │   │       ├── Repository.java  # public interface Repository<T, ID> extends OutputPort {}
-│   │       ├── DomainEventPublisher.java  # public interface DomainEventPublisher extends OutputPort { void publish(DomainEvent event); }
-│   │       └── IdentityProvider.java      # public interface IdentityProvider extends OutputPort {}
+│   │       └── DomainEventPublisher.java  # public interface DomainEventPublisher extends OutputPort { void publish(DomainEvent event); }
 │   └── infrastructure/          ← Infrastructure markers
 │       └── AsyncInitialize.java # Marker annotation for async initialization
 ├── domain/
@@ -299,7 +298,6 @@ sharedkernel/
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- [IdentityProvider](/marker/port-out/identityprovider.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)

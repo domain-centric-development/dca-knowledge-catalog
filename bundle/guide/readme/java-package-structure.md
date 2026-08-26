@@ -258,7 +258,6 @@ com.company.project
 │   │           │   public interface IntegrationEventPublisher extends OutputPort {
 │   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts
 │   │           │   }
-│   │           └── IdentityProvider.java  // With nested Identity and IdentityType interfaces
 │   └── domain
 │       ├── model (Universal value objects)
 │       │   ├── Money.java
@@ -361,7 +360,6 @@ APPLICATION LAYER
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- [IdentityProvider](/marker/port-out/identityprovider.md)
 - [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
