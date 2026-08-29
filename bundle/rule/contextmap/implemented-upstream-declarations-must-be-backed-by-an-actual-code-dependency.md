@@ -7,7 +7,7 @@ constraint: Implemented Upstream declarations must be backed by an actual code d
 enforced_by: "ContextMapRules#DCA-MAP-007"
 status: enforced
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---

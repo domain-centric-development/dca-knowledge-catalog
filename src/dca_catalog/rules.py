@@ -28,6 +28,9 @@ from .okf import Node, slugify
 
 JAVA_REL = "dca-java"
 RULES_JSON_REL = f"{JAVA_REL}/rules.json"
+DOTNET_REL = "dca-dotnet"
+DOTNET_RULES_JSON_REL = f"{DOTNET_REL}/rules.json"
+DOTNET_RULES_SRC_REL = f"{DOTNET_REL}/src/DomainCentric.ArchRules/Rules"
 RULES_SRC_REL = f"{JAVA_REL}/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules"
 
 # rule set name (as in rules.json / DcaRuleSet.name()) -> implementing class
@@ -114,7 +117,29 @@ def _constraint(title: str) -> str:
     return " ".join(title.split()).rstrip(".") + "."
 
 
+def _dotnet_catalog(repo_root: Path) -> tuple[dict[str, dict], dict[str, str]]:
+    """``(ported, not_applicable)`` from ``dca-dotnet/rules.json`` — ported entries keyed by
+    id; not-applicable ids mapped to the reason. Both empty when the file is absent."""
+    path = repo_root / DOTNET_RULES_JSON_REL
+    if not path.exists():
+        print(f"WARNING: {path} not found — rule nodes list the Java implementation only.", file=sys.stderr)
+        return {}, {}
+    ported: dict[str, dict] = {}
+    not_applicable: dict[str, str] = {}
+    for entry in json.loads(path.read_text(encoding="utf-8")):
+        if entry.get("status") == "n/a":
+            not_applicable[entry["id"]] = entry["reason"]
+        else:
+            ported[entry["id"]] = entry
+    return ported, not_applicable
+
+
+def _dotnet_class(rule_set: str) -> str:
+    return _RULE_SET_CLASS.get(rule_set, "DotnetRules")
+
+
 def extract(repo_root: Path) -> list[Node]:
+    dotnet_ported, dotnet_na = _dotnet_catalog(repo_root)
     catalog_path = repo_root / RULES_JSON_REL
     if not catalog_path.exists():
         raise SystemExit(
@@ -144,6 +169,7 @@ def extract(repo_root: Path) -> list[Node]:
             code = ""
         else:
             code = _dedent(expression)
+        implementations = ["java"] + (["dotnet"] if rule_id in dotnet_ported else [])
         fm = {
             "type": "Rule",
             "id": rule_id,
@@ -153,17 +179,44 @@ def extract(repo_root: Path) -> list[Node]:
             "enforced_by": f"{class_name}#{rule_id}",
             "status": _status(title, code),
             "rule_set": rule_set,
-            "implementations": ["java"],
+            "implementations": implementations,
             "resource": (Path(RULES_SRC_REL) / f"{class_name}.java").as_posix(),
             "tags": [rule_set, "archunit"],
         }
+        if rule_id in dotnet_na:
+            fm["not_applicable_dotnet"] = dotnet_na[rule_id]
         body = f"```java\n{code}\n```" if code else ""
+        dotnet_ported.pop(rule_id, None)
         nodes.append(
             Node(
                 path=f"rule/{rule_set}/{slugify(title)}.md",
                 frontmatter=fm,
                 body=body,
                 meta={"name": title, "kind": "rule", "scan_text": code},
+            )
+        )
+    # Rules that exist only in the .NET library (rule set ``dotnet``, ids DCA-NET-…).
+    for rule_id, entry in sorted(dotnet_ported.items()):
+        rule_set, title, rationale = entry["set"], entry["title"], entry["rationale"]
+        class_name = _dotnet_class(rule_set)
+        nodes.append(
+            Node(
+                path=f"rule/{rule_set}/{slugify(title)}.md",
+                frontmatter={
+                    "type": "Rule",
+                    "id": rule_id,
+                    "title": title,
+                    "rule": rationale.rstrip(".") + ".",
+                    "constraint": _constraint(title),
+                    "enforced_by": f"{class_name}#{rule_id}",
+                    "status": "enforced",
+                    "rule_set": rule_set,
+                    "implementations": ["dotnet"],
+                    "resource": (Path(DOTNET_RULES_SRC_REL) / f"{class_name}.cs").as_posix(),
+                    "tags": [rule_set, "archunitnet"],
+                },
+                body="",
+                meta={"name": title, "kind": "rule", "scan_text": ""},
             )
         )
     return nodes

@@ -7,7 +7,7 @@ constraint: "Incoming adapters must only access their own bounded context (excep
 enforced_by: "HexagonalRules#DCA-HEX-007"
 status: enforced
 rule_set: hexagonal
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---

@@ -7,7 +7,7 @@ constraint: Event Listeners consuming integration events should use Anti-Corrupt
 enforced_by: "StrategicPatternRules#DCA-STR-010"
 status: informational
 rule_set: strategic
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---

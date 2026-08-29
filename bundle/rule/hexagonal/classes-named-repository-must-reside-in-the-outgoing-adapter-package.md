@@ -7,7 +7,7 @@ constraint: "Classes named *Repository must reside in the outgoing adapter packa
 enforced_by: "HexagonalRules#DCA-HEX-008"
 status: enforced
 rule_set: hexagonal
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---

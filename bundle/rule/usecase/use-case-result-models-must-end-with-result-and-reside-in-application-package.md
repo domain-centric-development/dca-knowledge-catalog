@@ -7,7 +7,7 @@ constraint: Use Case Result Models must end with 'Result' and reside in applicat
 enforced_by: "UseCaseRules#DCA-USE-006"
 status: enforced
 rule_set: usecase
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 ---

@@ -7,7 +7,7 @@ constraint: "Bounded contexts must not directly access each other in application
 enforced_by: "StrategicPatternRules#DCA-STR-003"
 status: enforced
 rule_set: strategic
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---

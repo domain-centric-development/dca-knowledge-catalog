@@ -7,7 +7,7 @@ constraint: Transaction boundaries belong to the application layer.
 enforced_by: "LayeredRules#DCA-LAY-004"
 status: enforced
 rule_set: layered
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java
 tags: [layered, archunit]
 ---

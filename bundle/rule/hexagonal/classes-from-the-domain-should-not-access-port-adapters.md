@@ -7,7 +7,7 @@ constraint: Classes from the domain should not access port adapters.
 enforced_by: "HexagonalRules#DCA-HEX-001"
 status: enforced
 rule_set: hexagonal
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---

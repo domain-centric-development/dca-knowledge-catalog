@@ -7,7 +7,7 @@ constraint: Incoming Adapter Packages must not have cyclic dependencies.
 enforced_by: "CycleRules#DCA-CYC-004"
 status: enforced
 rule_set: cycles
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 ---

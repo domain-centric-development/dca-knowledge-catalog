@@ -7,7 +7,7 @@ constraint: "Diagnostic: Display declared context map."
 enforced_by: "ContextMapRules#DCA-MAP-013"
 status: informational
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---

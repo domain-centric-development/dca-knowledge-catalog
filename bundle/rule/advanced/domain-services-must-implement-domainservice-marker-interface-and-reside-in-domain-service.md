@@ -7,7 +7,7 @@ constraint: Domain Services must implement DomainService Marker Interface and re
 enforced_by: "AdvancedPatternRules#DCA-ADV-009"
 status: enforced
 rule_set: advanced
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 ---

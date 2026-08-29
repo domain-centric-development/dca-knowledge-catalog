@@ -7,7 +7,7 @@ constraint: Application layer InputPort implementations must end with 'UseCase'.
 enforced_by: "NamingRules#DCA-NAM-001"
 status: enforced
 rule_set: naming
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---

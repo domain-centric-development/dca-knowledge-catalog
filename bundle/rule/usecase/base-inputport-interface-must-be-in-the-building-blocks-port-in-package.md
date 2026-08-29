@@ -7,7 +7,7 @@ constraint: Base InputPort interface must be in the building-blocks port in pack
 enforced_by: "UseCaseRules#DCA-USE-001"
 status: enforced
 rule_set: usecase
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 ---

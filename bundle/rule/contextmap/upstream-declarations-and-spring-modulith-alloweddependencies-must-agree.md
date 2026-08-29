@@ -10,6 +10,7 @@ rule_set: contextmap
 implementations: [java]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
+not_applicable_dotnet: Upstream declarations and Spring Modulith allowedDependencies must agree — .NET has no module system annotation; project boundaries take that role
 ---
 
 ```java

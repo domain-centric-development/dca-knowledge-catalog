@@ -7,7 +7,7 @@ constraint: InputPort interfaces must end with 'InputPort'.
 enforced_by: "NamingRules#DCA-NAM-003"
 status: enforced
 rule_set: naming
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---

@@ -7,7 +7,7 @@ constraint: "Domain Services should be stateless (only final fields for dependen
 enforced_by: "AdvancedPatternRules#DCA-ADV-012"
 status: enforced
 rule_set: advanced
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 ---

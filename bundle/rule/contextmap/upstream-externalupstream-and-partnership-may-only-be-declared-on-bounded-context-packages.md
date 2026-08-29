@@ -7,7 +7,7 @@ constraint: "Upstream, ExternalUpstream, and Partnership may only be declared on
 enforced_by: "ContextMapRules#DCA-MAP-001"
 status: enforced
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---

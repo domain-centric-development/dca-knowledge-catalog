@@ -7,7 +7,7 @@ constraint: Converters must reside in the adapter layer.
 enforced_by: "NamingRules#DCA-NAM-008"
 status: enforced
 rule_set: naming
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---

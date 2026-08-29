@@ -7,7 +7,7 @@ constraint: Cross-context dependencies on published interfaces require an Upstre
 enforced_by: "ContextMapRules#DCA-MAP-011"
 status: enforced
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---

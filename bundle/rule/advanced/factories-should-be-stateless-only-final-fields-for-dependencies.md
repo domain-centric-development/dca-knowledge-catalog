@@ -7,7 +7,7 @@ constraint: "Factories should be stateless (only final fields for dependencies).
 enforced_by: "AdvancedPatternRules#DCA-ADV-016"
 status: enforced
 rule_set: advanced
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 ---

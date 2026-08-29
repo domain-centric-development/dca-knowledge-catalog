@@ -7,7 +7,7 @@ constraint: "Port adapters (incoming and outgoing) must not communicate directly
 enforced_by: "HexagonalRules#DCA-HEX-006"
 status: enforced
 rule_set: hexagonal
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---

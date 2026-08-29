@@ -17,7 +17,7 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 |----------------|----------------|
 | `bundle/guide/**` | `implementing-domain-centric-architecture/*.md` (full text, container + section nodes) |
 | `bundle/marker/**` | `dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java` |
-| `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule) |
+| `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule); `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`) for `implementations`, `not_applicable_dotnet` and the .NET-only `DCA-NET` rules |
 | `bundle/process/creating-an-adr.md` | `implementing-domain-centric-architecture/adr-template.md` |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
@@ -101,7 +101,8 @@ document acquired an outward reference: fix it there.
 - `markers.py` — parses the building-block `.java` types (declaration anchored at column 0 to
   avoid matching javadoc example code); bundle category from the package path, `package:` kept.
 - `rules.py` — reads `dca-java/rules.json` (id, set, resolved title, rationale) and attaches the
-  verbatim `DcaRule.of/check(...)` expression from the matching `<Set>Rules.java`.
+  verbatim `DcaRule.of/check(...)` expression from the matching `<Set>Rules.java`; merges
+  `dca-dotnet/rules.json` (implementation flag, n/a reasons, `DCA-NET` nodes without code body).
 - `process.py` — builds the Process node from the ADR template.
 - `linker.py` — string-based cross-linking (rule↔marker, section→marker),
   sorted for determinism.
@@ -144,7 +145,8 @@ document acquired an outward reference: fix it there.
 ## Cross-project consistency
 
 This sub-project is downstream of `implementing-domain-centric-architecture` and
-of `dca-java`'s building-block markers and `dca-archunit` rules. When any of
+of `dca-java`'s building-block markers and `dca-archunit` rules, and of `dca-dotnet`'s rule
+catalog. When any of
 those change, regenerate the bundle (see the root `AGENTS.md` cross-project
 checklist). Changing the sample's ADRs or a book chapter does **not** affect the
 bundle. All persisted content is English.

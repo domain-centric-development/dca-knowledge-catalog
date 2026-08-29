@@ -7,7 +7,7 @@ constraint: "Value Object classes should be final (immutability)."
 enforced_by: "TacticalPatternRules#DCA-TAC-009"
 status: enforced
 rule_set: tactical
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---

@@ -93,8 +93,11 @@ One rule of the `dca-archunit` rule library — an enforceable architecture rule
 - `enforced_by`: `<RuleSetClass>#<id>`
 - `status`: `enforced | informational | disabled`
 - `rule_set`: the rule set name (`tactical`, `hexagonal`, `contextmap`, …)
-- `implementations`: the languages the rule is implemented in (`java`; `dotnet` once the
-  .NET rule library ports it)
+- `implementations`: the languages the rule is implemented in (`java`, `dotnet`; read from
+  `dca-java/rules.json` and `dca-dotnet/rules.json`). Rules in the `dotnet` rule set
+  (`DCA-NET-…`) exist only in .NET.
+- `not_applicable_dotnet` (optional): the reason when the .NET library deliberately does not
+  port a Java rule (e.g. it only checks a Spring annotation)
 - Body: the rule's `DcaRule.of(...)` / `DcaRule.check(...)` expression, verbatim, in a
   fenced block.
 - Link section: **Applies to markers**.

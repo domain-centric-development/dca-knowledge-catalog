@@ -7,7 +7,7 @@ constraint: Shared Kernel must not have dependencies on any bounded context.
 enforced_by: "StrategicPatternRules#DCA-STR-002"
 status: enforced
 rule_set: strategic
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---

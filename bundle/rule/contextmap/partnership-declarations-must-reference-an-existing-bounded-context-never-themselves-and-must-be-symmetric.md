@@ -7,7 +7,7 @@ constraint: "Partnership declarations must reference an existing bounded context
 enforced_by: "ContextMapRules#DCA-MAP-012"
 status: enforced
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---
