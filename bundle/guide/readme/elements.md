@@ -178,7 +178,10 @@ sharedkernel/
 │   ├── strategic/                 # DDD Strategic Patterns
 │   │   ├── SharedKernel.java      # Annotation for shared kernel packages
 │   │   ├── BoundedContext.java    # Annotation for bounded context packages
-│   │   └── OpenHostService.java   # Marker for Open Host Service adapters
+│   │   ├── OpenHostService.java   # Marker for Open Host Service adapters
+│   │   ├── Upstream.java          # Declares an upstream context (ACL or Conformist, via API or events)
+│   │   ├── ExternalUpstream.java  # Declares an external system as upstream/downstream
+│   │   └── Partnership.java       # Declares a mutual Partnership with another context
 │   └── port/                      # Hexagonal Architecture Ports
 │       ├── in/                    # Input Ports (Driving/Primary)
 │       │   ├── InputPort.java     # Marker for all input ports
@@ -450,8 +453,11 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [Store](/marker/port-out/store.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
+- [@ExternalUpstream](/marker/strategic/externalupstream.md)
 - [@OpenHostService](/marker/strategic/openhostservice.md)
+- [@Partnership](/marker/strategic/partnership.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)
+- [@Upstream](/marker/strategic/upstream.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)
 - [DomainEvent](/marker/tactical/domainevent.md)

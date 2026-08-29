@@ -27,6 +27,7 @@ _CATEGORY = {
     "PackageCyclesArchUnitTest": "cycles",
     "NamingConventionsArchUnitTest": "naming",
     "UseCasePatternsArchUnitTest": "usecase",
+    "ContextMapArchUnitTest": "contextmap",
 }
 
 # Test classes that match the *ArchUnitTest.groovy glob but carry no extractable

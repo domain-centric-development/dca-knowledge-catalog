@@ -1,6 +1,7 @@
 # rule
 
 - [advanced/](advanced/index.md) (18)
+- [contextmap/](contextmap/index.md) (13)
 - [cycles/](cycles/index.md) (4)
 - [hexagonal/](hexagonal/index.md) (10)
 - [layered/](layered/index.md) (5)

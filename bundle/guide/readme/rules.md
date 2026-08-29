@@ -283,8 +283,10 @@ including the assertion that an unsaved mutation is invisible to the next reader
 > **Note:** For deployment variations including multi-service bounded contexts, see [Deployment Patterns](/guide/deployment-patterns.md)
 
 #### Context Integration Rules
-- Make all context relationships explicit
-- Use Context Map to document relationships and each context's subdomain type (Core/Supporting/Generic)
+- Make all context relationships explicit — declare them in code on each context's `package-info.java`
+  (`@Upstream`, `@ExternalUpstream`, `@Partnership`, see [Declaring Context Relationships in Code](#declaring-context-relationships-in-code))
+- Use Context Map to document relationships and each context's subdomain type (Core/Supporting/Generic);
+  generate it from the declarations so it cannot drift
 - Protect domain with Anti-Corruption Layer
 - Shared Kernel requires team coordination
 - Keep Shared Kernel small
@@ -463,4 +465,7 @@ Customer Aggregate notified → Loyalty points updated
 
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
+- [@ExternalUpstream](/marker/strategic/externalupstream.md)
+- [@Partnership](/marker/strategic/partnership.md)
+- [@Upstream](/marker/strategic/upstream.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)

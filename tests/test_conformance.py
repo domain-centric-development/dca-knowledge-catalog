@@ -47,8 +47,8 @@ def test_counts(bundle: Path):
         fm, _ = _split_frontmatter(p.read_text(encoding="utf-8"))
         types[fm["type"]] = types.get(fm["type"], 0) + 1
     # skeleton from the sample app — exact (regression guard)
-    assert types["Marker"] == 23
-    assert types["Rule"] == 94
+    assert types["Marker"] == 29
+    assert types["Rule"] == 107
     assert types["Process"] == 1
     # the book and the sample's ADRs are deliberately not in the bundle
     assert "Chapter" not in types

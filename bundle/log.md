@@ -7,8 +7,8 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 ### Generated zone (rebuilt from sources)
 - Guides: 10
 - Sections: 104
-- Markers: 23
-- Rules: 94
+- Markers: 29
+- Rules: 107
 - Process: 1
 
 ### Extensible zone (authored, preserved across regeneration)
