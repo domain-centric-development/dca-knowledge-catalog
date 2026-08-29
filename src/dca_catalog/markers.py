@@ -1,8 +1,14 @@
-"""Extract Marker nodes from the reference implementation's marker package.
+"""Extract Marker nodes from the ``dca-building-blocks`` library.
 
-Source: ``dca-ecommerce-sample/src/main/java/.../sharedkernel/marker/**/*.java``
+Source: ``dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java``
 Each marker interface / annotation becomes one OKF ``Marker`` node carrying the
 contract a new application implements (signature, methods, what it extends).
+
+The bundle keeps its own four-way category taxonomy (``tactical``, ``strategic``,
+``port-in``, ``port-out``) — stable node paths for links from the authored zone
+— while the ``package`` frontmatter records the library package the type
+actually lives in (``ddd.strategic.relationships`` for the context-map
+annotations, for instance).
 """
 
 from __future__ import annotations
@@ -13,16 +19,18 @@ from pathlib import Path
 
 from .okf import Node, slugify
 
-MARKER_REL = "dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker"
+MARKER_REL = "dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks"
 
-# package sub-path (under marker/) -> bundle category directory
+# package sub-path (under buildingblocks/) -> bundle category directory.
+# Longest match wins, so ``ddd/strategic/relationships`` is checked before ``ddd/strategic``.
 _CATEGORY = {
-    "tactical": "tactical",
-    "strategic": "strategic",
-    "port/in": "port-in",
-    "port/out": "port-out",
-    "infrastructure": "infrastructure",
+    "ddd/tactical": "tactical",
+    "ddd/strategic/relationships": "strategic",
+    "ddd/strategic": "strategic",
+    "hexagonal/port/in": "port-in",
+    "hexagonal/port/out": "port-out",
 }
+_PACKAGE_RE = re.compile(r"^package\s+([\w.]+);", re.MULTILINE)
 
 # Anchored at column 0 so example declarations inside javadoc (` * public ...`)
 # are not mistaken for the real top-level type declaration.
@@ -36,11 +44,11 @@ _METHOD_RE = re.compile(
 
 def _category(path: Path) -> str:
     rel = path.as_posix()
-    for key, cat in _CATEGORY.items():
-        if f"/marker/{key}/" in rel:
-            return cat
+    for key in sorted(_CATEGORY, key=len, reverse=True):
+        if f"/buildingblocks/{key}/" in rel:
+            return _CATEGORY[key]
     print(
-        f"WARNING: marker {path.name} is in no known marker sub-package "
+        f"WARNING: marker {path.name} is in no known building-blocks sub-package "
         f"({', '.join(_CATEGORY)}) — defaulting to 'tactical'. Add the package to "
         f"markers._CATEGORY.",
         file=sys.stderr,
@@ -171,6 +179,9 @@ def extract(repo_root: Path) -> list[Node]:
             "kind": "annotation" if is_annotation else ("class" if kind == "class" else "interface"),
             "signature": signature,
         }
+        pkg = _PACKAGE_RE.search(source)
+        if pkg:
+            fm["package"] = pkg.group(1)
         if extends:
             fm["extends"] = extends
         if methods:

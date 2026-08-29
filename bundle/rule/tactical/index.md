@@ -1,24 +1,24 @@
 # tactical
 
 - [Aggregate Roots must implement AggregateRoot<T, ID>](aggregate-roots-must-implement-aggregateroot-t-id.md) — Classes named *AggregateRoot must implement AggregateRoot interface (DDD pattern).
-- [Aggregate Roots must not have fields with other Aggregate Root types](aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) — Aggregate Roots must not have fields with other Aggregate Root types.
-- [Aggregate Roots must not hold references to Repositories or other Output Ports](aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md) — Aggregate Roots must not hold references to Repositories or other Output Ports.
-- [Domain model classes must not have public setter methods](domain-model-classes-must-not-have-public-setter-methods.md) — Domain model classes must not have public setter methods.
+- [Aggregate Roots must not have fields with other Aggregate Root types](aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) — Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep aggregate boundaries and transactio...
+- [Aggregate Roots must not hold references to Repositories or other Output Ports](aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md) — Aggregates are persistence-ignorant: repositories and services are passed as method parameters by the use case, never...
+- [Domain model classes must not have public setter methods](domain-model-classes-must-not-have-public-setter-methods.md) — Behavior-rich domain models change state through intention-revealing methods from the ubiquitous language, never thro...
 - [Enriched Domain Models must be Value Object records](enriched-domain-models-must-be-value-object-records.md) — Enriched domain models are immutable read projections and must be records implementing Value.
-- [Entities must have an ID field](entities-must-have-an-id-field.md) — Entities must have an ID field.
-- [Entities must not be instantiated directly from outside the aggregate](entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md) — Entities must not be instantiated directly from outside the aggregate.
-- [Entities must not have fields with Aggregate Root types](entities-must-not-have-fields-with-aggregate-root-types.md) — Entities must not have fields with Aggregate Root types.
-- [Repositories must only exist for Aggregate Roots](repositories-must-only-exist-for-aggregate-roots.md) — Repositories must only exist for Aggregate Roots.
+- [Entities must have an ID field](entities-must-have-an-id-field.md) — An Entity is defined by its identity, which is a value object implementing the Id marker.
+- [Entities must not be instantiated directly from outside the aggregate](entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md) — Entities are created through their aggregate root so that the root can enforce its invariants.
+- [Entities must not have fields with Aggregate Root types](entities-must-not-have-fields-with-aggregate-root-types.md) — An entity inside an aggregate references other aggregates by identity only, otherwise the aggregate boundary leaks.
+- [Repositories must only exist for Aggregate Roots](repositories-must-only-exist-for-aggregate-roots.md) — A repository is the collection of one aggregate type; a repository for an entity would let callers bypass the root th...
 - [Repository Implementations must reside in adapter.outgoing package](repository-implementations-must-reside-in-adapter-outgoing-package.md) — Repository implementations are outgoing adapters in bounded contexts.
 - [Repository interfaces must reside in the application layer's shared output-port package](repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) — Repository interfaces are output ports in the application layer (Hexagonal Architecture).
 - [Repository Interfaces should extend Repository Marker Interface](repository-interfaces-should-extend-repository-marker-interface.md) — Repository interfaces should extend Repository marker interface.
-- [Repository methods must not return non-root Entities](repository-methods-must-not-return-non-root-entities.md) — Repository methods must not return non-root Entities.
+- [Repository methods must not return non-root Entities](repository-methods-must-not-return-non-root-entities.md) — A caller receiving an Entity that is not an Aggregate Root could mutate part of an aggregate without passing its root...
 - [Store implementations must reside in the adapter.outgoing package](store-implementations-must-reside-in-the-adapter-outgoing-package.md) — Store implementations are outgoing adapters in bounded contexts.
 - [Store interfaces must extend the Store marker, not Repository](store-interfaces-must-extend-the-store-marker-not-repository.md) — Stores extend the Store marker; Repository is reserved for Aggregate Roots.
-- [Store interfaces must not declare findById or save methods](store-interfaces-must-not-declare-findbyid-or-save-methods.md) — Store interfaces must not declare findById or save methods.
+- [Store interfaces must not declare findById or save methods](store-interfaces-must-not-declare-findbyid-or-save-methods.md) — findById/save are Repository semantics; a Store that has them is a Repository wearing the wrong name, and the stored ...
 - [Store interfaces must reside in the application layer's shared output-port package](store-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) — Store interfaces are output ports in the application layer (Hexagonal Architecture).
 - [Value Object classes should be final (immutability)](value-object-classes-should-be-final-immutability.md) — Value objects should be immutable (final classes) - Vernon's DDD recommendation.
-- [Value Object fields must be final (deep immutability)](value-object-fields-must-be-final-deep-immutability.md) — Value Object fields must be final (deep immutability).
-- [Value Objects must be records or immutable classes with attribute equality](value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md) — Value Objects must be records or immutable classes with attribute equality.
-- [Value Objects must not contain Aggregate Roots or Entities](value-objects-must-not-contain-aggregate-roots-or-entities.md) — Value Objects must not contain Aggregate Roots or Entities.
-- [Value Objects must not have setter methods](value-objects-must-not-have-setter-methods.md) — Value Objects must not have setter methods.
+- [Value Object fields must be final (deep immutability)](value-object-fields-must-be-final-deep-immutability.md) — Records have implicitly final fields and enums are immutable by design; a hand-written value class must make every in...
+- [Value Objects must be records or immutable classes with attribute equality](value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md) — A record grants attribute-based equality for free; a hand-written Value Object class must override equals and hashCod...
+- [Value Objects must not contain Aggregate Roots or Entities](value-objects-must-not-contain-aggregate-roots-or-entities.md) — A Value Object is defined by its attributes; holding an object with identity would give it a lifecycle it must not have.
+- [Value Objects must not have setter methods](value-objects-must-not-have-setter-methods.md) — Value Objects are immutable; state changes produce a new instance instead of mutating.

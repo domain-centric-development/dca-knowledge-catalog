@@ -1,27 +1,36 @@
 ---
 type: Rule
+id: DCA-NAM-010
 title: "Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)"
 rule: "Domain names come from the ubiquitous language - name services by their specialty, not by technical role."
 constraint: "Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)."
-enforced_by: "NamingConventionsArchUnitTest#Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)"
+enforced_by: "NamingRules#DCA-NAM-010"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-// Domain concepts carry ubiquitous-language names. 'Manager'/'Helper'/'Util' signal
-// a missing domain concept; 'Impl' signals naming by pattern instead of by specialty.
-noClasses()
-  .that().resideInAPackage(DOMAIN_PACKAGE)
-  .should().haveSimpleNameEndingWith("Manager")
-  .orShould().haveSimpleNameEndingWith("Helper")
-  .orShould().haveSimpleNameEndingWith("Util")
-  .orShould().haveSimpleNameEndingWith("Utils")
-  .orShould().haveSimpleNameEndingWith("Impl")
-  .because("Domain names come from the ubiquitous language - name services by their specialty, not by technical role")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-010",
+    "Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)",
+    "Domain names come from the ubiquitous language - name services by their specialty, not by"
+        + " technical role",
+    arch ->
+        noClasses()
+            .that()
+            .resideInAPackage(layout.domainPattern())
+            .should()
+            .haveSimpleNameEndingWith("Manager")
+            .orShould()
+            .haveSimpleNameEndingWith("Helper")
+            .orShould()
+            .haveSimpleNameEndingWith("Util")
+            .orShould()
+            .haveSimpleNameEndingWith("Utils")
+            .orShould()
+            .haveSimpleNameEndingWith("Impl")
+            .allowEmptyShould(true))
 ```

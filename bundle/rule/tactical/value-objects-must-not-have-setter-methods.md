@@ -1,45 +1,34 @@
 ---
 type: Rule
+id: DCA-TAC-011
 title: Value Objects must not have setter methods
-rule: Value Objects must not have setter methods.
+rule: Value Objects are immutable; state changes produce a new instance instead of mutating.
 constraint: Value Objects must not have setter methods.
-enforced_by: "DddTacticalPatternsArchUnitTest#Value Objects must not have setter methods"
+enforced_by: "TacticalPatternRules#DCA-TAC-011"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-// Value Objects are immutable, so they should not have setter methods
-// Records don't have setters, but regular classes need this check
-
-def valueObjectClasses = allClasses.stream()
-  .filter { it.isAssignableTo(Value.class) }
-  .filter { !it.isInterface() }
-  .collect()
-
-def violations = []
-valueObjectClasses.each { voClass ->
-  voClass.getAllMethods().each { method ->
-    if (method.getName().startsWith("set") &&
-      method.getName().length() > 3 &&
-      Character.isUpperCase(method.getName().charAt(3)) &&
-      method.getRawParameterTypes().size() == 1 &&
-      method.getRawReturnType().getName() == "void") {
-      violations.add("${voClass.getName()} has setter method '${method.getName()}'")
-    }
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Value Objects must be immutable and should not have setter methods.\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+```java
+DcaRule.check(
+    "DCA-TAC-011",
+    "Value Objects must not have setter methods",
+    "Value Objects are immutable; state changes produce a new instance instead of mutating",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
+        for (JavaMethod method : valueObject.getAllMethods()) {
+          if (isSetter(method)) {
+            violations.add(
+                valueObject.getName() + " has setter method '" + method.getName() + "'");
+          }
+        }
+      }
+      fail("Value Objects must be immutable and should not have setter methods.", violations);
+    })
 ```
 
 ## Applies to markers

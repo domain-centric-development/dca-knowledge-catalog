@@ -1,20 +1,26 @@
 ---
 type: Rule
+id: DCA-CYC-001
 title: Domain Packages must not have cyclic dependencies
 rule: "Domain model packages should have clear boundaries and no cycles (Acyclic Dependencies Principle)."
 constraint: Domain Packages must not have cyclic dependencies.
-enforced_by: "PackageCyclesArchUnitTest#Domain Packages must not have cyclic dependencies"
+enforced_by: "CycleRules#DCA-CYC-001"
 status: enforced
-test_class: PackageCyclesArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/PackageCyclesArchUnitTest.groovy
+rule_set: cycles
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 ---
 
-```groovy
-expect:
-slices()
-  .matching("${BASE_PACKAGE}.(*).domain.model..")
-  .should().beFreeOfCycles()
-  .because("Domain model packages should have clear boundaries and no cycles (Acyclic Dependencies Principle)")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-CYC-001",
+    "Domain Packages must not have cyclic dependencies",
+    "Domain model packages should have clear boundaries and no cycles (Acyclic Dependencies"
+        + " Principle)",
+    arch ->
+        slices()
+            .matching(layout.basePackage() + ".(*)." + layout.domainSubpackage() + ".model..")
+            .should()
+            .beFreeOfCycles())
 ```

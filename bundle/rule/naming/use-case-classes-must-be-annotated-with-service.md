@@ -1,27 +1,31 @@
 ---
 type: Rule
+id: DCA-NAM-002
 title: "Use case classes must be annotated with @Service"
 rule: Use case classes must be Spring-managed beans.
 constraint: "Use case classes must be annotated with @Service."
-enforced_by: "NamingConventionsArchUnitTest#Use case classes must be annotated with @Service"
+enforced_by: "NamingRules#DCA-NAM-002"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAPackage(APPLICATION_PACKAGE)
-  .and().haveSimpleNameEndingWith("UseCase")
-  .and().areNotInterfaces()  // Exclude the UseCase interface itself
-  .should().beAnnotatedWith(Service.class)
-  .because("Use case classes must be Spring-managed beans")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-002",
+    "Use case classes must be annotated with @Service",
+    "Use case classes must be Spring-managed beans",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.applicationPattern())
+            .and()
+            .haveSimpleNameEndingWith(layout.useCaseSuffix())
+            .and()
+            .areNotInterfaces()
+            .should()
+            .beAnnotatedWith(layout.frameworkAnnotations().service())
+            .allowEmptyShould(true))
 ```
-
-## Applies to markers
-
-- [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)

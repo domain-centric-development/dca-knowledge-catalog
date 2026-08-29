@@ -1,26 +1,35 @@
 ---
 type: Rule
+id: DCA-TAC-009
 title: "Value Object classes should be final (immutability)"
 rule: "Value objects should be immutable (final classes) - Vernon's DDD recommendation."
 constraint: "Value Object classes should be final (immutability)."
-enforced_by: "DddTacticalPatternsArchUnitTest#Value Object classes should be final (immutability)"
+enforced_by: "TacticalPatternRules#DCA-TAC-009"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAnyPackage(DOMAIN_MODEL_PACKAGE, SHAREDKERNEL_DOMAIN_PACKAGE)
-  .and().implement(Value.class)
-  .and().areNotInterfaces()
-  .and().areNotRecords()
-  .should().haveModifier(JavaModifier.FINAL)
-  .because("Value objects should be immutable (final classes) - Vernon's DDD recommendation")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-TAC-009",
+    "Value Object classes should be final (immutability)",
+    "Value objects should be immutable (final classes) - Vernon's DDD recommendation",
+    arch ->
+        classes()
+            .that()
+            .resideInAnyPackage(layout.domainModelPattern(), layout.sharedKernelDomainPattern())
+            .and()
+            .implement(Value.class)
+            .and()
+            .areNotInterfaces()
+            .and()
+            .areNotRecords()
+            .should()
+            .haveModifier(JavaModifier.FINAL)
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

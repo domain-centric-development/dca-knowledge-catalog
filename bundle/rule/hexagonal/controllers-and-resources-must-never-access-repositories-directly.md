@@ -1,27 +1,32 @@
 ---
 type: Rule
+id: DCA-HEX-003
 title: Controllers and Resources must never access repositories directly
 rule: "Controllers must go through use cases (input ports), never directly to repositories."
 constraint: Controllers and Resources must never access repositories directly.
-enforced_by: "HexagonalArchitectureArchUnitTest#Controllers and Resources must never access repositories directly"
+enforced_by: "HexagonalRules#DCA-HEX-003"
 status: enforced
-test_class: HexagonalArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+rule_set: hexagonal
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---
 
-```groovy
-expect:
-// Incoming web adapters drive the application through input ports (use cases) only.
-// Direct repository access would bypass the application layer and its
-// transaction/authorization/orchestration responsibilities.
-noClasses()
-  .that().haveSimpleNameEndingWith("Controller")
-  .or().haveSimpleNameEndingWith(REST_CONTROLLER_SUFFIX)
-  .should().dependOnClassesThat().areAssignableTo(REPOSITORY_MARKER)
-  .because("Controllers must go through use cases (input ports), never directly to repositories")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-HEX-003",
+    "Controllers and Resources must never access repositories directly",
+    "Controllers must go through use cases (input ports), never directly to repositories",
+    arch ->
+        noClasses()
+            .that()
+            .haveSimpleNameEndingWith("Controller")
+            .or()
+            .haveSimpleNameEndingWith(layout.restControllerSuffix())
+            .should()
+            .dependOnClassesThat()
+            .areAssignableTo(Repository.class)
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

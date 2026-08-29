@@ -1,26 +1,35 @@
 ---
 type: Rule
+id: DCA-NAM-004
 title: Repository Interfaces must end with 'Repository'
 rule: "Repository interfaces should follow consistent naming conventions (DDD pattern)."
 constraint: Repository Interfaces must end with 'Repository'.
-enforced_by: "NamingConventionsArchUnitTest#Repository Interfaces must end with 'Repository'"
+enforced_by: "NamingRules#DCA-NAM-004"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAPackage(APPLICATION_PACKAGE)  // Repositories are now in application.shared
-  .and().areInterfaces()
-  .and().haveSimpleNameContaining("Repository")
-  .and().doNotHaveSimpleName("Repository")  // Exclude the base Repository interface
-  .should().haveSimpleNameEndingWith("Repository")
-  .because("Repository interfaces should follow consistent naming conventions (DDD pattern)")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-004",
+    "Repository Interfaces must end with 'Repository'",
+    "Repository interfaces should follow consistent naming conventions (DDD pattern)",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.applicationPattern())
+            .and()
+            .areInterfaces()
+            .and()
+            .haveSimpleNameContaining("Repository")
+            .and()
+            .doNotHaveSimpleName("Repository")
+            .should()
+            .haveSimpleNameEndingWith("Repository")
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

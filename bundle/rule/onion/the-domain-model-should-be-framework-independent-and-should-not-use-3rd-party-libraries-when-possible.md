@@ -1,41 +1,38 @@
 ---
 type: Rule
+id: DCA-ONI-002
 title: The Domain Model should be framework independent and should not use 3rd party libraries when possible
 rule: "Domain should be framework-independent (Dependency Inversion Principle)."
 constraint: The Domain Model should be framework independent and should not use 3rd party libraries when possible.
-enforced_by: "OnionArchitectureArchUnitTest#The Domain Model should be framework independent and should not use 3rd party libraries when possible"
+enforced_by: "OnionRules#DCA-ONI-002"
 status: enforced
-test_class: OnionArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/OnionArchitectureArchUnitTest.groovy
+rule_set: onion
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/OnionRules.java
 tags: [onion, archunit]
 ---
 
-```groovy
-expect:
-final JavaClasses importedClasses = new ClassFileImporter()
-.withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-.importPackages(BASE_PACKAGE)
-
-// Matched by pattern, never by context name: a context added tomorrow is covered without
-// being registered here. DOMAIN_PACKAGE is "${BASE_PACKAGE}.*.domain..", which also covers
-// the shared kernel's own domain package.
-final String[] domainPackagePatterns = [
-  DOMAIN_PACKAGE,
-  "${BASE_PACKAGE}.sharedkernel.marker.tactical..",   // Allow DDD marker interfaces
-  "${BASE_PACKAGE}.sharedkernel.marker.port.out.."    // Allow output port interfaces (e.g., Repository)
-] as String[]
-
-final ArchRule domainClassesMustNotDependOnAnyFrameworkOr3rdParty =
-classes()
-.that().resideInAnyPackage(domainPackagePatterns)
-.should().onlyDependOnClassesThat().resideInAnyPackage(Stream.concat(
-THIRD_PARTY_PACKAGES_ALLOWED_IN_DOMAIN.stream(),
-Arrays.stream(domainPackagePatterns)).toArray(String[]::new))
-.because("Domain should be framework-independent (Dependency Inversion Principle)")
-
-domainClassesMustNotDependOnAnyFrameworkOr3rdParty.check(importedClasses)
+```java
+DcaRule.of(
+    "DCA-ONI-002",
+    "The Domain Model should be framework independent and should not use 3rd party libraries"
+        + " when possible",
+    "Domain should be framework-independent (Dependency Inversion Principle)",
+    arch -> {
+      // Matched by pattern, never by context name: domainPattern() is base.*.domain.., which
+      // also covers the shared kernel's own domain package.
+      String[] domainPackages = {
+        layout.domainPattern(),
+        DcaLayout.BUILDING_BLOCKS_TACTICAL_PACKAGE,
+        DcaLayout.BUILDING_BLOCKS_PORT_OUT_PACKAGE
+      };
+      List<String> allowed = new ArrayList<>(layout.thirdPartyPackagesAllowedInDomain());
+      allowed.addAll(List.of(domainPackages));
+      return classes()
+          .that()
+          .resideInAnyPackage(domainPackages)
+          .should()
+          .onlyDependOnClassesThat()
+          .resideInAnyPackage(allowed.toArray(String[]::new));
+    })
 ```
-
-## Applies to markers
-
-- [Repository<T, ID>](/marker/port-out/repository.md)

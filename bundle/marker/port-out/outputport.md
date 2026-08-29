@@ -4,7 +4,8 @@ title: OutputPort
 category: port-out
 kind: interface
 signature: public interface OutputPort
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/OutputPort.java
+package: dev.domaincentric.dca.buildingblocks.hexagonal.port.out
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/hexagonal/port/out/OutputPort.java
 tags: [port-out, marker]
 ---
 

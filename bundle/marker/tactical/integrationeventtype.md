@@ -4,8 +4,9 @@ title: "@IntegrationEventType"
 category: tactical
 kind: annotation
 signature: "public @interface IntegrationEventType"
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
 methods: ["String name()", "int version()"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/IntegrationEventType.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/IntegrationEventType.java
 tags: [tactical, marker]
 ---
 

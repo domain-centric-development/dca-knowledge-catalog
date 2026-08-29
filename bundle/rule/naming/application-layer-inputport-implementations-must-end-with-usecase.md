@@ -1,26 +1,38 @@
 ---
 type: Rule
+id: DCA-NAM-001
 title: Application layer InputPort implementations must end with 'UseCase'
 rule: "InputPort implementations (use cases) should follow consistent naming conventions (Hexagonal Architecture)."
 constraint: Application layer InputPort implementations must end with 'UseCase'.
-enforced_by: "NamingConventionsArchUnitTest#Application layer InputPort implementations must end with 'UseCase'"
+enforced_by: "NamingRules#DCA-NAM-001"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAPackage(APPLICATION_PACKAGE)
-  .and().areNotInterfaces()
-  .and().areNotRecords()
-  .and().implement(UseCase.class)
-  .should().haveSimpleNameEndingWith("UseCase")
-  .because("InputPort implementations (use cases) should follow consistent naming conventions (Hexagonal Architecture)")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-001",
+    "Application layer InputPort implementations must end with '"
+        + layout.useCaseSuffix()
+        + "'",
+    "InputPort implementations (use cases) should follow consistent naming conventions"
+        + " (Hexagonal Architecture)",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.applicationPattern())
+            .and()
+            .areNotInterfaces()
+            .and()
+            .areNotRecords()
+            .and()
+            .implement(UseCase.class)
+            .should()
+            .haveSimpleNameEndingWith(layout.useCaseSuffix())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

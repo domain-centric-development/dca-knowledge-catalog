@@ -1,36 +1,44 @@
 ---
 type: Rule
+id: DCA-LAY-004
 title: Transaction boundaries belong to the application layer
 rule: Transactions are an application-layer concern - domain and incoming adapters must not manage them.
 constraint: Transaction boundaries belong to the application layer.
-enforced_by: "LayeredArchitectureArchUnitTest#Transaction boundaries belong to the application layer"
+enforced_by: "LayeredRules#DCA-LAY-004"
 status: enforced
-test_class: LayeredArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+rule_set: layered
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java
 tags: [layered, archunit]
 ---
 
-```groovy
-expect:
-// The use case owns the unit of work. @Transactional is allowed in the application
-// layer (transaction boundary) and in outgoing persistence adapters (multi-statement
-// operations that must stay atomic even when invoked outside a use-case transaction;
-// with default REQUIRED propagation they join the caller's transaction).
-// It is never allowed in the domain layer or in incoming adapters.
-def transactionalMethods = methods()
-  .that().areAnnotatedWith(Transactional.class)
-  .should().beDeclaredInClassesThat().resideInAnyPackage(
-    [APPLICATION_PACKAGE, "..adapter.outgoing.."] as String[])
-  .because("Transactions are an application-layer concern - domain and incoming adapters must not manage them")
-  .allowEmptyShould(true)
-
-def transactionalClasses = classes()
-  .that().areAnnotatedWith(Transactional.class)
-  .should().resideInAnyPackage(
-    [APPLICATION_PACKAGE, "..adapter.outgoing.."] as String[])
-  .because("Transactions are an application-layer concern - domain and incoming adapters must not manage them")
-  .allowEmptyShould(true)
-
-transactionalMethods.check(allClasses)
-transactionalClasses.check(allClasses)
+```java
+DcaRule.check(
+    "DCA-LAY-004",
+    "Transaction boundaries belong to the application layer",
+    rationale,
+    arch -> {
+      String transactional = layout.frameworkAnnotations().transactional();
+      String[] allowed = {
+        layout.applicationPattern(),
+        ".." + layout.adapterSubpackage() + "." + layout.outgoingSubpackage() + ".."
+      };
+      methods()
+          .that()
+          .areAnnotatedWith(transactional)
+          .should()
+          .beDeclaredInClassesThat()
+          .resideInAnyPackage(allowed)
+          .because(rationale)
+          .allowEmptyShould(true)
+          .check(arch.classes());
+      classes()
+          .that()
+          .areAnnotatedWith(transactional)
+          .should()
+          .resideInAnyPackage(allowed)
+          .because(rationale)
+          .allowEmptyShould(true)
+          .check(arch.classes());
+    })
 ```

@@ -1,29 +1,37 @@
 ---
 type: Rule
+id: DCA-NAM-003
 title: InputPort interfaces must end with 'InputPort'
 rule: "Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)."
 constraint: InputPort interfaces must end with 'InputPort'.
-enforced_by: "NamingConventionsArchUnitTest#InputPort interfaces must end with 'InputPort'"
+enforced_by: "NamingRules#DCA-NAM-003"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-// Matched by marker, not by package: DCA places each input port in its own use-case folder,
-// so there is no single ..application.port.in.. package to point at.
-classes()
-  .that().resideInAPackage(APPLICATION_PACKAGE)
-  .and().areInterfaces()
-  .and().areAssignableTo(InputPort.class)
-  .and().doNotHaveSimpleName("InputPort")
-  .and().doNotHaveSimpleName("UseCase")
-  .should().haveSimpleNameEndingWith("InputPort")
-  .because("Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-003",
+    "InputPort interfaces must end with 'InputPort'",
+    "Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.applicationPattern())
+            .and()
+            .areInterfaces()
+            .and()
+            .areAssignableTo(InputPort.class)
+            .and()
+            .doNotHaveSimpleName("InputPort")
+            .and()
+            .doNotHaveSimpleName("UseCase")
+            .should()
+            .haveSimpleNameEndingWith("InputPort")
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

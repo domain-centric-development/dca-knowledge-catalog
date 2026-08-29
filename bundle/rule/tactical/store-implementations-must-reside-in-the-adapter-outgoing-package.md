@@ -1,24 +1,31 @@
 ---
 type: Rule
+id: DCA-TAC-020
 title: Store implementations must reside in the adapter.outgoing package
 rule: Store implementations are outgoing adapters in bounded contexts.
 constraint: Store implementations must reside in the adapter.outgoing package.
-enforced_by: "DddTacticalPatternsArchUnitTest#Store implementations must reside in the adapter.outgoing package"
+enforced_by: "TacticalPatternRules#DCA-TAC-020"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().areNotInterfaces()
-  .and().areAssignableTo(Store.class)
-  .should().resideInAPackage(OUTGOING_ADAPTER_PACKAGE)
-  .because("Store implementations are outgoing adapters in bounded contexts")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-TAC-020",
+    "Store implementations must reside in the adapter.outgoing package",
+    "Store implementations are outgoing adapters in bounded contexts",
+    arch ->
+        classes()
+            .that()
+            .areNotInterfaces()
+            .and()
+            .areAssignableTo(Store.class)
+            .should()
+            .resideInAPackage(layout.outgoingAdapterPattern())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

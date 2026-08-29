@@ -4,7 +4,8 @@ title: DomainGateway
 category: tactical
 kind: interface
 signature: public interface DomainGateway
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/DomainGateway.java
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/DomainGateway.java
 tags: [tactical, marker]
 ---
 

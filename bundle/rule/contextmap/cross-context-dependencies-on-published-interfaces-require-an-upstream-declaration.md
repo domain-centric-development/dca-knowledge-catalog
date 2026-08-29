@@ -1,44 +1,61 @@
 ---
 type: Rule
+id: DCA-MAP-011
 title: Cross-context dependencies on published interfaces require an Upstream declaration
-rule: "Context '<context>' depends on '<context> :: <context>' without declaring it — add @Upstream(context = \"<context>\", translation = ..., via = ...) to its package-info."
+rule: Every real dependency on a foreign api/ or events/ package is a context-map edge and must be declared as such.
 constraint: Cross-context dependencies on published interfaces require an Upstream declaration.
-enforced_by: "ContextMapArchUnitTest#Cross-context dependencies on published interfaces require an Upstream declaration"
+enforced_by: "ContextMapRules#DCA-MAP-011"
 status: enforced
-test_class: ContextMapArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/ContextMapArchUnitTest.groovy
+rule_set: contextmap
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---
 
-```groovy
-given:
-Map<String, BoundedContext> contexts = discoverBoundedContextPackages()
-
-expect:
-contexts.each { srcPkg, bc ->
-  String source = shortName(srcPkg)
-  Set<String> declared = declaredEdges(srcPkg)
-
-  contexts.each { tgtPkg, tbc ->
-    if (tgtPkg == srcPkg) {
-      return
-    }
-    String target = shortName(tgtPkg)
-    ["api", "events"].each { channel ->
-      if (!declared.contains("${target} :: ${channel}".toString())) {
-        noClasses()
-          .that().resideInAPackage("${srcPkg}..")
-          .should().dependOnClassesThat().resideInAPackage("${tgtPkg}.${channel}..")
-          .allowEmptyShould(true)
-          .because("Context '${source}' depends on '${target} :: ${channel}' without declaring it — add @Upstream(context = \"${target}\", translation = ..., via = ...) to its package-info")
-          .check(allClasses)
+```java
+DcaRule.check(
+    "DCA-MAP-011",
+    "Cross-context dependencies on published interfaces require an Upstream declaration",
+    "Every real dependency on a foreign api/ or events/ package is a context-map edge and must"
+        + " be declared as such",
+    arch -> {
+      List<String> contexts = arch.boundedContextPackages();
+      for (String srcPkg : contexts) {
+        String source = shortName(srcPkg);
+        Set<String> declared = declaredEdges(arch, srcPkg);
+        for (String tgtPkg : contexts) {
+          if (tgtPkg.equals(srcPkg)) {
+            continue;
+          }
+          String target = shortName(tgtPkg);
+          for (String channel : List.of(API, EVENTS)) {
+            if (declared.contains(target + " :: " + channel)) {
+              continue;
+            }
+            noClasses()
+                .that()
+                .resideInAPackage(srcPkg + "..")
+                .should()
+                .dependOnClassesThat()
+                .resideInAPackage(tgtPkg + "." + channel + "..")
+                .allowEmptyShould(true)
+                .because(
+                    "Context '"
+                        + source
+                        + "' depends on '"
+                        + target
+                        + " :: "
+                        + channel
+                        + "' without declaring it — add @Upstream(context = \""
+                        + target
+                        + "\", translation = ..., via = ...) to its package-info")
+                .check(arch.classes());
+          }
+        }
       }
-    }
-  }
-}
+    })
 ```
 
 ## Applies to markers
 
-- [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@Upstream](/marker/strategic/upstream.md)

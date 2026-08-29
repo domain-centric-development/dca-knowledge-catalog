@@ -1,6 +1,6 @@
 # usecase
 
-- [Base InputPort interface must be in sharedkernel marker port in package](base-inputport-interface-must-be-in-sharedkernel-marker-port-in-package.md) — Base InputPort interface defines the generic contract for all use cases (Hexagonal Architecture).
+- [Base InputPort interface must be in the building-blocks port in package](base-inputport-interface-must-be-in-the-building-blocks-port-in-package.md) — Base InputPort interface defines the generic contract for all use cases (Hexagonal Architecture).
 - [DTOs must not be used in the Application Layer](dtos-must-not-be-used-in-the-application-layer.md) — Application layer should use Command/Query/Response models, not presentation DTOs (Clean Architecture).
 - [DTOs must not be used in the Domain Layer](dtos-must-not-be-used-in-the-domain-layer.md) — Domain layer should not depend on DTOs (presentation concerns) - Dependency Inversion Principle.
 - [HTTP Response Models must end with 'Response' and reside in adapter incoming package](http-response-models-must-end-with-response-and-reside-in-adapter-incoming-package.md) — HTTP response models should be in adapter incoming layer.

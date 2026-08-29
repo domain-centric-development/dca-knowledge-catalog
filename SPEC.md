@@ -70,9 +70,11 @@ One `##` heading of a guide file — the unit of knowledge, carrying the
 - Link section: **Related markers** (anchoring to the skeleton).
 
 ### `Marker`
-A marker interface / annotation from `sharedkernel/marker` — a contract a new
-application implements.
-- `category`: `tactical | strategic | port-in | port-out | infrastructure`
+A marker interface / annotation from the `dca-building-blocks` library
+(`dev.domaincentric.dca.buildingblocks`) — a contract a new application implements.
+- `category`: `tactical | strategic | port-in | port-out` (bundle taxonomy; stable node paths)
+- `package`: the library package the type lives in (`…ddd.tactical`, `…ddd.strategic`,
+  `…ddd.strategic.relationships`, `…hexagonal.port.in`, `…hexagonal.port.out`)
 - `kind`: `interface | class | annotation`
 - `signature`: the Java declaration (generics + supertypes)
 - `extends`: supertype marker names (optional)
@@ -82,14 +84,19 @@ application implements.
   mentions, capped at 10 to stay low-noise).
 
 ### `Rule`
-One ArchUnit feature method — an enforceable architecture rule.
-- `rule`: the rationale (the `.because(...)` text — the *why*)
+One rule of the `dca-archunit` rule library — an enforceable architecture rule.
+- `id`: the stable identifier `DCA-<SET>-<NNN>` (shared with every implementation of the
+  rule and with violation messages; never renumbered)
+- `rule`: the rationale (the `because(...)` text — the *why*)
 - `constraint`: the rule as a single-line actionable precondition (the *what*, from the
-  method name) — what an LLM satisfies while generating; recipes surface these as checklists
-- `enforced_by`: `<TestClass>#<method>`
+  title) — what an LLM satisfies while generating; recipes surface these as checklists
+- `enforced_by`: `<RuleSetClass>#<id>`
 - `status`: `enforced | informational | disabled`
-- `test_class`: the ArchUnit test class
-- Body: the rule's Groovy expression, verbatim, in a fenced block.
+- `rule_set`: the rule set name (`tactical`, `hexagonal`, `contextmap`, …)
+- `implementations`: the languages the rule is implemented in (`java`; `dotnet` once the
+  .NET rule library ports it)
+- Body: the rule's `DcaRule.of(...)` / `DcaRule.check(...)` expression, verbatim, in a
+  fenced block.
 - Link section: **Applies to markers**.
 
 ### `Process`

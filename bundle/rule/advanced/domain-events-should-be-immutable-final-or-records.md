@@ -1,27 +1,37 @@
 ---
 type: Rule
+id: DCA-ADV-003
 title: "Domain Events should be immutable (final or records)"
 rule: "Domain events should be immutable (final classes or records)."
 constraint: "Domain Events should be immutable (final or records)."
-enforced_by: "DddAdvancedPatternsArchUnitTest#Domain Events should be immutable (final or records)"
+enforced_by: "AdvancedPatternRules#DCA-ADV-003"
 status: enforced
-test_class: DddAdvancedPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+rule_set: advanced
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAnyPackage(DOMAIN_PACKAGE)
-  .and().implement(DomainEvent.class)
-  .and().areNotInterfaces()
-  .and().areNotEnums()
-  .and().areNotRecords()
-  .should().haveModifier(JavaModifier.FINAL)
-  .because("Domain events should be immutable (final classes or records)")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-ADV-003",
+    "Domain Events should be immutable (final or records)",
+    "Domain events should be immutable (final classes or records)",
+    arch ->
+        classes()
+            .that()
+            .resideInAnyPackage(layout.domainPattern())
+            .and()
+            .implement(DomainEvent.class)
+            .and()
+            .areNotInterfaces()
+            .and()
+            .areNotEnums()
+            .and()
+            .areNotRecords()
+            .should()
+            .haveModifier(JavaModifier.FINAL)
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

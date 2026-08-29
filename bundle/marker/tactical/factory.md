@@ -4,7 +4,8 @@ title: Factory
 category: tactical
 kind: interface
 signature: public interface Factory
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Factory.java
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/Factory.java
 tags: [tactical, marker]
 ---
 

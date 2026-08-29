@@ -1,25 +1,33 @@
 ---
 type: Rule
+id: DCA-ADV-017
 title: Specifications must end with 'Specification'
 rule: Specification implementations are part of the domain layer.
 constraint: Specifications must end with 'Specification'.
-enforced_by: "DddAdvancedPatternsArchUnitTest#Specifications must end with 'Specification'"
+enforced_by: "AdvancedPatternRules#DCA-ADV-017"
 status: enforced
-test_class: DddAdvancedPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddAdvancedPatternsArchUnitTest.groovy
+rule_set: advanced
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().haveSimpleNameEndingWith("Specification")
-  .and().areNotInterfaces()
-  .and().doNotHaveSimpleName("Specification")
-  .should().resideInAnyPackage(DOMAIN_PACKAGE)
-  .because("Specification implementations are part of the domain layer")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-ADV-017",
+    "Specifications must end with 'Specification'",
+    "Specification implementations are part of the domain layer",
+    arch ->
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Specification")
+            .and()
+            .areNotInterfaces()
+            .and()
+            .doNotHaveSimpleName("Specification")
+            .should()
+            .resideInAnyPackage(layout.domainPattern())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

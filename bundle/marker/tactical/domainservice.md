@@ -4,7 +4,8 @@ title: DomainService
 category: tactical
 kind: interface
 signature: public interface DomainService
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/DomainService.java
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/DomainService.java
 tags: [tactical, marker]
 ---
 

@@ -46,8 +46,8 @@ def test_counts(bundle: Path):
     for p in _concept_files(bundle):
         fm, _ = _split_frontmatter(p.read_text(encoding="utf-8"))
         types[fm["type"]] = types.get(fm["type"], 0) + 1
-    # skeleton from the sample app — exact (regression guard)
-    assert types["Marker"] == 29
+    # skeleton from dca-java (building blocks + rule library) — exact (regression guard)
+    assert types["Marker"] == 28
     assert types["Rule"] == 107
     assert types["Process"] == 1
     # the book and the sample's ADRs are deliberately not in the bundle
@@ -208,6 +208,8 @@ def test_bundle_is_tool_agnostic():
     hits = []
     for p in committed.rglob("*.md"):
         for line in p.read_text(encoding="utf-8").splitlines():
+            if line.startswith("resource: "):
+                continue  # provenance path (e.g. dca-java/dca-building-blocks/...), not tooling
             if tool_ref.search(line):
                 hits.append((str(p.relative_to(committed)), line.strip()[:80]))
     assert not hits, f"tool-specific references in the bundle: {hits}"
@@ -325,7 +327,7 @@ def test_lint_catches_problems(tmp_path):
     (bundle / "marker").mkdir(parents=True)
     (bundle / "note").mkdir()
     (bundle / "marker" / "x.md").write_text(
-        "---\ntype: Marker\ntitle: X\nresource: dca-ecommerce-sample/GONE.java\n---\n\n"
+        "---\ntype: Marker\ntitle: X\nresource: dca-java/GONE.java\n---\n\n"
         "broken [link](/rule/nope/none.md)\n",
         encoding="utf-8",
     )

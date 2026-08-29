@@ -4,7 +4,8 @@ title: Value
 category: tactical
 kind: interface
 signature: public interface Value
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Value.java
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/Value.java
 tags: [tactical, marker]
 ---
 
@@ -12,8 +13,10 @@ Marker for Value.
 
 ## Governed by
 
+- [Enriched Domain Models must be Value Object records](/rule/tactical/enriched-domain-models-must-be-value-object-records.md)
 - [Value Object classes should be final (immutability)](/rule/tactical/value-object-classes-should-be-final-immutability.md)
 - [Value Object fields must be final (deep immutability)](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md)
+- [Value Objects must be records or immutable classes with attribute equality](/rule/tactical/value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md)
 - [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
 - [Value Objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md)
 - [Use Case Result Models must end with 'Result' and reside in application package](/rule/usecase/use-case-result-models-must-end-with-result-and-reside-in-application-package.md)

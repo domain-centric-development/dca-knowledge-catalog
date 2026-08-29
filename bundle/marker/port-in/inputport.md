@@ -4,7 +4,8 @@ title: InputPort
 category: port-in
 kind: interface
 signature: public interface InputPort
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/in/InputPort.java
+package: dev.domaincentric.dca.buildingblocks.hexagonal.port.in
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/hexagonal/port/in/InputPort.java
 tags: [port-in, marker]
 ---
 
@@ -14,7 +15,7 @@ Marker interface for Input Ports (Hexagonal Architecture).
 
 - [Application layer InputPort implementations must end with 'UseCase'](/rule/naming/application-layer-inputport-implementations-must-end-with-usecase.md)
 - [InputPort interfaces must end with 'InputPort'](/rule/naming/inputport-interfaces-must-end-with-inputport.md)
-- [Base InputPort interface must be in sharedkernel marker port in package](/rule/usecase/base-inputport-interface-must-be-in-sharedkernel-marker-port-in-package.md)
+- [Base InputPort interface must be in the building-blocks port in package](/rule/usecase/base-inputport-interface-must-be-in-the-building-blocks-port-in-package.md)
 
 ## Discussed in
 

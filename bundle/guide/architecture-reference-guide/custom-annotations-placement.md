@@ -1001,7 +1001,6 @@ When adding new code, ask yourself:
 
 ## Related markers
 
-- [@AsyncInitialize](/marker/infrastructure/asyncinitialize.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)

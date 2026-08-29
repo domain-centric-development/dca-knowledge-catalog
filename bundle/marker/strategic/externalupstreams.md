@@ -4,8 +4,9 @@ title: "@ExternalUpstreams"
 category: strategic
 kind: annotation
 signature: "public @interface ExternalUpstreams"
+package: dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships
 methods: ["ExternalUpstream[] value()"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/strategic/ExternalUpstreams.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/strategic/relationships/ExternalUpstreams.java
 tags: [strategic, marker]
 ---
 

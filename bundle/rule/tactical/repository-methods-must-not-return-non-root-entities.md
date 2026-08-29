@@ -1,50 +1,46 @@
 ---
 type: Rule
+id: DCA-TAC-017
 title: Repository methods must not return non-root Entities
-rule: Repository methods must not return non-root Entities.
+rule: "A caller receiving an Entity that is not an Aggregate Root could mutate part of an aggregate without passing its root, so the root's invariants would never run."
 constraint: Repository methods must not return non-root Entities.
-enforced_by: "DddTacticalPatternsArchUnitTest#Repository methods must not return non-root Entities"
+enforced_by: "TacticalPatternRules#DCA-TAC-017"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-// The prohibition, not a positive requirement. A repository may legitimately return a
-// boolean, a count, a page wrapper or a Value Object composed for one use case (Vernon's
-// use-case optimal query). What it must never hand out is an Entity that is not an
-// Aggregate Root: the caller could then mutate a part of an aggregate without going
-// through the root, and the root's invariants would never run.
-//
-// The type parameter side needs no rule — the compiler pins it via
-// Repository<T extends AggregateRoot<T, ID>, ID extends Id>. Only method returns are open.
-def repositoryInterfaces = allClasses.stream()
-  .filter { it.isAssignableTo(Repository.class) }
-  .filter { it.isInterface() }
-  .filter { !it.getSimpleName().equals("Repository") }
-  .collect()
-
-def violations = []
-repositoryInterfaces.each { repoInterface ->
-  repoInterface.getMethods().each { method ->
-    typesInvolvedIn(method.getReturnType()).each { type ->
-      if (type.isAssignableTo(Entity.class) && !type.isAssignableTo(AggregateRoot.class)) {
-        violations.add("${repoInterface.getName()}.${method.getName()} exposes ${type.getName()}, an Entity that is not an Aggregate Root")
+```java
+DcaRule.check(
+    "DCA-TAC-017",
+    "Repository methods must not return non-root Entities",
+    "A caller receiving an Entity that is not an Aggregate Root could mutate part of an"
+        + " aggregate without passing its root, so the root's invariants would never run",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass repository : repositoryInterfaces(arch)) {
+        for (JavaMethod method : repository.getMethods()) {
+          for (JavaClass type : typesInvolvedIn(method.getReturnType())) {
+            if (type.isAssignableTo(Entity.class)
+                && !type.isAssignableTo(AggregateRoot.class)) {
+              violations.add(
+                  repository.getName()
+                      + "."
+                      + method.getName()
+                      + " exposes "
+                      + type.getName()
+                      + ", an Entity that is not an Aggregate Root");
+            }
+          }
+        }
       }
-    }
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Repository methods must not expose an Entity that is not an Aggregate Root: a caller " +
-  "could mutate part of an aggregate without passing its root (DDD pattern).\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+      fail(
+          "Repository methods must not expose an Entity that is not an Aggregate Root: a caller"
+              + " could mutate part of an aggregate without passing its root (DDD pattern).",
+          violations);
+    })
 ```
 
 ## Applies to markers
@@ -52,4 +48,3 @@ true
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)
-- [Id](/marker/tactical/id.md)

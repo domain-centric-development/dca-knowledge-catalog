@@ -4,9 +4,10 @@ title: DomainEventPublisher
 category: port-out
 kind: interface
 signature: public interface DomainEventPublisher extends OutputPort
+package: dev.domaincentric.dca.buildingblocks.hexagonal.port.out
 extends: [OutputPort]
 methods: ["void publish(DomainEvent event)", "void publishAndClearEvents(AggregateRoot<?, ?> aggregate)"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/DomainEventPublisher.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/hexagonal/port/out/DomainEventPublisher.java
 tags: [port-out, marker]
 ---
 
@@ -19,7 +20,6 @@ Outbound port for publishing domain events.
 ## Governed by
 
 - [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
-- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
 ## Discussed in
 

@@ -2,8 +2,8 @@
 
 An **[Open Knowledge Format](SPEC.md) (OKF)** bundle for Domain-Centric
 Architecture. Its **main body is the full text of the implementation guide**;
-that knowledge is *anchored* to the reference implementation's skeleton — the
-marker contracts you implement and the ArchUnit rules you must obey.
+that knowledge is *anchored* to the DCA skeleton — the `dca-building-blocks` marker
+contracts you implement and the `dca-archunit` rules you must obey.
 
 It is designed to be **consumed by an LLM / agentic coding factory**: point an
 agent at [`bundle/index.md`](bundle/index.md), give it a task ("add an aggregate
@@ -19,8 +19,8 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 |------|-------|--------|------------------------|
 | `Guide` | 10 | `implementing-domain-centric-architecture/*.md` | an implementation-guide doc |
 | `Section` | ~104 | `##` headings of the above | one concept, **full verbatim text** |
-| `Marker` | 24 | `sharedkernel/marker/**/*.java` | the contract/interface to implement |
-| `Rule` | 90 | `*ArchUnitTest.groovy` | the enforceable, machine-checkable architecture |
+| `Marker` | 28 | `dca-java/dca-building-blocks/**/*.java` | the contract/interface to implement |
+| `Rule` | 107 | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java` | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
 | `Process` | 1 | `adr-template.md` | how to record a new decision |
 | `Recipe` `Decision` `Pitfall` `Template` `Note` | ~69 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
 
@@ -48,7 +48,8 @@ marker/rule nodes — only the contracts and the rules that shape them.
 
 The `bundle/` has **two zones** (see `SPEC.md`). The **generated zone** (`guide/
 marker/ rule/ process/`) is a derived artifact — **never hand-edit it**; edit the
-source (the guide / marker interfaces / ArchUnit tests) and regenerate. The **extensible zone**
+source (the guide / `dca-java` markers and rules) and regenerate. The rule source is
+`dca-java/rules.json` — refresh it with `./gradlew :dca-archunit:rulesCatalog` after changing rules. The **extensible zone**
 (`recipe/ decision/ pitfall/ template/ note/`) is authored by hand or by an LLM and
 **survives regeneration**.
 
@@ -101,7 +102,7 @@ maintains.
 
 1. **Source knowledge** (a pattern, a rule, a guide doc): edit the
    *source* — `implementing-domain-centric-architecture/`, the marker
-   interfaces or ArchUnit tests in `dca-ecommerce-sample/` — then
+   markers or rules in `dca-java/` — then
    `make generate && make lint && make test`. Never hand-edit the generated zone.
 2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`
    with frontmatter `type:` + `title:` + `tags:` (pick tags from the SPEC.md

@@ -1,25 +1,34 @@
 ---
 type: Rule
+id: DCA-USE-006
 title: Use Case Result Models must end with 'Result' and reside in application package
 rule: Use case result models should be in application layer. Domain Value Objects with 'Result' in name are allowed in domain layer.
 constraint: Use Case Result Models must end with 'Result' and reside in application package.
-enforced_by: "UseCasePatternsArchUnitTest#Use Case Result Models must end with 'Result' and reside in application package"
+enforced_by: "UseCaseRules#DCA-USE-006"
 status: enforced
-test_class: UseCasePatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/UseCasePatternsArchUnitTest.groovy
+rule_set: usecase
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().haveSimpleNameEndingWith("Result")
-  .and().resideInAnyPackage(BASE_PACKAGE + "..")
-  .and().doNotImplement(de.sample.aiarchitecture.sharedkernel.marker.tactical.Value.class)
-  .should().resideInAnyPackage(APPLICATION_PACKAGE)
-  .because("Use case result models should be in application layer. Domain Value Objects with 'Result' in name are allowed in domain layer.")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-USE-006",
+    "Use Case Result Models must end with 'Result' and reside in application package",
+    "Use case result models should be in application layer. Domain Value Objects with 'Result'"
+        + " in name are allowed in domain layer.",
+    arch ->
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Result")
+            .and()
+            .resideInAnyPackage(layout.basePackage() + "..")
+            .and()
+            .doNotImplement(Value.class)
+            .should()
+            .resideInAnyPackage(layout.applicationPattern())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

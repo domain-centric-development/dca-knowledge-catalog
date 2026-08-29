@@ -4,7 +4,8 @@ title: Id
 category: tactical
 kind: interface
 signature: public interface Id
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Id.java
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/Id.java
 tags: [tactical, marker]
 ---
 
@@ -12,7 +13,7 @@ Marker for Id.
 
 ## Governed by
 
-- [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
+- [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md)
 
 ## Discussed in
 

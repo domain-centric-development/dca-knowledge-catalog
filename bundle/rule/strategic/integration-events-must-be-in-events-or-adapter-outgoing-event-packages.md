@@ -1,26 +1,30 @@
 ---
 type: Rule
+id: DCA-STR-007
 title: Integration Events must be in events or adapter outgoing event packages
-rule: "Integration Events must be in events/ packages (Spring Modulith @NamedInterface) or adapter.outgoing.event/ packages."
+rule: "Integration Events must be in events/ packages (published named interface) or adapter.outgoing.event/ packages."
 constraint: Integration Events must be in events or adapter outgoing event packages.
-enforced_by: "DddStrategicPatternsArchUnitTest#Integration Events must be in events or adapter outgoing event packages"
+enforced_by: "StrategicPatternRules#DCA-STR-007"
 status: enforced
-test_class: DddStrategicPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+rule_set: strategic
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---
 
-```groovy
-expect:
-// Integration Events are published for cross-module consumption.
-// With Spring Modulith, they reside in events/ packages (@NamedInterface("events"))
-// or in adapter.outgoing.event/ packages (legacy location)
-classes()
-  .that().implement(IntegrationEvent)
-  .should().resideInAnyPackage("..events..", "..adapter.outgoing.event..")
-  .allowEmptyShould(true)
-  .because("Integration Events must be in events/ packages (Spring Modulith @NamedInterface) or adapter.outgoing.event/ packages")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-STR-007",
+    "Integration Events must be in events or adapter outgoing event packages",
+    "Integration Events must be in events/ packages (published named interface) or"
+        + " adapter.outgoing.event/ packages",
+    arch ->
+        classes()
+            .that()
+            .implement(IntegrationEvent.class)
+            .should()
+            .resideInAnyPackage("..events..", outgoingEventAdapterPattern())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

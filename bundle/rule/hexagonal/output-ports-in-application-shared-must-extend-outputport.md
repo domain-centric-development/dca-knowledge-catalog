@@ -1,26 +1,37 @@
 ---
 type: Rule
+id: DCA-HEX-009
 title: Output Ports in application.shared must extend OutputPort
-rule: Top-level interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy. .
+rule: "Top-level interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy. Nested interfaces (e.g. IdentityProvider.Identity) are part of their enclosing port's contract, not ports themselves."
 constraint: Output Ports in application.shared must extend OutputPort.
-enforced_by: "HexagonalArchitectureArchUnitTest#Output Ports in application.shared must extend OutputPort"
+enforced_by: "HexagonalRules#DCA-HEX-009"
 status: enforced
-test_class: HexagonalArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+rule_set: hexagonal
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAPackage("..application.shared..")
-  .and().areInterfaces()
-  .and().areTopLevelClasses()
-  .and().haveSimpleNameNotEndingWith("package-info")
-  .should().beAssignableTo(OutputPort.class)
-  .because("Top-level interfaces in application.shared are output ports and must extend OutputPort to be part of the port hierarchy. " +
-  "Nested interfaces (e.g. IdentityProvider.Identity) are part of their enclosing port's contract, not ports themselves")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-HEX-009",
+    "Output Ports in application.shared must extend OutputPort",
+    "Top-level interfaces in application.shared are output ports and must extend OutputPort to"
+        + " be part of the port hierarchy. Nested interfaces (e.g. IdentityProvider.Identity)"
+        + " are part of their enclosing port's contract, not ports themselves",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.sharedOutputPortPattern())
+            .and()
+            .areInterfaces()
+            .and()
+            .areTopLevelClasses()
+            .and()
+            .haveSimpleNameNotEndingWith("package-info")
+            .should()
+            .beAssignableTo(OutputPort.class)
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

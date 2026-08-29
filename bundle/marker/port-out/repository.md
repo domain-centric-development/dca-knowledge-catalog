@@ -4,9 +4,10 @@ title: "Repository<T, ID>"
 category: port-out
 kind: interface
 signature: "public interface Repository<T extends AggregateRoot<T, ID>, ID extends Id> extends OutputPort"
+package: dev.domaincentric.dca.buildingblocks.hexagonal.port.out
 extends: [OutputPort]
 methods: ["Optional<T> findById(ID id)", "T save(T aggregate)", "void deleteById(ID id)"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/Repository.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/hexagonal/port/out/Repository.java
 tags: [port-out, marker]
 ---
 
@@ -23,17 +24,13 @@ Base interface for Repositories.
 - [Output ports must not reside in the domain layer](/rule/hexagonal/output-ports-must-not-reside-in-the-domain-layer.md)
 - [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
 - [Repository Interfaces must end with 'Repository'](/rule/naming/repository-interfaces-must-end-with-repository.md)
-- [The Domain Model should be framework independent and should not use 3rd party libraries when possible](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md)
 - [Aggregate Roots must not hold references to Repositories or other Output Ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md)
 - [Repository Implementations must reside in adapter.outgoing package](/rule/tactical/repository-implementations-must-reside-in-adapter-outgoing-package.md)
 - [Repository interfaces must reside in the application layer's shared output-port package](/rule/tactical/repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md)
 - [Repository Interfaces should extend Repository Marker Interface](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md)
 - [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
 - [Store interfaces must extend the Store marker, not Repository](/rule/tactical/store-interfaces-must-extend-the-store-marker-not-repository.md)
 - [Store interfaces must not declare findById or save methods](/rule/tactical/store-interfaces-must-not-declare-findbyid-or-save-methods.md)
-- [Store interfaces must reside in the application layer's shared output-port package](/rule/tactical/store-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md)
-- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
 
 ## Discussed in
 

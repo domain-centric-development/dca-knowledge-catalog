@@ -1,48 +1,43 @@
 ---
 type: Rule
+id: DCA-TAC-012
 title: Value Objects must be records or immutable classes with attribute equality
-rule: Value Objects must be records or immutable classes with attribute equality.
+rule: A record grants attribute-based equality for free; a hand-written Value Object class must override equals and hashCode itself to compare by its attributes.
 constraint: Value Objects must be records or immutable classes with attribute equality.
-enforced_by: "DddTacticalPatternsArchUnitTest#Value Objects must be records or immutable classes with attribute equality"
+enforced_by: "TacticalPatternRules#DCA-TAC-012"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-// Records are the preferred implementation: the compiler grants final fields,
-// no setters and attribute-based equality. A hand-written class is a permitted
-// alternative — the immutability rules above (final class, final fields, no setters)
-// apply to it unchanged. What they cannot check is the one thing a record gives for
-// free: a Value Object compares by its attributes, so a non-record class must override
-// equals and hashCode itself.
-def valueObjectClasses = allClasses.stream()
-  .filter { it.isAssignableTo(VALUE_MARKER) }
-  .filter { !it.isInterface() && !it.isRecord() && !it.isEnum() }
-  .collect()
-
-def violations = []
-valueObjectClasses.each { voClass ->
-  def overridesOwn = { String name, int paramCount ->
-    voClass.getAllMethods().any {
-      it.getName() == name &&
-        it.getRawParameterTypes().size() == paramCount &&
-        it.getOwner().getName() != "java.lang.Object"
-    }
-  }
-  if (!overridesOwn("equals", 1) || !overridesOwn("hashCode", 0)) {
-    violations.add("${voClass.getName()} is a non-record Value Object without its own equals/hashCode")
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Value Objects are records by preference; an immutable class is allowed, "
-  + "but it must implement attribute equality itself.\n"
-  + "Violations found:\n" + violations.join("\n"))
-}
-true
+```java
+DcaRule.check(
+    "DCA-TAC-012",
+    "Value Objects must be records or immutable classes with attribute equality",
+    "A record grants attribute-based equality for free; a hand-written Value Object class must"
+        + " override equals and hashCode itself to compare by its attributes",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
+        if (valueObject.isRecord() || valueObject.isEnum()) {
+          continue;
+        }
+        if (!overridesOwn(valueObject, "equals", 1)
+            || !overridesOwn(valueObject, "hashCode", 0)) {
+          violations.add(
+              valueObject.getName()
+                  + " is a non-record Value Object without its own equals/hashCode");
+        }
+      }
+      fail(
+          "Value Objects are records by preference; an immutable class is allowed, but it must"
+              + " implement attribute equality itself.",
+          violations);
+    })
 ```
+
+## Applies to markers
+
+- [Value](/marker/tactical/value.md)

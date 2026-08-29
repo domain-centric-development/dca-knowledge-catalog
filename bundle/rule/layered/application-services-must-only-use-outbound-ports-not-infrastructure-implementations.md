@@ -1,20 +1,27 @@
 ---
 type: Rule
+id: DCA-LAY-003
 title: "Application Services must only use outbound ports (not infrastructure implementations)"
-rule: "Application services should only use outbound ports declared as interfaces (sharedkernel.marker.port.out), not infrastructure implementation details."
+rule: "Application services should only use outbound ports declared as interfaces (port.out), not infrastructure implementation details."
 constraint: "Application Services must only use outbound ports (not infrastructure implementations)."
-enforced_by: "LayeredArchitectureArchUnitTest#Application Services must only use outbound ports (not infrastructure implementations)"
+enforced_by: "LayeredRules#DCA-LAY-003"
 status: enforced
-test_class: LayeredArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/LayeredArchitectureArchUnitTest.groovy
+rule_set: layered
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java
 tags: [layered, archunit]
 ---
 
-```groovy
-expect:
-noClasses()
-  .that().resideInAnyPackage(APPLICATION_PACKAGE)
-  .should().dependOnClassesThat(INFRASTRUCTURE_IMPLEMENTATION)
-  .because("Application services should only use outbound ports declared as interfaces (sharedkernel.marker.port.out), not infrastructure implementation details")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-LAY-003",
+    "Application Services must only use outbound ports (not infrastructure implementations)",
+    "Application services should only use outbound ports declared as interfaces (port.out), not"
+        + " infrastructure implementation details",
+    arch ->
+        noClasses()
+            .that()
+            .resideInAnyPackage(layout.applicationPattern())
+            .should()
+            .dependOnClassesThat(arch.infrastructureImplementation()))
 ```

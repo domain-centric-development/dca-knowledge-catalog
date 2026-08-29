@@ -1,46 +1,45 @@
 ---
 type: Rule
+id: DCA-TAC-004
 title: Entities must have an ID field
-rule: Entities must have an ID field.
+rule: "An Entity is defined by its identity, which is a value object implementing the Id marker."
 constraint: Entities must have an ID field.
-enforced_by: "DddTacticalPatternsArchUnitTest#Entities must have an ID field"
+enforced_by: "TacticalPatternRules#DCA-TAC-004"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-def entityClasses = allClasses.stream()
-  .filter { it.isAssignableTo(Entity.class) }
-  .filter { !it.isInterface() }
-  .filter { !it.getModifiers().contains(JavaModifier.ABSTRACT) }
-  .collect()
-
-def violations = []
-entityClasses.each { entityClass ->
-  // Matched by type, not by name: the old check accepted any field whose lowercased name
-  // ended in "id", so valid, paid and uuid satisfied it while no identity existed. An
-  // identity is a value object implementing the Id marker.
-  def hasIdField = entityClass.getAllFields().any { field ->
-    field.getRawType().isAssignableTo(ID_MARKER)
-  }
-
-  if (!hasIdField) {
-    violations.add("${entityClass.getName()} has no field whose type implements ${ID_MARKER.simpleName}")
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Entities must have an identity field typed as an Id value object (DDD pattern).\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+```java
+DcaRule.check(
+    "DCA-TAC-004",
+    "Entities must have an ID field",
+    "An Entity is defined by its identity, which is a value object implementing the Id marker",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass entity : concreteClassesAssignableTo(arch, Entity.class)) {
+        if (entity.getModifiers().contains(JavaModifier.ABSTRACT)) {
+          continue;
+        }
+        boolean hasIdField =
+            entity.getAllFields().stream()
+                .anyMatch(f -> f.getRawType().isAssignableTo(Id.class));
+        if (!hasIdField) {
+          violations.add(
+              entity.getName()
+                  + " has no field whose type implements "
+                  + Id.class.getSimpleName());
+        }
+      }
+      fail(
+          "Entities must have an identity field typed as an Id value object (DDD pattern).",
+          violations);
+    })
 ```
 
 ## Applies to markers
 
 - [Entity<T, ID>](/marker/tactical/entity.md)
+- [Id](/marker/tactical/id.md)

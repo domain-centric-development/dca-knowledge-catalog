@@ -1,20 +1,25 @@
 ---
 type: Rule
+id: DCA-CYC-002
 title: Application Layer must not have cyclic dependencies
 rule: Application services should have clear boundaries and no cycles.
 constraint: Application Layer must not have cyclic dependencies.
-enforced_by: "PackageCyclesArchUnitTest#Application Layer must not have cyclic dependencies"
+enforced_by: "CycleRules#DCA-CYC-002"
 status: enforced
-test_class: PackageCyclesArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/PackageCyclesArchUnitTest.groovy
+rule_set: cycles
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 ---
 
-```groovy
-expect:
-slices()
-  .matching("${BASE_PACKAGE}.(*).application..")
-  .should().beFreeOfCycles()
-  .because("Application services should have clear boundaries and no cycles")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-CYC-002",
+    "Application Layer must not have cyclic dependencies",
+    "Application services should have clear boundaries and no cycles",
+    arch ->
+        slices()
+            .matching(layout.basePackage() + ".(*)." + layout.applicationSubpackage() + "..")
+            .should()
+            .beFreeOfCycles())
 ```

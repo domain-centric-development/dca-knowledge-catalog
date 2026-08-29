@@ -1,22 +1,29 @@
 ---
 type: Rule
+id: DCA-NAM-005
 title: Controller classes must end with 'Controller'
 rule: "@Controller annotated classes should follow naming conventions."
 constraint: Controller classes must end with 'Controller'.
-enforced_by: "NamingConventionsArchUnitTest#Controller classes must end with 'Controller'"
+enforced_by: "NamingRules#DCA-NAM-005"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().resideInAPackage(INCOMING_ADAPTER_PACKAGE)
-  .and().areAnnotatedWith(Controller.class)
-  .should().haveSimpleNameEndingWith("Controller")
-  .because("@Controller annotated classes should follow naming conventions")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-005",
+    "Controller classes must end with 'Controller'",
+    "@Controller annotated classes should follow naming conventions",
+    arch ->
+        classes()
+            .that()
+            .resideInAPackage(layout.incomingAdapterPattern())
+            .and()
+            .areAnnotatedWith(layout.frameworkAnnotations().controller())
+            .should()
+            .haveSimpleNameEndingWith("Controller")
+            .allowEmptyShould(true))
 ```

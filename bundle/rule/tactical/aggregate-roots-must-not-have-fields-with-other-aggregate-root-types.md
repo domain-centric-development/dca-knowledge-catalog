@@ -1,61 +1,46 @@
 ---
 type: Rule
+id: DCA-TAC-003
 title: Aggregate Roots must not have fields with other Aggregate Root types
-rule: Aggregate Roots must not have fields with other Aggregate Root types.
+rule: "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep aggregate boundaries and transactional consistency intact."
 constraint: Aggregate Roots must not have fields with other Aggregate Root types.
-enforced_by: "DddTacticalPatternsArchUnitTest#Aggregate Roots must not have fields with other Aggregate Root types"
+enforced_by: "TacticalPatternRules#DCA-TAC-003"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-expect:
-// This test enforces Vaughn Vernon's Aggregate Design Rule #2:
-// "Reference other Aggregates by Identity"
-// An aggregate should not hold direct references to other aggregate roots,
-// only their IDs. This maintains aggregate boundaries and transaction consistency.
-
-def aggregateRootClasses = allClasses.stream()
-  .filter { it.isAssignableTo(AggregateRoot.class) }
-  .filter { !it.isInterface() }
-  .collect()
-
-def violations = []
-aggregateRootClasses.each { aggregateClass ->
-  aggregateClass.getAllFields().each { field ->
-    def fieldType = field.getRawType()
-
-    // Check if field type implements AggregateRoot
-    if (fieldType.isAssignableTo(AggregateRoot.class) &&
-      !fieldType.equals(aggregateClass) &&  // Allow self-reference
-      !fieldType.isInterface()) {
-      violations.add("${aggregateClass.getName()} has field '${field.getName()}' of type ${fieldType.getName()} which is another aggregate root")
-    }
-
-    // Check collections/arrays of aggregate roots
-    if (field.getRawType().getName().startsWith("java.util.List") ||
-      field.getRawType().getName().startsWith("java.util.Set") ||
-      field.getRawType().getName().startsWith("java.util.Collection")) {
-      // Check generic type parameter
-      field.getType().getActualTypeArguments().each { typeArg ->
-        if (typeArg.toErasure().isAssignableTo(AggregateRoot.class) &&
-          !typeArg.toErasure().isInterface()) {
-          violations.add("${aggregateClass.getName()} has field '${field.getName()}' containing ${typeArg.getName()} which is an aggregate root")
+```java
+DcaRule.check(
+    "DCA-TAC-003",
+    "Aggregate Roots must not have fields with other Aggregate Root types",
+    "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep"
+        + " aggregate boundaries and transactional consistency intact",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass aggregate : concreteClassesAssignableTo(arch, AggregateRoot.class)) {
+        for (JavaField field : aggregate.getAllFields()) {
+          JavaClass fieldType = field.getRawType();
+          if (isConcreteAggregateRoot(fieldType) && !fieldType.equals(aggregate)) {
+            violations.add(
+                fieldDescription(aggregate, field, fieldType)
+                    + " which is another aggregate root");
+          }
+          for (JavaClass element : collectionElementTypes(field)) {
+            if (isConcreteAggregateRoot(element)) {
+              violations.add(
+                  containsDescription(aggregate, field, element)
+                      + " which is an aggregate root");
+            }
+          }
         }
       }
-    }
-  }
-}
-
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Aggregates must reference other aggregates by ID only (Vernon's Rule #2).\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-
-true
+      fail(
+          "Aggregates must reference other aggregates by ID only (Vernon's Rule #2).",
+          violations);
+    })
 ```
 
 ## Applies to markers

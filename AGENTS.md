@@ -5,7 +5,7 @@ Guidance for AI coding agents (Claude Code, Codex, and others) when working in `
 ## What this is
 
 An OKF (Open Knowledge Format) bundle that captures the **bootstrap skeleton** of
-a Domain-Centric Architecture app — marker contracts, ArchUnit rules, and the ADR
+a Domain-Centric Architecture app — building-block marker contracts, `dca-archunit` rules, and the ADR
 process — for consumption by an LLM / agentic coding factory. See
 [README.md](README.md) and [SPEC.md](SPEC.md).
 
@@ -16,8 +16,8 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 | Bundle content | Generated from |
 |----------------|----------------|
 | `bundle/guide/**` | `implementing-domain-centric-architecture/*.md` (full text, container + section nodes) |
-| `bundle/marker/**` | `dca-ecommerce-sample/src/main/java/.../sharedkernel/marker/**/*.java` |
-| `bundle/rule/**` | `dca-ecommerce-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy` |
+| `bundle/marker/**` | `dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java` |
+| `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule) |
 | `bundle/process/creating-an-adr.md` | `implementing-domain-centric-architecture/adr-template.md` |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
@@ -71,7 +71,7 @@ edits, regenerates indexes, lints).
 That copy is **also a derived artifact — never hand-edit it**. Every node type is
 public, so no node is dropped, but the `resource:` frontmatter is: the mirror
 travels into projects that do not have the source repositories, where a path like
-`dca-ecommerce-sample/src/main/java/…` names nothing. The canonical `bundle/`
+`dca-java/dca-building-blocks/src/main/java/…` names nothing. The canonical `bundle/`
 keeps `resource:` as provenance and as the basis for the lint's stale-resource
 check. Disable mirroring with `--no-default-mirror`; add targets with
 `--mirror PATH`.
@@ -143,7 +143,7 @@ document acquired an outward reference: fix it there.
 ## Cross-project consistency
 
 This sub-project is downstream of `implementing-domain-centric-architecture` and
-of `dca-ecommerce-sample`'s marker interfaces and ArchUnit tests. When any of
+of `dca-java`'s building-block markers and `dca-archunit` rules. When any of
 those change, regenerate the bundle (see the root `AGENTS.md` cross-project
 checklist). Changing the sample's ADRs or a book chapter does **not** affect the
 bundle. All persisted content is English.

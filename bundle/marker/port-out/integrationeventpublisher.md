@@ -4,9 +4,10 @@ title: IntegrationEventPublisher
 category: port-out
 kind: interface
 signature: public interface IntegrationEventPublisher extends OutputPort
+package: dev.domaincentric.dca.buildingblocks.hexagonal.port.out
 extends: [OutputPort]
 methods: ["void publish(IntegrationEvent event)"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/port/out/IntegrationEventPublisher.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/hexagonal/port/out/IntegrationEventPublisher.java
 tags: [port-out, marker]
 ---
 

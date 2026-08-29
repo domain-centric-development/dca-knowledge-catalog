@@ -1,30 +1,34 @@
 ---
 type: Rule
+id: DCA-MAP-001
 title: "Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages"
-rule: "Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages."
+rule: "Context map declarations are reserved for bounded contexts — only a context can be downstream of, or partner with, another."
 constraint: "Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages."
-enforced_by: "ContextMapArchUnitTest#Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages"
+enforced_by: "ContextMapRules#DCA-MAP-001"
 status: enforced
-test_class: ContextMapArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/ContextMapArchUnitTest.groovy
+rule_set: contextmap
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---
 
-```groovy
-given:
-Set<String> roots = allRootPackages()
-
-expect:
-roots.each { pkg ->
-  if (getPackageAnnotation(pkg, BoundedContext) == null) {
-    assert getPackageAnnotations(pkg, Upstream).isEmpty() :
-    "Package '${pkg}' declares @Upstream but is not a @BoundedContext — context map declarations are reserved for bounded contexts"
-    assert getPackageAnnotations(pkg, ExternalUpstream).isEmpty() :
-    "Package '${pkg}' declares @ExternalUpstream but is not a @BoundedContext — context map declarations are reserved for bounded contexts"
-    assert getPackageAnnotations(pkg, Partnership).isEmpty() :
-    "Package '${pkg}' declares @Partnership but is not a @BoundedContext — context map declarations are reserved for bounded contexts"
-  }
-}
+```java
+DcaRule.check(
+    "DCA-MAP-001",
+    "Upstream, ExternalUpstream, and Partnership may only be declared on bounded context"
+        + " packages",
+    "Context map declarations are reserved for bounded contexts — only a context can be"
+        + " downstream of, or partner with, another",
+    arch -> {
+      for (String pkg : allRootPackages(arch)) {
+        if (arch.packageAnnotation(pkg, BoundedContext.class).isPresent()) {
+          continue;
+        }
+        requireNoDeclaration(arch, pkg, Upstream.class, "@Upstream");
+        requireNoDeclaration(arch, pkg, ExternalUpstream.class, "@ExternalUpstream");
+        requireNoDeclaration(arch, pkg, Partnership.class, "@Partnership");
+      }
+    })
 ```
 
 ## Applies to markers

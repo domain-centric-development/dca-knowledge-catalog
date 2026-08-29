@@ -1,165 +1,169 @@
-"""Extract Rule nodes from the reference implementation's ArchUnit tests.
+"""Extract Rule nodes from the ``dca-archunit`` rule library.
 
-Source: ``dca-ecommerce-sample/src/test-architecture/groovy/.../*ArchUnitTest.groovy``
-Each Spock feature method (``def "<rule statement>"() { ... }``) becomes one OKF
-``Rule`` node. The method name is already a human-readable rule statement; the
-body is carried verbatim as a fenced code block (lossless, no semantic parsing).
+Sources (both under ``dca-java/``):
+
+* ``rules.json`` — the rule catalog the library renders from its own code
+  (``./gradlew :dca-archunit:rulesCatalog``): one entry per rule with the
+  stable id (``DCA-TAC-006``), the rule set, the title and the rationale.
+  Titles are *resolved* — a rule whose title embeds a configured suffix is
+  rendered for the default layout — so this file, not the Java source, is the
+  authority for what a rule says.
+* ``dca-archunit/src/main/java/.../rules/<Set>Rules.java`` — the implementation.
+  The ``DcaRule.of(...)`` / ``DcaRule.check(...)`` expression that constructs a
+  rule is carried verbatim as a fenced code block (lossless, no semantic
+  parsing) and scanned by the linker for marker references.
+
+Each rule becomes one OKF ``Rule`` node. Node paths are derived from the title
+so links from the authored zone stay stable across implementation changes.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
 
 from .okf import Node, slugify
 
-RULES_REL = "dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture"
+JAVA_REL = "dca-java"
+RULES_JSON_REL = f"{JAVA_REL}/rules.json"
+RULES_SRC_REL = f"{JAVA_REL}/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules"
 
-# test class -> bundle category directory
-_CATEGORY = {
-    "DddTacticalPatternsArchUnitTest": "tactical",
-    "DddAdvancedPatternsArchUnitTest": "advanced",
-    "DddStrategicPatternsArchUnitTest": "strategic",
-    "HexagonalArchitectureArchUnitTest": "hexagonal",
-    "OnionArchitectureArchUnitTest": "onion",
-    "LayeredArchitectureArchUnitTest": "layered",
-    "PackageCyclesArchUnitTest": "cycles",
-    "NamingConventionsArchUnitTest": "naming",
-    "UseCasePatternsArchUnitTest": "usecase",
-    "ContextMapArchUnitTest": "contextmap",
+# rule set name (as in rules.json / DcaRuleSet.name()) -> implementing class
+_RULE_SET_CLASS = {
+    "layered": "LayeredRules",
+    "onion": "OnionRules",
+    "hexagonal": "HexagonalRules",
+    "tactical": "TacticalPatternRules",
+    "strategic": "StrategicPatternRules",
+    "contextmap": "ContextMapRules",
+    "advanced": "AdvancedPatternRules",
+    "usecase": "UseCaseRules",
+    "naming": "NamingRules",
+    "cycles": "CycleRules",
 }
 
-# Test classes that match the *ArchUnitTest.groovy glob but carry no extractable
-# rules (base/helper). Listed explicitly so a *new* unmapped test class warns
-# loudly instead of being silently dropped from the catalog.
-_KNOWN_NON_RULE = {"BaseArchUnitTest"}
-
-_METHOD_RE = re.compile(r'def\s+"((?:[^"\\]|\\.)*)"\s*\(\s*\)\s*\{')
-_BECAUSE_RE = re.compile(r'\.because\(\s*"((?:[^"\\]|\\.)*)"')
+_FACTORY_RE = re.compile(r"DcaRule\.(?:of|check)\s*\(")
 
 
-def _method_body(source: str, brace_open: int) -> str:
-    depth, i = 0, brace_open
+def _expression_at(source: str, id_literal: str) -> str | None:
+    """The ``DcaRule.of(...)``/``DcaRule.check(...)`` call that carries ``id_literal``."""
+    at = source.find(f'"{id_literal}"')
+    if at < 0:
+        return None
+    start = max((m.start() for m in _FACTORY_RE.finditer(source, 0, at)), default=-1)
+    if start < 0:
+        return None
+    open_paren = source.index("(", start)
+    depth, i, in_string, escaped = 0, open_paren, False, False
     while i < len(source):
         ch = source[i]
-        if ch == "{":
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+        elif ch == '"':
+            in_string = True
+        elif ch == "(":
             depth += 1
-        elif ch == "}":
+        elif ch == ")":
             depth -= 1
             if depth == 0:
-                return source[brace_open + 1 : i]
+                return source[start : i + 1]
         i += 1
-    return source[brace_open + 1 :]
+    return source[start:]
 
 
-def _dedent(body: str) -> str:
-    lines = [ln for ln in body.splitlines()]
+def _dedent(code: str) -> str:
+    lines = code.splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
     while lines and not lines[-1].strip():
         lines.pop()
-    indents = [len(ln) - len(ln.lstrip()) for ln in lines if ln.strip()]
-    pad = min(indents) if indents else 0
-    return "\n".join(ln[pad:] if len(ln) >= pad else ln for ln in lines)
+    if not lines:
+        return ""
+    # The expression starts mid-line (`return DcaRule.of(`); keep the arguments indented
+    # by one continuation step (4) relative to it, as google-java-format wrote them.
+    indents = [len(ln) - len(ln.lstrip()) for ln in lines[1:] if ln.strip()]
+    pad = max(0, (min(indents) if indents else 0) - 4)
+    return "\n".join([lines[0].strip()] + [ln[pad:] if len(ln) >= pad else ln for ln in lines[1:]])
 
 
-def _assertion_block(body: str) -> str:
-    """The executable content of the feature's assertion block (``expect:`` or ``then:``).
+def _status(title: str, code: str) -> str:
+    """``enforced`` unless the rule is documentation-only.
 
-    Setup in ``given:``/``when:`` is not an assertion, so it must not count towards deciding
-    whether a rule checks anything. A feature whose ``given:`` computes two unread variables
-    and whose ``expect:`` is the literal ``true`` enforces nothing, however busy it looks.
+    A rule is informational when its title says so (``Diagnostic: …``) or when
+    its check body is empty (``arch -> {}``) — it then exists to carry doctrine
+    into the catalog, never to fail a build.
     """
-    stripped = re.sub(r"//.*", "", body)
-    stripped = re.sub(r"/\*.*?\*/", "", stripped, flags=re.DOTALL)
-    lines, collecting = [], False
-    for ln in stripped.splitlines():
-        label = ln.strip()
-        if label in ("expect:", "then:"):
-            collecting = True
-            continue
-        if label in ("given:", "when:", "where:", "cleanup:", "setup:"):
-            collecting = False
-            continue
-        if collecting and label:
-            lines.append(label)
-    return "\n".join(lines).strip()
-
-
-def _status(body: str) -> str:
-    if "disabled" in body.lower():
-        return "disabled"
-    assertion = _assertion_block(body)
-    # A feature whose only assertion is the literal `true` documents a pattern rather than
-    # enforcing one — checked before check(), since setup may call anything.
-    if re.fullmatch(r"true\b.*", assertion, re.DOTALL):
+    if title.startswith("Diagnostic"):
         return "informational"
-    # Anything that actually runs an ArchUnit rule against the classes is enforced,
-    # regardless of diagnostics/prints alongside it.
-    if "check(" in assertion or "check(" in body:
-        return "enforced"
-    # A diagnostic/print-only feature (no .check()) documents rather than enforces.
-    if "Diagnostic" in body or "println" in body:
+    if re.search(r"arch\s*->\s*\{\s*\}", code):
         return "informational"
     return "enforced"
 
 
 def _constraint(title: str) -> str:
     """The rule as a single-line, actionable precondition an LLM satisfies while
-    generating code. The Spock method name is already a ``X must Y`` statement —
-    normalize whitespace and trailing punctuation so it is machine-addressable."""
+    generating code. The title is already an ``X must Y`` statement — normalize
+    whitespace and trailing punctuation so it is machine-addressable."""
     return " ".join(title.split()).rstrip(".") + "."
 
 
-def _because(body: str, title: str) -> str:
-    m = _BECAUSE_RE.search(body)
-    if not m:
-        return title.rstrip(".") + "."
-    text = m.group(1).replace('\\"', '"')
-    # Spock GString interpolation -> readable placeholder
-    text = re.sub(r"\$\{[^}]*\}", "<context>", text)
-    return text.rstrip(".") + "."
-
-
 def extract(repo_root: Path) -> list[Node]:
-    base = repo_root / RULES_REL
+    catalog_path = repo_root / RULES_JSON_REL
+    if not catalog_path.exists():
+        raise SystemExit(
+            f"{catalog_path} not found — run `./gradlew :dca-archunit:rulesCatalog` in {JAVA_REL}/ first."
+        )
+    entries = json.loads(catalog_path.read_text(encoding="utf-8"))
+    sources: dict[str, str] = {}
     nodes: list[Node] = []
-    for path in sorted(base.glob("*ArchUnitTest.groovy")):
-        class_name = path.stem
-        category = _CATEGORY.get(class_name)
-        if category is None:
-            if class_name not in _KNOWN_NON_RULE:
-                print(
-                    f"WARNING: ArchUnit test class {class_name!r} is not mapped in "
-                    f"rules._CATEGORY — its rules are excluded from the catalog. "
-                    f"Add it to _CATEGORY or _KNOWN_NON_RULE.",
-                    file=sys.stderr,
-                )
-            continue
-        source = path.read_text(encoding="utf-8")
-        rel = path.relative_to(repo_root).as_posix()
-        for m in _METHOD_RE.finditer(source):
-            title = m.group(1).replace('\\"', '"')
-            body = _method_body(source, m.end() - 1)
-            status = _status(body)
-            code = _dedent(body)
-            fm = {
-                "type": "Rule",
-                "title": title,
-                "rule": _because(body, title),
-                "constraint": _constraint(title),
-                "enforced_by": f"{class_name}#{title}",
-                "status": status,
-                "test_class": class_name,
-                "resource": rel,
-                "tags": [category, "archunit"],
-            }
-            node = Node(
-                path=f"rule/{category}/{slugify(title)}.md",
-                frontmatter=fm,
-                body=f"```groovy\n{code}\n```",
-                meta={"name": title, "kind": "rule", "scan_text": body},
+    for entry in entries:
+        rule_set, rule_id, title, rationale = (
+            entry["set"], entry["id"], entry["title"], entry["rationale"],
+        )
+        class_name = _RULE_SET_CLASS.get(rule_set)
+        if class_name is None:
+            print(
+                f"WARNING: rule set {rule_set!r} ({rule_id}) is not mapped in rules._RULE_SET_CLASS — "
+                f"its rules are excluded from the catalog.",
+                file=sys.stderr,
             )
-            nodes.append(node)
+            continue
+        src_path = repo_root / RULES_SRC_REL / f"{class_name}.java"
+        if class_name not in sources:
+            sources[class_name] = src_path.read_text(encoding="utf-8") if src_path.exists() else ""
+        expression = _expression_at(sources[class_name], rule_id)
+        if expression is None:
+            print(f"WARNING: no DcaRule expression found for {rule_id} in {class_name}.java", file=sys.stderr)
+            code = ""
+        else:
+            code = _dedent(expression)
+        fm = {
+            "type": "Rule",
+            "id": rule_id,
+            "title": title,
+            "rule": rationale.rstrip(".") + ".",
+            "constraint": _constraint(title),
+            "enforced_by": f"{class_name}#{rule_id}",
+            "status": _status(title, code),
+            "rule_set": rule_set,
+            "implementations": ["java"],
+            "resource": (Path(RULES_SRC_REL) / f"{class_name}.java").as_posix(),
+            "tags": [rule_set, "archunit"],
+        }
+        body = f"```java\n{code}\n```" if code else ""
+        nodes.append(
+            Node(
+                path=f"rule/{rule_set}/{slugify(title)}.md",
+                frontmatter=fm,
+                body=body,
+                meta={"name": title, "kind": "rule", "scan_text": code},
+            )
+        )
     return nodes

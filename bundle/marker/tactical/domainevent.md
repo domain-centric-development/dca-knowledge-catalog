@@ -4,8 +4,9 @@ title: DomainEvent
 category: tactical
 kind: interface
 signature: public interface DomainEvent
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
 methods: ["UUID eventId()", "Instant occurredOn()"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/DomainEvent.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/DomainEvent.java
 tags: [tactical, marker]
 ---
 

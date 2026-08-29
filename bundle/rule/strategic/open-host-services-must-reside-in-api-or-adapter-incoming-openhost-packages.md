@@ -1,23 +1,30 @@
 ---
 type: Rule
+id: DCA-STR-005
 title: Open Host Services must reside in api or adapter.incoming.openhost packages
-rule: "Open Host Services expose context capabilities via api/ packages (Spring Modulith @NamedInterface) or adapter.incoming.openhost/ packages."
+rule: "Open Host Services expose context capabilities via api/ packages (published named interface) or adapter.incoming.openhost/ packages."
 constraint: Open Host Services must reside in api or adapter.incoming.openhost packages.
-enforced_by: "DddStrategicPatternsArchUnitTest#Open Host Services must reside in api or adapter.incoming.openhost packages"
+enforced_by: "StrategicPatternRules#DCA-STR-005"
 status: enforced
-test_class: DddStrategicPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+rule_set: strategic
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().areAnnotatedWith(OpenHostService)
-  .should().resideInAnyPackage("..api..", "..adapter.incoming.openhost..")
-  .allowEmptyShould(true)
-  .because("Open Host Services expose context capabilities via api/ packages (Spring Modulith @NamedInterface) or adapter.incoming.openhost/ packages")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-STR-005",
+    "Open Host Services must reside in api or adapter.incoming.openhost packages",
+    "Open Host Services expose context capabilities via api/ packages (published named"
+        + " interface) or adapter.incoming.openhost/ packages",
+    arch ->
+        classes()
+            .that()
+            .areAnnotatedWith(OpenHostService.class)
+            .should()
+            .resideInAnyPackage("..api..", openHostAdapterPattern())
+            .allowEmptyShould(true))
 ```
 
 ## Applies to markers

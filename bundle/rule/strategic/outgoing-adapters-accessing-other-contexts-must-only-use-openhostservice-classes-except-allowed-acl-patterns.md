@@ -1,64 +1,62 @@
 ---
 type: Rule
+id: DCA-STR-006
 title: "Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)"
-rule: "Outgoing adapters in '<context>' must not access domain layer of '<context>' - use api/ or events/ packages instead."
+rule: "Cross-context communication goes through the published api/ and events/ packages, never through another context's domain or application layer."
 constraint: "Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)."
-enforced_by: "DddStrategicPatternsArchUnitTest#Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)"
+enforced_by: "StrategicPatternRules#DCA-STR-006"
 status: enforced
-test_class: DddStrategicPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddStrategicPatternsArchUnitTest.groovy
+rule_set: strategic
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 ---
 
-```groovy
-given:
-Map<String, BoundedContext> boundedContexts = discoverBoundedContextPackages()
-List<String> contextPackages = boundedContexts.keySet().toList()
-
-expect:
-// For each bounded context's outgoing adapters, verify they only access
-// @OpenHostService annotated classes (or Shared Kernel) from other contexts
-// Exception: Documented ACL patterns in ALLOWED_ADAPTER_CROSS_CONTEXT_ACCESS
-contextPackages.each { sourceContext ->
-  String sourceName = boundedContexts[sourceContext].name()
-  String sourceContextShort = extractContextName(sourceContext)
-
-  // Get allowed ACL targets for this source
-  List<String> allowedAclTargets = ALLOWED_ADAPTER_CROSS_CONTEXT_ACCESS.getOrDefault(sourceContextShort, [])
-
-  // Get all other contexts, excluding allowed ACL targets
-  List<String> otherContexts = contextPackages.findAll { targetContext ->
-    if (targetContext == sourceContext) return false
-    String targetContextShort = extractContextName(targetContext)
-    return !allowedAclTargets.contains(targetContextShort)
-  }
-
-  if (!otherContexts.isEmpty()) {
-    // For each other context (not in ACL exceptions), outgoing adapters should only access
-    // api/ packages (Open Host Services) or events/ packages (Integration Events)
-    otherContexts.each { targetContext ->
-      String targetName = boundedContexts[targetContext].name()
-
-      // Forbid access to domain layers of other contexts
-      noClasses()
-        .that().resideInAPackage("${sourceContext}.adapter.outgoing..")
-        .should().dependOnClassesThat()
-          .resideInAPackage("${targetContext}.domain..")
-        .allowEmptyShould(true)
-        .because("Outgoing adapters in '${sourceName}' must not access domain layer of '${targetName}' - use api/ or events/ packages instead")
-        .check(allClasses)
-
-      // Forbid access to application layers of other contexts
-      noClasses()
-        .that().resideInAPackage("${sourceContext}.adapter.outgoing..")
-        .should().dependOnClassesThat()
-          .resideInAPackage("${targetContext}.application..")
-        .allowEmptyShould(true)
-        .because("Outgoing adapters in '${sourceName}' must not access application layer of '${targetName}' - use api/ or events/ packages instead")
-        .check(allClasses)
-    }
-  }
-}
+```java
+DcaRule.check(
+    "DCA-STR-006",
+    "Outgoing adapters accessing other contexts must only use OpenHostService classes (except"
+        + " allowed ACL patterns)",
+    "Cross-context communication goes through the published api/ and events/ packages, never"
+        + " through another context's domain or application layer",
+    arch -> {
+      Map<String, BoundedContext> contexts = arch.boundedContexts();
+      for (Map.Entry<String, BoundedContext> source : contexts.entrySet()) {
+        for (Map.Entry<String, BoundedContext> target : contexts.entrySet()) {
+          if (target.getKey().equals(source.getKey())) {
+            continue;
+          }
+          noClasses()
+              .that()
+              .resideInAPackage(layout.outgoingAdapterPattern(source.getKey()))
+              .should()
+              .dependOnClassesThat()
+              .resideInAPackage(layout.domainPattern(target.getKey()))
+              .allowEmptyShould(true)
+              .because(
+                  "Outgoing adapters in '"
+                      + source.getValue().name()
+                      + "' must not access domain layer of '"
+                      + target.getValue().name()
+                      + "' - use api/ or events/ packages instead")
+              .check(arch.classes());
+          noClasses()
+              .that()
+              .resideInAPackage(layout.outgoingAdapterPattern(source.getKey()))
+              .should()
+              .dependOnClassesThat()
+              .resideInAPackage(layout.applicationPattern(target.getKey()))
+              .allowEmptyShould(true)
+              .because(
+                  "Outgoing adapters in '"
+                      + source.getValue().name()
+                      + "' must not access application layer of '"
+                      + target.getValue().name()
+                      + "' - use api/ or events/ packages instead")
+              .check(arch.classes());
+        }
+      }
+    })
 ```
 
 ## Applies to markers

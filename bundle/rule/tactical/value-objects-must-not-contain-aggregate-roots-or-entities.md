@@ -1,70 +1,56 @@
 ---
 type: Rule
+id: DCA-TAC-008
 title: Value Objects must not contain Aggregate Roots or Entities
-rule: Value Objects must not contain Aggregate Roots or Entities.
+rule: A Value Object is defined by its attributes; holding an object with identity would give it a lifecycle it must not have.
 constraint: Value Objects must not contain Aggregate Roots or Entities.
-enforced_by: "DddTacticalPatternsArchUnitTest#Value Objects must not contain Aggregate Roots or Entities"
+enforced_by: "TacticalPatternRules#DCA-TAC-008"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-def valueObjectClasses = allClasses.stream()
-  .filter { it.isAssignableTo(Value.class) }
-  .filter { !it.isInterface() }
-  .collect()
-
-def violations = []
-valueObjectClasses.each { voClass ->
-  voClass.getAllFields().each { field ->
-    def fieldType = field.getRawType()
-
-    if (fieldType.isAssignableTo(AggregateRoot.class) &&
-      !fieldType.isInterface()) {
-      violations.add("${voClass.getName()} has field '${field.getName()}' of type ${fieldType.getName()} which is an aggregate root")
-    }
-
-    if (fieldType.isAssignableTo(Entity.class) &&
-      !fieldType.isAssignableTo(AggregateRoot.class) &&
-      !fieldType.isInterface()) {
-      violations.add("${voClass.getName()} has field '${field.getName()}' of type ${fieldType.getName()} which is an entity")
-    }
-
-    if (field.getRawType().getName().startsWith("java.util.List") ||
-      field.getRawType().getName().startsWith("java.util.Set") ||
-      field.getRawType().getName().startsWith("java.util.Collection")) {
-      field.getType().getActualTypeArguments().each { typeArg ->
-        def erasure = typeArg.toErasure()
-
-        if (erasure.isAssignableTo(AggregateRoot.class) &&
-          !erasure.isInterface()) {
-          violations.add("${voClass.getName()} has field '${field.getName()}' containing ${typeArg.getName()} which is an aggregate root")
-        }
-
-        if (erasure.isAssignableTo(Entity.class) &&
-          !erasure.isAssignableTo(AggregateRoot.class) &&
-          !erasure.isInterface()) {
-          violations.add("${voClass.getName()} has field '${field.getName()}' containing ${typeArg.getName()} which is an entity")
+```java
+DcaRule.check(
+    "DCA-TAC-008",
+    "Value Objects must not contain Aggregate Roots or Entities",
+    "A Value Object is defined by its attributes; holding an object with identity would give"
+        + " it a lifecycle it must not have",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
+        for (JavaField field : valueObject.getAllFields()) {
+          JavaClass fieldType = field.getRawType();
+          if (isConcreteAggregateRoot(fieldType)) {
+            violations.add(
+                fieldDescription(valueObject, field, fieldType)
+                    + " which is an aggregate root");
+          }
+          if (isConcreteNonRootEntity(fieldType)) {
+            violations.add(
+                fieldDescription(valueObject, field, fieldType) + " which is an entity");
+          }
+          for (JavaClass element : collectionElementTypes(field)) {
+            if (isConcreteAggregateRoot(element)) {
+              violations.add(
+                  containsDescription(valueObject, field, element)
+                      + " which is an aggregate root");
+            }
+            if (isConcreteNonRootEntity(element)) {
+              violations.add(
+                  containsDescription(valueObject, field, element) + " which is an entity");
+            }
+          }
         }
       }
-    }
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Value Objects must only contain other Value Objects or primitives (Vernon's DDD).\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+      fail(
+          "Value Objects must only contain other Value Objects or primitives (Vernon's DDD).",
+          violations);
+    })
 ```
 
 ## Applies to markers
 
-- [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
-- [Entity<T, ID>](/marker/tactical/entity.md)
 - [Value](/marker/tactical/value.md)

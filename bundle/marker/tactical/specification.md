@@ -4,8 +4,9 @@ title: "Specification<T>"
 category: tactical
 kind: interface
 signature: "public interface Specification<T>"
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
 methods: ["boolean isSatisfiedBy(T candidate)"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/Specification.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/Specification.java
 tags: [tactical, marker]
 ---
 

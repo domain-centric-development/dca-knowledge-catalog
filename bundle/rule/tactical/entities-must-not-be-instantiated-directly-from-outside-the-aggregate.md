@@ -1,48 +1,41 @@
 ---
 type: Rule
+id: DCA-TAC-005
 title: Entities must not be instantiated directly from outside the aggregate
-rule: Entities must not be instantiated directly from outside the aggregate.
+rule: Entities are created through their aggregate root so that the root can enforce its invariants.
 constraint: Entities must not be instantiated directly from outside the aggregate.
-enforced_by: "DddTacticalPatternsArchUnitTest#Entities must not be instantiated directly from outside the aggregate"
+enforced_by: "TacticalPatternRules#DCA-TAC-005"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-// Entities (except Aggregate Roots) should not have public constructors
-// They should only be created through their aggregate root
-// This enforces aggregate boundaries and ensures invariants
-
-def entityClasses = allClasses.stream()
-  .filter { it.isAssignableTo(Entity.class) }
-  .filter { !it.isAssignableTo(AggregateRoot.class) }  // Exclude aggregate roots
-  .filter { !it.isInterface() }
-  .filter { !it.isRecord() }  // Records always have public constructors
-  .collect()
-
-def violations = []
-entityClasses.each { entityClass ->
-  entityClass.getConstructors().each { constructor ->
-    if (constructor.getModifiers().contains(JavaModifier.PUBLIC)) {
-      violations.add("${entityClass.getName()} has public constructor - should be package-private or protected")
-    }
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Entities should not have public constructors (access only through aggregate root).\n" +
-  "Note: Records are excluded from this rule.\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+```java
+DcaRule.check(
+    "DCA-TAC-005",
+    "Entities must not be instantiated directly from outside the aggregate",
+    "Entities are created through their aggregate root so that the root can enforce its"
+        + " invariants",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass entity : nonRootEntities(arch)) {
+        if (entity.isRecord()) {
+          continue;
+        }
+        entity.getConstructors().stream()
+            .filter(c -> c.getModifiers().contains(JavaModifier.PUBLIC))
+            .forEach(
+                c ->
+                    violations.add(
+                        entity.getName()
+                            + " has public constructor - should be package-private or"
+                            + " protected"));
+      }
+      fail(
+          "Entities should not have public constructors (access only through aggregate root).\n"
+              + "Note: Records are excluded from this rule.",
+          violations);
+    })
 ```
-
-## Applies to markers
-
-- [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
-- [Entity<T, ID>](/marker/tactical/entity.md)

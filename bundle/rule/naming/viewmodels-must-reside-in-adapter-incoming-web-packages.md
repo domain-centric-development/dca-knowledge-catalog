@@ -1,21 +1,29 @@
 ---
 type: Rule
+id: DCA-NAM-011
 title: ViewModels must reside in adapter.incoming.web packages
 rule: ViewModels are presentation concerns and must reside in incoming web adapter packages.
 constraint: ViewModels must reside in adapter.incoming.web packages.
-enforced_by: "NamingConventionsArchUnitTest#ViewModels must reside in adapter.incoming.web packages"
+enforced_by: "NamingRules#DCA-NAM-011"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-classes()
-  .that().haveSimpleNameEndingWith("ViewModel")
-  .and().resideInAnyPackage(BASE_PACKAGE + "..")
-  .should().resideInAPackage("..adapter.incoming.web..")
-  .because("ViewModels are presentation concerns and must reside in incoming web adapter packages")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-011",
+    "ViewModels must reside in adapter.incoming.web packages",
+    "ViewModels are presentation concerns and must reside in incoming web adapter packages",
+    arch ->
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("ViewModel")
+            .and()
+            .resideInAnyPackage(layout.basePackage() + "..")
+            .should()
+            .resideInAPackage(incomingWebPattern)
+            .allowEmptyShould(true))
 ```

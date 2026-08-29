@@ -1,43 +1,53 @@
 ---
 type: Rule
+id: DCA-MAP-006
 title: Upstream declarations and Spring Modulith allowedDependencies must agree
-rule: Upstream declarations and Spring Modulith allowedDependencies must agree.
+rule: Neither the context map nor the module boundary may know more than the other — an edge that exists only on one side is stale.
 constraint: Upstream declarations and Spring Modulith allowedDependencies must agree.
-enforced_by: "ContextMapArchUnitTest#Upstream declarations and Spring Modulith allowedDependencies must agree"
+enforced_by: "ContextMapRules#DCA-MAP-006"
 status: enforced
-test_class: ContextMapArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/ContextMapArchUnitTest.groovy
+rule_set: contextmap
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 ---
 
-```groovy
-given:
-// Loaded reflectively so this test class compiles and runs in projects without Spring
-// Modulith — there the rule is skipped and the remaining rules still bind the declarations
-// to the code itself.
-Class<? extends java.lang.annotation.Annotation> applicationModule =
-  Class.forName(APPLICATION_MODULE_ANNOTATION) as Class<? extends java.lang.annotation.Annotation>
-Map<String, BoundedContext> contexts = discoverBoundedContextPackages()
-Set<String> moduleNames = contexts.keySet().collect { shortName(it) } as Set
-
-expect:
-contexts.each { pkg, bc ->
-  String source = shortName(pkg)
-  Set<String> declared = declaredEdges(pkg)
-
-  def module = getPackageAnnotation(pkg, applicationModule)
-  Set<String> allowed = (module == null ? [] : module.allowedDependencies().toList())
-    .collect { it.replaceAll(/\s*::\s*/, ' :: ').trim() }
-    .findAll { it.contains(' :: ') }
-    .findAll { moduleNames.contains(it.split(' :: ')[0]) }
-    .toSet()
-
-  assert declared == allowed :
-  "Context '${source}': @Upstream declarations ${declared.sort()} and @ApplicationModule.allowedDependencies named-interface entries ${allowed.sort()} must describe the same edges — neither side may know more than the other"
-}
+```java
+DcaRule.check(
+    "DCA-MAP-006",
+    "Upstream declarations and Spring Modulith allowedDependencies must agree",
+    "Neither the context map nor the module boundary may know more than the other — an edge"
+        + " that exists only on one side is stale",
+    arch -> {
+      Optional<Class<? extends Annotation>> moduleAnnotation = moduleAnnotationType();
+      if (moduleAnnotation.isEmpty()) {
+        return;
+      }
+      Set<String> moduleNames = moduleNames(arch);
+      for (String pkg : arch.boundedContextPackages()) {
+        String source = shortName(pkg);
+        Set<String> declared = declaredEdges(arch, pkg);
+        Set<String> allowed = new LinkedHashSet<>();
+        for (String entry : allowedDependencies(arch, pkg, moduleAnnotation.get())) {
+          String normalized = entry.replaceAll("\\s*::\\s*", " :: ").trim();
+          if (normalized.contains(" :: ")
+              && moduleNames.contains(normalized.split(" :: ")[0])) {
+            allowed.add(normalized);
+          }
+        }
+        require(
+            declared.equals(allowed),
+            "Context '"
+                + source
+                + "': @Upstream declarations "
+                + new TreeSet<>(declared)
+                + " and @ApplicationModule.allowedDependencies named-interface entries "
+                + new TreeSet<>(allowed)
+                + " must describe the same edges — neither side may know more than the other");
+      }
+    })
 ```
 
 ## Applies to markers
 
-- [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@Upstream](/marker/strategic/upstream.md)

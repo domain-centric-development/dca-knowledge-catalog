@@ -1,23 +1,29 @@
 ---
 type: Rule
+id: DCA-NAM-009
 title: No technical bucket packages - package by domain concept
 rule: "Packages are named after domain concepts from the ubiquitous language, not technical patterns."
 constraint: No technical bucket packages - package by domain concept.
-enforced_by: "NamingConventionsArchUnitTest#No technical bucket packages - package by domain concept"
+enforced_by: "NamingRules#DCA-NAM-009"
 status: enforced
-test_class: NamingConventionsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/NamingConventionsArchUnitTest.groovy
+rule_set: naming
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 ---
 
-```groovy
-expect:
-// Top-level structure must scream business capabilities (screaming architecture).
-// Technical buckets like 'entities' or 'util' hide the domain and attract
-// unrelated code. DTOs/Converters/ViewModels have their own placement rules above.
-noClasses()
-  .should().resideInAnyPackage("..entities..", "..valueobjects..", "..helpers..", "..util..", "..utils..")
-  .because("Packages are named after domain concepts from the ubiquitous language, not technical patterns")
-  .allowEmptyShould(true)
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-NAM-009",
+    "No technical bucket packages - package by domain concept",
+    "Packages are named after domain concepts from the ubiquitous language, not technical"
+        + " patterns",
+    arch ->
+        noClasses()
+            .that()
+            .resideInAPackage(layout.basePackage() + "..")
+            .should()
+            .resideInAnyPackage(
+                "..entities..", "..valueobjects..", "..helpers..", "..util..", "..utils..")
+            .allowEmptyShould(true))
 ```

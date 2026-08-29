@@ -1,20 +1,27 @@
 ---
 type: Rule
+id: DCA-HEX-004
 title: "Incoming Adapters must only use outbound ports (not infrastructure implementations)"
-rule: "Incoming adapters should only use outbound ports declared as interfaces (sharedkernel.marker.port.out), not infrastructure implementation details."
+rule: "Incoming adapters should only use outbound ports declared as interfaces (port.out), not infrastructure implementation details."
 constraint: "Incoming Adapters must only use outbound ports (not infrastructure implementations)."
-enforced_by: "HexagonalArchitectureArchUnitTest#Incoming Adapters must only use outbound ports (not infrastructure implementations)"
+enforced_by: "HexagonalRules#DCA-HEX-004"
 status: enforced
-test_class: HexagonalArchitectureArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/HexagonalArchitectureArchUnitTest.groovy
+rule_set: hexagonal
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 ---
 
-```groovy
-expect:
-noClasses()
-  .that().resideInAPackage(INCOMING_ADAPTER_PACKAGE)
-  .should().dependOnClassesThat(INFRASTRUCTURE_IMPLEMENTATION)
-  .because("Incoming adapters should only use outbound ports declared as interfaces (sharedkernel.marker.port.out), not infrastructure implementation details")
-  .check(allClasses)
+```java
+DcaRule.of(
+    "DCA-HEX-004",
+    "Incoming Adapters must only use outbound ports (not infrastructure implementations)",
+    "Incoming adapters should only use outbound ports declared as interfaces (port.out), not"
+        + " infrastructure implementation details",
+    arch ->
+        noClasses()
+            .that()
+            .resideInAPackage(layout.incomingAdapterPattern())
+            .should()
+            .dependOnClassesThat(arch.infrastructureImplementation()))
 ```

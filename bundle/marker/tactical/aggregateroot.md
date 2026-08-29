@@ -4,9 +4,10 @@ title: "AggregateRoot<T, ID>"
 category: tactical
 kind: interface
 signature: "public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> extends Entity<T, ID>"
+package: dev.domaincentric.dca.buildingblocks.ddd.tactical
 extends: [Entity]
 methods: ["List<DomainEvent> domainEvents()", "void clearDomainEvents()"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/tactical/AggregateRoot.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/AggregateRoot.java
 tags: [tactical, marker]
 ---
 
@@ -21,11 +22,8 @@ Marker interface for Aggregate Roots.
 - [Aggregate Roots must implement AggregateRoot<T, ID>](/rule/tactical/aggregate-roots-must-implement-aggregateroot-t-id.md)
 - [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md)
 - [Aggregate Roots must not hold references to Repositories or other Output Ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md)
-- [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md)
 - [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md)
 - [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
-- [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
 
 ## Discussed in
 

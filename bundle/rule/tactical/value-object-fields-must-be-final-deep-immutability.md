@@ -1,46 +1,42 @@
 ---
 type: Rule
+id: DCA-TAC-010
 title: "Value Object fields must be final (deep immutability)"
-rule: "Value Object fields must be final (deep immutability)."
+rule: Records have implicitly final fields and enums are immutable by design; a hand-written value class must make every instance field final itself.
 constraint: "Value Object fields must be final (deep immutability)."
-enforced_by: "DddTacticalPatternsArchUnitTest#Value Object fields must be final (deep immutability)"
+enforced_by: "TacticalPatternRules#DCA-TAC-010"
 status: enforced
-test_class: DddTacticalPatternsArchUnitTest
-resource: dca-ecommerce-sample/src/test-architecture/groovy/de/sample/aiarchitecture/DddTacticalPatternsArchUnitTest.groovy
+rule_set: tactical
+implementations: [java]
+resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 ---
 
-```groovy
-when:
-// All fields in value objects must be final to ensure deep immutability
-// Records automatically have final fields, but regular classes need this check
-// Enums are already immutable by design, so we exclude them too
-
-def valueObjectClasses = allClasses.stream()
-  .filter { it.isAssignableTo(Value.class) }
-  .filter { !it.isInterface() }
-  .filter { !it.isRecord() }  // Records have implicitly final fields
-  .filter { !it.isEnum() }    // Enums are immutable by design
-  .collect()
-
-def violations = []
-valueObjectClasses.each { voClass ->
-  voClass.getAllFields().each { field ->
-    if (!field.getModifiers().contains(JavaModifier.FINAL) &&
-      !field.getModifiers().contains(JavaModifier.STATIC)) {
-      // Static fields can be non-final
-      violations.add("${voClass.getName()} has non-final field '${field.getName()}'")
-    }
-  }
-}
-
-then:
-if (!violations.isEmpty()) {
-  throw new AssertionError(
-  "Value Object fields must be final for deep immutability (Vernon's DDD).\n" +
-  "Violations found:\n" + violations.join("\n"))
-}
-true
+```java
+DcaRule.check(
+    "DCA-TAC-010",
+    "Value Object fields must be final (deep immutability)",
+    "Records have implicitly final fields and enums are immutable by design; a hand-written"
+        + " value class must make every instance field final itself",
+    arch -> {
+      List<String> violations = new ArrayList<>();
+      for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
+        if (valueObject.isRecord() || valueObject.isEnum()) {
+          continue;
+        }
+        for (JavaField field : valueObject.getAllFields()) {
+          Set<JavaModifier> modifiers = field.getModifiers();
+          if (!modifiers.contains(JavaModifier.FINAL)
+              && !modifiers.contains(JavaModifier.STATIC)) {
+            violations.add(
+                valueObject.getName() + " has non-final field '" + field.getName() + "'");
+          }
+        }
+      }
+      fail(
+          "Value Object fields must be final for deep immutability (Vernon's DDD).",
+          violations);
+    })
 ```
 
 ## Applies to markers

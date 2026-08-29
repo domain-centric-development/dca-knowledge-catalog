@@ -4,8 +4,9 @@ title: "@OpenHostService"
 category: strategic
 kind: annotation
 signature: "public @interface OpenHostService"
+package: dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships
 methods: ["String context()", "String description()"]
-resource: dca-ecommerce-sample/src/main/java/de/sample/aiarchitecture/sharedkernel/marker/strategic/OpenHostService.java
+resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/strategic/relationships/OpenHostService.java
 tags: [strategic, marker]
 ---
 
