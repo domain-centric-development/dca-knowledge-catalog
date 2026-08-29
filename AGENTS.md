@@ -78,10 +78,10 @@ check. Disable mirroring with `--no-default-mirror`; add targets with
 
 ### ⚠️ The bundle stands alone — no links out
 
-The catalog is *generated from* the guide and the sample and must never link back
-at either (nor at the non-public book). A consumer has the bundle and nothing
-else, so `../implementing-domain-centric-architecture/…`, a sample source path or
-the sample's GitHub URL all point at nothing. Content is copied; pointers are
+The catalog is *generated from* the guide and `dca-java` and must never link back
+at either (nor at the sample or the non-public book). A consumer has the bundle and
+nothing else, so `../implementing-domain-centric-architecture/…`, a `dca-java` source
+path or a GitHub URL all point at nothing. Content is copied; pointers are
 rewritten onto bundle nodes or dropped. Two conformance tests enforce this —
 `test_bundle_never_links_out_to_a_sibling_project` and
 `test_mirror_drops_the_resource_frontmatter`. A leftover link means a **source**
@@ -98,9 +98,10 @@ document acquired an outward reference: fix it there.
   on the Process node (`_ALIASES`). A link left un-rewritten fails the tests: it
   means the guide points at a document the bundle has no node for (the book),
   which is a **guide** bug — fix the guide, not the generator.
-- `markers.py` — parses marker `.java` (declaration anchored at column 0 to avoid
-  matching javadoc example code).
-- `rules.py` — parses Spock `def "<rule>"()` methods; body carried verbatim.
+- `markers.py` — parses the building-block `.java` types (declaration anchored at column 0 to
+  avoid matching javadoc example code); bundle category from the package path, `package:` kept.
+- `rules.py` — reads `dca-java/rules.json` (id, set, resolved title, rationale) and attaches the
+  verbatim `DcaRule.of/check(...)` expression from the matching `<Set>Rules.java`.
 - `process.py` — builds the Process node from the ADR template.
 - `linker.py` — string-based cross-linking (rule↔marker, section→marker),
   sorted for determinism.
