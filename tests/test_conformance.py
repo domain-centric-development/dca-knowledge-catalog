@@ -48,8 +48,8 @@ def test_counts(bundle: Path):
         types[fm["type"]] = types.get(fm["type"], 0) + 1
     # skeleton from dca-java (building blocks + rule library) plus the .NET-only rules of
     # dca-dotnet (DCA-NET) — exact (regression guard)
-    assert types["Marker"] == 28
-    assert types["Rule"] == 113
+    assert types["Marker"] == 29
+    assert types["Rule"] == 115
     assert types["Process"] == 1
     # the book and the sample's ADRs are deliberately not in the bundle
     assert "Chapter" not in types

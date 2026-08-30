@@ -16,3 +16,7 @@ Outbound port for publishing integration events across bounded-context boundarie
 ## Extends
 
 - [OutputPort](/marker/port-out/outputport.md)
+
+## Governed by
+
+- [Transactional use cases must not call remote-capable output ports](/rule/usecase/transactional-use-cases-must-not-call-remote-capable-output-ports.md)

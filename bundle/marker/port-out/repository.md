@@ -31,6 +31,7 @@ Base interface for Repositories.
 - [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
 - [Store interfaces must extend the Store marker, not Repository](/rule/tactical/store-interfaces-must-extend-the-store-marker-not-repository.md)
 - [Store interfaces must not declare findById or save methods](/rule/tactical/store-interfaces-must-not-declare-findbyid-or-save-methods.md)
+- [Transactional use cases must not call remote-capable output ports](/rule/usecase/transactional-use-cases-must-not-call-remote-capable-output-ports.md)
 
 ## Discussed in
 
@@ -38,9 +39,9 @@ Base interface for Repositories.
 - [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
 - [Interface vs Implementation Placement](/guide/architecture-reference-guide/interface-vs-implementation-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
+- [Adoption Path (Tiers)](/guide/archunit-governance/adoption-path-tiers.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
 - [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

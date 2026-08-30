@@ -27,3 +27,4 @@ Marker interface for Stores — output ports that record or query operational da
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [RULES](/guide/readme/rules.md)

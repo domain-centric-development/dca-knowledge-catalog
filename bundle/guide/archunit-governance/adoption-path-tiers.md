@@ -19,6 +19,7 @@ Fully static, high consensus, no project-specific conventions needed:
 - Aggregates reference other aggregates by ID only
 - Repository interface/implementation split (interface in application, implementation in adapter)
 - Transactions only in the application layer
+- No remote-capable output port called inside a `@Transactional` use case (only `Repository`, `Store`, event publishers, `UnitOfWork`)
 - Value-object immutability
 - Controllers never reach repositories directly
 
@@ -55,3 +56,4 @@ Some rules cannot be expressed as static checks at all. They belong in ADRs and 
 ## Related markers
 
 - [Repository<T, ID>](/marker/port-out/repository.md)
+- [UnitOfWork](/marker/port-out/unitofwork.md)

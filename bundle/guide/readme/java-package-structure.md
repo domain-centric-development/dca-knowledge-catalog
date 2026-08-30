@@ -258,6 +258,10 @@ com.company.project
 │   │           │   public interface IntegrationEventPublisher extends OutputPort {
 │   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts
 │   │           │   }
+│   │           ├── UnitOfWork.java
+│   │           │   public interface UnitOfWork extends OutputPort {
+│   │           │     <T> T run(Supplier<T> work);        // explicit transaction boundary
+│   │           │   }
 │   └── domain
 │       ├── model (Universal value objects)
 │       │   ├── Money.java
@@ -363,6 +367,7 @@ APPLICATION LAYER
 - [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
+- [UnitOfWork](/marker/port-out/unitofwork.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@OpenHostService](/marker/strategic/openhostservice.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)
