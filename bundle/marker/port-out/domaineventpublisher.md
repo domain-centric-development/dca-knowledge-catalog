@@ -20,7 +20,7 @@ Outbound port for publishing domain events.
 ## Governed by
 
 - [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
-- [Transactional use cases must not call remote-capable output ports](/rule/usecase/transactional-use-cases-must-not-call-remote-capable-output-ports.md)
+- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
 
 ## Discussed in
 

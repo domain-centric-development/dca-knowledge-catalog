@@ -4,8 +4,8 @@ Source: ``dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 Each marker interface / annotation becomes one OKF ``Marker`` node carrying the
 contract a new application implements (signature, methods, what it extends).
 
-The bundle keeps its own four-way category taxonomy (``tactical``, ``strategic``,
-``port-in``, ``port-out``) — stable node paths for links from the authored zone
+The bundle keeps its own five-way category taxonomy (``tactical``, ``strategic``,
+``port-in``, ``port-out``, ``application`` — execution abstractions that are no ports) — stable node paths for links from the authored zone
 — while the ``package`` frontmatter records the library package the type
 actually lives in (``ddd.strategic.relationships`` for the context-map
 annotations, for instance).
@@ -29,6 +29,7 @@ _CATEGORY = {
     "ddd/strategic": "strategic",
     "hexagonal/port/in": "port-in",
     "hexagonal/port/out": "port-out",
+    "application": "application",
 }
 _PACKAGE_RE = re.compile(r"^package\s+([\w.]+);", re.MULTILINE)
 

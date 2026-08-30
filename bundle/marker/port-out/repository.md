@@ -31,7 +31,7 @@ Base interface for Repositories.
 - [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
 - [Store interfaces must extend the Store marker, not Repository](/rule/tactical/store-interfaces-must-extend-the-store-marker-not-repository.md)
 - [Store interfaces must not declare findById or save methods](/rule/tactical/store-interfaces-must-not-declare-findbyid-or-save-methods.md)
-- [Transactional use cases must not call remote-capable output ports](/rule/usecase/transactional-use-cases-must-not-call-remote-capable-output-ports.md)
+- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
 
 ## Discussed in
 

@@ -19,4 +19,4 @@ Outbound port for publishing integration events across bounded-context boundarie
 
 ## Governed by
 
-- [Transactional use cases must not call remote-capable output ports](/rule/usecase/transactional-use-cases-must-not-call-remote-capable-output-ports.md)
+- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)

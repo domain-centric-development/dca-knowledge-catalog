@@ -1,0 +1,3 @@
+# application
+
+- [TransactionBoundary](transactionboundary.md) — Explicit transaction boundary inside a use case — an application-layer execution abstraction, not an output port.

@@ -1,9 +1,9 @@
 ---
 type: Rule
 id: DCA-USE-012
-title: Use cases that publish domain events must run inside a transaction boundary
-rule: "Integration events are relayed after commit (@TransactionalEventListener, @ApplicationModuleListener) and their publication is registered in the publishing transaction. Without an active transaction the after-commit listeners are skipped silently and nothing is registered: the use case succeeds, the other contexts never hear of it. The use case that publishes owns the boundary - @Transactional on the class or the executing method, or an explicit UnitOfWork.run(...) around save and publish."
-constraint: Use cases that publish domain events must run inside a transaction boundary.
+title: Use cases that publish domain events must have a transaction boundary
+rule: "Integration events are relayed after commit (@TransactionalEventListener, @ApplicationModuleListener) and their publication is registered in the publishing transaction. Without an active transaction the after-commit listeners are skipped silently and nothing is registered: the use case succeeds, the other contexts never hear of it. The use case that publishes owns the boundary - either declarative transaction metadata (@Transactional on the class or the executing method) or an explicit TransactionBoundary.inTransaction(...) around save and publish."
+constraint: Use cases that publish domain events must have a transaction boundary.
 enforced_by: "UseCaseRules#DCA-USE-012"
 status: enforced
 rule_set: usecase
@@ -16,14 +16,14 @@ not_applicable_dotnet: "Guards Spring's after-commit relay (@TransactionalEventL
 ```java
 DcaRule.of(
     "DCA-USE-012",
-    "Use cases that publish domain events must run inside a transaction boundary",
+    "Use cases that publish domain events must have a transaction boundary",
     "Integration events are relayed after commit (@TransactionalEventListener,"
         + " @ApplicationModuleListener) and their publication is registered in the publishing"
         + " transaction. Without an active transaction the after-commit listeners are skipped"
         + " silently and nothing is registered: the use case succeeds, the other contexts never"
-        + " hear of it. The use case that publishes owns the boundary - @Transactional on the"
-        + " class or the executing method, or an explicit UnitOfWork.run(...) around save and"
-        + " publish",
+        + " hear of it. The use case that publishes owns the boundary - either declarative"
+        + " transaction metadata (@Transactional on the class or the executing method) or an"
+        + " explicit TransactionBoundary.inTransaction(...) around save and publish",
     arch ->
         classes()
             .that()
@@ -39,4 +39,4 @@ DcaRule.of(
 
 ## Applies to markers
 
-- [UnitOfWork](/marker/port-out/unitofwork.md)
+- [TransactionBoundary](/marker/application/transactionboundary.md)

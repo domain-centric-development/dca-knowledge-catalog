@@ -72,9 +72,9 @@ One `##` heading of a guide file — the unit of knowledge, carrying the
 ### `Marker`
 A marker interface / annotation from the `dca-building-blocks` library
 (`dev.domaincentric.dca.buildingblocks`) — a contract a new application implements.
-- `category`: `tactical | strategic | port-in | port-out` (bundle taxonomy; stable node paths)
+- `category`: `tactical | strategic | port-in | port-out | application` (bundle taxonomy; stable node paths; `application` = application-layer execution abstractions such as `TransactionBoundary`, which are no ports)
 - `package`: the library package the type lives in (`…ddd.tactical`, `…ddd.strategic`,
-  `…ddd.strategic.relationships`, `…hexagonal.port.in`, `…hexagonal.port.out`)
+  `…ddd.strategic.relationships`, `…hexagonal.port.in`, `…hexagonal.port.out`, `…application`)
 - `kind`: `interface | class | annotation`
 - `signature`: the Java declaration (generics + supertypes)
 - `extends`: supertype marker names (optional)
