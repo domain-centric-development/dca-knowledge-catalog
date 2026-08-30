@@ -20,7 +20,7 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 | `Guide` | 10 | `implementing-domain-centric-architecture/*.md` | an implementation-guide doc |
 | `Section` | ~104 | `##` headings of the above | one concept, **full verbatim text** |
 | `Marker` | 28 | `dca-java/dca-building-blocks/**/*.java` | the contract/interface to implement |
-| `Rule` | 112 | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java`; `dca-dotnet/rules.json` adds the `dotnet` implementation flag, the `not_applicable_dotnet` reasons and the .NET-only `DCA-NET` rules | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
+| `Rule` | 113 | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java`; `dca-dotnet/rules.json` adds the `dotnet` implementation flag, the `not_applicable_dotnet` reasons and the .NET-only `DCA-NET` rules | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
 | `Process` | 1 | `adr-template.md` | how to record a new decision |
 | `Recipe` `Decision` `Pitfall` `Template` `Note` | ~69 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
 
