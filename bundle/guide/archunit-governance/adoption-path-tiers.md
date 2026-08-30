@@ -36,7 +36,8 @@ Verifiable only after the team agrees on marker interfaces/annotations and a pac
 
 ### Tier 3 — Warning-Level Fitness Functions
 
-Trends to observe, not pass/fail gates — report instead of failing the build:
+Trends to observe, not pass/fail gates — report instead of failing the build (the *severity* dial in
+[Tuning the Rule Catalog](#tuning-the-rule-catalog)):
 
 - Component size (classes per context or package)
 - Coupling metrics: instability, abstractness, distance from the main sequence (ArchUnit metrics API, `com.tngtech.archunit.library.metrics`)

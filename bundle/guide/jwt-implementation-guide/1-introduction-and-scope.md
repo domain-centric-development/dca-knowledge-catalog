@@ -12,7 +12,7 @@ Two concerns that must be kept separate:
 - **JWT Session Token (access token):** Stateless, short-lived, validated by signature + `exp` only — no DB lookup per request.
 - **Login State Management (refresh token):** Stateful, DB-backed, revocable by deleting a row.
 
-**What the `dca-ecommerce-sample` has today:**
+**What the `dca-ecommerce-sample-java` has today:**
 - `JwtTokenService` — signs/verifies tokens using **HS256** (symmetric)
 - `JwtIdentitySession` — manages a visitor cookie (`shop-identity`) and access cookie; `Secure=false` hardcoded
 - `JwtAuthenticationFilter` — validates the access token per request

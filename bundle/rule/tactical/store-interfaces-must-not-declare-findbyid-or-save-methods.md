@@ -31,14 +31,11 @@ DcaRule.check(
           }
         }
       }
-      if (!violations.isEmpty()) {
-        throw new AssertionError(
-            "Store interfaces use record/count/exists semantics, not findById/save.\n"
-                + "Violations:\n"
-                + String.join("\n", violations)
-                + "\n\nFix: rename to *Repository if the stored object is an Aggregate Root,"
-                + " otherwise rename the methods to record(...), count(...), exists(...).");
-      }
+      fail(
+          "Store interfaces use record/count/exists semantics, not findById/save."
+              + " Fix: rename to *Repository if the stored object is an Aggregate Root,"
+              + " otherwise rename the methods to record(...), count(...), exists(...).",
+          violations);
     })
 ```
 

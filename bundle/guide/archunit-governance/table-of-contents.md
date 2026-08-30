@@ -13,8 +13,9 @@ tags: [guide, section]
 4. [Complete Test Suites](#complete-test-suites)
 5. [Context-Specific Rule Sets](#context-specific-rule-sets)
 6. [Adoption Path (Tiers)](#adoption-path-tiers)
-7. [Best Practices](#best-practices)
-8. [CI/CD Integration](#cicd-integration)
-9. [Common Pitfalls and Solutions](#common-pitfalls-and-solutions)
+7. [Tuning the Rule Catalog](#tuning-the-rule-catalog)
+8. [Best Practices](#best-practices)
+9. [CI/CD Integration](#cicd-integration)
+10. [Common Pitfalls and Solutions](#common-pitfalls-and-solutions)
 
 ---

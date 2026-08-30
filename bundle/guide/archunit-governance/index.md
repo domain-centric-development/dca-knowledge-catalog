@@ -11,3 +11,4 @@
 - [Introduction](introduction.md) — 1. **Prevents Architectural Drift** - Rules enforced automatically on every build
 - [Setup and Configuration](setup-and-configuration.md) — <dependency>
 - [Table of Contents](table-of-contents.md) — 1. Introduction
+- [Tuning the Rule Catalog](tuning-the-rule-catalog.md) — Whether the rules are hand-written or come from a rule library, a team adopting them on an existing

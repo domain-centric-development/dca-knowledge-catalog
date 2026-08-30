@@ -1,7 +1,7 @@
 # guide
 
 - [architecture-reference-guide/](architecture-reference-guide/index.md) (7)
-- [archunit-governance/](archunit-governance/index.md) (11)
+- [archunit-governance/](archunit-governance/index.md) (12)
 - [clean-architecture-comparison/](clean-architecture-comparison/index.md) (11)
 - [deployment-patterns/](deployment-patterns/index.md) (6)
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (7)

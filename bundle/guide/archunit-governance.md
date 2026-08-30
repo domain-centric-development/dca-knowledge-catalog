@@ -21,6 +21,7 @@ tags: [guide, guide]
 - [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
 - [Context-Specific Rule Sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - [Adoption Path (Tiers)](/guide/archunit-governance/adoption-path-tiers.md)
+- [Tuning the Rule Catalog](/guide/archunit-governance/tuning-the-rule-catalog.md)
 - [Best Practices](/guide/archunit-governance/best-practices.md)
 - [CI/CD Integration](/guide/archunit-governance/ci-cd-integration.md)
 - [Common Pitfalls and Solutions](/guide/archunit-governance/common-pitfalls-and-solutions.md)

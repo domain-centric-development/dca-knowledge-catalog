@@ -61,6 +61,10 @@ This allows you to:
 - Fix existing violations incrementally
 - Track progress over time
 
+Freezing needs a single `ArchRule` to build the baseline from. A check that iterates — one rule per
+bounded context, say — has no single rule to freeze; lower it to a warning instead (see
+[Tuning the Rule Catalog](#tuning-the-rule-catalog)).
+
 ### 5. Exclude Generated Code
 
 ```java
