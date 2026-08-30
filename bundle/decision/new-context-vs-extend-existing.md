@@ -33,6 +33,8 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 - **When:** a term changes meaning, the model would conflict, a different team owns it, or it is a distinct capability/subdomain.
 - Build it: [Add a bounded context](/recipe/add-a-bounded-context.md) · classify it: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
 
+**Neither, sometimes.** A module that owns no concept of its own — an operational backoffice, an admin shell, a reporting surface — is not a third option on this list; it is not a context at all. Give it no context marker and keep it off the map: [Operational module marked as a bounded context](/pitfall/operational-module-marked-as-a-bounded-context.md).
+
 **Default:** **start together, split later.** Don't open with many contexts — keep features in one context (as separate packages) until a real boundary earns its own. Let it split when a term's meaning forks, the model starts fighting itself, or a second team needs to own and release a piece independently. When two contexts share a small stable model instead, weigh [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md) rather than merging them back.
 
 ## Anchors
@@ -42,3 +44,4 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Recipes: [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Related decisions: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) · [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
+- Related pitfall: [Operational module marked as a bounded context](/pitfall/operational-module-marked-as-a-bounded-context.md)

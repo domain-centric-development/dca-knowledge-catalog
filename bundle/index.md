@@ -8,8 +8,8 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 - [guide/](guide/index.md) (115) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (29) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (1) — Compounded query answers — synthesis made permanent.
-- [pitfall/](pitfall/index.md) (20) — Anti-patterns and the rules/ADRs that forbid them.
+- [pitfall/](pitfall/index.md) (23) — Anti-patterns and the rules/ADRs that forbid them.
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
 - [recipe/](recipe/index.md) (17) — Task playbooks — ordered steps to build a DCA construct.
-- [rule/](rule/index.md) (115) — ArchUnit rules — the enforceable, machine-checkable architecture.
+- [rule/](rule/index.md) (116) — ArchUnit rules — the enforceable, machine-checkable architecture.
 - [template/](template/index.md) (21) — Domain-free code skeletons to fill in.
