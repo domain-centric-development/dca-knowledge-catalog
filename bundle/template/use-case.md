@@ -74,6 +74,12 @@ public class {Name}UseCase implements {Name}InputPort {
 }
 ```
 
+`@Transactional` at class level is the boundary when every output port is local. If the use case also reads from a
+remote-capable port, drop the annotation, do the remote reads first and wrap steps 1–3 in
+`transactionBoundary.inTransaction(() -> { ... })` (constructor-inject `TransactionBoundary` from the building
+blocks' `application` package — it is not an output port). See
+[Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md).
+
 ## Realizes / governed by
 
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)

@@ -28,6 +28,7 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 
 ## Anchors
 
+- Pitfalls: [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) · [CSRF-exempt API that accepts cookies](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
 - Template: [REST resource skeleton](/template/rest-resource.md) · AI-facing sibling: [MCP tool provider skeleton](/template/mcp-tool-provider.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Layer rules](/guide/readme/rules.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)

@@ -13,8 +13,8 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 
 ### Extensible zone (authored, preserved across regeneration)
 - Recipe: 17
-- Decision: 17
-- Pitfall: 12
+- Decision: 18
+- Pitfall: 20
 - Template: 21
 - Note: 1
-- Total authored: 68
+- Total authored: 77
