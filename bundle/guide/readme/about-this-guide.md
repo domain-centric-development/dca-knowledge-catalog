@@ -13,3 +13,6 @@ code that accompanies it. The rules here are stated so that a build can enforce 
 made the collaboration workable at this size.
 
 Published under the MIT licence; see [LICENSE](LICENSE).
+
+Contributions are accepted under the MIT licence, and the copyright holder may additionally publish
+them under other licences (for example a documentation licence for prose).
