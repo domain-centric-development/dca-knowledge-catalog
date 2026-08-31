@@ -7,7 +7,7 @@
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (7)
 - [e2e-testing/](e2e-testing/index.md) (10)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (17)
-- [readme/](readme/index.md) (13)
+- [readme/](readme/index.md) (14)
 - [spring-modulith/](spring-modulith/index.md) (11)
 - [team-topologies/](team-topologies/index.md) (11)
 

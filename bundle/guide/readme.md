@@ -10,6 +10,7 @@ tags: [guide, guide]
 
 ## Sections
 
+- [About this guide](/guide/readme/about-this-guide.md)
 - [Table of Contents](/guide/readme/table-of-contents.md)
 - [Quick Navigation](/guide/readme/quick-navigation.md)
 - [Key Points](/guide/readme/key-points.md)

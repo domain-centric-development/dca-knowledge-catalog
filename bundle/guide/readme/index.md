@@ -1,5 +1,6 @@
 # readme
 
+- [About this guide](about-this-guide.md) — This guide was written with AI assistance, in an iterative dialogue with the author since 2025: the
 - [ADDITIONAL TOPICS](additional-topics.md) — For information about deployment patterns including Self-Contained Systems (SCS), service decomposition, and multi-se...
 - [DEPENDENCY STRUCTURE](dependency-structure.md) — ┌─────────────────────────────────────────────────────┐
 - [DEVIATIONS FROM THE LITERATURE](deviations-from-the-literature.md) — DCA deliberately deviates from classic DDD literature in a few places. The deviations are conscious decisions, not ov...

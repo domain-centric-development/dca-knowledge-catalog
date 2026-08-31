@@ -180,3 +180,10 @@ dca-knowledge-catalog/
 │   └── recipe/  decision/  pitfall/  template/  note/   # AUTHORED — survives regeneration
 └── bundle-obsidian/         # gitignored Obsidian view (make obsidian / obsidian-import)
 ```
+
+*Written with AI assistance — drafted mainly by Claude, reviewed and directed by the author
+since 2025.*
+
+## Licence
+
+MIT — see [LICENSE](LICENSE).
