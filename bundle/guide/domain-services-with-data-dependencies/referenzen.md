@@ -3,7 +3,7 @@ type: Section
 title: Referenzen
 chapter: Domain Services mit Datenabhängigkeiten
 source: guide
-resource: implementing-domain-centric-architecture/domain-services-with-data-dependencies.md
+resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, section]
 ---
 

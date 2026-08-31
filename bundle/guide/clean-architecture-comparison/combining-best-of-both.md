@@ -3,7 +3,7 @@ type: Section
 title: Combining Best of Both
 chapter: Domain-Centric Architecture vs Clean Architecture
 source: guide
-resource: implementing-domain-centric-architecture/clean-architecture-comparison.md
+resource: dca-guide/clean-architecture-comparison.md
 tags: [guide, section]
 ---
 

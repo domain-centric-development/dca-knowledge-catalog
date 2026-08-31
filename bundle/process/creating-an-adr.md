@@ -1,7 +1,7 @@
 ---
 type: Process
 title: How to write an ADR
-resource: implementing-domain-centric-architecture/adr-template.md
+resource: dca-guide/adr-template.md
 tags: [adr, process, governance]
 ---
 

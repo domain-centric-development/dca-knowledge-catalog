@@ -173,7 +173,7 @@ def test_process_node_carries_the_fillable_adr_template(bundle: Path):
 def test_bundle_never_links_out_to_a_sibling_project(bundle: Path):
     """The catalog stands on its own: it is *generated from* the guide and the
     sample, and must not link back at either (nor at the non-public book)."""
-    outward = re.compile(r"\]\([^)]*(dca-ecommerce-sample|dca-book|implementing-domain-centric-architecture)[^)]*\)")
+    outward = re.compile(r"\]\([^)]*(dca-ecommerce-sample|dca-book|dca-guide)[^)]*\)")
     hits = []
     for p in bundle.rglob("*.md"):
         for line in p.read_text(encoding="utf-8").splitlines():

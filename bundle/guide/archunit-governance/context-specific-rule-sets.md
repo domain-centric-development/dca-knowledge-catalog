@@ -3,7 +3,7 @@ type: Section
 title: Context-Specific Rule Sets
 chapter: ArchUnit Governance for Domain-Centric Architecture
 source: guide
-resource: implementing-domain-centric-architecture/archunit-governance.md
+resource: dca-guide/archunit-governance.md
 tags: [guide, section]
 ---
 

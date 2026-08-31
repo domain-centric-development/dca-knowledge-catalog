@@ -3,7 +3,7 @@ type: Section
 title: Deployment Pattern Comparison
 chapter: Deployment Patterns
 source: guide
-resource: implementing-domain-centric-architecture/deployment-patterns.md
+resource: dca-guide/deployment-patterns.md
 tags: [guide, section]
 ---
 

@@ -15,10 +15,10 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 
 | Bundle content | Generated from |
 |----------------|----------------|
-| `bundle/guide/**` | `implementing-domain-centric-architecture/*.md` (full text, container + section nodes) |
+| `bundle/guide/**` | `dca-guide/*.md` (full text, container + section nodes) |
 | `bundle/marker/**` | `dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java` |
 | `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule); `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`) for `implementations`, `not_applicable_dotnet` and the .NET-only `DCA-NET` rules |
-| `bundle/process/creating-an-adr.md` | `implementing-domain-centric-architecture/adr-template.md` |
+| `bundle/process/creating-an-adr.md` | `dca-guide/adr-template.md` |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
 are the **skeleton** it anchors to.
@@ -80,7 +80,7 @@ check. Disable mirroring with `--no-default-mirror`; add targets with
 
 The catalog is *generated from* the guide and `dca-java` and must never link back
 at either (nor at the sample or the non-public book). A consumer has the bundle and
-nothing else, so `../implementing-domain-centric-architecture/…`, a `dca-java` source
+nothing else, so `../dca-guide/…`, a `dca-java` source
 path or a GitHub URL all point at nothing. Content is copied; pointers are
 rewritten onto bundle nodes or dropped. Two conformance tests enforce this —
 `test_bundle_never_links_out_to_a_sibling_project` and
@@ -144,7 +144,7 @@ document acquired an outward reference: fix it there.
 
 ## Cross-project consistency
 
-This sub-project is downstream of `implementing-domain-centric-architecture` and
+This sub-project is downstream of `dca-guide` and
 of `dca-java`'s building-block markers and `dca-archunit` rules, and of `dca-dotnet`'s rule
 catalog. When any of
 those change, regenerate the bundle (see the root `AGENTS.md` cross-project

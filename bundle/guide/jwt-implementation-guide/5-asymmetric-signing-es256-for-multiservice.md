@@ -3,7 +3,7 @@ type: Section
 title: "5. Asymmetric Signing (ES256) for Multiservice"
 chapter: JWT Implementation Guide
 source: guide
-resource: implementing-domain-centric-architecture/jwt-implementation-guide.md
+resource: dca-guide/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 

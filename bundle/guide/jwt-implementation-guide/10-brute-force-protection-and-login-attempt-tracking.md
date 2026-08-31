@@ -3,7 +3,7 @@ type: Section
 title: 10. Brute-Force Protection and Login Attempt Tracking
 chapter: JWT Implementation Guide
 source: guide
-resource: implementing-domain-centric-architecture/jwt-implementation-guide.md
+resource: dca-guide/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 

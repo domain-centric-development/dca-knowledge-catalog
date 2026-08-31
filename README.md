@@ -17,7 +17,7 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 
 | Type | ~Count | Source | What it gives an agent |
 |------|-------|--------|------------------------|
-| `Guide` | 10 | `implementing-domain-centric-architecture/*.md` | an implementation-guide doc |
+| `Guide` | 10 | `dca-guide/*.md` | an implementation-guide doc |
 | `Section` | ~104 | `##` headings of the above | one concept, **full verbatim text** |
 | `Marker` | 29 | `dca-java/dca-building-blocks/**/*.java` | the contract/interface to implement |
 | `Rule` | 115 | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java`; `dca-dotnet/rules.json` adds the `dotnet` implementation flag, the `not_applicable_dotnet` reasons and the .NET-only `DCA-NET` rules | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
@@ -101,7 +101,7 @@ maintains.
 ## Add knowledge — the four ways
 
 1. **Source knowledge** (a pattern, a rule, a guide doc): edit the
-   *source* — `implementing-domain-centric-architecture/`, the marker
+   *source* — `dca-guide/`, the marker
    markers or rules in `dca-java/` — then
    `make generate && make lint && make test`. Never hand-edit the generated zone.
 2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`

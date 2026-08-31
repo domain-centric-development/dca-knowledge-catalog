@@ -28,7 +28,7 @@ from pathlib import Path
 from .okf import Node, bundle_link, slugify
 from .process import NODE_PATH as _ADR_PROCESS_NODE, TEMPLATE_REL as _ADR_TEMPLATE_REL
 
-GUIDE_REL = "implementing-domain-centric-architecture"
+GUIDE_REL = "dca-guide"
 
 # files that are meta/tooling, not knowledge content
 _SKIP = {"CLAUDE.md", "AGENTS.md", "adr-template.md", "RESTRUCTURING-PLAN.md"}

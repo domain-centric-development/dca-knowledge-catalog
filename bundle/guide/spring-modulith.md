@@ -2,7 +2,7 @@
 type: Guide
 title: Spring Modulith Implementation
 source: guide
-resource: implementing-domain-centric-architecture/spring-modulith.md
+resource: dca-guide/spring-modulith.md
 tags: [guide, guide]
 ---
 

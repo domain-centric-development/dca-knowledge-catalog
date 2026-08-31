@@ -3,7 +3,7 @@ type: Section
 title: Custom Annotations Placement
 chapter: Architecture Reference Guide
 source: guide
-resource: implementing-domain-centric-architecture/architecture-reference-guide.md
+resource: dca-guide/architecture-reference-guide.md
 tags: [guide, section]
 ---
 

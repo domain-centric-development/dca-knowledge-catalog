@@ -3,7 +3,7 @@ type: Section
 title: GENERAL PRINCIPLES
 chapter: Domain-Centric Architecture
 source: guide
-resource: implementing-domain-centric-architecture/README.md
+resource: dca-guide/README.md
 tags: [guide, section]
 ---
 

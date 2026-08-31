@@ -2,7 +2,7 @@
 type: Guide
 title: E2E Testing for Domain-Centric Architecture
 source: guide
-resource: implementing-domain-centric-architecture/e2e-testing.md
+resource: dca-guide/e2e-testing.md
 tags: [guide, guide]
 ---
 
