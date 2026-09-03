@@ -21,7 +21,7 @@ Ask, in order:
 
 ### Synchronous call — Open Host Service + consumer output port
 
-The provider publishes an **Open Host Service**: a REST API (`adapter/incoming/api/`, canonical) or, in a modulith, an in-process `@OpenHostService` (`adapter/incoming/openhost/`) that calls its own use cases and returns DTOs. The consumer defines its **own** output port in `application/shared/` stating exactly what it needs, and an outgoing adapter in `adapter/outgoing/{context}/` implements it against the OHS. Only the adapter changes when you later move the provider to a separate service — use cases and ports stay identical.
+The provider publishes an **Open Host Service**: a REST API (an incoming adapter, e.g. `adapter/incoming/api/`, canonical) or, in a modulith, an in-process `@OpenHostService` in the context's published `api/` package — same relationship, different transport — that calls its own use cases and returns DTOs. The consumer defines its **own** output port in `application/shared/` stating exactly what it needs, and an outgoing adapter in `adapter/outgoing/{context}/` implements it against the OHS. Only the adapter changes when you later move the provider to a separate service — use cases and ports stay identical.
 
 - **When:** the consumer needs data to proceed; immediate consistency; a query with a caller waiting for the answer.
 - Provider marker: [@OpenHostService](/marker/strategic/openhostservice.md) · consumer port: [OutputPort](/marker/port-out/outputport.md)
@@ -47,7 +47,7 @@ The provider raises a `DomainEvent` internally; an ACL translates it to a versio
 ## Anchors
 
 - Markers: [@OpenHostService](/marker/strategic/openhostservice.md) · [OutputPort](/marker/port-out/outputport.md) · [DomainGateway](/marker/tactical/domaingateway.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- Rules: [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md) · [Bounded contexts must not directly access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md) · [Event listeners consuming integration events should use an ACL](/rule/strategic/event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md)
+- Rules: [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md) · [Modules must not access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md) · [Event listeners consuming integration events should use an ACL](/rule/strategic/event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md)
 - Guide: [Integration Patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Recipes: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)
 - Related decisions: [Event delivery: sync, async, and when you need an outbox](/decision/event-delivery-sync-async-and-outbox.md) · [Domain event vs integration event](/decision/domain-event-vs-integration-event.md)

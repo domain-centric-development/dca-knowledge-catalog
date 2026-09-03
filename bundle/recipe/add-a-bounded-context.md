@@ -21,9 +21,9 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 
 ## Rules to satisfy (build-time checklist)
 
-- [Bounded contexts must not directly access each other in the application layer (except allowed dependencies)](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md)
+- [Modules must not access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md)
 - [Incoming adapters must only access their own bounded context](/rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md)
-- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
+- [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
 - [Shared Kernel must not have dependencies on any bounded context](/rule/strategic/shared-kernel-must-not-have-dependencies-on-any-bounded-context.md)
 - [No technical bucket packages — package by domain concept](/rule/naming/no-technical-bucket-packages-package-by-domain-concept.md)
 - [Domain packages must not have cyclic dependencies](/rule/cycles/domain-packages-must-not-have-cyclic-dependencies.md)

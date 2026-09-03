@@ -40,7 +40,7 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 ## Anchors
 
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md)
-- Rules: [Bounded contexts must not directly access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md)
+- Rules: [Modules must not access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md)
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Recipes: [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Related decisions: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) · [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)

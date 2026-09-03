@@ -4,12 +4,12 @@ title: "Open Host Service skeleton (provider-side cross-context API)"
 tags: [template, strategic, bounded-context]
 ---
 
-Domain-free skeleton for an **Open Host Service (OHS)**: the published, provider-side API a bounded context exposes so *other* contexts can consume its capabilities. It is an **incoming adapter** — other contexts "call into" this one — so it depends on **input ports (use cases)**, never on output ports/repositories directly, exactly like a REST controller. It is annotated `@OpenHostService(context, description)`, returns **DTOs (records) only, never domain objects**, and lives in `adapter/incoming/openhost/` (or an `api/` named-interface package in a Spring Modulith). Consumers must **not** call it from their use cases — they define their *own* output port in `application/shared/` and an outgoing adapter that delegates to this OHS (see the cross-context decision). Replace `{Context}` / `{context}` / `{basePackage}` and the DTO/use-case types.
+Domain-free skeleton for an **Open Host Service (OHS)**: the published, provider-side API a bounded context exposes so *other* contexts can consume its capabilities. It is a *relationship*, not a transport: in-process it lives in the context's published `api/` package (next to `events/`), over the network it is an incoming adapter (REST, gRPC, MCP — any sub-package). Either way other contexts "call into" this one, so it depends on **input ports (use cases)**, never on output ports/repositories directly, exactly like a REST controller. It is annotated `@OpenHostService(context, description)` and returns **DTOs (records) only, never domain objects**. Consumers must **not** call it from their use cases — they define their *own* output port in `application/shared/` and an outgoing adapter that delegates to this OHS (see the cross-context decision). Replace `{Context}` / `{context}` / `{basePackage}` and the DTO/use-case types.
 
-## `{Context}Service.java` — Open Host Service (incoming adapter)
+## `{Context}Service.java` — Open Host Service (in-process, published `api/` package)
 
 ```java
-package {basePackage}.{context}.adapter.incoming.openhost;
+package {basePackage}.{context}.api;
 
 import {basePackage}.{context}.application.get{thing}byid.Get{Thing}ByIdInputPort;
 import {basePackage}.{context}.application.get{thing}byid.Get{Thing}ByIdQuery;
@@ -69,7 +69,7 @@ differs from yours, an [anti-corruption layer](/recipe/add-an-anti-corruption-la
 ## Realizes / governed by
 
 - Marker: [@OpenHostService](/marker/strategic/openhostservice.md)
-- Rules: [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md) · [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
+- Rules: [Open Host Services must be published: in the api package or as an incoming adapter](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md) · [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
 - Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Decisions: [Cross-context communication: synchronous call or integration event](/decision/cross-context-communication.md)
 - Recipe: [Expose an Open Host Service](/recipe/expose-an-open-host-service.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)
