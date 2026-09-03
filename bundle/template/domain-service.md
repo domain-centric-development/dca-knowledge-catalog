@@ -12,7 +12,7 @@ Domain-free skeleton for a **Domain Service**: a stateless operation in the doma
 package {basePackage}.{context}.domain.service;
 
 import {basePackage}.{context}.domain.{concept}.{ValueObject};
-import {basePackage}.sharedkernel.marker.tactical.DomainService;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainService;
 
 /**
  * Domain Service for {activity phrased in the ubiquitous language}.

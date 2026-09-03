@@ -11,7 +11,7 @@ Domain-free skeleton for a domain event: an immutable fact about something that 
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.DomainEvent;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;
 

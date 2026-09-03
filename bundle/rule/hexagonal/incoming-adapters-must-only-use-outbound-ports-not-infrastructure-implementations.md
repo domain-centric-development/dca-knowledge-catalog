@@ -21,7 +21,7 @@ DcaRule.of(
     arch ->
         noClasses()
             .that()
-            .resideInAPackage(layout.incomingAdapterPattern())
+            .resideInAnyPackage(arch.allIncomingAdapterPatterns())
             .should()
             .dependOnClassesThat(arch.infrastructureImplementation()))
 ```

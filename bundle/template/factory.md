@@ -12,7 +12,7 @@ Domain-free skeleton for a **Factory**: a domain-layer object that encapsulates 
 package {basePackage}.{context}.domain.{name};
 
 import {basePackage}.{context}.domain.{name}.event.{Name}Created;
-import {basePackage}.sharedkernel.marker.tactical.Factory;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Factory;
 
 /**
  * Factory for creating {Name} aggregates.

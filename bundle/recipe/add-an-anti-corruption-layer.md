@@ -22,9 +22,9 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 ## Rules to satisfy (build-time checklist)
 
 - [Anti-corruption layer components must be in acl packages](/rule/strategic/anti-corruption-layer-components-must-be-in-acl-packages.md)
-- [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
+- [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
 - [Event listeners consuming integration events should use an anti-corruption layer](/rule/strategic/event-listeners-consuming-integration-events-should-use-anti-corruption-layer.md)
-- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
+- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
 - [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/outgoing-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
 
 ## Anchors

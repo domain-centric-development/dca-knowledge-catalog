@@ -11,7 +11,7 @@ Domain-free skeleton for a value object: an immutable, attribute-equal concept w
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.Value;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Value;
 
 /** Immutable value object. Equality is by attribute (record), never by identity. */
 public record {Name}(String value) implements Value {

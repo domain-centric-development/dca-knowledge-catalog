@@ -27,7 +27,7 @@ DcaRule.of(
     arch ->
         classes()
             .that()
-            .resideInAPackage(layout.applicationPattern())
+            .resideInAnyPackage(arch.allApplicationPatterns())
             .and()
             .haveSimpleNameEndingWith(layout.useCaseSuffix())
             .and()

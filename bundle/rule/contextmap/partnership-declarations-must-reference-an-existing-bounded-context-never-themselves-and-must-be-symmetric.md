@@ -21,7 +21,7 @@ DcaRule.check(
     arch -> {
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         for (Partnership p : arch.packageAnnotations(pkg, Partnership.class)) {
           require(
               packagesByName.containsKey(p.context()),

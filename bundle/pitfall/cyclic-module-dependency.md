@@ -17,7 +17,7 @@ Where [raw cross-context import](/pitfall/raw-cross-context-import.md) is the *s
 
 ## What forbids it
 
-- [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](/rule/strategic/bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md) — the mechanical guard; a mutual dependency can't satisfy the `allowedDependencies` allow-list in both directions.
+- [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md) — the mechanical guard; a mutual dependency can't satisfy the `allowedDependencies` allow-list in both directions.
 - The package-cycle rules apply the same acyclic principle inside each layer: [Domain Packages](/rule/cycles/domain-packages-must-not-have-cyclic-dependencies.md) · [Application Layer](/rule/cycles/application-layer-must-not-have-cyclic-dependencies.md) · [Incoming Adapter Packages](/rule/cycles/incoming-adapter-packages-must-not-have-cyclic-dependencies.md) · [Outgoing Adapter Packages](/rule/cycles/outgoing-adapter-packages-must-not-have-cyclic-dependencies.md).
 
 ## Do instead

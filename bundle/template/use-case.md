@@ -11,7 +11,7 @@ Domain-free skeleton for one application-layer use case. A use case is a self-co
 ```java
 package {basePackage}.{context}.application.{usecasename};
 
-import {basePackage}.sharedkernel.marker.port.in.UseCase;
+import dev.domaincentric.dca.buildingblocks.hexagonal.port.in.UseCase;
 
 /** Input port for the {Name} use case (driving/primary port). */
 public interface {Name}InputPort extends UseCase<{Name}Command, {Name}Result> {

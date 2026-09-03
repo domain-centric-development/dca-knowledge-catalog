@@ -11,7 +11,7 @@ Domain-free skeleton for an entity: a domain object with a distinct identity tha
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.Id;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Id;
 import java.util.UUID;
 
 /** Local identity of the entity within its aggregate. */
@@ -28,7 +28,7 @@ public record {Name}Id(UUID value) implements Id {
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.Entity;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Entity;
 
 /** Entity within the {aggregate} aggregate. Created and modified only via the aggregate root. */
 public final class {Name} implements Entity<{Name}, {Name}Id> {

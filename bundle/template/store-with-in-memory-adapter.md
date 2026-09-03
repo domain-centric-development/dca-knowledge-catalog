@@ -11,7 +11,7 @@ Domain-free skeleton for a **Store**: the output port for operational data that 
 ```java
 package {basePackage}.{context}.application.shared;
 
-import {basePackage}.sharedkernel.marker.port.out.Store;
+import dev.domaincentric.dca.buildingblocks.hexagonal.port.out.Store;
 import java.time.Instant;
 import java.util.List;
 

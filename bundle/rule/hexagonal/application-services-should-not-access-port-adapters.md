@@ -20,8 +20,8 @@ DcaRule.of(
     arch ->
         noClasses()
             .that()
-            .resideInAPackage(layout.applicationPattern())
+            .resideInAnyPackage(arch.allApplicationPatterns())
             .should()
             .dependOnClassesThat()
-            .resideInAPackage(layout.adapterPattern()))
+            .resideInAnyPackage(arch.allAdapterPatterns()))
 ```

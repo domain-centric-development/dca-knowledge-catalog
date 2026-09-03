@@ -11,7 +11,7 @@ Domain-free skeleton for a **Domain Gateway**: an interface declared in the *dom
 ```java
 package {basePackage}.{context}.domain.gateway;
 
-import {basePackage}.sharedkernel.marker.tactical.DomainGateway;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainGateway;
 
 /**
  * Domain Gateway for {external capability, in the ubiquitous language}.

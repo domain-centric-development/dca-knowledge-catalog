@@ -26,7 +26,7 @@ DcaRule.of(
             .and()
             .doNotHaveSimpleName(STORE_SUFFIX)
             .should()
-            .resideInAPackage(layout.sharedOutputPortPattern())
+            .resideInAnyPackage(arch.allSharedOutputPortPatterns())
             .allowEmptyShould(true))
 ```
 

@@ -24,7 +24,7 @@ DcaRule.of(
             .and()
             .areAssignableTo(Store.class)
             .should()
-            .resideInAPackage(layout.outgoingAdapterPattern())
+            .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
             .allowEmptyShould(true))
 ```
 

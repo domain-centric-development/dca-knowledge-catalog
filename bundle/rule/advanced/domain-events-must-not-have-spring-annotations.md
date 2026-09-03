@@ -20,7 +20,7 @@ DcaRule.of(
     arch ->
         noClasses()
             .that()
-            .resideInAnyPackage(layout.domainPattern())
+            .resideInAnyPackage(arch.allDomainPatterns())
             .and()
             .implement(DomainEvent.class)
             .should()

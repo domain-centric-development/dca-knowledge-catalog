@@ -27,6 +27,7 @@ Marker interface for Aggregate Roots.
 
 ## Discussed in
 
+- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [ELEMENTS](/guide/readme/elements.md)

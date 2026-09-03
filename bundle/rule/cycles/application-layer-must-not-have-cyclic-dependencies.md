@@ -19,7 +19,9 @@ DcaRule.of(
     "Application services should have clear boundaries and no cycles",
     arch ->
         slices()
-            .matching(layout.basePackage() + ".(*)." + layout.applicationSubpackage() + "..")
+            .assignedFrom(
+                moduleLayerSlices(arch, root -> root + "." + layout.applicationSubpackage()))
             .should()
-            .beFreeOfCycles())
+            .beFreeOfCycles()
+            .allowEmptyShould(true))
 ```

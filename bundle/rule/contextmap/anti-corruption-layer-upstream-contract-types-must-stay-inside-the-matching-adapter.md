@@ -22,7 +22,7 @@ DcaRule.check(
     arch -> {
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
           String targetPkg = packagesByName.get(u.context());
           if (u.translation() != Upstream.Translation.ANTI_CORRUPTION_LAYER
@@ -41,7 +41,7 @@ DcaRule.check(
                 .resideOutsideOfPackage(allowedAdapter)
                 .should()
                 .dependOnClassesThat()
-                .resideInAPackage(targetPkg + "." + channelName(channel) + "..")
+                .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
                 .allowEmptyShould(true)
                 .because(
                     "Context '"
@@ -49,7 +49,7 @@ DcaRule.check(
                         + "' declares ANTI_CORRUPTION_LAYER towards '"
                         + u.context()
                         + "' ("
-                        + channelName(channel)
+                        + channelName(arch, channel)
                         + ") — upstream contract types must not leave "
                         + allowedAdapter
                         + "; translate them there into the context's own model")

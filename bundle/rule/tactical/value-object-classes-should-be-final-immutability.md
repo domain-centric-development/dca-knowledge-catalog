@@ -20,7 +20,7 @@ DcaRule.of(
     arch ->
         classes()
             .that()
-            .resideInAnyPackage(layout.domainModelPattern(), layout.sharedKernelDomainPattern())
+            .resideInAnyPackage(arch.allDomainModelPatterns())
             .and()
             .implement(Value.class)
             .and()

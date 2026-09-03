@@ -20,7 +20,7 @@ DcaRule.of(
     arch ->
         classes()
             .that()
-            .resideInAPackage(layout.incomingAdapterPattern())
+            .resideInAnyPackage(arch.allIncomingAdapterPatterns())
             .and()
             .areAnnotatedWith(layout.frameworkAnnotations().controller())
             .should()

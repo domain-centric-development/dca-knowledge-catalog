@@ -15,7 +15,7 @@ One bounded context reaching directly into another's internals — `import com.s
 
 ## What forbids it
 
-- [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](/rule/strategic/bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md) — mechanically blocks the application-layer cross-context call.
+- [Bounded contexts must not directly access each other in application layer (except allowed dependencies)](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md) — mechanically blocks the application-layer cross-context call.
 - [Incoming adapters must only access their own bounded context (except event consumers and Open Host Services)](/rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md)
 - [Shared Kernel must not have dependencies on any bounded context](/rule/strategic/shared-kernel-must-not-have-dependencies-on-any-bounded-context.md) — you can't launder the coupling through the shared kernel either.
 

@@ -371,17 +371,23 @@ START: I have code that might be shared
 
 **Example - Marker Interface:**
 ```java
-// sharedkernel/marker/tactical/AggregateRoot.java
-public interface AggregateRoot<ID> extends Entity<ID> {
-    // Marker interface - identifies aggregate roots for all contexts
+// sharedkernel/marker/tactical/Id.java
+public interface Id {
+    // Marker interface - typed identifiers, no type parameter of their own
 }
 
 // sharedkernel/marker/tactical/Entity.java
-public interface Entity<ID> {
-    ID getId();
-    default boolean isSameAs(Entity<ID> other) {
-        return this.getId().equals(other.getId());
+public interface Entity<T extends Entity<T, ID>, ID extends Id> {
+    ID id();
+    default boolean sameIdentityAs(T other) {
+        return other != null && id().equals(other.id());
     }
+}
+
+// sharedkernel/marker/tactical/AggregateRoot.java
+public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id>
+        extends Entity<T, ID> {
+    // Marker interface - identifies aggregate roots for all contexts
 }
 ```
 
@@ -425,7 +431,7 @@ public interface UseCase<INPUT, OUTPUT> extends InputPort {
 }
 
 // sharedkernel/marker/port/out/Repository.java
-public interface Repository<T, ID> extends OutputPort {
+public interface Repository<T extends AggregateRoot<T, ID>, ID extends Id> extends OutputPort {
     Optional<T> findById(ID id);
     T save(T aggregate);
     void deleteById(ID id);
@@ -464,5 +470,6 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 - [DomainService](/marker/tactical/domainservice.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)
 - [Factory](/marker/tactical/factory.md)
+- [Id](/marker/tactical/id.md)
 - [IntegrationEvent](/marker/tactical/integrationevent.md)
 - [Specification<T>](/marker/tactical/specification.md)

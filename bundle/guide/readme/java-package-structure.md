@@ -214,15 +214,15 @@ com.company.project
 │   ├── marker (All architectural markers consolidated)
 │   │   ├── tactical (DDD tactical patterns)
 │   │   │   ├── Id.java
-│   │   │   │   public interface Id<T> {}  // Base for typed identifiers
+│   │   │   │   public interface Id {}  // Base for typed identifiers
 │   │   │   ├── Entity.java
-│   │   │   │   public interface Entity<ID> { ID getId(); }
+│   │   │   │   public interface Entity<T extends Entity<T, ID>, ID extends Id> { ID id(); }
 │   │   │   ├── Value.java
 │   │   │   │   public interface Value {}  // Marker for value objects
 │   │   │   ├── AggregateRoot.java
-│   │   │   │   public interface AggregateRoot<ID> extends Entity<ID> {}
+│   │   │   │   public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> extends Entity<T, ID> {}
 │   │   │   ├── BaseAggregateRoot.java
-│   │   │   │   public abstract class BaseAggregateRoot<ID> implements AggregateRoot<ID> {}
+│   │   │   │   public abstract class BaseAggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> implements AggregateRoot<T, ID> {}
 │   │   │   ├── DomainEvent.java
 │   │   │   │   public interface DomainEvent { UUID eventId(); Instant occurredOn(); }
 │   │   │   ├── IntegrationEvent.java
@@ -249,7 +249,7 @@ com.company.project
 │   │       └── out (Output ports - driven adapters)
 │   │           ├── OutputPort.java    // Marker for all output ports
 │   │           ├── Repository.java
-│   │           │   public interface Repository<T, ID> extends OutputPort {}
+│   │           │   public interface Repository<T extends AggregateRoot<T, ID>, ID extends Id> extends OutputPort {}
 │   │           ├── DomainEventPublisher.java
 │   │           │   public interface DomainEventPublisher extends OutputPort {
 │   │           │     void publish(DomainEvent event);
@@ -378,6 +378,7 @@ APPLICATION LAYER
 - [DomainService](/marker/tactical/domainservice.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)
 - [Factory](/marker/tactical/factory.md)
+- [Id](/marker/tactical/id.md)
 - [IntegrationEvent](/marker/tactical/integrationevent.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 - [Specification<T>](/marker/tactical/specification.md)

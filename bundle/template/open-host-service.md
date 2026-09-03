@@ -13,7 +13,7 @@ package {basePackage}.{context}.adapter.incoming.openhost;
 
 import {basePackage}.{context}.application.get{thing}byid.Get{Thing}ByIdInputPort;
 import {basePackage}.{context}.application.get{thing}byid.Get{Thing}ByIdQuery;
-import {basePackage}.sharedkernel.marker.strategic.OpenHostService;
+import dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships.OpenHostService;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ differs from yours, an [anti-corruption layer](/recipe/add-an-anti-corruption-la
 ## Realizes / governed by
 
 - Marker: [@OpenHostService](/marker/strategic/openhostservice.md)
-- Rules: [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-reside-in-api-or-adapter-incoming-openhost-packages.md) · [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
+- Rules: [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md) · [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md)
 - Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
 - Decisions: [Cross-context communication: synchronous call or integration event](/decision/cross-context-communication.md)
 - Recipe: [Expose an Open Host Service](/recipe/expose-an-open-host-service.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)

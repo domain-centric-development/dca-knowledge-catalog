@@ -21,7 +21,7 @@ DcaRule.check(
     arch -> {
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
           String targetPkg = packagesByName.get(u.context());
           if (u.translation() != Upstream.Translation.CONFORMIST || targetPkg == null) {
@@ -33,7 +33,7 @@ DcaRule.check(
                 .resideInAPackage(layout.domainPattern(pkg))
                 .should()
                 .dependOnClassesThat()
-                .resideInAPackage(targetPkg + "." + channelName(channel) + "..")
+                .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
                 .allowEmptyShould(true)
                 .because(
                     "Context '"
@@ -41,7 +41,7 @@ DcaRule.check(
                         + "' conforms to '"
                         + u.context()
                         + "' ("
-                        + channelName(channel)
+                        + channelName(arch, channel)
                         + "), but conformism does not suspend domain purity — the domain"
                         + " layer stays free of foreign contract types")
                 .check(arch.classes());

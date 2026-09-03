@@ -12,7 +12,7 @@ Domain-free skeleton for an **enriched domain model**: an immutable read model t
 package {basePackage}.{context}.domain.model;
 
 import {basePackage}.sharedkernel.domain.model.Money;
-import {basePackage}.sharedkernel.marker.tactical.Value;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Value;
 
 /**
  * Enriched read model: {Name} aggregate state + cross-context data.

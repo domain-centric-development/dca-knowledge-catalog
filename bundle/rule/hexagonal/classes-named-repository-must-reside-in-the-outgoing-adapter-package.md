@@ -24,7 +24,7 @@ DcaRule.of(
             .and()
             .areNotInterfaces()
             .should()
-            .resideInAPackage(layout.outgoingAdapterPattern())
+            .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
             .allowEmptyShould(true))
 ```
 

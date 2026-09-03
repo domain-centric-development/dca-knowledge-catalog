@@ -20,7 +20,7 @@ DcaRule.of(
     arch ->
         classes()
             .that()
-            .resideInAPackage(layout.applicationPattern())
+            .resideInAnyPackage(arch.allApplicationPatterns())
             .and()
             .areInterfaces()
             .and()

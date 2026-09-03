@@ -22,7 +22,7 @@ DcaRule.of(
             .that()
             .implement(DomainService.class)
             .and()
-            .resideInAnyPackage(layout.domainPattern())
+            .resideInAnyPackage(arch.allDomainPatterns())
             .should()
             .haveOnlyFinalFields()
             .allowEmptyShould(true))

@@ -21,14 +21,14 @@ DcaRule.check(
     arch -> {
       List<String> contexts = arch.boundedContextPackages();
       for (String srcPkg : contexts) {
-        String source = shortName(srcPkg);
+        String source = arch.contextName(srcPkg);
         Set<String> declared = declaredEdges(arch, srcPkg);
         for (String tgtPkg : contexts) {
           if (tgtPkg.equals(srcPkg)) {
             continue;
           }
-          String target = shortName(tgtPkg);
-          for (String channel : List.of(API, EVENTS)) {
+          String target = arch.contextName(tgtPkg);
+          for (String channel : arch.layout().publishedSubpackages()) {
             if (declared.contains(target + " :: " + channel)) {
               continue;
             }

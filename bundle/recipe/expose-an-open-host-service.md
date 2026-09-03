@@ -17,11 +17,11 @@ Publish the public, stable capabilities of a bounded context so *other* contexts
 
 ## Rules to satisfy (build-time checklist)
 
-- [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-reside-in-api-or-adapter-incoming-openhost-packages.md)
+- [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md)
 - [Incoming adapters must only access their own bounded context (event consumers and Open Host Services excepted)](/rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md)
 - [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/incoming-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
-- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md) *(consumer side)*
-- [Bounded contexts must not directly access each other in the application layer](/rule/strategic/bounded-contexts-must-not-directly-access-each-other-in-application-layer-except-allowed-dependencies.md)
+- [Outgoing adapters accessing other contexts must only use OpenHostService classes](/rule/strategic/outgoing-adapters-accessing-other-modules-must-only-use-their-published-api-and-events-packages.md) *(consumer side)*
+- [Bounded contexts must not directly access each other in the application layer](/rule/strategic/modules-must-not-access-each-other-in-the-application-layer.md)
 
 ## Anchors
 

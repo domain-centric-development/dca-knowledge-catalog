@@ -11,7 +11,7 @@ Domain-free skeleton for the **Specification pattern**: a business rule expresse
 ```java
 package {basePackage}.{context}.domain.{concept};
 
-import {basePackage}.sharedkernel.marker.tactical.Specification;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Specification;
 
 /**
  * {Business rule phrased in the ubiquitous language}, e.g. "an order is eligible

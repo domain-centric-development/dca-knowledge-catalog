@@ -22,7 +22,7 @@ DcaRule.check(
       // Without contractPackages (wire-level contract, no vendor SDK) there is nothing to
       // check — the declaration then only documents the relationship.
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
           if (e.contractPackages().length == 0) {
             continue;

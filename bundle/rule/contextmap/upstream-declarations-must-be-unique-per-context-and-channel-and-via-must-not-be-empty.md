@@ -20,7 +20,7 @@ DcaRule.check(
         + " channel require separate annotations",
     arch -> {
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         List<String> edges = new ArrayList<>();
         for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
           require(
@@ -31,7 +31,7 @@ DcaRule.check(
                   + u.context()
                   + "\") declares no channel — via must not be empty");
           for (Upstream.Consumes channel : u.via()) {
-            String edge = u.context() + " :: " + channelName(channel);
+            String edge = u.context() + " :: " + channelName(arch, channel);
             require(
                 !edges.contains(edge),
                 "Context '"

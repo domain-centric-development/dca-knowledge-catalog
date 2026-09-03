@@ -11,8 +11,8 @@ Domain-free skeleton for an integration event: the versioned, published-language
 ```java
 package {basePackage}.{context}.events;
 
-import {basePackage}.sharedkernel.marker.tactical.IntegrationEvent;
-import {basePackage}.sharedkernel.marker.tactical.IntegrationEventType;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.IntegrationEvent;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.IntegrationEventType;
 import java.time.Instant;
 import java.util.UUID;
 

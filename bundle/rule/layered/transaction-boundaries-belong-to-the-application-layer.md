@@ -19,10 +19,10 @@ DcaRule.check(
     rationale,
     arch -> {
       String transactional = layout.frameworkAnnotations().transactional();
-      String[] allowed = {
-        layout.applicationPattern(),
-        ".." + layout.adapterSubpackage() + "." + layout.outgoingSubpackage() + ".."
-      };
+      List<String> allowedPatterns = new ArrayList<>(List.of(arch.allApplicationPatterns()));
+      allowedPatterns.add(
+          ".." + layout.adapterSubpackage() + "." + layout.outgoingSubpackage() + "..");
+      String[] allowed = allowedPatterns.toArray(String[]::new);
       methods()
           .that()
           .areAnnotatedWith(transactional)

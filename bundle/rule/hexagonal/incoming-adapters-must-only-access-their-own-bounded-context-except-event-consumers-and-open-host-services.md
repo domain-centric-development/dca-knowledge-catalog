@@ -20,32 +20,30 @@ DcaRule.check(
     "Incoming adapters must only orchestrate use cases from their own bounded context - use"
         + " domain events for cross-context integration",
     arch -> {
-      Map<String, BoundedContext> contexts = arch.boundedContexts();
-      for (Map.Entry<String, BoundedContext> entry : contexts.entrySet()) {
-        String contextPackage = entry.getKey();
-        String[] otherContexts = arch.boundedContextPatternsExcluding(contextPackage);
-        if (otherContexts.length == 0) {
+      // Structural, over every module that owns a DCA layer - declared as a bounded context or
+      // not - so an undeclared module can neither reach out nor be reached into.
+      List<ArchRule> perModule = new ArrayList<>();
+      for (String module : arch.isolatedModuleRoots()) {
+        String[] otherModules = arch.moduleRootPatternsExcluding(module);
+        if (otherModules.length == 0) {
           continue;
         }
-        noClasses()
-            .that()
-            .resideInAPackage(layout.incomingAdapterPattern(contextPackage))
-            .and()
-            .resideOutsideOfPackage(eventConsumerPattern())
-            .should()
-            .dependOnClassesThat()
-            .resideInAnyPackage(otherContexts)
-            .allowEmptyShould(true)
-            .because(
-                "Incoming adapters in '"
-                    + entry.getValue().name()
-                    + "' must only orchestrate use cases from their own bounded context - use"
-                    + " domain events for cross-context integration")
-            .check(arch.classes());
+        perModule.add(
+            noClasses()
+                .that()
+                .resideInAPackage(layout.incomingAdapterPattern(module))
+                .and()
+                .resideOutsideOfPackage(eventConsumerPattern())
+                .should()
+                .dependOnClassesThat()
+                .resideInAnyPackage(otherModules)
+                .allowEmptyShould(true)
+                .because(
+                    "Incoming adapters in module '"
+                        + arch.contextName(module)
+                        + "' must only orchestrate use cases from their own module - use"
+                        + " domain events for cross-context integration"));
       }
+      CollectedViolations.check(perModule, arch.classes());
     })
 ```
-
-## Applies to markers
-
-- [@BoundedContext](/marker/strategic/boundedcontext.md)

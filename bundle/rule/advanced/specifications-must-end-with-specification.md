@@ -26,7 +26,7 @@ DcaRule.of(
             .and()
             .doNotHaveSimpleName("Specification")
             .should()
-            .resideInAnyPackage(layout.domainPattern())
+            .resideInAnyPackage(arch.allDomainPatterns())
             .allowEmptyShould(true))
 ```
 

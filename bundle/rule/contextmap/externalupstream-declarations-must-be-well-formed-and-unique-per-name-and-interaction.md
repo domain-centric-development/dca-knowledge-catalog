@@ -21,7 +21,7 @@ DcaRule.check(
     arch -> {
       Set<String> moduleNames = moduleNames(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         List<String> edges = new ArrayList<>();
         for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
           require(

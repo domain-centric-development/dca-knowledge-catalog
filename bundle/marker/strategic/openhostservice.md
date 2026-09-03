@@ -14,8 +14,7 @@ Marks a class as an Open Host Service in Domain-Driven Design.
 
 ## Governed by
 
-- [Open Host Services must reside in api or adapter.incoming.openhost packages](/rule/strategic/open-host-services-must-reside-in-api-or-adapter-incoming-openhost-packages.md)
-- [Outgoing adapters accessing other contexts must only use OpenHostService classes (except allowed ACL patterns)](/rule/strategic/outgoing-adapters-accessing-other-contexts-must-only-use-openhostservice-classes-except-allowed-acl-patterns.md)
+- [Open Host Services must be published: in the api package or as an incoming adapter](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md)
 
 ## Discussed in
 

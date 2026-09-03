@@ -21,7 +21,7 @@ DcaRule.of(
     arch ->
         noClasses()
             .that()
-            .resideInAnyPackage(layout.domainPattern())
+            .resideInAnyPackage(arch.allDomainPatterns())
             .should()
             .dependOnClassesThat()
             .haveSimpleNameEndingWith("Dto")

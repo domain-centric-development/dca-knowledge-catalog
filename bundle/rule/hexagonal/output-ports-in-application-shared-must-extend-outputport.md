@@ -22,7 +22,7 @@ DcaRule.of(
     arch ->
         classes()
             .that()
-            .resideInAPackage(layout.sharedOutputPortPattern())
+            .resideInAnyPackage(arch.allSharedOutputPortPatterns())
             .and()
             .areInterfaces()
             .and()

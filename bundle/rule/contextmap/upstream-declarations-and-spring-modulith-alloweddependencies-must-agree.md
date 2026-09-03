@@ -26,7 +26,7 @@ DcaRule.check(
       }
       Set<String> moduleNames = moduleNames(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         Set<String> declared = declaredEdges(arch, pkg);
         Set<String> allowed = new LinkedHashSet<>();
         for (String entry : allowedDependencies(arch, pkg, moduleAnnotation.get())) {

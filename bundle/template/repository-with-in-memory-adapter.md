@@ -13,7 +13,7 @@ package {basePackage}.{context}.application.shared;
 
 import {basePackage}.{context}.domain.{name}.{Name};
 import {basePackage}.{context}.domain.{name}.{Name}Id;
-import {basePackage}.sharedkernel.marker.port.out.Repository;
+import dev.domaincentric.dca.buildingblocks.hexagonal.port.out.Repository;
 import java.util.List;
 import java.util.Optional;
 

@@ -44,7 +44,7 @@ public class Order implements AggregateRoot<OrderId> {
         validateCanAddLine();
         OrderLine line = OrderLine.create(product, quantity);
         lines.add(line);
-        registerDomainEvent(new OrderLineAdded(id, line.getId()));
+        registerEvent(new OrderLineAdded(id, line.getId()));
     }
 
     public void cancel() {
@@ -52,7 +52,7 @@ public class Order implements AggregateRoot<OrderId> {
             throw new InvalidOrderStateException();
         }
         this.status = OrderStatus.CANCELLED;
-        registerDomainEvent(new OrderCancelled(id, Instant.now()));
+        registerEvent(new OrderCancelled(id, Instant.now()));
     }
 
     // Aggregate invariants

@@ -21,7 +21,7 @@ DcaRule.check(
     arch -> {
       Set<String> moduleNames = moduleNames(arch);
       for (String pkg : arch.boundedContextPackages()) {
-        String source = shortName(pkg);
+        String source = arch.contextName(pkg);
         for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
           require(
               moduleNames.contains(u.context()),

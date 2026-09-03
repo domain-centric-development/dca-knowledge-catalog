@@ -17,5 +17,5 @@ DcaRule.of(
     "DCA-USE-007",
     "Use Case Result Models should be immutable (final or records)",
     "Use case result models should be immutable (value objects)",
-    arch -> immutableApplicationModels(layout, "Result"))
+    arch -> immutableApplicationModels(arch, "Result"))
 ```

@@ -11,10 +11,17 @@ Domain-free skeleton for an aggregate root: the consistency boundary that enforc
 ```java
 package {basePackage}.{context}.domain.{name};
 
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Id;
 import java.util.UUID;
 
-/** Typed identity. Reference other aggregates by their Id, never by object. */
-public record {Name}Id(UUID value) {
+/**
+ * Typed identity. Reference other aggregates by their Id, never by object.
+ *
+ * <p>Implementing {@code Id} is not decoration: {@code AggregateRoot<T, ID extends Id>} and
+ * {@code Repository<T, ID extends Id>} bound their ID parameter on it, so a plain record does
+ * not satisfy them.
+ */
+public record {Name}Id(UUID value) implements Id {
     public {Name}Id {
         if (value == null) throw new IllegalArgumentException("id required");
     }
@@ -27,7 +34,7 @@ public record {Name}Id(UUID value) {
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.DomainEvent;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -45,25 +52,37 @@ public record {Name}Created(UUID eventId, Instant occurredOn, {Name}Id {name}Id)
 ```java
 package {basePackage}.{context}.domain.{name};
 
-import {basePackage}.sharedkernel.marker.tactical.BaseAggregateRoot;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.BaseAggregateRoot;
 
-public class {Name} extends BaseAggregateRoot<{Name}Id> {
+/**
+ * Two type parameters, not one: {@code BaseAggregateRoot<T extends AggregateRoot<T, ID>, ID extends
+ * Id>} is self-referential (F-bounded), which is what lets {@code sameIdentityAs} take the concrete
+ * type. The base class holds the events; identity is the aggregate's own field.
+ */
+public class {Name} extends BaseAggregateRoot<{Name}, {Name}Id> {
 
-    // invariant-protected state; no setters — mutate through intention-revealing methods
+    private final {Name}Id id;
+
+    // further invariant-protected state; no setters — mutate through intention-revealing methods
 
     private {Name}({Name}Id id) {
-        super(id);
+        this.id = id;
+    }
+
+    @Override
+    public {Name}Id id() {
+        return id;
     }
 
     /** Factory enforces creation invariants and registers the creation event. */
     public static {Name} create({Name}Id id /*, args */) {
         var aggregate = new {Name}(id);
         // enforce invariants here
-        aggregate.registerDomainEvent({Name}Created.of(id));
+        aggregate.registerEvent({Name}Created.of(id));
         return aggregate;
     }
 
-    // behavior methods enforce invariants, then registerDomainEvent(...)
+    // behavior methods enforce invariants, then registerEvent(...)
 }
 ```
 
