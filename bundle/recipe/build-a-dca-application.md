@@ -30,6 +30,7 @@ generating, and the template to fill in.
 | Add a read-optimized model for a query | [Add a read model](/recipe/add-a-read-model.md) |
 | Expose a bounded context's API to other contexts | [Expose an open host service](/recipe/expose-an-open-host-service.md) |
 | Persist operational data that has no aggregate of its own | [Add a store](/recipe/add-a-store.md) |
+| Know who is calling — and keep ownership checks in the use case | [Add an identity port](/recipe/add-an-identity-port.md) |
 
 ## Decide first (design forks)
 

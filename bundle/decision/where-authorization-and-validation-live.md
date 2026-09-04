@@ -56,5 +56,6 @@ Split authorization once more, by whether the check needs the **resource**:
 - Markers: [OutputPort](/marker/port-out/outputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
 - Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
+- Recipe: [Add an identity port](/recipe/add-an-identity-port.md) — the port, the command field, the scoped repository question
 - Related decision: [Where does the logic live](/decision/where-does-the-logic-live.md)
 - Related pitfalls: [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Authenticated is not authorized](/pitfall/authenticated-is-not-authorized.md) · [Resource id without an owner](/pitfall/resource-id-without-an-owner.md)

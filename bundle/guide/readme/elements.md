@@ -190,7 +190,8 @@ sharedkernel/
 │           ├── OutputPort.java    # Marker for all output ports
 │           ├── Repository.java    # Base repository: extends OutputPort (for Aggregate Roots)
 │           ├── Store.java         # Base store: extends OutputPort (for operational data)
-│           └── DomainEventPublisher.java  # Event publishing: extends OutputPort
+│           ├── DomainEventPublisher.java  # Event publishing: extends OutputPort
+│           └── IntegrationEventPublisher.java  # Cross-context event publishing: extends OutputPort
 │
 ├── application/
 │   └── shared/                    # Application-specific ports shared by several contexts
@@ -213,12 +214,13 @@ sharedkernel/
 **Port Interface Hierarchy:**
 ```
 Input Ports (marker/port/in/)        Output Ports (marker/port/out/)
-┌────────────────────────────┐       ┌────────────────────────────┐
-│ InputPort (marker)         │       │ OutputPort (marker)        │
-│   └── UseCase<INPUT,OUTPUT>│       │   ├── Repository<T, ID>    │
-│         └── *InputPort     │       │   ├── Store               │
-└────────────────────────────┘       │   └── DomainEventPublisher │
-                                     └────────────────────────────┘
+┌────────────────────────────┐       ┌─────────────────────────────────┐
+│ InputPort (marker)         │       │ OutputPort (marker)             │
+│   └── UseCase<INPUT,OUTPUT>│       │   ├── Repository<T, ID>         │
+│         └── *InputPort     │       │   ├── Store                     │
+└────────────────────────────┘       │   ├── DomainEventPublisher      │
+                                     │   └── IntegrationEventPublisher │
+                                     └─────────────────────────────────┘
 ```
 
 Only *generic* contracts live under `marker/`: interfaces that assign an architectural role and
@@ -252,13 +254,48 @@ public interface IdentityProvider extends OutputPort {
     }
 }
 
-// In infrastructure/security/ - PROJECT-SPECIFIC implementations
+// In the owning context's adapter/outgoing/security/ - PROJECT-SPECIFIC implementations
 public enum JwtIdentityType implements IdentityProvider.IdentityType {
     ANONYMOUS, REGISTERED, SERVICE_ACCOUNT;  // Extensible per project
 }
 
 public record JwtIdentity(...) implements IdentityProvider.Identity { ... }
 ```
+
+**Why the identity port is not a building block.** Its contract returns `UserId` — a value object of
+*this* project's shared kernel — and its `IdentityType` encodes *this* shop's two-cookie design (anonymous
+visitor vs. registered customer). A reusable marker must carry neither, and a marker only earns its place
+once a rule selects on it; every rule about identity that exists today ("the domain never reads the
+caller") works over the layer packages alone. So the port is written per project, following the cut below.
+
+**How to cut the identity port:**
+
+1. **One output port, in the shared kernel's `application/shared/`** (or in a single context's
+   `application/shared/` if only that context needs it). It extends `OutputPort`, returns an `Identity`
+   made of the project's own types, and knows nothing about tokens, cookies or headers.
+2. **The implementation is an outgoing adapter of the context that owns authentication** — it reads the
+   security context the framework populated (`adapter/outgoing/security/`). Incoming adapters and use cases
+   see only the port.
+3. **The authentication filter enriches, it never gates.** It attaches an identity or nothing and lets the
+   request proceed; every request has an identity (an anonymous visitor is one). Blanket
+   "must be authenticated" rules at the token boundary are not where authorization lives.
+4. **Ownership goes into the command.** A use case that acts on somebody's resource takes the caller as a
+   field — `GetCartByIdQuery(cartId, customerId)`, `StartCheckoutCommand(cartId, customerId)` — and asks the
+   repository a *scoped* question (`findByIdForCustomer(cartId, customerId)`) instead of loading by id and
+   comparing afterwards. The incoming adapter resolves the caller through the port and fills the field; the
+   use case never calls the identity port to find out on whose behalf it runs.
+5. **A claims-only gate may stay in the adapter.** "Does this token carry the staff role?" reads nothing but
+   the caller's claims and is a property of the *exposure*, so the REST resource or page controller may
+   check it and refuse. Anything that needs the resource — is this cart theirs — is a property of the
+   *operation* and belongs to the use case, through the command field of step 4.
+6. **The domain never sees the caller.** No `User` parameter on an aggregate method, no role check in a
+   value object; `cart.checkout()` protects *its* invariants (not empty, not already completed), the use
+   case has already answered *who may*.
+7. **A use case without a caller says so.** An event consumer completing a cart after a confirmed checkout
+   acts on nobody's behalf; leave its command unscoped and document why, or the next reader "fixes" it.
+
+Refusals are decided in the use case and *rendered* in the adapter: whether a stranger's cart answers
+`403` or `404` is a protocol choice (a `403` confirms the id exists), and the REST resource makes it.
 
 - **InputPort** - Marker interface for all entry points to the application (called by driving adapters)
 - **OutputPort** - Marker interface for all dependencies the application needs (implemented by driven adapters)
@@ -455,6 +492,7 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
+- [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [Store](/marker/port-out/store.md)

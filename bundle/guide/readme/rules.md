@@ -169,6 +169,14 @@ START: Something happened in the domain
 - Use case knows nothing about presentation
 - Use case knows nothing about persistence details
 
+#### Authorization Rules
+- Authorization ("may *this caller* do this?") is decided in the use case; the caller arrives as a field of the Command/Query, resolved by the incoming adapter through the identity output port
+- A use case that acts on a caller's resource asks the repository a scoped question (`findByIdForCustomer`), never an open lookup followed by a comparison
+- A claims-only gate (a role on the token) may sit in the incoming adapter — it reads nothing but the caller
+- The domain never knows the caller: no `User` parameter on aggregate methods, no role checks in domain code — invariants only
+- The identity port is a project-specific output port in `application/shared/` (context or shared kernel), implemented in the authenticating context's outgoing adapter; the authentication filter enriches every request and gates none
+- A use case with no caller (event consumers, scheduled work) stays unscoped and documents it
+
 #### Input Port Rules
 - Input Port defines use case interface
 - Input Port represents business operation

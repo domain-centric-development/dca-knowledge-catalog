@@ -29,7 +29,7 @@ Keep the three responsibilities on their own layers:
 - **Use case** performs the *authorization* check before delegating: resolve the caller via `IdentityProvider`, decide whether they may run this operation on this resource, then call the parameter-free aggregate method.
 - **Adapter** handles *authentication* and structural input validation at the edge.
 
-For the full layer split of validation vs. authorization vs. invariants, see [Where authorization and validation live](/decision/where-authorization-and-validation-live.md).
+For the full layer split of validation vs. authorization vs. invariants, see [Where authorization and validation live](/decision/where-authorization-and-validation-live.md); for the port itself and how the caller travels as a command field, follow [Add an identity port](/recipe/add-an-identity-port.md).
 
 ## Anchors
 
@@ -37,4 +37,5 @@ For the full layer split of validation vs. authorization vs. invariants, see [Wh
 - Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) · [The Domain Model should be framework independent](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
 - Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
+- Recipe: [Add an identity port](/recipe/add-an-identity-port.md)
 - Related pitfalls: [Framework leak in the domain](/pitfall/framework-leak-in-domain.md) · [Anemic domain model](/pitfall/anemic-domain-model.md)
