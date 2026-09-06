@@ -1,0 +1,13 @@
+*
+!dca-guide
+!dca-java/rules.json
+!dca-java/RULES.md
+!dca-java/dca-building-blocks/src/main
+!dca-java/dca-archunit/src/main
+!dca-dotnet/rules.json
+!dca-dotnet/src/DomainCentric.ArchRules
+!dca-knowledge-catalog
+**/.git
+**/__pycache__
+**/.pytest_cache
+dca-knowledge-catalog/bundle-obsidian

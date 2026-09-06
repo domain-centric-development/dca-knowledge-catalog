@@ -495,7 +495,8 @@ Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a 
 
 ### PACKAGING RULES
 
-- Package by feature/bounded context preferred
+- Package by bounded context, then by layer; inside the application layer by use case — optionally grouped into
+  features (see [Grouping use cases into features](#grouping-use-cases-into-features))
 - Layer separation enforced by module structure
 - Domain module has zero external dependencies
 - Application module depends only on domain

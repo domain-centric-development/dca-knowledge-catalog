@@ -1,0 +1,22 @@
+# Meta-repository entry point: both reference shops with one command.
+#   docker compose up --build        → Java shop on http://localhost:8080, .NET shop on http://localhost:5080
+#   docker compose up shop-java      → one of them
+# Every buildable sub-project also has its own compose.yaml (tests, libraries, catalog, slides) — run it from
+# the sub-project directory. The two services below repeat the sub-projects' build settings rather than
+# `include:`-ing them, because the sub-projects' tool services share names (`test`) that include would merge.
+services:
+  shop-java:
+    build: dca-ecommerce-sample-java
+    image: dca-shop-java
+    ports:
+      - "8080:8080"
+
+  shop-dotnet:
+    build:
+      context: .
+      dockerfile: dca-ecommerce-sample-dotnet/Dockerfile
+    image: dca-shop-dotnet
+    ports:
+      - "5080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development

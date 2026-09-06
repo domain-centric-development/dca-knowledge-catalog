@@ -8,7 +8,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 
 ## Steps
 
-1. **Create the folder** `application/{usecasename}/` — lowercase, no separators (e.g. `additemtocart`).
+1. **Find the context's form, then create the folder.** Look at the packages directly below `application/` (ignore `shared`). If they are use cases, the context is *flat*: create `application/{usecasename}/`. If they are features — domain-named groups such as `session` or `cartrecovery` that themselves contain use-case folders — the context is *grouped*: pick the feature the new use case belongs to (or add one, named from the ubiquitous language, never `commands`/`queries`/`handlers`) and create `application/{feature}/{usecasename}/`. Never add a flat use case to a grouped context or a grouped one to a flat context — the mixed form is a rule violation. The folder name is lowercase, no separators (e.g. `additemtocart`). When to introduce features at all: [Group use cases into features or split the bounded context](/decision/group-use-cases-vs-split-context.md).
 2. **Pick write or read** — a write takes a `{Name}Command`; a read takes a `{Name}Query`.
 3. **Generate the four files** from the [use-case template](/template/use-case.md): `{Name}InputPort`, `{Name}Command`/`{Name}Query`, `{Name}Result`, `{Name}UseCase`.
 4. **Declare output ports** the use case needs (repositories, publishers) as constructor parameters — interfaces only, defined in `application/shared/` or the marker package; never reference adapters.
@@ -28,6 +28,8 @@ Add one application-layer use case (a single intention: place an order, add an i
 - [DTOs must not be used in the application layer](/rule/usecase/dtos-must-not-be-used-in-the-application-layer.md)
 - [Use cases that publish domain events must have a transaction boundary](/rule/usecase/use-cases-that-publish-domain-events-must-have-a-transaction-boundary.md)
 - [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
+- [Use case packages within a module must use one consistent depth — flat or grouped by feature](/rule/usecase/use-case-packages-within-a-module-must-use-one-consistent-depth-flat-or-grouped-by-feature.md)
+- [Feature and use case packages within a module's application layer must not have cyclic dependencies](/rule/cycles/feature-and-use-case-packages-within-a-module-s-application-layer-must-not-have-cyclic-dependencies.md)
 
 ## Anchors
 
@@ -35,5 +37,6 @@ Add one application-layer use case (a single intention: place an order, add an i
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
 - Guide: [Layer rules](/guide/readme/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/readme/elements.md)
 - If the use case must notify another context: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)
+- If the flat list has grown long: [Group use cases into features or split the bounded context](/decision/group-use-cases-vs-split-context.md) — migrate the whole context in one move, never one use case at a time
 - Pitfall: [The god port](/pitfall/god-port.md) — one InputPort per use case, never one fat interface for many
 - Pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Publishing domain events without a transaction](/pitfall/publishing-domain-events-without-a-transaction.md) · [Clearing domain events before dispatch](/pitfall/clearing-domain-events-before-dispatch.md)

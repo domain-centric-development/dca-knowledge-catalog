@@ -41,7 +41,7 @@ _TAG_VOCABULARY = frozenset({
     "domain-event", "integration-event", "events", "outbox", "specification",
     "factory", "domain-service", "gateway", "port", "dto",
     "bounded-context", "shared-kernel", "subdomain", "context-map",
-    "anti-corruption-layer", "package-structure", "naming", "testing",
+    "anti-corruption-layer", "package-structure", "feature", "naming", "testing",
     "archunit", "spring", "modulith", "rest", "persistence", "bootstrap",
     "cqrs", "event-sourcing", "security", "performance", "migration",
 })
