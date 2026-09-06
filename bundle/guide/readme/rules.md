@@ -164,6 +164,8 @@ START: Something happened in the domain
 - Use case handles transaction boundaries
 - Use case transforms DTOs to domain objects
 - Use case transforms domain objects to DTOs
+- Use case assembles the `*Result` (static factory, use-case body or `*Assembler`); a result carries values, never aggregate roots or entities (`DCA-USE-015`)
+- Command results are small (ids, status, what the caller needs next); the view comes from a query or read model
 - No business logic in use cases
 - Use case tested with port mocks
 - Use case knows nothing about presentation

@@ -39,11 +39,25 @@ For a read use case, replace with `{Name}Query` and have the InputPort extend
 ```java
 package {basePackage}.{context}.application.{usecasename};
 
-/** Application-layer output model. The adapter maps this to a *Response DTO. */
+/**
+ * Application-layer output model. The adapter maps this to a *Response DTO.
+ * Values, never identities: ids, value objects, nested part records (named by content, e.g.
+ * LineItemSummary), read models — no aggregate root or entity, also not inside List/Optional.
+ * A command's result stays small; the view comes from a query.
+ */
 public record {Name}Result(
     // primitive/value fields the caller needs back
-) {}
+) {
+    public static {Name}Result from(/* aggregate or read model */) {
+        // copy values out; the static factory keeps assembly in the application layer
+    }
+}
 ```
+
+When the projection needs several ports, assemble in the use case body; when it grows or several use cases
+share it, in a `*Assembler` (use-case folder or `application/shared`). Large aggregates hand out a snapshot
+(`Value` in `domain/readmodel`) that becomes the result field. See
+[Result shape and assembly](/decision/result-shape-and-assembly.md).
 
 ## `{Name}UseCase.java` — implementation
 
@@ -68,7 +82,7 @@ public class {Name}UseCase implements {Name}InputPort {
         // 1. load aggregate(s) via output ports
         // 2. apply business rules on the aggregate (logic lives in the domain)
         // 3. save, then publish + clear domain events (writes)
-        // 4. map to {Name}Result
+        // 4. assemble {Name}Result: values only (static from(...)), never the aggregate
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

@@ -28,7 +28,7 @@ Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Arc
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [DEPENDENCY STRUCTURE](/guide/readme/dependency-structure.md)
+- [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)

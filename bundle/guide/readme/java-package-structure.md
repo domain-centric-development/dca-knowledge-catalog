@@ -433,7 +433,8 @@ APPLICATION LAYER
 - **Use Case Implementation**: `*UseCase implements *InputPort` (e.g., `CreateOrderUseCase implements CreateOrderInputPort`)
 - **Commands**: `*Command` (e.g., `CreateOrderCommand`)
 - **Queries**: `*Query` (e.g., `OrderQuery`)
-- **Results**: `*Result` (e.g., `CreateOrderResult`)
+- **Results**: `*Result` (e.g., `CreateOrderResult`) — top level only; part records nested in the result are named by content (`CartItemSummary`, `LineItemData`, `ProfileView`), never `*Result`
+- **Assemblers**: `*Assembler` when result assembly outgrows a static factory or is shared by several use cases (e.g., `ProductArticleAssembler` in `application/shared`) — never `*Mapper`, `*Converter` or `*Helper` in the application layer
 - **Adapters**: `*Adapter` or specific suffixes (e.g., `InMemoryOrderRepository`, `OrderPageController`, `OrderMcpToolProvider`)
 
 **Benefits:**

@@ -25,6 +25,7 @@ Marker interface for Output Ports (Hexagonal Architecture).
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
 - [14. Architecture Placement (DCA Pattern)](/guide/jwt-implementation-guide/14-architecture-placement-dca-pattern.md)
+- [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)

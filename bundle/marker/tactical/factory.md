@@ -21,4 +21,5 @@ Marker interface for Factories.
 
 ## Discussed in
 
+- [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
