@@ -19,12 +19,13 @@ DcaRule.check(
     "The generated context map renders one node per normalized external system name — two"
         + " spellings of the same system would silently merge into one node",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Map<String, String> idToName = new LinkedHashMap<>();
       for (String pkg : arch.boundedContextPackages()) {
         for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
           String id = normalizedExternalId(e.name());
           String known = idToName.getOrDefault(id, e.name());
-          require(
+          violations.require(
               known.equals(e.name()),
               "External system names '"
                   + known
@@ -36,6 +37,7 @@ DcaRule.check(
           idToName.put(id, e.name());
         }
       }
+      violations.throwIfAny();
     })
 ```
 

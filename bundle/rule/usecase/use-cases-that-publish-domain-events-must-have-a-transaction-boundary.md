@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-USE-012
 title: Use cases that publish domain events must have a transaction boundary
-rule: "Integration events are relayed after commit (@TransactionalEventListener, @ApplicationModuleListener) and their publication is registered in the publishing transaction. Without an active transaction the after-commit listeners are skipped silently and nothing is registered: the use case succeeds, the other contexts never hear of it. The use case that publishes owns the boundary - either declarative transaction metadata (@Transactional on the class or the executing method) or an explicit TransactionBoundary.inTransaction(...) around save and publish."
+rule: "Integration events are relayed after commit (@TransactionalEventListener, @ApplicationModuleListener) and their publication is registered in the publishing transaction. Without an active transaction the after-commit listeners are skipped silently and nothing is registered: the use case succeeds, the other contexts never hear of it. The use case that publishes owns the boundary - either declarative transaction metadata (@Transactional on the class or the executing method) or an explicit TransactionBoundary.inTransaction(...) around save and publish. Checked per entry path, following calls within the class: from every entry point - a method callable from outside the class, or one nothing in the class calls - no route down to the publishing method may be free of an annotation or a boundary; a covered caller does not cover another route to the same helper, and a boundary on one route does not cover a second route. Whether the publication sits inside the block handed to inTransaction(...) is not visible in ArchUnit's call model, which folds a lambda's body into the enclosing method; that placement stays a review check."
 constraint: Use cases that publish domain events must have a transaction boundary.
 enforced_by: "UseCaseRules#DCA-USE-012"
 status: enforced
@@ -23,7 +23,14 @@ DcaRule.of(
         + " silently and nothing is registered: the use case succeeds, the other contexts never"
         + " hear of it. The use case that publishes owns the boundary - either declarative"
         + " transaction metadata (@Transactional on the class or the executing method) or an"
-        + " explicit TransactionBoundary.inTransaction(...) around save and publish",
+        + " explicit TransactionBoundary.inTransaction(...) around save and publish. Checked"
+        + " per entry path, following calls within the class: from every entry point - a"
+        + " method callable from outside the class, or one nothing in the class calls - no route"
+        + " down to the publishing method may be free of an annotation or a boundary; a covered"
+        + " caller does not cover another route to the same helper, and a boundary on one route"
+        + " does not cover a second route. Whether the publication sits inside the block"
+        + " handed to inTransaction(...) is not visible in ArchUnit's call model, which folds a"
+        + " lambda's body into the enclosing method; that placement stays a review check",
     arch ->
         classes()
             .that()

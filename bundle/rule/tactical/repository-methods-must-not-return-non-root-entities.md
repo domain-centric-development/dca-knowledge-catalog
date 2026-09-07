@@ -22,7 +22,7 @@ DcaRule.check(
       List<String> violations = new ArrayList<>();
       for (JavaClass repository : repositoryInterfaces(arch)) {
         for (JavaMethod method : repository.getMethods()) {
-          for (JavaClass type : typesInvolvedIn(method.getReturnType())) {
+          for (JavaClass type : TypeInspection.involvedTypes(method.getReturnType())) {
             if (type.isAssignableTo(Entity.class)
                 && !type.isAssignableTo(AggregateRoot.class)) {
               violations.add(

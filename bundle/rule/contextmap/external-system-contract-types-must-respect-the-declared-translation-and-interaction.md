@@ -19,6 +19,7 @@ DcaRule.check(
     "An external system's contract types are confined to the adapter where the exchange"
         + " crosses the boundary (ACL) or at least kept out of the domain (Conformist)",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       // Without contractPackages (wire-level contract, no vendor SDK) there is nothing to
       // check — the declaration then only documents the relationship.
       for (String pkg : arch.boundedContextPackages()) {
@@ -32,46 +33,47 @@ DcaRule.check(
                 e.interaction() == ExternalUpstream.Interaction.OUTBOUND
                     ? layout.outgoingAdapterPattern(pkg)
                     : layout.incomingAdapterPattern(pkg);
-            noClasses()
-                .that()
-                .resideInAPackage(pkg + "..")
-                .and()
-                .resideOutsideOfPackage(allowedAdapter)
-                .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(e.contractPackages())
-                .allowEmptyShould(true)
-                .because(
-                    "Context '"
-                        + source
-                        + "' declares ANTI_CORRUPTION_LAYER towards external system '"
-                        + e.name()
-                        + "' ("
-                        + e.interaction()
-                        + ") — its contract types ("
-                        + String.join(", ", e.contractPackages())
-                        + ") must not leave "
-                        + allowedAdapter)
-                .check(arch.classes());
+            violations.addAll(
+                noClasses()
+                    .that()
+                    .resideInAPackage(pkg + "..")
+                    .and()
+                    .resideOutsideOfPackage(allowedAdapter)
+                    .should()
+                    .dependOnClassesThat()
+                    .resideInAnyPackage(e.contractPackages())
+                    .allowEmptyShould(true),
+                arch.classes(),
+                "Context '"
+                    + source
+                    + "' declares ANTI_CORRUPTION_LAYER towards external system '"
+                    + e.name()
+                    + "' ("
+                    + e.interaction()
+                    + ") — its contract types ("
+                    + String.join(", ", e.contractPackages())
+                    + ") must not leave "
+                    + allowedAdapter);
           } else {
-            noClasses()
-                .that()
-                .resideInAPackage(layout.domainPattern(pkg))
-                .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(e.contractPackages())
-                .allowEmptyShould(true)
-                .because(
-                    "Context '"
-                        + source
-                        + "' conforms to external system '"
-                        + e.name()
-                        + "', but conformism does not suspend domain purity — the domain"
-                        + " layer stays free of its contract types")
-                .check(arch.classes());
+            violations.addAll(
+                noClasses()
+                    .that()
+                    .resideInAPackage(layout.domainPattern(pkg))
+                    .should()
+                    .dependOnClassesThat()
+                    .resideInAnyPackage(e.contractPackages())
+                    .allowEmptyShould(true),
+                arch.classes(),
+                "Context '"
+                    + source
+                    + "' conforms to external system '"
+                    + e.name()
+                    + "', but conformism does not suspend domain purity — the domain"
+                    + " layer stays free of its contract types");
           }
         }
       }
+      violations.throwIfAny();
     })
 ```
 

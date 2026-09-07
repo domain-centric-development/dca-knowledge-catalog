@@ -20,6 +20,7 @@ DcaRule.check(
     "Neither the context map nor the module boundary may know more than the other — an edge"
         + " that exists only on one side is stale",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Optional<Class<? extends Annotation>> moduleAnnotation = moduleAnnotationType();
       if (moduleAnnotation.isEmpty()) {
         return;
@@ -36,7 +37,7 @@ DcaRule.check(
             allowed.add(normalized);
           }
         }
-        require(
+        violations.require(
             declared.equals(allowed),
             "Context '"
                 + source
@@ -46,6 +47,7 @@ DcaRule.check(
                 + new TreeSet<>(allowed)
                 + " must describe the same edges — neither side may know more than the other");
       }
+      violations.throwIfAny();
     })
 ```
 

@@ -20,6 +20,7 @@ DcaRule.check(
         + " API calls, incoming adapters for consumed events — and translates the upstream"
         + " contract into the context's own model there",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
@@ -34,29 +35,30 @@ DcaRule.check(
                 channel == Upstream.Consumes.API
                     ? layout.outgoingAdapterPattern(pkg)
                     : layout.incomingAdapterPattern(pkg);
-            noClasses()
-                .that()
-                .resideInAPackage(pkg + "..")
-                .and()
-                .resideOutsideOfPackage(allowedAdapter)
-                .should()
-                .dependOnClassesThat()
-                .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
-                .allowEmptyShould(true)
-                .because(
-                    "Context '"
-                        + source
-                        + "' declares ANTI_CORRUPTION_LAYER towards '"
-                        + u.context()
-                        + "' ("
-                        + channelName(arch, channel)
-                        + ") — upstream contract types must not leave "
-                        + allowedAdapter
-                        + "; translate them there into the context's own model")
-                .check(arch.classes());
+            violations.addAll(
+                noClasses()
+                    .that()
+                    .resideInAPackage(pkg + "..")
+                    .and()
+                    .resideOutsideOfPackage(allowedAdapter)
+                    .should()
+                    .dependOnClassesThat()
+                    .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
+                    .allowEmptyShould(true),
+                arch.classes(),
+                "Context '"
+                    + source
+                    + "' declares ANTI_CORRUPTION_LAYER towards '"
+                    + u.context()
+                    + "' ("
+                    + channelName(arch, channel)
+                    + ") — upstream contract types must not leave "
+                    + allowedAdapter
+                    + "; translate them there into the context's own model");
           }
         }
       }
+      violations.throwIfAny();
     })
 ```
 

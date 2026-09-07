@@ -45,8 +45,13 @@ rules.off               = DCA-NAM-002
 rule.DCA-NAM-002.reason = no DI framework in this project
 rules.warn              = DCA-TAC-009
 rule.DCA-STR-003.ignore = .*legacy.*
+rule.DCA-STR-003.ignore.1 = Generated.{1,3}Client
 rules.freeze            = DCA-ONI-002
 ```
+
+An `ignore` value is one regular expression as written — commas are part of it — and a second
+exception for the same rule uses an indexed key (`.ignore.1`, `.ignore.2`, …). Lists of rule ids and
+set names are comma-separated.
 
 With hand-written rules the same dials exist in cruder form: scope is which test classes you keep,
 severity is a rule you evaluate and log instead of asserting, exceptions are extra `and()` predicates

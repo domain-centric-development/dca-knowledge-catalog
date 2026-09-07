@@ -21,18 +21,13 @@ DcaRule.check(
     arch -> {
       List<String> violations = new ArrayList<>();
       for (JavaClass aggregate : concreteClassesAssignableTo(arch, AggregateRoot.class)) {
-        for (JavaField field : aggregate.getAllFields()) {
-          JavaClass fieldType = field.getRawType();
-          if (isConcreteAggregateRoot(fieldType) && !fieldType.equals(aggregate)) {
-            violations.add(
-                fieldDescription(aggregate, field, fieldType)
-                    + " which is another aggregate root");
-          }
-          for (JavaClass element : collectionElementTypes(field)) {
-            if (isConcreteAggregateRoot(element)) {
+        for (JavaField field : TypeInspection.instanceFields(aggregate)) {
+          for (JavaClass involved : TypeInspection.involvedTypes(field, aggregate)) {
+            if (isConcreteAggregateRoot(involved)
+                && !isSelfReference(aggregate, field, involved)) {
               violations.add(
-                  containsDescription(aggregate, field, element)
-                      + " which is an aggregate root");
+                  fieldDescription(aggregate, field, involved)
+                      + " which is another aggregate root");
             }
           }
         }

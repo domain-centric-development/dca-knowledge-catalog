@@ -24,11 +24,10 @@ DcaRule.check(
         if (valueObject.isRecord() || valueObject.isEnum()) {
           continue;
         }
-        if (!overridesOwn(valueObject, "equals", 1)
-            || !overridesOwn(valueObject, "hashCode", 0)) {
+        if (!TypeInspection.declaresAttributeEquality(valueObject)) {
           violations.add(
               valueObject.getName()
-                  + " is a non-record Value Object without its own equals/hashCode");
+                  + " is a non-record Value Object without its own equals(Object)/hashCode()");
         }
       }
       fail(

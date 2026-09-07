@@ -23,5 +23,6 @@ DcaRule.of(
             .that()
             .resideInAnyPackage(arch.allApplicationPatterns())
             .should()
-            .dependOnClassesThat(arch.infrastructureImplementation()))
+            .dependOnClassesThat(arch.infrastructureImplementation())
+            .allowEmptyShould(true))
 ```

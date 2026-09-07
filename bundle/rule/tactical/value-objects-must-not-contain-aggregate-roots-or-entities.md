@@ -21,26 +21,16 @@ DcaRule.check(
     arch -> {
       List<String> violations = new ArrayList<>();
       for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
-        for (JavaField field : valueObject.getAllFields()) {
-          JavaClass fieldType = field.getRawType();
-          if (isConcreteAggregateRoot(fieldType)) {
-            violations.add(
-                fieldDescription(valueObject, field, fieldType)
-                    + " which is an aggregate root");
-          }
-          if (isConcreteNonRootEntity(fieldType)) {
-            violations.add(
-                fieldDescription(valueObject, field, fieldType) + " which is an entity");
-          }
-          for (JavaClass element : collectionElementTypes(field)) {
-            if (isConcreteAggregateRoot(element)) {
+        for (JavaField field : TypeInspection.instanceFields(valueObject)) {
+          for (JavaClass involved : TypeInspection.involvedTypes(field, valueObject)) {
+            if (isConcreteAggregateRoot(involved)) {
               violations.add(
-                  containsDescription(valueObject, field, element)
+                  fieldDescription(valueObject, field, involved)
                       + " which is an aggregate root");
             }
-            if (isConcreteNonRootEntity(element)) {
+            if (isConcreteNonRootEntity(involved)) {
               violations.add(
-                  containsDescription(valueObject, field, element) + " which is an entity");
+                  fieldDescription(valueObject, field, involved) + " which is an entity");
             }
           }
         }

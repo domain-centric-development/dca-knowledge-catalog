@@ -23,22 +23,26 @@ DcaRule.check(
       allowedPatterns.add(
           ".." + layout.adapterSubpackage() + "." + layout.outgoingSubpackage() + "..");
       String[] allowed = allowedPatterns.toArray(String[]::new);
-      methods()
-          .that()
-          .areAnnotatedWith(transactional)
-          .should()
-          .beDeclaredInClassesThat()
-          .resideInAnyPackage(allowed)
-          .because(rationale)
-          .allowEmptyShould(true)
-          .check(arch.classes());
-      classes()
-          .that()
-          .areAnnotatedWith(transactional)
-          .should()
-          .resideInAnyPackage(allowed)
-          .because(rationale)
-          .allowEmptyShould(true)
-          .check(arch.classes());
+      CollectedViolations violations = CollectedViolations.withoutHeader();
+      violations.addAll(
+          methods()
+              .that()
+              .areAnnotatedWith(transactional)
+              .should()
+              .beDeclaredInClassesThat()
+              .resideInAnyPackage(allowed)
+              .allowEmptyShould(true),
+          arch.classes(),
+          rationale);
+      violations.addAll(
+          classes()
+              .that()
+              .areAnnotatedWith(transactional)
+              .should()
+              .resideInAnyPackage(allowed)
+              .allowEmptyShould(true),
+          arch.classes(),
+          rationale);
+      violations.throwIfAny();
     })
 ```

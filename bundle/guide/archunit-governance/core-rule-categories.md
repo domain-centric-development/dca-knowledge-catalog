@@ -222,6 +222,15 @@ static final ArchRule use_cases_that_save_must_publish =
         .because("Unpublished events are lost, and events left on a stored aggregate may surface later out of context");
 ```
 
+This condition looks at the class as a whole, which is enough to teach the idea. Two things it does
+not see: a publication in one method covers a save in an *unrelated* method, and a helper shared by
+two entry methods appears to connect them. A production version — the published `DCA-USE-009` rule
+does this — follows the calls within the class and judges every *entry path*: each entry point that
+reaches a `save` — a method callable from outside the class, or one nothing in the class calls — must
+also reach a `publishAndClearEvents`; a public method stays an entry point when a wrapper calls it. Even
+then, bytecode does not say in which order the two calls run or that they concern the same aggregate,
+and ArchUnit attributes a lambda's body to the enclosing method; those remain review checks.
+
 Note the rule demands the call **unconditionally**, not only where an event is expected: whether an
 action raised one is the aggregate's business, and a use case that publishes only "when needed"
 breaks silently the day an aggregate starts raising an event it did not raise before.

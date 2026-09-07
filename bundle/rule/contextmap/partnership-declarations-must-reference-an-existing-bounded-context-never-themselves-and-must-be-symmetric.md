@@ -19,26 +19,30 @@ DcaRule.check(
         + " and must be symmetric",
     "A partnership is a mutual commitment — it exists only when both contexts declare it",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
         for (Partnership p : arch.packageAnnotations(pkg, Partnership.class)) {
-          require(
-              packagesByName.containsKey(p.context()),
-              "Context '"
-                  + source
-                  + "' declares @Partnership(context = \""
-                  + p.context()
-                  + "\") but no bounded context module with that name exists");
-          require(
-              !p.context().equals(source),
-              "Context '" + source + "' declares a partnership with itself");
+          if (!packagesByName.containsKey(p.context())) {
+            violations.add(
+                "Context '"
+                    + source
+                    + "' declares @Partnership(context = \""
+                    + p.context()
+                    + "\") but no bounded context module with that name exists");
+            continue;
+          }
+          if (p.context().equals(source)) {
+            violations.add("Context '" + source + "' declares a partnership with itself");
+            continue;
+          }
           boolean reverse =
               arch
                   .packageAnnotations(packagesByName.get(p.context()), Partnership.class)
                   .stream()
                   .anyMatch(r -> r.context().equals(source));
-          require(
+          violations.require(
               reverse,
               "Partnership between '"
                   + source
@@ -53,6 +57,7 @@ DcaRule.check(
                   + "'");
         }
       }
+      violations.throwIfAny();
     })
 ```
 

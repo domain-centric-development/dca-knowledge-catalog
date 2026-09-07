@@ -19,6 +19,7 @@ DcaRule.check(
     "Every real dependency on a foreign api/ or events/ package is a context-map edge and must"
         + " be declared as such",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       List<String> contexts = arch.boundedContextPackages();
       for (String srcPkg : contexts) {
         String source = arch.contextName(srcPkg);
@@ -32,27 +33,28 @@ DcaRule.check(
             if (declared.contains(target + " :: " + channel)) {
               continue;
             }
-            noClasses()
-                .that()
-                .resideInAPackage(srcPkg + "..")
-                .should()
-                .dependOnClassesThat()
-                .resideInAPackage(tgtPkg + "." + channel + "..")
-                .allowEmptyShould(true)
-                .because(
-                    "Context '"
-                        + source
-                        + "' depends on '"
-                        + target
-                        + " :: "
-                        + channel
-                        + "' without declaring it — add @Upstream(context = \""
-                        + target
-                        + "\", translation = ..., via = ...) to its package-info")
-                .check(arch.classes());
+            violations.addAll(
+                noClasses()
+                    .that()
+                    .resideInAPackage(srcPkg + "..")
+                    .should()
+                    .dependOnClassesThat()
+                    .resideInAPackage(tgtPkg + "." + channel + "..")
+                    .allowEmptyShould(true),
+                arch.classes(),
+                "Context '"
+                    + source
+                    + "' depends on '"
+                    + target
+                    + " :: "
+                    + channel
+                    + "' without declaring it — add @Upstream(context = \""
+                    + target
+                    + "\", translation = ..., via = ...) to its package-info");
           }
         }
       }
+      violations.throwIfAny();
     })
 ```
 

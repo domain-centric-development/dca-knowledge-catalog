@@ -20,6 +20,7 @@ DcaRule.check(
         + " is PLANNED) and would otherwise pass forever alongside an equally stale module"
         + " boundary entry",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
@@ -45,7 +46,7 @@ DcaRule.check(
                 break;
               }
             }
-            require(
+            violations.require(
                 exists,
                 "Context '"
                     + source
@@ -62,6 +63,7 @@ DcaRule.check(
           }
         }
       }
+      violations.throwIfAny();
     })
 ```
 

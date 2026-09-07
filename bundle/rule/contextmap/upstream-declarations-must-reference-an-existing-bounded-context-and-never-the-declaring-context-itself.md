@@ -19,11 +19,12 @@ DcaRule.check(
         + " context itself",
     "A dangling or self-referencing upstream edge describes a relationship that cannot exist",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Set<String> moduleNames = moduleNames(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
         for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
-          require(
+          violations.require(
               moduleNames.contains(u.context()),
               "Context '"
                   + source
@@ -32,11 +33,12 @@ DcaRule.check(
                   + "\") but no bounded context module with that name exists (known: "
                   + moduleNames
                   + ")");
-          require(
+          violations.require(
               !u.context().equals(source),
               "Context '" + source + "' declares itself as its own upstream");
         }
       }
+      violations.throwIfAny();
     })
 ```
 

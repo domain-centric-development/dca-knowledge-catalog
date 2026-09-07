@@ -23,7 +23,8 @@ DcaRule.of(
             .resideInAnyPackage(arch.allDomainPatterns())
             .should()
             .dependOnClassesThat()
-            .resideInAPackage(layout.infrastructurePattern())
+            // The global infrastructure package and every module's own one.
+            .resideInAnyPackage(arch.allInfrastructurePatterns())
             // A context may legitimately have no domain layer at all - a supporting or generic
             // subdomain in transaction-script style. An absent domain is not a violation.
             .allowEmptyShould(true))

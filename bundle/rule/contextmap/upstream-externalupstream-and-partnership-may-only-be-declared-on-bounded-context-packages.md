@@ -20,14 +20,17 @@ DcaRule.check(
     "Context map declarations are reserved for bounded contexts — only a context can be"
         + " downstream of, or partner with, another",
     arch -> {
-      for (String pkg : allRootPackages(arch)) {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
+      for (String pkg : arch.packagesBelowBase()) {
         if (arch.packageAnnotation(pkg, BoundedContext.class).isPresent()) {
           continue;
         }
-        requireNoDeclaration(arch, pkg, Upstream.class, "@Upstream");
-        requireNoDeclaration(arch, pkg, ExternalUpstream.class, "@ExternalUpstream");
-        requireNoDeclaration(arch, pkg, Partnership.class, "@Partnership");
+        requireNoDeclaration(violations, arch, pkg, Upstream.class, "@Upstream");
+        requireNoDeclaration(
+            violations, arch, pkg, ExternalUpstream.class, "@ExternalUpstream");
+        requireNoDeclaration(violations, arch, pkg, Partnership.class, "@Partnership");
       }
+      violations.throwIfAny();
     })
 ```
 

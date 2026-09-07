@@ -19,15 +19,16 @@ DcaRule.check(
     "The identity of an @ExternalUpstream declaration is (name, interaction); internal"
         + " contexts are declared with @Upstream instead",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Set<String> moduleNames = moduleNames(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
         List<String> edges = new ArrayList<>();
         for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
-          require(
+          violations.require(
               !e.name().isBlank(),
               "Context '" + source + "' declares an @ExternalUpstream with a blank name");
-          require(
+          violations.require(
               !moduleNames.contains(e.name()),
               "Context '"
                   + source
@@ -36,7 +37,7 @@ DcaRule.check(
                   + "', which is an internal bounded context module — use @Upstream for"
                   + " internal contexts");
           String edge = e.name() + " :: " + e.interaction();
-          require(
+          violations.require(
               !edges.contains(edge),
               "Context '"
                   + source
@@ -47,6 +48,7 @@ DcaRule.check(
           edges.add(edge);
         }
       }
+      violations.throwIfAny();
     })
 ```
 

@@ -19,6 +19,7 @@ DcaRule.check(
     "Conformism does not suspend domain purity — the domain layer stays free of foreign"
         + " contract types",
     arch -> {
+      CollectedViolations violations = CollectedViolations.withoutHeader();
       Map<String, String> packagesByName = packagesByName(arch);
       for (String pkg : arch.boundedContextPackages()) {
         String source = arch.contextName(pkg);
@@ -28,26 +29,27 @@ DcaRule.check(
             continue;
           }
           for (Upstream.Consumes channel : u.via()) {
-            noClasses()
-                .that()
-                .resideInAPackage(layout.domainPattern(pkg))
-                .should()
-                .dependOnClassesThat()
-                .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
-                .allowEmptyShould(true)
-                .because(
-                    "Context '"
-                        + source
-                        + "' conforms to '"
-                        + u.context()
-                        + "' ("
-                        + channelName(arch, channel)
-                        + "), but conformism does not suspend domain purity — the domain"
-                        + " layer stays free of foreign contract types")
-                .check(arch.classes());
+            violations.addAll(
+                noClasses()
+                    .that()
+                    .resideInAPackage(layout.domainPattern(pkg))
+                    .should()
+                    .dependOnClassesThat()
+                    .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")
+                    .allowEmptyShould(true),
+                arch.classes(),
+                "Context '"
+                    + source
+                    + "' conforms to '"
+                    + u.context()
+                    + "' ("
+                    + channelName(arch, channel)
+                    + "), but conformism does not suspend domain purity — the domain"
+                    + " layer stays free of foreign contract types");
           }
         }
       }
+      violations.throwIfAny();
     })
 ```
 
