@@ -63,4 +63,3 @@ Pattern
 
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)

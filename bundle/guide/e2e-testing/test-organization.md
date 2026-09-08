@@ -10,7 +10,7 @@ tags: [guide, section]
 ### Directory Structure
 
 ```
-src/test-e2e/java/de/sample/aiarchitecture/e2e/
+src/test-e2e/java/com/company/project/e2e/
 ├── BaseE2ETest.java           # Common test setup
 ├── CheckoutGuestE2ETest.java  # Guest checkout flow tests
 ├── CheckoutLoginE2ETest.java  # Authenticated checkout tests

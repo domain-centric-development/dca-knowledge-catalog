@@ -16,12 +16,12 @@ The Domain Service receives the data retrieval as a **functional parameter** (St
 **1. Domain Service with Functional Parameter (Domain Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.domain.service;
+package com.company.project.pricing.domain.service;
 
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.sharedkernel.domain.model.Price;
-import de.sample.aiarchitecture.sharedkernel.domain.model.ProductId;
-import de.sample.aiarchitecture.sharedkernel.marker.tactical.DomainService;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.sharedkernel.domain.model.Price;
+import com.company.project.sharedkernel.domain.model.ProductId;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainService;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -53,12 +53,12 @@ public final class BundleDiscountService implements DomainService {
 **2. Wiring in the Use Case (Application Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.application.calculatebundlediscount;
+package com.company.project.pricing.application.calculatebundlediscount;
 
-import de.sample.aiarchitecture.pricing.application.shared.ProductPriceRepository;
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.pricing.domain.service.BundleDiscountService;
-import de.sample.aiarchitecture.sharedkernel.domain.model.Price;
+import com.company.project.pricing.application.shared.ProductPriceRepository;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.pricing.domain.service.BundleDiscountService;
+import com.company.project.sharedkernel.domain.model.Price;
 
 public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountInputPort {
 
@@ -88,10 +88,10 @@ public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountIn
 If the signature `Function<ProductId, Optional<CategoryDiscount>>` is too generic, a dedicated functional interface can improve readability:
 
 ```java
-package de.sample.aiarchitecture.pricing.domain.service;
+package com.company.project.pricing.domain.service;
 
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.sharedkernel.domain.model.ProductId;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.sharedkernel.domain.model.ProductId;
 import java.util.Optional;
 
 @FunctionalInterface

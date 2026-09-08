@@ -65,5 +65,4 @@ clearing to the caller and is not the sanctioned form.
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

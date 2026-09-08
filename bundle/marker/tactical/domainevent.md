@@ -74,6 +74,5 @@ public record ProductCreated(
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

@@ -38,3 +38,7 @@ declare `@Partnership`
 - [Diagnostic: Display declared context map](/rule/contextmap/diagnostic-display-declared-context-map.md)
 - [Partnership declarations must reference an existing bounded context, never themselves, and must be symmetric](/rule/contextmap/partnership-declarations-must-reference-an-existing-bounded-context-never-themselves-and-must-be-symmetric.md)
 - [Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages](/rule/contextmap/upstream-externalupstream-and-partnership-may-only-be-declared-on-bounded-context-packages.md)
+
+## Discussed in
+
+- [Declaring Contexts and Relationships](/guide/language-mappings/declaring-contexts-and-relationships.md)

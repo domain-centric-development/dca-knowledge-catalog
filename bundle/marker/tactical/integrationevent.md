@@ -91,7 +91,5 @@ public class CartCheckedOutEventPublisher {
 ## Discussed in
 
 - [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

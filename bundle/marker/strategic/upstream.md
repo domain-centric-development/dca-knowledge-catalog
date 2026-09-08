@@ -71,4 +71,5 @@ downstream's domain layer
 ## Discussed in
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [Declaring Contexts and Relationships](/guide/language-mappings/declaring-contexts-and-relationships.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)

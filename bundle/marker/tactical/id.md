@@ -50,7 +50,7 @@ public record ProductId(UUID value) implements Id {
 - [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
+- [Building Blocks](/guide/language-mappings/building-blocks.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

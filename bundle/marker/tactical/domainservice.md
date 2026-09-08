@@ -49,5 +49,4 @@ Software"
 - [Default Rule: Pure Domain Services (90% of Cases)](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md)
 - [Problem Statement](/guide/domain-services-with-data-dependencies/problem-statement.md)
 - [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

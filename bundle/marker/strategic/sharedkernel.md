@@ -54,4 +54,6 @@ import dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships.SharedKe
 - [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [Approach 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/approach-2-strategy-callback-pattern.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
+- [RULES](/guide/readme/rules.md)
 - [Shared Kernel in Spring Modulith](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)

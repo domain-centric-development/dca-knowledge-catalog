@@ -65,4 +65,5 @@ it is not.
 
 ## Discussed in
 
+- [ELEMENTS](/guide/readme/elements.md)
 - [RULES](/guide/readme/rules.md)

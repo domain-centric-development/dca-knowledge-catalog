@@ -10,6 +10,11 @@ tags: [guide, guide]
 
 > **📘 Prerequisites:** This document shows how to implement [Domain-Centric Architecture](/guide/readme.md) using Spring Modulith. Read the main document first for core patterns and rules.
 
+> **☕ Java/Spring specific.** Everything here assumes Spring Boot and Spring Modulith. The .NET
+> equivalents — project boundaries plus ArchUnitNET instead of module verification, an outbox or
+> post-commit dispatch instead of `@TransactionalEventListener`, DI registration instead of component
+> scan — are in [Language Mappings](/guide/language-mappings.md).
+
 ## Sections
 
 - [Introduction](/guide/spring-modulith/introduction.md)

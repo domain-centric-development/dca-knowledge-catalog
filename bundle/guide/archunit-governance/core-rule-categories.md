@@ -7,6 +7,11 @@ resource: dca-guide/archunit-governance.md
 tags: [guide, section]
 ---
 
+Each category below corresponds to one or more rule sets of the library (`layered`/`onion`, `hexagonal`,
+`tactical`, `strategic`, `naming`, `cycles`, `contextmap`, …). The code is what the library runs,
+written out in plain ArchUnit so you can read what a rule checks — and copy its shape for a rule of
+your own.
+
 ### 1. Layer Dependency Rules
 
 Enforce that dependencies only point inward toward the domain.

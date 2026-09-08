@@ -8,5 +8,5 @@
 - [Page Object Pattern](page-object-pattern.md) — Page Objects encapsulate page-specific selectors and interactions, providing:
 - [Related Documentation](related-documentation.md) — Related Documentation
 - [Table of Contents](table-of-contents.md) — Table of Contents
-- [Test Organization](test-organization.md) — src/test-e2e/java/de/sample/aiarchitecture/e2e/
+- [Test Organization](test-organization.md) — src/test-e2e/java/com/company/project/e2e/
 - [Writing E2E Tests](writing-e2e-tests.md) — @DisplayName("Guest Checkout E2E Tests")

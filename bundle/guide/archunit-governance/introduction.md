@@ -9,7 +9,7 @@ tags: [guide, section]
 
 ### What is ArchUnit?
 
-**ArchUnit** is a Java library that allows you to test your architecture using unit tests. It verifies that your code follows defined architectural rules by analyzing compiled classes.
+**ArchUnit** is a Java library that allows you to test your architecture using unit tests. It verifies that your code follows defined architectural rules by analyzing compiled classes. **ArchUnitNET** is its .NET port; the DCA rule catalog exists for both, under the same rule ids (see [.NET: ArchUnitNET](#net-archunitnet)).
 
 **Key Capabilities:**
 - ✅ Enforce layer dependencies

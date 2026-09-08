@@ -5,8 +5,8 @@
 Generated bundle: the DCA implementation guide (full text, as Guide containers + Section nodes), anchored to the reference implementation's marker interfaces and ArchUnit rules.
 
 ### Generated zone (rebuilt from sources)
-- Guides: 10
-- Sections: 106
+- Guides: 11
+- Sections: 117
 - Markers: 29
 - Rules: 120
 - Process: 1

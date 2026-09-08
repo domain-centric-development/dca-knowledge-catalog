@@ -19,8 +19,11 @@ A **DomainGateway** is a narrow, read-only interface in the Domain Layer, phrase
 
 ### Marker Interface
 
+`DomainGateway` is one of the tactical building blocks the `dca-building-blocks` library ships — you
+implement it, you do not write it:
+
 ```java
-package de.sample.aiarchitecture.sharedkernel.marker.tactical;
+package dev.domaincentric.dca.buildingblocks.ddd.tactical;
 
 /**
  * Marker interface for Domain Gateways.
@@ -46,15 +49,15 @@ package de.sample.aiarchitecture.sharedkernel.marker.tactical;
 public interface DomainGateway {}
 ```
 
-**Placement in the Shared Kernel:**
+**Where it sits among the building blocks:**
 
 ```
-sharedkernel/marker/tactical/
-├── DomainService.java
-├── DomainGateway.java          ← NEW
-├── AggregateRoot.java
-├── Entity.java
-├── Value.java
+dev.domaincentric.dca.buildingblocks.ddd.tactical     (the library; .NET: DomainCentric.BuildingBlocks.Ddd.Tactical → IDomainGateway)
+├── DomainService
+├── DomainGateway               ← this one
+├── AggregateRoot
+├── Entity
+├── Value
 └── ...
 ```
 
@@ -71,11 +74,11 @@ sharedkernel/marker/tactical/
 **1. DomainGateway Interface (Domain Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.domain.gateway;
+package com.company.project.pricing.domain.gateway;
 
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.sharedkernel.domain.model.ProductId;
-import de.sample.aiarchitecture.sharedkernel.marker.tactical.DomainGateway;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.sharedkernel.domain.model.ProductId;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainGateway;
 import java.util.Optional;
 
 /**
@@ -90,9 +93,9 @@ public interface CategoryPriceLookup extends DomainGateway {
 **2. Domain Value Object (Domain Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.domain.model;
+package com.company.project.pricing.domain.model;
 
-import de.sample.aiarchitecture.sharedkernel.marker.tactical.Value;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.Value;
 
 public record CategoryDiscount(String categoryName, int discountPercentage) implements Value {
 
@@ -108,13 +111,13 @@ public record CategoryDiscount(String categoryName, int discountPercentage) impl
 **3. Domain Service with DomainGateway (Domain Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.domain.service;
+package com.company.project.pricing.domain.service;
 
-import de.sample.aiarchitecture.pricing.domain.gateway.CategoryPriceLookup;
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.sharedkernel.domain.model.Price;
-import de.sample.aiarchitecture.sharedkernel.domain.model.ProductId;
-import de.sample.aiarchitecture.sharedkernel.marker.tactical.DomainService;
+import com.company.project.pricing.domain.gateway.CategoryPriceLookup;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.sharedkernel.domain.model.Price;
+import com.company.project.sharedkernel.domain.model.ProductId;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainService;
 
 public final class BundleDiscountService implements DomainService {
 
@@ -145,11 +148,11 @@ public final class BundleDiscountService implements DomainService {
 **4. Adapter Implementation (Adapter Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.adapter.outgoing.categorylookup;
+package com.company.project.pricing.adapter.outgoing.categorylookup;
 
-import de.sample.aiarchitecture.pricing.domain.gateway.CategoryPriceLookup;
-import de.sample.aiarchitecture.pricing.domain.model.CategoryDiscount;
-import de.sample.aiarchitecture.sharedkernel.domain.model.ProductId;
+import com.company.project.pricing.domain.gateway.CategoryPriceLookup;
+import com.company.project.pricing.domain.model.CategoryDiscount;
+import com.company.project.sharedkernel.domain.model.ProductId;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -173,11 +176,11 @@ class InMemoryCategoryPriceLookup implements CategoryPriceLookup {
 **5. Wiring in the Use Case (Application Layer)**
 
 ```java
-package de.sample.aiarchitecture.pricing.application.calculatebundlediscount;
+package com.company.project.pricing.application.calculatebundlediscount;
 
-import de.sample.aiarchitecture.pricing.domain.gateway.CategoryPriceLookup;
-import de.sample.aiarchitecture.pricing.domain.service.BundleDiscountService;
-import de.sample.aiarchitecture.sharedkernel.domain.model.Price;
+import com.company.project.pricing.domain.gateway.CategoryPriceLookup;
+import com.company.project.pricing.domain.service.BundleDiscountService;
+import com.company.project.sharedkernel.domain.model.Price;
 
 public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountInputPort {
 

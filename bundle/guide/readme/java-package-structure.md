@@ -34,13 +34,43 @@ com.company.project/
 │                            Spring, JPA, Kafka config, Logging, Security
 │
 ├── sharedkernel/            [SHARED ACROSS ALL CONTEXTS - Keep Minimal]
-│   ├── marker/              DDD markers (tactical/, strategic/) and port interfaces (port/)
+│   ├── application/shared/  Application-specific ports shared by several contexts (IdentityProvider)
 │   ├── domain/model/        Universal value objects (Money, Address, etc.)
 │   └── adapter/outgoing/    Shared adapters (e.g., SpringDomainEventPublisher)
 │
 └── infrastructure/          [GLOBAL INFRASTRUCTURE]
                              Application-wide configuration and setup
+
+Architectural markers (AggregateRoot, UseCase, Repository, @BoundedContext, …) are not part of
+the application: they come from the dca-building-blocks dependency (see Shared Kernel Pattern).
 ```
+
+#### .NET Solution Structure
+
+The same shape in C#: **one project per bounded context**, folders for the layers, PascalCase
+segments. A context is declared by a marker class in its root namespace (C# has no `package-info`).
+
+```
+src/
+├── Company.Project.{Context}/        one assembly per bounded context (namespace Company.Project.{Context})
+│   ├── {Context}Context.cs           [BoundedContext], [Upstream], [Partnership] — the context declaration
+│   ├── Domain/                       Model/, Event/, Service/, Specification/
+│   ├── Application/                  {UseCase}/ or {Feature}/{UseCase}/ — I*InputPort, *UseCase, *Command, *Result
+│   │   └── Shared/                   output ports, context-wide
+│   ├── Adapter/
+│   │   ├── Incoming/                 Web/, Api/, Event/ (call input ports)
+│   │   └── Outgoing/                 Persistence/, Event/, … (implement output ports)
+│   └── Infrastructure/               DI registration: Add{Context}Context()
+├── Company.Project.SharedKernel/     [SharedKernel] marker class; Domain/Model, Application/Shared, shared adapters
+├── Company.Project.Infrastructure/   composition root, cross-cutting concerns
+└── Company.Project.Web/              the host (ASP.NET Core); controllers live in the contexts
+tests/
+└── Company.Project.ArchitectureTests/   DcaArchitectureTest subclass (Debug build), all context assemblies
+```
+
+Building blocks come from `DomainCentric.BuildingBlocks`, the rules from `DomainCentric.ArchRules.Xunit`
+— the same rule ids as the Java library. Every rule speaks of namespaces where the Java text says
+packages; a project boundary per context is the .NET way of making the module boundary physical.
 
 #### Progressive Complexity Principle
 
@@ -298,58 +328,18 @@ com.company.project
 │       └── outgoing
 │
 ├── sharedkernel (Shared across ALL bounded contexts - keep minimal)
-│   ├── marker (All architectural markers consolidated)
-│   │   ├── tactical (DDD tactical patterns)
-│   │   │   ├── Id.java
-│   │   │   │   public interface Id {}  // Base for typed identifiers
-│   │   │   ├── Entity.java
-│   │   │   │   public interface Entity<T extends Entity<T, ID>, ID extends Id> { ID id(); }
-│   │   │   ├── Value.java
-│   │   │   │   public interface Value {}  // Marker for value objects
-│   │   │   ├── AggregateRoot.java
-│   │   │   │   public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> extends Entity<T, ID> {}
-│   │   │   ├── BaseAggregateRoot.java
-│   │   │   │   public abstract class BaseAggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id> implements AggregateRoot<T, ID> {}
-│   │   │   ├── DomainEvent.java
-│   │   │   │   public interface DomainEvent { UUID eventId(); Instant occurredOn(); }
-│   │   │   ├── IntegrationEvent.java
-│   │   │   │   public interface IntegrationEvent { UUID eventId(); Instant occurredOn(); }
-│   │   │   ├── IntegrationEventType.java
-│   │   │   │   @interface IntegrationEventType { String name(); int version() default 1; }  // contract identity as class property
-│   │   │   ├── DomainService.java
-│   │   │   │   public interface DomainService {}
-│   │   │   ├── Factory.java
-│   │   │   │   public interface Factory<T> {}
-│   │   │   └── Specification.java
-│   │   │       public interface Specification<T> { boolean isSatisfiedBy(T t); }
-│   │   ├── strategic (DDD strategic patterns)
-│   │   │   ├── SharedKernel.java      // Package annotation
-│   │   │   ├── BoundedContext.java    // Package annotation
-│   │   │   └── OpenHostService.java   // Marker for OHS adapters
-│   │   └── port (Hexagonal architecture ports)
-│   │       ├── in (Input ports - driving adapters)
-│   │       │   ├── InputPort.java     // Marker for all input ports
-│   │       │   └── UseCase.java
-│   │       │       public interface UseCase<INPUT, OUTPUT> extends InputPort {
-│   │       │         OUTPUT execute(INPUT input);
-│   │       │       }
-│   │       └── out (Output ports - driven adapters)
-│   │           ├── OutputPort.java    // Marker for all output ports
-│   │           ├── Repository.java
-│   │           │   public interface Repository<T extends AggregateRoot<T, ID>, ID extends Id> extends OutputPort {}
-│   │           ├── DomainEventPublisher.java
-│   │           │   public interface DomainEventPublisher extends OutputPort {
-│   │           │     void publish(DomainEvent event);
-│   │           │   }
-│   │           ├── IntegrationEventPublisher.java
-│   │           │   public interface IntegrationEventPublisher extends OutputPort {
-│   │           │     void publish(IntegrationEvent event);  // boundary-crossing facts
-│   │           │   }
+│   │   // Markers, port interfaces and TransactionBoundary are NOT here — they come from the
+│   │   // dca-building-blocks dependency (dev.domaincentric.dca.buildingblocks.ddd.tactical,
+│   │   // .ddd.strategic, .hexagonal.port.in/.out, .application). Only application-specific code:
 │   ├── application
-│   │   └── TransactionBoundary.java   // execution abstraction, NOT a port
-│   │       public interface TransactionBoundary {
-│   │         <T> T inTransaction(Supplier<T> work);  // explicit transaction boundary
-│   │       }
+│   │   └── shared
+│   │       └── IdentityProvider.java   // project-specific shared port: extends OutputPort
+│   ├── adapter
+│   │   └── outgoing/event
+│   │       └── SpringDomainEventPublisher.java   // implements DomainEventPublisher
+│   ├── infrastructure
+│   │   └── transaction
+│   │       └── SpringTransactionBoundary.java    // implements TransactionBoundary
 │   └── domain
 │       ├── model (Universal value objects)
 │       │   ├── Money.java
@@ -436,6 +426,7 @@ APPLICATION LAYER
 - **Results**: `*Result` (e.g., `CreateOrderResult`) — top level only; part records nested in the result are named by content (`CartItemSummary`, `LineItemData`, `ProfileView`), never `*Result`
 - **Assemblers**: `*Assembler` when result assembly outgrows a static factory or is shared by several use cases (e.g., `ProductArticleAssembler` in `application/shared`) — never `*Mapper`, `*Converter` or `*Helper` in the application layer
 - **Adapters**: `*Adapter` or specific suffixes (e.g., `InMemoryOrderRepository`, `OrderPageController`, `OrderMcpToolProvider`)
+- **Host-language spelling**: marker and port names follow the host language's convention — Java `AggregateRoot`, `UseCase<I, O>`, `OrderRepository`; C# `IAggregateRoot`, `IUseCase<TIn, TOut>`, `IOrderRepository` with `ExecuteAsync`/`FindByIdAsync`. The roles, folders and rule ids are the same; see [Language Mappings](/guide/language-mappings.md)
 
 **Benefits:**
 - ✅ **High Cohesion** - All files for one use case are together
@@ -476,19 +467,11 @@ mirrored: `Order` serves `ordering`, `fulfilment` and `reporting` alike. See
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
-- [@OpenHostService](/marker/strategic/openhostservice.md)
+- [@Partnership](/marker/strategic/partnership.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)
+- [@Upstream](/marker/strategic/upstream.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
-- [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)
-- [DomainEvent](/marker/tactical/domainevent.md)
-- [DomainService](/marker/tactical/domainservice.md)
-- [Entity<T, ID>](/marker/tactical/entity.md)
-- [Factory](/marker/tactical/factory.md)
-- [Id](/marker/tactical/id.md)
-- [IntegrationEvent](/marker/tactical/integrationevent.md)
-- [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 - [Specification<T>](/marker/tactical/specification.md)

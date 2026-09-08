@@ -27,27 +27,40 @@ Two properties matter more than the mechanism:
    a rule enforced that someone believes is switched off. Identifiers are therefore written in full
    (`DCA-NAM-002`, never the abbreviated `NAM-002`), and an unknown one aborts the run.
 
-A rule library implements this as a selection object plus, for teams that would rather not touch test
-code, a properties file:
+The library implements this as `DcaRuleSelection` — overridden in the test class — plus, for teams
+that would rather not touch test code, a `dca-archunit.properties` file on the test class path:
 
 ```java
-selection = RuleSelection.all()
-    .onlySets("cycles", "layered", "hexagonal")             // scope
-    .excluding("DCA-NAM-002", "no DI framework in this project")   // off, with the reason
-    .warning("DCA-TAC-009", "value objects are being made final")  // reported, does not fail
-    .ignoringViolationsMatching("DCA-STR-003", ".*legacy.*")       // documented exception
-    .frozen("DCA-ONI-002");                                        // baseline
+class ArchitectureTest extends DcaArchitectureTest {
+    @Override
+    protected DcaRuleSelection additionalSelection() {
+        return DcaRuleSelection.all()
+            .onlySets("cycles", "layered", "hexagonal")             // scope
+            .excluding("DCA-NAM-002", "no DI framework in this project")   // off, with the reason
+            .warning("DCA-TAC-009", "value objects are being made final")  // reported, does not fail
+            .ignoringViolationsMatching("DCA-STR-003", ".*legacy.*")       // documented exception
+            .frozen("DCA-ONI-002")                                         // baseline
+            .withFreezeStore(Path.of("arch/frozen"));
+    }
+}
 ```
 
 ```properties
-rules.sets              = cycles,layered,hexagonal
-rules.off               = DCA-NAM-002
-rule.DCA-NAM-002.reason = no DI framework in this project
-rules.warn              = DCA-TAC-009
-rule.DCA-STR-003.ignore = .*legacy.*
-rule.DCA-STR-003.ignore.1 = Generated.{1,3}Client
-rules.freeze            = DCA-ONI-002
+dca.rules.sets              = cycles,layered,hexagonal
+dca.rules.off               = DCA-NAM-002
+dca.rule.DCA-NAM-002.reason = no DI framework in this project
+dca.rules.warn              = DCA-TAC-009
+dca.rules.warn.sets         = naming
+dca.rule.DCA-STR-003.ignore = .*legacy.*
+dca.rule.DCA-STR-003.ignore.1 = Generated.{1,3}Client
+dca.rules.freeze            = DCA-ONI-002
+dca.rules.freeze.store      = arch/frozen
 ```
+
+Both sources combine: the file is the base, `additionalSelection()` is merged on top, and the later
+entry wins per rule id. Override `additionalSelection()`, not `selection()` — the latter *replaces*
+the file. A lowered or excluded rule stays in the report, marked with the reason. The .NET library reads
+the same file next to the test assembly; it has no `freeze` dial (see [.NET: ArchUnitNET](#net-archunitnet)).
 
 An `ignore` value is one regular expression as written — commas are part of it — and a second
 exception for the same rule uses an indexed key (`.ignore.1`, `.ignore.2`, …). Lists of rule ids and

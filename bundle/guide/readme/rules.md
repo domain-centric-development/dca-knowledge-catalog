@@ -123,7 +123,7 @@ START: Something happened in the domain
 
 #### Event Publishing Rules
 - Use cases call DomainEventPublisher (Output Port) to publish events
-- DomainEventPublisher interface in marker/port/out
+- `DomainEventPublisher` is the library port (`hexagonal.port.out`); the application implements it once, in the shared kernel
 - DomainEventPublisherAdapter in adapter/outgoing/messaging
 - Adapter converts domain events to integration events via mapper
 - Message broker (Kafka, RabbitMQ) used for async delivery

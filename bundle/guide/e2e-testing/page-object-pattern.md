@@ -27,7 +27,7 @@ Page Objects encapsulate page-specific selectors and interactions, providing:
 ### Structure
 
 ```
-src/test-e2e/java/de/sample/aiarchitecture/e2e/pages/
+src/test-e2e/java/com/company/project/e2e/pages/
 ├── BasePage.java              # Common methods for all pages
 ├── ProductCatalogPage.java    # Product listing interactions
 ├── ProductDetailPage.java     # Product detail and add to cart

@@ -68,7 +68,7 @@ and needs no method of its own.
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
+- [Ports and Use Cases](/guide/language-mappings/ports-and-use-cases.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
