@@ -54,6 +54,7 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `apiSubpackage` | `api` | `withApiSubpackage(...)` | Sub-package of a module's *synchronous* published contract, e.g. `"api"` (default) or `"contract"`. Together with `withEventsSubpackage(String)` it is the only part of a module another module's adapters may depend on; the context-map rules and renderer use the same name for the channel. |
 | `eventsSubpackage` | `events` | `withEventsSubpackage(...)` | Sub-package of a module's *asynchronous* published contract — its integration events — e.g. `"events"` (default) or `"published"`. |
 | `useCaseSuffix` | `UseCase` | `withUseCaseSuffix(...)` | Suffix of use-case implementations, e.g. `"UseCase"` or `"ApplicationService"`. |
+| `controllerSuffix` | `Controller` | `withControllerSuffix(...)` | Suffix of MVC (server-rendered) controllers, e.g. `"Controller"` (default) or `"Page"`. Read by the naming rule for classes carrying the configured `@Controller` annotation and by the rule that keeps controllers away from repositories; the REST suffix is configured separately. |
 | `restControllerSuffix` | `Resource` | `withRestControllerSuffix(...)` | Suffix of REST controllers, e.g. `"Resource"` or `"Controller"`. |
 
 ## Third-party packages the domain may depend on (Java default)
@@ -170,6 +171,7 @@ Create the default layout with `DcaLayout.ForRootNamespace(string)`.
 | `ApiSegment` | `Api` | `WithApiSegment(...)` |
 | `EventsSegment` | `Events` | `WithEventsSegment(...)` |
 | `UseCaseSuffix` | `UseCase` | `WithUseCaseSuffix(...)` |
+| `ControllerSuffix` | `Controller` | `WithControllerSuffix(...)` |
 | `RestControllerSuffix` | `Controller` | `WithRestControllerSuffix(...)` |
 
 ### Third-party namespaces the domain may depend on (.NET default)

@@ -4,7 +4,7 @@ id: DCA-HEX-003
 title: Controllers and Resources must never access repositories directly
 rule: "Controllers must go through use cases (input ports), never directly to repositories."
 constraint: Controllers and Resources must never access repositories directly.
-selects: "Classes anywhere on the classpath under scan whose simple name ends with the literal Controller or with the configured REST-controller suffix. Selected by name, not by annotation, and not restricted to adapter packages."
+selects: "Classes anywhere on the classpath under scan whose simple name ends with the configured controller suffix or with the configured REST-controller suffix. Selected by name, not by annotation, and not restricted to adapter packages."
 checks: "No dependency on a class assignable to Repository - the port interface or an implementation. Other output ports (Store, event publishers) are not checked; a controller that reaches a repository through another class is not reported. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-003"
 status: enforced
@@ -16,7 +16,7 @@ tags: [hexagonal, archunit]
 
 ## Selection
 
-Classes anywhere on the classpath under scan whose simple name ends with the literal Controller or with the configured REST-controller suffix. Selected by name, not by annotation, and not restricted to adapter packages.
+Classes anywhere on the classpath under scan whose simple name ends with the configured controller suffix or with the configured REST-controller suffix. Selected by name, not by annotation, and not restricted to adapter packages.
 
 ## Check
 
@@ -24,7 +24,7 @@ No dependency on a class assignable to Repository - the port interface or an imp
 
 ## .NET reading
 
-**Selection.** Controller classes anywhere in the loaded assemblies: a class whose name ends with the literal Controller or with the configured REST-controller suffix, one deriving from the configured controller or page-model base class, or one carrying the configured API-controller attribute. Not restricted to adapter namespaces.
+**Selection.** Controller classes anywhere in the loaded assemblies: a class whose name ends with the configured controller suffix or the configured REST-controller suffix, one deriving from the configured controller or page-model base class, or one carrying the configured API-controller attribute. Not restricted to adapter namespaces.
 
 **Check.** No dependency on a type assignable to IRepository - the port interface or an implementation. Other output ports (IStore, event publishers) are not checked; a controller that reaches a repository through another class is not reported. An empty selection passes.
 
@@ -38,7 +38,7 @@ DcaRule.of(
         arch ->
             noClasses()
                 .that()
-                .haveSimpleNameEndingWith("Controller")
+                .haveSimpleNameEndingWith(layout.controllerSuffix())
                 .or()
                 .haveSimpleNameEndingWith(layout.restControllerSuffix())
                 .should()
@@ -47,8 +47,8 @@ DcaRule.of(
                 .allowEmptyShould(true))
     .selecting(
         "Classes anywhere on the classpath under scan whose simple name ends with the"
-            + " literal Controller or with the configured REST-controller suffix. Selected by"
-            + " name, not by annotation, and not restricted to adapter packages.")
+            + " configured controller suffix or with the configured REST-controller suffix."
+            + " Selected by name, not by annotation, and not restricted to adapter packages.")
     .checking(
         "No dependency on a class assignable to Repository - the port interface or an"
             + " implementation. Other output ports (Store, event publishers) are not checked; a"

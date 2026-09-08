@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-USE-009
 title: Use cases that save an aggregate must publish its domain events
-rule: "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be published out of context. Publishing belongs after the save, in the use case that owns the unit of work - even when the action raised no event. Checked per entry path, following calls within the use case class: every entry point that reaches a save - a method callable from outside the class, or one nothing in the class calls - must also reach a publication; a wrapper that publishes does not cover a direct call of the public method it wraps, and a helper two methods share does not connect them. That the publication follows the save and concerns the same aggregate is not established statically."
+rule: "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be published out of context. Publishing belongs after the save, in the use case that owns the unit of work - even when the action raised no event. Checked per entry path, following calls within the use case class: every entry point that reaches a save - a method callable from outside the class, or one nothing in the class calls - must also reach a publication; a wrapper that publishes does not cover a direct call of the public method it wraps, and a helper two methods share does not connect them. That the publication follows the save and concerns the same aggregate is not established statically. Only DomainEventPublisher.publishAndClearEvents counts as a publication: iterating domainEvents() and calling publish(event), even followed by clearDomainEvents(), separates dispatch from acknowledgement and is not accepted."
 constraint: Use cases that save an aggregate must publish its domain events.
 selects: "Non-interface classes in <module>.application.. whose simple name ends with the configured use-case suffix."
 checks: "For every method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes."
@@ -43,7 +43,9 @@ DcaRule.of(
             + " does not cover a direct call of the public method it wraps, and a helper two methods"
             + " share does not connect them. That the"
             + " publication follows the save and concerns the same aggregate is not established"
-            + " statically",
+            + " statically. Only DomainEventPublisher.publishAndClearEvents counts as a publication:"
+            + " iterating domainEvents() and calling publish(event), even followed by"
+            + " clearDomainEvents(), separates dispatch from acknowledgement and is not accepted",
         arch ->
             classes()
                 .that()
