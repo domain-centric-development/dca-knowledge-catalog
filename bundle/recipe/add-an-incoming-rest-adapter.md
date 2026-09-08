@@ -15,6 +15,15 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 5. **Stay in your context** — an incoming adapter accesses only its own bounded context (event consumers and Open Host Services are the sanctioned exceptions).
 6. **Verify** — `./gradlew test-architecture`.
 
+## Server-rendered page instead of REST
+
+The same recipe with a different edge. A `{Name}PageController` in `adapter/incoming/web/` depends on the same input ports; what changes is the shape of what goes in and out:
+
+- **View models instead of `*Response`** — the controller maps the `{Name}Result` to a view model that carries exactly what the template renders (formatted amounts, labels, flags), placed next to the controller ([ViewModel](/template/view-model.md)). Templates never see a `Result`, let alone an aggregate.
+- **POST + redirect for every state change** — a command use case is reached only from a form submitted with `POST`; the handler redirects to a `GET` page afterwards. A link that changes state is the pitfall [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md).
+- **Form records validated in the adapter** — the request binds to a `{Name}Form` record with bean-validation annotations; the adapter checks it, re-renders the page with errors on failure, and builds the `{Name}Command` from it on success. Business rules still live in the domain — the form validates shape, not meaning.
+- **Name and place** — the class ends with `Controller`, lives under the web package, and never touches a repository. Generate from the [page controller template](/template/page-controller.md).
+
 ## Rules to satisfy (build-time checklist)
 
 - [REST controllers must end with `Resource`](/rule/naming/rest-controllers-must-end-with-resource-rest-best-practice.md)
@@ -29,7 +38,7 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 ## Anchors
 
 - Pitfalls: [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) · [CSRF-exempt API that accepts cookies](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
-- Template: [REST resource skeleton](/template/rest-resource.md) · AI-facing sibling: [MCP tool provider skeleton](/template/mcp-tool-provider.md)
+- Template: [REST resource skeleton](/template/rest-resource.md) · web sibling: [Page controller](/template/page-controller.md) with [ViewModel](/template/view-model.md) · AI-facing sibling: [MCP tool provider skeleton](/template/mcp-tool-provider.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Layer rules](/guide/readme/rules.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
 - The use case this adapter drives: [Add a use case](/recipe/add-a-use-case.md)

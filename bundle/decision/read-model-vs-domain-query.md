@@ -22,7 +22,8 @@ Ask, in order:
 An `application/{usecasename}/` folder with a `{Name}Query`, a `{Name}Result`, and a use case that loads via the aggregate's repository and maps to the result. Same model, immediate consistency, no projection machinery.
 
 - **When:** the domain model can answer it; reads and writes have similar needs; no proven performance problem.
-- Build it: [Add a use case](/recipe/add-a-use-case.md) (pick the read/`Query` path) · shape: [Layer elements](/guide/readme/elements.md)
+- Build it: [Add a use case](/recipe/add-a-use-case.md) (pick the read/`Query` path)
+- **Example:** a list page shows "12 open items" above the list. The counter is a field of the list query's result — `ListTasksResult` with `List<TaskSummary> tasks` and `int openCount` — computed in the same use case from the same repository call. It is not a `CountOpenTasks` use case of its own (one page, one query) and not a read model (nothing to project, no skew between reads and writes). · shape: [Layer elements](/guide/readme/elements.md)
 
 ### Dedicated read model / CQRS split
 

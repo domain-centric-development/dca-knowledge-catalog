@@ -15,17 +15,9 @@ package {basePackage}.{context}.application.{usecasename};
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import {basePackage}.{context}.application.shared.{Aggregate}Repository;
+import {basePackage}.{context}.application.shared.Test{Aggregate}Repository;
+import {basePackage}.{context}.application.shared.TestDomainEventPublisher;
 import {basePackage}.{context}.domain.{aggregate}.{Aggregate};
-import {basePackage}.{context}.domain.{aggregate}.{Aggregate}Id;
-import dev.domaincentric.dca.buildingblocks.hexagonal.port.out.DomainEventPublisher;
-import dev.domaincentric.dca.buildingblocks.ddd.tactical.AggregateRoot;
-import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -65,49 +57,80 @@ class {Name}UseCaseTest {
       assertTrue(repository.findById(aggregate.id()).isPresent());
     }
   }
+}
+```
 
-  // Hand-written fake output ports — no Mockito.
+## Shared test doubles (`src/test/java/.../{context}/application/shared/`)
 
-  private static class Test{Aggregate}Repository implements {Aggregate}Repository {
+The fakes are top-level classes in the **test** source set, next to the ports they double, so every use-case
+test of the context reuses the same two files. With several use cases, private inner copies would otherwise
+multiply — one drifting fake repository per test class. They are `public` only because the tests that use
+them live in the sibling packages `application/{usecasename}`; being test code, they never reach production.
 
-    private final Map<{Aggregate}Id, {Aggregate}> store = new ConcurrentHashMap<>();
+### `Test{Aggregate}Repository.java`
 
-    @Override
-    public Optional<{Aggregate}> findById({Aggregate}Id id) {
-      return Optional.ofNullable(store.get(id));
-    }
+```java
+package {basePackage}.{context}.application.shared;
 
-    @Override
-    public {Aggregate} save({Aggregate} aggregate) {
-      store.put(aggregate.id(), aggregate);
-      return aggregate;
-    }
+import {basePackage}.{context}.domain.{aggregate}.{Aggregate};
+import {basePackage}.{context}.domain.{aggregate}.{Aggregate}Id;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-    @Override
-    public void deleteById({Aggregate}Id id) {
-      store.remove(id);
-    }
-    // implement the remaining domain-language finders the port declares
+/** Hand-written fake of the repository port — a real Map store, no Mockito. */
+public class Test{Aggregate}Repository implements {Aggregate}Repository {
+
+  private final Map<{Aggregate}Id, {Aggregate}> store = new ConcurrentHashMap<>();
+
+  @Override
+  public Optional<{Aggregate}> findById({Aggregate}Id id) {
+    return Optional.ofNullable(store.get(id));
   }
 
-  private static class TestDomainEventPublisher implements DomainEventPublisher {
+  @Override
+  public {Aggregate} save({Aggregate} aggregate) {
+    store.put(aggregate.id(), aggregate);
+    return aggregate;
+  }
 
-    private final List<DomainEvent> published = new ArrayList<>();
+  @Override
+  public void deleteById({Aggregate}Id id) {
+    store.remove(id);
+  }
+  // implement the remaining domain-language finders the port declares
+}
+```
 
-    @Override
-    public void publish(DomainEvent event) {
-      published.add(event);
-    }
+### `TestDomainEventPublisher.java`
 
-    @Override
-    public void publishAndClearEvents(AggregateRoot<?, ?> aggregate) {
-      published.addAll(aggregate.domainEvents());
-      aggregate.clearDomainEvents();
-    }
+```java
+package {basePackage}.{context}.application.shared;
 
-    List<DomainEvent> published() {
-      return published;
-    }
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.AggregateRoot;
+import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
+import dev.domaincentric.dca.buildingblocks.hexagonal.port.out.DomainEventPublisher;
+import java.util.ArrayList;
+import java.util.List;
+
+/** Hand-written fake of the publisher port — records what was published. */
+public class TestDomainEventPublisher implements DomainEventPublisher {
+
+  private final List<DomainEvent> published = new ArrayList<>();
+
+  @Override
+  public void publish(DomainEvent event) {
+    published.add(event);
+  }
+
+  @Override
+  public void publishAndClearEvents(AggregateRoot<?, ?> aggregate) {
+    published.addAll(aggregate.domainEvents());
+    aggregate.clearDomainEvents();
+  }
+
+  public List<DomainEvent> published() {
+    return published;
   }
 }
 ```

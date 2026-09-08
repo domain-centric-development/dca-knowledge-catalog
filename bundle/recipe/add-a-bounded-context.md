@@ -12,7 +12,7 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 
 ## Steps
 
-1. **Create the package** `{boundedcontext}/` at the top level (a Spring Modulith module boundary) and annotate it with `@BoundedContext(name = "...", description = "...")`.
+1. **Create the package** `{boundedcontext}/` — at the top level or below a grouping package; contexts are discovered by the annotation at any depth — and declare it in `package-info.java` with `@BoundedContext(name = "...", description = "...")` ([package-info template](/template/bounded-context-package-info.md)).
 2. **Lay out the layers** inside it: `domain/`, `application/` (with `shared/` for output ports), `adapter/incoming/`, `adapter/outgoing/`, and an optional per-context `infrastructure/`. Package by domain concept, never by technical bucket (`entities/`, `util/`).
 3. **Keep the domain framework-free** — no cross-context imports. Reference other contexts only through their Open Host Service ([Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)) or by reacting to their integration events ([Publish a cross-context event](/recipe/publish-a-cross-context-event.md)).
 4. **Seed the first slice** — one aggregate ([Add an aggregate](/recipe/add-an-aggregate.md)), one use case ([Add a use case](/recipe/add-a-use-case.md)), one incoming adapter ([Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)).
@@ -31,6 +31,7 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 ## Anchors
 
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
+- Template: [Bounded context declaration (package-info.java)](/template/bounded-context-package-info.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Then bootstrap the shared kernel and rule suite first if this is a greenfield app: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md)

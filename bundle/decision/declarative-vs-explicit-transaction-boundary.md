@@ -15,6 +15,7 @@ Does the use case call an output port that **may leave the process** — another
 | Writes; all ports local (repositories, stores, publishers) | **Declarative** — class-level `@Transactional` (.NET: a decorator/pipeline around `IUseCase`) | Shortest code, whole method atomic, nothing to get wrong |
 | Writes; also reads from a remote-capable port | **Explicit** — remote reads first, then `transactionBoundary.inTransaction(() -> { load; mutate; save; publish; })` | The remote round trip must not hold a connection; a rollback could not undo it anyway |
 | Writes; needs a remote **effect** (charge, notify) | Explicit boundary for the local part; the effect runs **after commit** as a reaction to an integration event | Retry and idempotency belong to the consumer, not inside the transaction |
+| Bulk command without `save` (delete all, archive before date) | **Declarative** `@Transactional`, no publisher | Nothing is loaded or saved per aggregate, so the save-then-publish rule does not apply; the port method is the whole unit of work |
 | Read-only | **None** | Nothing to make atomic; remote reads must not be wrapped |
 
 ## What the rules enforce
@@ -36,4 +37,5 @@ Moving the transactional part into a dedicated handler behind a decorator, so th
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - Rules: [Use cases that publish domain events must have a transaction boundary](/rule/usecase/use-cases-that-publish-domain-events-must-have-a-transaction-boundary.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md) · [Application layer must not use persistence or transaction frameworks](/rule/dotnet/application-layer-must-not-use-persistence-or-transaction-frameworks.md)
 - Guide: [Layer rules](/guide/readme/rules.md)
+- Recipe: [Add a bulk operation](/recipe/add-a-bulk-operation.md)
 - Pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Publishing domain events without a transaction](/pitfall/publishing-domain-events-without-a-transaction.md)

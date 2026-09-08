@@ -94,8 +94,70 @@ remote-capable port, drop the annotation, do the remote reads first and wrap ste
 blocks' `application` package — it is not an output port). See
 [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md).
 
+## Read-only variant (`{Name}Query`)
+
+A query use case answers a question and changes nothing. It carries no `@Transactional` and no
+`DomainEventPublisher` — there is no aggregate to save, so there are no events to publish. Its only
+collaborators are the repository or a dedicated read port.
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+import dev.domaincentric.dca.buildingblocks.hexagonal.port.in.UseCase;
+
+/** Input port for the {Name} query (driving/primary port). */
+public interface {Name}InputPort extends UseCase<{Name}Query, {Name}Result> {
+    @Override
+    {Name}Result execute({Name}Query input);
+}
+```
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+/** Immutable query carrying the criteria of the question. */
+public record {Name}Query(
+    // domain-typed criteria, e.g. CustomerId customerId
+) {}
+```
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+import {basePackage}.{context}.application.shared.{Aggregate}Repository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class {Name}UseCase implements {Name}InputPort {
+
+    private final {Aggregate}Repository repository;   // repository or read port only — no publisher
+
+    public {Name}UseCase({Aggregate}Repository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public {Name}Result execute({Name}Query input) {
+        // 1. read via the output port
+        // 2. assemble {Name}Result: values only (static from(...)), never the aggregate
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+}
+```
+
+The `{Name}Result` record is the same as above. If the projection outgrows the aggregate, read from a
+read model instead ([Add a read model](/recipe/add-a-read-model.md)).
+
+> **Bulk command without `save`.** A command that calls a set-level method on the port — `repository.deleteAll()`,
+> `repository.archiveAllBefore(cutoff)` — loads and saves no aggregate and registers no domain event, so it needs
+> no `DomainEventPublisher`: `DCA-USE-009` ([Use cases that save an aggregate must publish its domain
+> events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)) hangs on `save`, not on
+> the command shape. It still writes, so keep `@Transactional`. See [Add a bulk operation](/recipe/add-a-bulk-operation.md)
+> and [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md).
+
 ## Realizes / governed by
 
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
 - Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
-- Recipe: [Add a use case](/recipe/add-a-use-case.md)
+- Rules: [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
+- Recipe: [Add a use case](/recipe/add-a-use-case.md) · [Add a bulk operation](/recipe/add-a-bulk-operation.md) · [Add a read model](/recipe/add-a-read-model.md)

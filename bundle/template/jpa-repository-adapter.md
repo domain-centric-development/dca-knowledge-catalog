@@ -121,19 +121,21 @@ public class Jpa{Name}RepositoryAdapter implements {Name}Repository {
     }
 
     private {Name} toDomain(final {Name}JpaEntity entity) {
-        // reconstitute the aggregate; then clear domain events raised during reconstitution
+        // rebuild through the reconstitution factory — it registers no event, so nothing to clear
+        return {Name}.reconstitute(new {Name}Id(entity.getId()) /*, entity.getStatus(), lines... */);
     }
 }
 ```
 
 `@Repository` is Spring's stereotype on the *adapter* (a wired bean), never on the port. Gate this adapter and its in-memory sibling on complementary profiles (`@Profile("!inmemory")` here, `@Profile("inmemory")` there) so exactly one bean exists — `@Primary` would select this one even under the in-memory profile, because it ranks *registered* beans rather than gating registration. Transaction boundaries can also sit at the use-case level; reads use `readOnly = true`.
 
-**Mapping keeps the domain persistence-free.** The aggregate carries no JPA annotations; the entity carries no invariants. If the aggregate has no setters (it usually shouldn't), reconstitution rebuilds it through its factory/constructor rather than mutating the entity. The mapper must contain *no* business logic — computing state during a save is a [business-logic-in-adapter](/pitfall/business-logic-in-adapter.md) smell. Putting `@Entity`/`jakarta.persistence` on the aggregate itself is a [framework-leak-in-domain](/pitfall/framework-leak-in-domain.md).
+**Mapping keeps the domain persistence-free.** The aggregate carries no JPA annotations; the entity carries no invariants. The aggregate has no setters, so the mapper rebuilds it through `{Name}.reconstitute(...)`, never through `create(...)`: `create` enforces creation invariants and registers `{Name}Created`, which the next `save()` would publish as a phantom event for an aggregate that already exists ([Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md)). Because `reconstitute` registers nothing, the mapper has no events to clear. The mapper must contain *no* business logic — computing state during a save is a [business-logic-in-adapter](/pitfall/business-logic-in-adapter.md) smell. Putting `@Entity`/`jakarta.persistence` on the aggregate itself is a [framework-leak-in-domain](/pitfall/framework-leak-in-domain.md).
 
 ## Realizes / governed by
 
 - Marker: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
 - Rules: [Repository Interfaces should extend Repository Marker Interface](/rule/tactical/repository-interfaces-should-extend-repository-marker-interface.md) · [Repository Interfaces must reside in application output port package](/rule/tactical/repository-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md) · [Repository Implementations must reside in adapter.outgoing package](/rule/tactical/repository-implementations-must-reside-in-adapter-outgoing-package.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md) · [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md) · [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/outgoing-adapters-must-only-use-outbound-ports-not-infrastructure-implementations.md)
 - Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/readme/rules.md)
-- Sibling template: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
+- Sibling templates: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md) · [Aggregate root skeleton](/template/aggregate-root.md) — where `reconstitute` comes from
+- Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md)
 - Recipe: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
