@@ -318,12 +318,31 @@ sharedkernel/                      # @SharedKernel on package-info.java
 │       ├── NotSpecification.java
 │       └── SpecificationVisitor.java
 │
-├── adapter/outgoing/event/        # Shared adapters
-│   └── SpringDomainEventPublisher.java   # implements DomainEventPublisher (from the library)
-│
-└── infrastructure/transaction/
-    └── SpringTransactionBoundary.java    # implements TransactionBoundary (from the library)
+└── (no adapters: the DomainEventPublisher and TransactionBoundary implementations
+     come from the dca-spring dependency — see below)
 ```
+
+**The runtime adapters are a dependency too.** The two ports that every use case needs at runtime —
+`DomainEventPublisher` and `TransactionBoundary` — have Spring implementations in
+`dev.domaincentric:dca-spring`: `SpringDomainEventPublisher` (over `ApplicationEventPublisher`, dispatch
+first, clear afterwards) and `SpringTransactionBoundary` (over `TransactionTemplate`, `REQUIRED`
+propagation, nested failures mark the transaction rollback-only), plus an `InMemoryTransactionBoundary`
+for tests. A Spring Boot application needs nothing but the dependency: the auto-configuration registers
+both beans, the boundary once a `PlatformTransactionManager` exists, and backs off where the application
+defines a port itself. An application on another framework writes the two classes in its shared kernel
+(`sharedkernel/adapter/outgoing/event/`, `sharedkernel/infrastructure/transaction/`).
+
+```kotlin
+implementation("dev.domaincentric:dca-spring:0.1.0")
+```
+
+> **The silent failure this guards.** `spring-boot-starter` and `spring-modulith-starter-core` bring no
+> transaction manager and not even Boot's `TransactionAutoConfiguration` (it lives in
+> `spring-boot-transaction`). In that in-memory starting configuration `@Transactional` compiles and does
+> nothing: no proxy, no transaction, and every `@TransactionalEventListener` / `@ApplicationModuleListener`
+> is skipped without a log line — while the rules stay green. Until a database arrives, add
+> `spring-boot-transaction`, a small `PlatformTransactionManager` bean of your own (deliberately visible
+> code, not a library class) and `spring-modulith-events-api` for the listener annotation itself.
 
 **Port Interface Hierarchy** (defined by the library):
 ```
@@ -478,7 +497,7 @@ The naming is part of the Ubiquitous Language. A reader should know from the int
 ✅ **Include:**
 - **Universal value objects** used by multiple contexts (Money, Price, shared IDs)
 - **Application-specific shared ports** with identical meaning in every context (an `IdentityProvider`)
-- **Shared adapters** that implement a library port once for the whole application (`SpringDomainEventPublisher`, `SpringTransactionBoundary`)
+- **Shared adapters** that implement a library port once for the whole application — on Spring these come from `dca-spring` (`SpringDomainEventPublisher`, `SpringTransactionBoundary`); other frameworks write them here
 - **Specification pattern implementations** (CompositeSpecification, And/Or/Not specifications)
 - **Cross-cutting domain concepts** that have identical meaning everywhere
 

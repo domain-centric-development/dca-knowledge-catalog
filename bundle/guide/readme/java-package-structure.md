@@ -36,7 +36,7 @@ com.company.project/
 ├── sharedkernel/            [SHARED ACROSS ALL CONTEXTS - Keep Minimal]
 │   ├── application/shared/  Application-specific ports shared by several contexts (IdentityProvider)
 │   ├── domain/model/        Universal value objects (Money, Address, etc.)
-│   └── adapter/outgoing/    Shared adapters (e.g., SpringDomainEventPublisher)
+│   └── adapter/outgoing/    Shared adapters only where no library ships them (Spring: dca-spring does)
 │
 └── infrastructure/          [GLOBAL INFRASTRUCTURE]
                              Application-wide configuration and setup
@@ -334,12 +334,8 @@ com.company.project
 │   ├── application
 │   │   └── shared
 │   │       └── IdentityProvider.java   // project-specific shared port: extends OutputPort
-│   ├── adapter
-│   │   └── outgoing/event
-│   │       └── SpringDomainEventPublisher.java   // implements DomainEventPublisher
-│   ├── infrastructure
-│   │   └── transaction
-│   │       └── SpringTransactionBoundary.java    // implements TransactionBoundary
+│   │   // DomainEventPublisher / TransactionBoundary implementations: dca-spring (auto-configured);
+│   │   // a non-Spring application writes them under adapter/outgoing/event and infrastructure/transaction
 │   └── domain
 │       ├── model (Universal value objects)
 │       │   ├── Money.java

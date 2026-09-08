@@ -21,6 +21,7 @@ A use case that saves and publishes but carries neither `@Transactional` nor an 
 Local use cases: class-level `@Transactional`. Use cases that also read from remote-capable ports: the explicit `transactionBoundary.inTransaction(...)` around load–mutate–save–publish, with the remote reads before it. Read-only use cases publish nothing and need no transaction.
 
 - Decision: [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md)
+- The annotation alone is not enough in an in-memory application: [Declarative transaction without a transaction manager](/pitfall/declarative-transaction-without-a-transaction-manager.md)
 
 ## Anchors
 

@@ -14,7 +14,7 @@ Does the consumer live in another bounded context or an external system? Then yo
 
 1. **Define the event** as a record implementing `DomainEvent`, in the aggregate's `domain/` package. Name it past tense (`{Something}Happened`). Include the `occurredOn` timestamp; no `version` field (integration events declare their version via `@IntegrationEventType`, domain events have none).
 2. **Register it on the aggregate** during the state change that causes it — never construct-and-forget. Generate from the [domain-event template](/template/domain-event.md).
-3. **Publish after persistence** — the use case saves the aggregate, then publishes and clears the registered events. No events escape before the transaction commits.
+3. **Publish after persistence** — the use case saves the aggregate, then publishes and clears the registered events (`publishAndClearEvents`, inside `@Transactional` or a `TransactionBoundary` block). No events escape before the transaction commits. On Spring the publisher is `SpringDomainEventPublisher` from the `dca-spring` dependency, auto-configured — nothing to write; check that a transaction manager exists, or the after-commit consumer is skipped silently ([pitfall](/pitfall/declarative-transaction-without-a-transaction-manager.md)).
 4. **Consume in-context** — a listener in the same context reacts. Depend on the event type, not the publishing use case; for Spring Modulith, invert the dependency so the listener owns the interface ([Module communication](/guide/spring-modulith/module-communication.md)).
 5. **Keep the domain framework-free** — no Spring annotations on the event record itself.
 6. **Verify** — `./gradlew test-architecture`.
