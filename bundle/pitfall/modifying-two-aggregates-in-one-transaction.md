@@ -22,7 +22,7 @@ A single use case that loads two aggregate roots, mutates both, and saves both i
 
 ## Do instead
 
-Change one aggregate per transaction. Let it raise a domain event on commit; a handler (in-process listener, or another context's consumer) loads the second aggregate and changes it in its own transaction — eventual consistency. When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare [domain service](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md), but the default is one write per transaction.
+Change one aggregate per transaction. Let it raise a domain event on commit; a handler (in-process listener, or another context's consumer) loads the second aggregate and changes it in its own transaction — eventual consistency. When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare [domain service](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md), but the default is one write per transaction.
 
 `order.confirm()` → `OrderConfirmed` → handler → `inventory.reserve()` in a separate transaction.
 
@@ -32,5 +32,5 @@ Change one aggregate per transaction. Let it raise a domain event on commit; a h
 ## Anchors
 
 - Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md) · [Aggregate Roots must not hold references to repositories or other output ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Pure domain services](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Pure domain services](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md) · [Integration patterns](/guide/readme/integration-patterns.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md)

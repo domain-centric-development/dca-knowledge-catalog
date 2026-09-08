@@ -1,22 +1,22 @@
 ---
 type: Guide
-title: Domain Services mit Datenabhängigkeiten
+title: Domain Services with Data Dependencies
 source: guide
 resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, guide]
 ---
 
-> **Kontext:** Domain-Centric Architecture · Pricing Bounded Context
-> **Zielgruppe:** Entwickler, die Domain Services mit externem Datenzugriff implementieren
+> **Context:** Domain-Centric Architecture · Pricing Bounded Context
+> **Audience:** Developers implementing Domain Services that need external data access
 
 ---
 
 ## Sections
 
-- [Problemstellung](/guide/domain-services-with-data-dependencies/problemstellung.md)
-- [Default-Regel: Pure Domain Services (90% der Fälle)](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md)
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
-- [Ansatz 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/ansatz-2-strategy-callback-pattern.md)
-- [Vergleich: Wann welchen Ansatz nutzen](/guide/domain-services-with-data-dependencies/vergleich-wann-welchen-ansatz-nutzen.md)
+- [Problem Statement](/guide/domain-services-with-data-dependencies/problem-statement.md)
+- [Default Rule: Pure Domain Services (90% of Cases)](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
+- [Approach 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/approach-2-strategy-callback-pattern.md)
+- [Comparison: When to Use Which Approach](/guide/domain-services-with-data-dependencies/comparison-when-to-use-which-approach.md)
 - [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)
-- [Referenzen](/guide/domain-services-with-data-dependencies/referenzen.md)
+- [References](/guide/domain-services-with-data-dependencies/references.md)

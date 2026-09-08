@@ -15,7 +15,7 @@
 - [ArchUnit Governance for Domain-Centric Architecture](archunit-governance.md) — ArchUnit Governance for Domain-Centric Architecture
 - [Domain-Centric Architecture vs Clean Architecture](clean-architecture-comparison.md) — Domain-Centric Architecture vs Clean Architecture
 - [Deployment Patterns](deployment-patterns.md) — Deployment Patterns
-- [Domain Services mit Datenabhängigkeiten](domain-services-with-data-dependencies.md) — Domain Services mit Datenabhängigkeiten
+- [Domain Services with Data Dependencies](domain-services-with-data-dependencies.md) — Domain Services with Data Dependencies
 - [E2E Testing for Domain-Centric Architecture](e2e-testing.md) — Practical guide for browser-based end-to-end testing using Playwright with data-test attributes and the Page Object P...
 - [JWT Implementation Guide](jwt-implementation-guide.md) — Reference guide for JWT-based authentication in a multiservice e-commerce platform. Covers token design, login state ...
 - [Domain-Centric Architecture](readme.md) — Domain-Centric Architecture

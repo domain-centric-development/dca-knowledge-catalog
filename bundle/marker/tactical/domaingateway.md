@@ -47,5 +47,5 @@ exposes external capability (cryptography, availability check, geocoding, …).
 
 ## Discussed in
 
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)

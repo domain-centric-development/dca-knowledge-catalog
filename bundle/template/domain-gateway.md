@@ -57,7 +57,7 @@ of them into the domain interface is a [framework-leak-in-domain](/pitfall/frame
 ## Realizes / governed by
 
 - Marker: [DomainGateway](/marker/tactical/domaingateway.md) — a domain-layer port, no dedicated ArchUnit rule yet
-- Book/Guide: [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md) · [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)
+- Book/Guide: [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md) · [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)
 - Decisions: [Cross-context communication: synchronous call or integration event](/decision/cross-context-communication.md) — the ACL / gateway option
 - Pitfall: [Framework leak in domain](/pitfall/framework-leak-in-domain.md)
 - Recipe: [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)

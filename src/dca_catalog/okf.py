@@ -8,6 +8,7 @@ generated ``bundle/`` is byte-identical for the same sources (CI-checkable).
 
 from __future__ import annotations
 
+import unicodedata
 from dataclasses import dataclass, field
 
 # Reserved OKF filenames that are not concept documents.
@@ -15,10 +16,18 @@ RESERVED = {"index.md", "log.md"}
 
 
 def slugify(text: str) -> str:
-    """Turn an arbitrary title into a stable, link-safe slug."""
+    """Turn an arbitrary title into a stable, link-safe ASCII slug.
+
+    Accented letters lose their diacritics (``ä`` -> ``a``), ``ß`` becomes ``ss``; anything
+    else outside ASCII is treated as a separator. File names therefore never depend on the
+    file system's Unicode normalisation.
+    """
+    text = unicodedata.normalize("NFKD", text.strip().lower().replace("ß", "ss"))
     out = []
     prev_dash = False
-    for ch in text.strip().lower():
+    for ch in text:
+        if not ch.isascii():
+            continue
         if ch.isalnum():
             out.append(ch)
             prev_dash = False

@@ -57,7 +57,7 @@ Identifiers are Value Objects too, but carry their own marker: `d`.
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)

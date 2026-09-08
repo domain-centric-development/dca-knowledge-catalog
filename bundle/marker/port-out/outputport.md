@@ -63,7 +63,7 @@ interface), and the infrastructure provides concrete implementations.
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [14. Architecture Placement (DCA Pattern)](/guide/jwt-implementation-guide/14-architecture-placement-dca-pattern.md)
 - [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)

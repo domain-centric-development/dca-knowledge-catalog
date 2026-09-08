@@ -32,7 +32,7 @@ _GENERATED_DIRS = ("guide", "marker", "rule", "process", "reference")
 _EXTENSIBLE_ZONE = (
     ("recipe", "Recipe", "Task playbooks — ordered steps to build a DCA construct."),
     ("decision", "Decision", "Decision guides for design forks (which pattern, when)."),
-    ("pitfall", "Pitfall", "Anti-patterns and the rules/ADRs that forbid them."),
+    ("pitfall", "Pitfall", "Anti-patterns and the rules that forbid them."),
     ("template", "Template", "Domain-free code skeletons to fill in."),
     ("note", "Note", "Compounded query answers — synthesis made permanent."),
 )

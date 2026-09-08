@@ -101,7 +101,7 @@ Pattern
 - [Interface vs Implementation Placement](/guide/architecture-reference-guide/interface-vs-implementation-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)

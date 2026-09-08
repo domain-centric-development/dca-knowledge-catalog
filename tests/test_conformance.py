@@ -680,3 +680,12 @@ def test_mirror_strips_dotnet_resource():
     stripped = generate._strip_resource(text)
     assert "resource" not in stripped.split("---")[1]
     assert "body" in stripped
+
+
+def test_slugify_is_ascii_only():
+    """File names must not depend on the file system's Unicode normalisation."""
+    from dca_catalog.okf import slugify
+
+    assert slugify("Default-Regel: Pure Domain Services (90% der Fälle)") == "default-regel-pure-domain-services-90-der-falle"
+    assert slugify("Größe & Maß") == "grosse-mass"
+    assert slugify("日本語 title").isascii()

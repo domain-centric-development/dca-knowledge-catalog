@@ -43,11 +43,11 @@ Software"
 ## Discussed in
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Ansatz 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/ansatz-1-domaingateway-pattern.md)
-- [Ansatz 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/ansatz-2-strategy-callback-pattern.md)
-- [Default-Regel: Pure Domain Services (90% der Fälle)](/guide/domain-services-with-data-dependencies/default-regel-pure-domain-services-90-der-fälle.md)
-- [Problemstellung](/guide/domain-services-with-data-dependencies/problemstellung.md)
-- [Vergleich: Wann welchen Ansatz nutzen](/guide/domain-services-with-data-dependencies/vergleich-wann-welchen-ansatz-nutzen.md)
+- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
+- [Approach 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/approach-2-strategy-callback-pattern.md)
+- [Comparison: When to Use Which Approach](/guide/domain-services-with-data-dependencies/comparison-when-to-use-which-approach.md)
+- [Default Rule: Pure Domain Services (90% of Cases)](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md)
+- [Problem Statement](/guide/domain-services-with-data-dependencies/problem-statement.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
 - [RULES](/guide/readme/rules.md)

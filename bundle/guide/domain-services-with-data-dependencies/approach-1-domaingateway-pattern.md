@@ -1,23 +1,23 @@
 ---
 type: Section
-title: "Ansatz 1: DomainGateway Pattern"
-chapter: Domain Services mit Datenabhängigkeiten
+title: "Approach 1: DomainGateway Pattern"
+chapter: Domain Services with Data Dependencies
 source: guide
 resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, section]
 ---
 
-### Konzept
+### Concept
 
-Ein **DomainGateway** ist ein schmales, read-only Interface im Domain Layer, das in der **Ubiquitous Language** formuliert ist. Es erlaubt dem Domain Service, gezielt Daten nachzuladen, ohne die Dependency Rule zu verletzen.
+A **DomainGateway** is a narrow, read-only interface in the Domain Layer, phrased in the **Ubiquitous Language**. It allows the Domain Service to load specific data on demand without violating the Dependency Rule.
 
-**Wichtige Abgrenzung:**
-- Ein DomainGateway ist ein **taktisches DDD-Pattern** — es gehört in den Domain Layer
-- Es ist **kein OutputPort** — OutputPorts gehören zum Application Layer (Hexagonal Architecture)
-- Es ist **kein Repository** — Repositories verwalten Aggregate Roots mit vollem Lifecycle (CRUD)
-- Ein DomainGateway ist **read-only** und liefert nur die Daten, die der Domain Service für seine Berechnung braucht
+**Important distinctions:**
+- A DomainGateway is a **tactical DDD pattern** — it belongs in the Domain Layer
+- It is **not an OutputPort** — OutputPorts belong to the Application Layer (Hexagonal Architecture)
+- It is **not a Repository** — Repositories manage Aggregate Roots with their full lifecycle (CRUD)
+- A DomainGateway is **read-only** and returns only the data the Domain Service needs for its calculation
 
-### Marker-Interface
+### Marker Interface
 
 ```java
 package de.sample.aiarchitecture.sharedkernel.marker.tactical;
@@ -46,27 +46,27 @@ package de.sample.aiarchitecture.sharedkernel.marker.tactical;
 public interface DomainGateway {}
 ```
 
-**Einordnung im Shared Kernel:**
+**Placement in the Shared Kernel:**
 
 ```
 sharedkernel/marker/tactical/
 ├── DomainService.java
-├── DomainGateway.java          ← NEU
+├── DomainGateway.java          ← NEW
 ├── AggregateRoot.java
 ├── Entity.java
 ├── Value.java
 └── ...
 ```
 
-### Naming-Konventionen
+### Naming Conventions
 
-| Suffix       | Verwendung                                           | Beispiel                    |
+| Suffix       | Usage                                                | Example                     |
 |--------------|------------------------------------------------------|-----------------------------|
-| `*Lookup`    | Einfache Datenabfrage (Key → Value)                  | `CategoryPriceLookup`       |
-| `*Resolver`  | Auflösung mit Logik (z.B. Fallback, Hierarchie)     | `TaxRateResolver`           |
-| `*Provider`  | Bereitstellung von Kontextdaten                      | `ExchangeRateProvider`      |
+| `*Lookup`    | Simple data query (key → value)                      | `CategoryPriceLookup`       |
+| `*Resolver`  | Resolution with logic (e.g. fallback, hierarchy)     | `TaxRateResolver`           |
+| `*Provider`  | Provision of contextual data                         | `ExchangeRateProvider`      |
 
-### Vollständiges Code-Beispiel
+### Complete Code Example
 
 **1. DomainGateway Interface (Domain Layer)**
 
@@ -105,7 +105,7 @@ public record CategoryDiscount(String categoryName, int discountPercentage) impl
 }
 ```
 
-**3. Domain Service mit DomainGateway (Domain Layer)**
+**3. Domain Service with DomainGateway (Domain Layer)**
 
 ```java
 package de.sample.aiarchitecture.pricing.domain.service;
@@ -142,7 +142,7 @@ public final class BundleDiscountService implements DomainService {
 }
 ```
 
-**4. Adapter-Implementierung (Adapter Layer)**
+**4. Adapter Implementation (Adapter Layer)**
 
 ```java
 package de.sample.aiarchitecture.pricing.adapter.outgoing.categorylookup;
@@ -170,7 +170,7 @@ class InMemoryCategoryPriceLookup implements CategoryPriceLookup {
 }
 ```
 
-**5. Wiring im Use Case (Application Layer)**
+**5. Wiring in the Use Case (Application Layer)**
 
 ```java
 package de.sample.aiarchitecture.pricing.application.calculatebundlediscount;
@@ -199,7 +199,7 @@ public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountIn
 }
 ```
 
-### Datenfluss
+### Data Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -227,36 +227,36 @@ public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountIn
 │      │                          │                                           │
 │      │◀── CategoryDiscount ◀────┘                                           │
 │      │                                                                      │
-│      └──▶ Price (berechnet)                                                 │
+│      └──▶ Price (calculated)                                                │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Abgrenzung: DomainGateway vs. Repository
+### Distinction: DomainGateway vs. Repository
 
-| Aspekt              | Repository                              | DomainGateway                            |
+| Aspect              | Repository                              | DomainGateway                            |
 |---------------------|-----------------------------------------|------------------------------------------|
 | **Marker**          | `extends OutputPort`                    | `extends DomainGateway`                  |
-| **Layer**           | Application Layer (Output Port)         | Domain Layer (taktisches Pattern)        |
-| **Verantwortung**   | Aggregate Lifecycle (CRUD)              | Read-only Datenabfrage                   |
-| **Scope**           | Ganzes Aggregate Root                   | Schmaler Datenausschnitt                 |
-| **Mutationen**      | `save()`, `deleteById()`               | Keine                                    |
-| **Benutzt von**     | Use Cases (Application Layer)           | Domain Services (Domain Layer)           |
-| **Implementiert von** | Outgoing Adapter                      | Outgoing Adapter                         |
+| **Layer**           | Application Layer (Output Port)         | Domain Layer (tactical pattern)          |
+| **Responsibility**  | Aggregate lifecycle (CRUD)              | Read-only data query                     |
+| **Scope**           | Whole Aggregate Root                    | Narrow slice of data                     |
+| **Mutations**       | `save()`, `deleteById()`               | None                                     |
+| **Used by**         | Use Cases (Application Layer)           | Domain Services (Domain Layer)           |
+| **Implemented by**  | Outgoing Adapter                        | Outgoing Adapter                         |
 
-### Vor- und Nachteile
+### Pros and Cons
 
-**Vorteile:**
-- Domain Service kann eigenständig entscheiden, welche Daten er wann braucht
-- Interface ist in Ubiquitous Language formuliert — explizit im Domain Model
-- Einfach testbar: Mock des DomainGateway im Unit Test
-- Gut geeignet für komplexe Domänenlogik mit bedingten Datenabfragen
+**Pros:**
+- The Domain Service can decide on its own which data it needs and when
+- The interface is phrased in the Ubiquitous Language — explicit in the domain model
+- Easy to test: mock the DomainGateway in the unit test
+- Well suited for complex domain logic with conditional data queries
 
-**Nachteile:**
-- Führt eine Abhängigkeit in den Domain Layer ein (wenn auch abstrakt)
-- Kann als "Hintertür" missbraucht werden — Disziplin nötig
-- Mehr Klassen: Interface + Implementierung + Marker
-- Nicht in allen DDD-Literaturquellen als Pattern etabliert
+**Cons:**
+- Introduces a dependency into the Domain Layer (albeit an abstract one)
+- Can be abused as a "back door" — discipline required
+- More classes: interface + implementation + marker
+- Not established as a pattern in all DDD literature
 
 ---
 

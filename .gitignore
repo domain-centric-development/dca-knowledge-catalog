@@ -7,3 +7,7 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 uv.lock
+
+# IDE / local env
+.idea/
+.venv/

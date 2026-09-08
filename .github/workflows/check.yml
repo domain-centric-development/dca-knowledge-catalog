@@ -1,0 +1,40 @@
+name: check
+
+# Freshness + health gate for the generated OKF knowledge catalog.
+# The generator reads its sources from sibling checkouts (dca-guide, dca-java, dca-dotnet),
+# so the job recreates that layout: this repository and the three sources side by side under
+# one parent directory, then runs scripts/check.sh (generate -> lint -> tests -> freshness).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: dca-knowledge-catalog
+      - uses: actions/checkout@v4
+        with:
+          repository: domain-centric-development/dca-guide
+          path: dca-guide
+      - uses: actions/checkout@v4
+        with:
+          repository: domain-centric-development/dca-java
+          path: dca-java
+      - uses: actions/checkout@v4
+        with:
+          repository: domain-centric-development/dca-dotnet
+          path: dca-dotnet
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install test deps
+        run: python -m pip install --upgrade pip "pytest>=7" "pyyaml>=6"
+      - name: Generate, lint, test, freshness
+        working-directory: dca-knowledge-catalog
+        run: bash scripts/check.sh

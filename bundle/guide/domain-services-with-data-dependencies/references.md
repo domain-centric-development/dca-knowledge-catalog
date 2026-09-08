@@ -1,7 +1,7 @@
 ---
 type: Section
-title: Referenzen
-chapter: Domain Services mit Datenabhängigkeiten
+title: References
+chapter: Domain Services with Data Dependencies
 source: guide
 resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, section]

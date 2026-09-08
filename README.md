@@ -15,14 +15,16 @@ Inspired by Google's [knowledge-catalog/okf](https://github.com/GoogleCloudPlatf
 
 ## What's in the bundle
 
-| Type | ~Count | Source | What it gives an agent |
-|------|-------|--------|------------------------|
-| `Guide` | 10 | `dca-guide/*.md` | an implementation-guide doc |
-| `Section` | ~104 | `##` headings of the above | one concept, **full verbatim text** |
-| `Marker` | 29 | `dca-java/dca-building-blocks/**/*.java` | the contract/interface to implement |
-| `Rule` | 115 | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java`; `dca-dotnet/rules.json` adds the `dotnet` implementation flag, the `not_applicable_dotnet` reasons and the .NET-only `DCA-NET` rules | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
-| `Process` | 1 | `adr-template.md` | how to record a new decision |
-| `Recipe` `Decision` `Pitfall` `Template` `Note` | ~69 | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
+| Type | Source | What it gives an agent |
+|------|--------|------------------------|
+| `Guide` | `dca-guide/*.md` | an implementation-guide doc |
+| `Section` | `##` headings of the above | one concept, **full verbatim text** |
+| `Marker` | `dca-java/dca-building-blocks/**/*.java` | the contract/interface to implement |
+| `Rule` | `dca-java/rules.json` + `dca-archunit/**/rules/*Rules.java`; `dca-dotnet/rules.json` adds the `dotnet` implementation flag, the `not_applicable_dotnet` reasons and the .NET-only `DCA-NET` rules | the enforceable, machine-checkable architecture, with stable ids `DCA-<SET>-<NNN>` |
+| `Process` | `adr-template.md` | how to record a new decision |
+| `Recipe` `Decision` `Pitfall` `Template` `Note` | **authored** (extensible zone) | task playbooks, design-fork guides, anti-patterns, code skeletons, saved answers |
+
+Node counts per type are in [`bundle/index.md`](bundle/index.md) and [`bundle/log.md`](bundle/log.md), both written by every run.
 
 **Neither the book nor the sample's ADRs are in the bundle.** An ADR records a
 decision *one* project made — a reader building their own application has no
@@ -113,9 +115,10 @@ maintains.
 3. **In Obsidian**: `make obsidian`, author/edit in the vault (wikilinks fine —
    the import converts them), then `make obsidian-import` (imports, regenerates,
    lints in one go). See "Browse & author in Obsidian" below.
-4. **From a Claude session**: `/dca-knowledge save <note|decision|pitfall|recipe|template> <title>`
-   promotes a grounded query answer into a permanent extensible-zone node — the
-   catalog compounds instead of re-deriving.
+4. **From an agent session**: an agent that answered a question from the catalog can save
+   the answer as an extensible-zone node (the dca-core plugin does this with
+   `/dca-knowledge save <note|decision|pitfall|recipe|template> <title>`) — the catalog
+   compounds instead of re-deriving.
 
 Whichever way: finish with a commit — the pre-commit hook (`make hooks`) runs the
 full gate, and the extensible zone has no other backup than this repo's history.
@@ -142,9 +145,10 @@ make check          # or: ./scripts/check.sh
 make hooks          # install it as a git pre-commit hook (one-time)
 ```
 
-CI runs the same gate — `.github/workflows/catalog.yml` at the **monorepo root**
-(the generator reads its sibling source dirs, so the workflow checks out the whole
-tree). Targets: `make generate | lint | test | check | hooks`.
+CI runs the same gate: `.github/workflows/check.yml` checks out this repository together
+with its three source repositories (`dca-guide`, `dca-java`, `dca-dotnet`) as sibling
+directories — the layout the generator expects (`--repo-root` defaults to the parent of this
+checkout) — and runs `scripts/check.sh`. Targets: `make generate | lint | test | check | hooks`.
 
 The same without a local Python: `docker compose run --rm generate` regenerates `bundle/` in this
 checkout, `docker compose run --rm check` runs the gate, and

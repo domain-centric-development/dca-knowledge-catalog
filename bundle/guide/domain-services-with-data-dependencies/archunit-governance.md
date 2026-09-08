@@ -1,13 +1,13 @@
 ---
 type: Section
 title: ArchUnit Governance
-chapter: Domain Services mit Datenabhängigkeiten
+chapter: Domain Services with Data Dependencies
 source: guide
 resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, section]
 ---
 
-### DomainGateway-Regeln
+### DomainGateway Rules
 
 ```java
 @ArchTest
@@ -31,12 +31,12 @@ static final ArchRule domain_gateway_interfaces_must_not_extend_output_port =
         .because("DomainGateways are tactical DDD patterns, not hexagonal OutputPorts");
 ```
 
-### Strategy/Callback-Regeln
+### Strategy/Callback Rules
 
-Da das Strategy/Callback Pattern kein eigenes Interface im Domain Layer definiert, sind die bestehenden ArchUnit-Regeln bereits ausreichend:
+Since the Strategy/Callback Pattern defines no interface of its own in the Domain Layer, the existing ArchUnit rules are already sufficient:
 
 ```java
-// Bestehende Regel: Domain Layer hat keine Abhängigkeiten nach außen
+// Existing rule: the Domain Layer has no outward dependencies
 @ArchTest
 static final ArchRule domain_layer_has_no_outward_dependencies =
     classes().that().resideInAnyPackage("..domain..")
@@ -45,12 +45,12 @@ static final ArchRule domain_layer_has_no_outward_dependencies =
         .because("Domain layer must not depend on application, adapter, or infrastructure layers");
 ```
 
-Diese Regel stellt automatisch sicher, dass:
-- Kein `Function`-Parameter auf Adapter- oder Application-Klassen verweist
-- Die Domain nur `java.util.function.*` verwendet (erlaubt unter `java..`)
-- Keine versteckten Abhängigkeiten über Lambdas eingeschleust werden
+This rule automatically ensures that:
+- No `Function` parameter refers to Adapter or Application classes
+- The domain uses only `java.util.function.*` (allowed under `java..`)
+- No hidden dependencies are smuggled in through lambdas
 
-### Zusätzliche Governance für eigene Functional Interfaces
+### Additional Governance for Dedicated Functional Interfaces
 
 ```java
 @ArchTest

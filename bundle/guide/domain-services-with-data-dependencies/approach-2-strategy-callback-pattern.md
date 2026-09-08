@@ -1,19 +1,19 @@
 ---
 type: Section
-title: "Ansatz 2: Strategy/Callback Pattern"
-chapter: Domain Services mit Datenabhängigkeiten
+title: "Approach 2: Strategy/Callback Pattern"
+chapter: Domain Services with Data Dependencies
 source: guide
 resource: dca-guide/domain-services-with-data-dependencies.md
 tags: [guide, section]
 ---
 
-### Konzept
+### Concept
 
-Der Domain Service erhält die Datenbeschaffung als **funktionalen Parameter** (Strategy). Der Application Service übergibt ein Lambda oder eine Method Reference, die die Daten liefert. Der Domain Layer definiert kein Interface — die Abhängigkeit existiert nur zur Aufrufzeit.
+The Domain Service receives the data retrieval as a **functional parameter** (Strategy). The Application Service passes a lambda or method reference that supplies the data. The Domain Layer defines no interface — the dependency exists only at call time.
 
-### Vollständiges Code-Beispiel
+### Complete Code Example
 
-**1. Domain Service mit funktionalem Parameter (Domain Layer)**
+**1. Domain Service with Functional Parameter (Domain Layer)**
 
 ```java
 package de.sample.aiarchitecture.pricing.domain.service;
@@ -50,7 +50,7 @@ public final class BundleDiscountService implements DomainService {
 }
 ```
 
-**2. Wiring im Use Case (Application Layer)**
+**2. Wiring in the Use Case (Application Layer)**
 
 ```java
 package de.sample.aiarchitecture.pricing.application.calculatebundlediscount;
@@ -83,9 +83,9 @@ public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountIn
 }
 ```
 
-### Variante: Eigenes Functional Interface statt `java.util.function.Function`
+### Variant: Dedicated Functional Interface Instead of `java.util.function.Function`
 
-Wenn die Signatur von `Function<ProductId, Optional<CategoryDiscount>>` zu generisch ist, kann ein eigenes Functional Interface die Lesbarkeit verbessern:
+If the signature `Function<ProductId, Optional<CategoryDiscount>>` is too generic, a dedicated functional interface can improve readability:
 
 ```java
 package de.sample.aiarchitecture.pricing.domain.service;
@@ -100,7 +100,7 @@ public interface CategoryDiscountLookup {
 }
 ```
 
-Der Domain Service verwendet dann:
+The Domain Service then uses:
 
 ```java
 public Price calculateBundleDiscount(
@@ -114,14 +114,14 @@ public Price calculateBundleDiscount(
 }
 ```
 
-Der Aufruf im Use Case bleibt identisch — Java's Lambda-Kompatibilität sorgt dafür, dass das Lambda automatisch zum Functional Interface passt.
+The call in the Use Case stays identical — Java's lambda compatibility ensures that the lambda automatically matches the functional interface.
 
-**Empfehlung:** Verwende ein eigenes Functional Interface wenn:
-- Die Methode mehr als einmal verwendet wird
-- Die generische Signatur `Function<A, B>` die Lesbarkeit verschlechtert
-- Du die Methode dokumentieren willst (Javadoc auf dem Interface)
+**Recommendation:** Use a dedicated functional interface when:
+- The method is used more than once
+- The generic signature `Function<A, B>` hurts readability
+- You want to document the method (Javadoc on the interface)
 
-### Datenfluss
+### Data Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -129,7 +129,7 @@ Der Aufruf im Use Case bleibt identisch — Java's Lambda-Kompatibilität sorgt 
 │                                                                             │
 │  CalculateBundleDiscountUseCase                                             │
 │      │                                                                      │
-│      │ ruft auf mit Lambda: productId -> repository.find(...)              │
+│      │ calls with lambda: productId -> repository.find(...)                │
 │      │                                    │                                 │
 │      ▼                                    ▼                                 │
 └──────┼──────────────────────────────┬─────┼─────────────────────────────────┘
@@ -140,30 +140,30 @@ Der Aufruf im Use Case bleibt identisch — Java's Lambda-Kompatibilität sorgt 
 │  BundleDiscountService              │     │                                 │
 │      │                              │     │                                 │
 │      │──▶ discountLookup.apply(id) ─┘     │                                 │
-│      │         (Lambda-Callback)          │                                 │
+│      │         (lambda callback)          │                                 │
 │      │                                    │                                 │
 │      │◀── CategoryDiscount ◀──────────────┘                                 │
 │      │                                                                      │
-│      └──▶ Price (berechnet)                                                 │
+│      └──▶ Price (calculated)                                                │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Vor- und Nachteile
+### Pros and Cons
 
-**Vorteile:**
-- **Zero Abhängigkeiten** im Domain Layer — nicht mal ein abstraktes Interface
-- Domain Service bleibt ein echtes Pure Object (stateless, no fields)
-- Maximale Testbarkeit: Lambda im Test inline definieren
-- Kein zusätzliches Marker-Interface nötig
-- Leichtgewichtig — keine zusätzlichen Klassen
+**Pros:**
+- **Zero dependencies** in the Domain Layer — not even an abstract interface
+- The Domain Service remains a true pure object (stateless, no fields)
+- Maximum testability: define the lambda inline in the test
+- No additional marker interface needed
+- Lightweight — no additional classes
 
-**Nachteile:**
-- Methodensignatur wird länger und komplexer
-- Weniger explizit: `Function<ProductId, Optional<CategoryDiscount>>` ist nicht sofort verständlich
-- Callback-Logik kann im Use Case unübersichtlich werden
-- Kein Platz für Javadoc am Contract (bei `java.util.function.Function`)
-- Bei mehreren Datenquellen: Parameter-Explosion
+**Cons:**
+- The method signature becomes longer and more complex
+- Less explicit: `Function<ProductId, Optional<CategoryDiscount>>` is not immediately understandable
+- Callback logic can clutter the Use Case
+- No place for Javadoc on the contract (with `java.util.function.Function`)
+- With several data sources: parameter explosion
 
 ---
 
