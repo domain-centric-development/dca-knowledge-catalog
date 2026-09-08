@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 def strip_resource(text: str) -> str:
-    """Drop the ``resource:`` frontmatter key, leaving the body untouched.
+    """Drop the ``resource:`` (and ``resource_dotnet:``) frontmatter keys, leaving the body untouched.
 
     Body text may legitimately contain a ``resource:`` line (a YAML example in a
     code fence), so this only rewrites the frontmatter block.
@@ -38,7 +38,7 @@ def strip_resource(text: str) -> str:
     end = text.index("\n---\n", 3) + 1
     front = "".join(
         line for line in text[:end].splitlines(keepends=True)
-        if not line.startswith("resource:")
+        if not line.startswith(("resource:", "resource_dotnet:"))
     )
     return front + text[end:]
 

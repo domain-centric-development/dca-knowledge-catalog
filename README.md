@@ -47,7 +47,7 @@ marker/rule nodes — only the contracts and the rules that shape them.
 ## Regenerate
 
 The `bundle/` has **two zones** (see `SPEC.md`). The **generated zone** (`guide/
-marker/ rule/ process/`) is a derived artifact — **never hand-edit it**; edit the
+marker/ rule/ process/ reference/`) is a derived artifact — **never hand-edit it**; edit the
 source (the guide / `dca-java` markers and rules) and regenerate. The rule source is
 `dca-java/rules.json` — refresh it with `./gradlew :dca-archunit:rulesCatalog` after changing rules — plus `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`). The **extensible zone**
 (`recipe/ decision/ pitfall/ template/ note/`) is authored by hand or by an LLM and
@@ -182,7 +182,7 @@ dca-knowledge-catalog/
 ├── bundle/                  # the OKF knowledge graph (canonical)
 │   ├── index.md  log.md
 │   ├── guide/               # GENERATED — full text: container + section nodes
-│   ├── marker/  rule/  process/         # GENERATED — the anchoring skeleton
+│   ├── marker/  rule/  process/  reference/  # GENERATED — the anchoring skeleton
 │   └── recipe/  decision/  pitfall/  template/  note/   # AUTHORED — survives regeneration
 └── bundle-obsidian/         # gitignored Obsidian view (make obsidian / obsidian-import)
 ```

@@ -38,9 +38,128 @@ _PACKAGE_RE = re.compile(r"^package\s+([\w.]+);", re.MULTILINE)
 _DECL_RE = re.compile(
     r"^public\s+(?:abstract\s+)?(interface|class|@interface)\s+(\w+)", re.MULTILINE
 )
-_METHOD_RE = re.compile(
-    r"(?m)^\s*([A-Za-z_][\w<>\[\],\?\. ]*\s+\w+\([^)]*\))(?:\s+default\s+[^;{]+)?\s*;"
-)
+_NESTED_TYPE_RE = re.compile(r"\b(?:class|interface|enum|record|@interface)\b")
+_ANNOTATION_RE = re.compile(r"@\w+(?:\([^)]*\))?")
+_TYPE_PARAMS_RE = re.compile(r"^(?:public\s+)?(?:abstract\s+)?(?:interface|class|@interface)\s+\w+\s*(<)")
+
+
+def _mask(source: str, literals: bool = True) -> str:
+    """Replace comments — and, unless ``literals`` is false, string/char literals —
+    with spaces of equal length so braces, semicolons and parentheses inside them
+    cannot confuse the scanner. Positions are preserved, so slices of one mask
+    index into the source and into the other mask."""
+    out = list(source)
+    i, n = 0, len(source)
+
+    def blank(a: int, b: int) -> None:
+        for k in range(a, b):
+            if out[k] != "\n":
+                out[k] = " "
+
+    while i < n:
+        ch = source[i]
+        nxt = source[i + 1] if i + 1 < n else ""
+        if ch == "/" and nxt == "*":
+            end = source.find("*/", i + 2)
+            end = n if end < 0 else end + 2
+            blank(i, end)
+            i = end
+        elif ch == "/" and nxt == "/":
+            end = source.find("\n", i)
+            end = n if end < 0 else end
+            blank(i, end)
+            i = end
+        elif ch in "\"'":
+            j = i + 1
+            while j < n and source[j] != ch:
+                j += 2 if source[j] == "\\" else 1
+            end = min(j + 1, n)
+            if literals:
+                blank(i + 1, end - 1)
+            i = end
+        else:
+            i += 1
+    return "".join(out)
+
+
+def _members(body: str, masked_body: str, type_name: str) -> list[str]:
+    """Method declarations of a type body (interface, class or annotation).
+
+    ``body`` has comments blanked, ``masked_body`` comments *and* literals. Walks
+    the masked body at brace depth 0. A member header is the text from the
+    previous member's terminator (``;`` or the closing brace of its body) up to
+    the next ``;`` or ``{``. Headers with a parameter list that are neither a
+    constructor nor a nested type are methods; a header ending in ``{`` is a
+    method with a body (class method or ``default`` method), whose body is then
+    skipped as a whole. An annotation element's array default (``default {}``)
+    is the one brace that belongs to the header — it runs on to the ``;``."""
+    methods: list[str] = []
+    depth, start, i, n = 0, 0, 0, len(masked_body)
+    in_array_default = False
+    while i < n:
+        ch = masked_body[i]
+        if depth == 0 and ch == "{" and body[start:i].rstrip().endswith("default"):
+            in_array_default = True
+            depth = 1
+        elif depth == 0 and ch in ";{":
+            _add_method(methods, body[start:i], type_name)
+            if ch == "{":
+                depth = 1
+            start = i + 1
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0 and in_array_default:
+                in_array_default = False
+            elif depth == 0:
+                start = i + 1
+            if depth < 0:  # closing brace of the type itself
+                break
+        i += 1
+    return methods
+
+
+def _add_method(methods: list[str], header: str, type_name: str) -> None:
+    header = _ANNOTATION_RE.sub("", header)
+    header = re.sub(r"\s+", " ", header).strip()
+    header = re.sub(r"\{\s*\}", "{}", header)
+    if "(" not in header or _NESTED_TYPE_RE.search(header):
+        return
+    if header.startswith("private ") or " private " in header.split("(", 1)[0]:
+        return  # not part of the contract an implementor sees
+    if header.startswith("=") or "=" in header.split("(", 1)[0]:
+        return  # field initialiser such as ``List<X> xs = new ArrayList<>()``
+    name = header.split("(", 1)[0].split()[-1]
+    if name == type_name:
+        return  # constructor
+    header = re.sub(r"\bfinal\s+", "", header)
+    header = re.sub(r"\s*\(\s*", "(", header)
+    header = re.sub(r"\s*\)", ")", header)
+    header = re.sub(r"\s*,\s*", ", ", header)
+    methods.append(header)
+
+
+def _type_parameters(signature: str) -> str | None:
+    """The type's own generic parameter block, verbatim without the angle brackets,
+    e.g. ``T extends AggregateRoot<T, ID>, ID extends Id``."""
+    m = _TYPE_PARAMS_RE.search(signature)
+    if not m:
+        return None
+    start = m.end(1)
+    depth, i = 1, start
+    while i < len(signature) and depth > 0:
+        if signature[i] == "<":
+            depth += 1
+        elif signature[i] == ">":
+            depth -= 1
+        i += 1
+    return signature[start : i - 1].strip()
+
+
+def _modifiers(signature: str) -> list[str]:
+    head = signature.split("interface", 1)[0].split("class", 1)[0]
+    return [w for w in head.split() if w in ("public", "abstract", "final", "sealed")]
 
 
 def _category(path: Path) -> str:
@@ -71,6 +190,79 @@ def _first_sentence(javadoc: str) -> str:
     joined = re.sub(r"\s+", " ", joined).strip()
     m = re.search(r"^(.*?\.)(\s|$)", joined)
     return (m.group(1) if m else joined).strip()
+
+
+def _javadoc_markdown(javadoc: str) -> str:
+    """The type's javadoc main description as markdown: paragraphs, ``<ul>``
+    lists, ``<pre>`` code blocks, inline tags resolved. Block tags (``@see``,
+    ``@param``, ``@since``, …) end the description. Everything the source says
+    about the contract reaches the node — nobody should need the sources jar."""
+    lines: list[str] = []
+    for raw in javadoc.splitlines():
+        line = raw.strip()
+        if line.startswith("/**"):
+            line = line[3:].strip()
+        if line.endswith("*/"):
+            line = line[:-2].strip()
+        if line.startswith("*"):
+            line = line[1:]
+        if line.startswith(" "):
+            line = line[1:]
+        lines.append(line.rstrip())
+    text = "\n".join(lines)
+    text = re.split(r"(?m)^\s*@(?:see|param|return|throws|since|author|version|deprecated)\b", text)[0]
+
+    # <pre> blocks first — their content is code and must not go through the
+    # inline-tag or HTML handling. ``<pre>{@code ...}</pre>`` is the javadoc idiom
+    # for a code sample: drop the {@code} wrapper, keep the lines as they are.
+    out: list[str] = []
+    pos = 0
+    for m in re.finditer(r"<pre>(.*?)</pre>", text, re.S):
+        out.append(_javadoc_prose(text[pos : m.start()]))
+        code = m.group(1)
+        code = re.sub(r"^\s*\{@code\s*", "", code)
+        code = re.sub(r"\}\s*$", "", code) if re.match(r"^\s*\{@code", m.group(1)) else code
+        code = re.sub(r"\{@(?:literal|code)\s+([^}]*)\}", r"\1", code)
+        code = _html_unescape(code).strip("\n")
+        out.append("```java\n" + code + "\n```")
+        pos = m.end()
+    out.append(_javadoc_prose(text[pos:]))
+    md = "\n\n".join(part for part in out if part.strip())
+    md = re.sub(r"\n{3,}", "\n\n", md).strip()
+    return md
+
+
+def _javadoc_prose(text: str) -> str:
+    """Javadoc prose (no ``<pre>``) to markdown: inline tags, ``<p>``, ``<ul>``/``<li>``, ``<b>``."""
+    text = _unescape(text)  # inline tags may span lines — resolve before line handling
+    out: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        stripped = re.sub(r"</?(?:ul|ol)>", "", stripped)
+        stripped = re.sub(r"^<li>\s*", "- ", stripped)
+        stripped = re.sub(r"</li>", "", stripped)
+        stripped = re.sub(r"^<p>\s*", "", stripped)
+        stripped = re.sub(r"</?p>", "", stripped)
+        stripped = re.sub(r"<b>(.*?)</b>", r"**\1**", stripped)
+        stripped = re.sub(r"<(?:i|em)>(.*?)</(?:i|em)>", r"*\1*", stripped)
+        stripped = re.sub(r"<[^>]+>", "", stripped)
+        out.append(_html_unescape(stripped))
+    return "\n".join(out)
+
+
+def _html_unescape(text: str) -> str:
+    return text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&quot;", '"')
+
+
+def _unescape(text: str) -> str:
+    text = re.sub(
+        r"\{@code\s+([^}]*)\}",
+        lambda m: "`" + re.sub(r"\s*\n\s*", " ", m.group(1).strip()) + "`",
+        text,
+    )
+    text = re.sub(r"\{@literal\s+([^}]*)\}", lambda m: m.group(1).strip(), text)
+    text = re.sub(r"\{@link\s+(?:[\w.]+)?#?([^}\s]+)[^}]*\}", r"`\1`", text)
+    return _html_unescape(text)
 
 
 def _signature(source: str, decl_start: int) -> str:
@@ -164,10 +356,12 @@ def extract(repo_root: Path) -> list[Node]:
         javadoc = source[: decl.start()]
         last_doc = javadoc.rfind("/**")
         description = _first_sentence(javadoc[last_doc:]) if last_doc >= 0 else ""
+        contract = _javadoc_markdown(javadoc[last_doc:]) if last_doc >= 0 else ""
 
-        body_start = source.index("{", decl.start())
-        body = source[body_start + 1 :]
-        methods = [re.sub(r"\s+", " ", m).strip() for m in _METHOD_RE.findall(body)]
+        masked = _mask(source)
+        no_comments = _mask(source, literals=False)
+        body_start = masked.index("{", decl.start())
+        methods = _members(no_comments[body_start + 1 :], masked[body_start + 1 :], name)
 
         is_annotation = kind == "@interface"
         title = _display_title(name, signature)
@@ -183,6 +377,11 @@ def extract(repo_root: Path) -> list[Node]:
         pkg = _PACKAGE_RE.search(source)
         if pkg:
             fm["package"] = pkg.group(1)
+        generics = _type_parameters(signature)
+        if generics:
+            fm["generics"] = generics
+        if kind == "class":
+            fm["modifiers"] = _modifiers(signature)
         if extends:
             fm["extends"] = extends
         if methods:
@@ -194,7 +393,7 @@ def extract(repo_root: Path) -> list[Node]:
         node = Node(
             path=f"marker/{category}/{slugify(name)}.md",
             frontmatter=fm,
-            body=description or f"Marker for {name}.",
+            body=contract or description or f"Marker for {name}.",
             meta={"name": name, "kind": "marker", "extends": extends},
         )
         nodes.append(node)

@@ -19,12 +19,12 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from . import docs, linker, markers, process, rules
+from . import docs, linker, markers, process, reference, rules
 from .mirror import mirror_bundle as _mirror, strip_resource as _strip_resource  # noqa: F401 — re-exported for tests
 from .okf import Node, RESERVED
 
 # Generated zone — derived from the sources, wiped and rebuilt on every run.
-_GENERATED_DIRS = ("guide", "marker", "rule", "process")
+_GENERATED_DIRS = ("guide", "marker", "rule", "process", "reference")
 
 # Extensible zone — authored (by a human or an LLM), survives regeneration.
 # Each entry: (dir, OKF node type, blurb). Node *files* are authored; their
@@ -43,6 +43,7 @@ _CATEGORY_BLURB = {
     "marker": "Architectural marker interfaces — the contracts a new application implements.",
     "rule": "ArchUnit rules — the enforceable, machine-checkable architecture.",
     "process": "How-to processes for keeping the architecture's conventions.",
+    "reference": "The two classes every rule is parameterised by — DcaLayout (settings, defaults, patterns) and DcaArchitecture (how contexts and modules are discovered).",
     **{name: blurb for name, _type, blurb in _EXTENSIBLE_ZONE},
 }
 
@@ -178,7 +179,8 @@ def _build_indexes(nodes: list[Node], extra_dirs: tuple[str, ...] = ()) -> dict[
                 "**Generated zone** (guide, marker, rule, process) is derived from the "
                 "sources and rebuilt on every run; the implementation guide (full text) "
                 "is the main body, the marker contracts and ArchUnit rules the skeleton "
-                "it anchors to. **Extensible zone** (recipe, decision, pitfall, template, "
+                "it anchors to, and `reference/` describes the layout and discovery "
+                "classes every rule is parameterised by. **Extensible zone** (recipe, decision, pitfall, template, "
                 "note) is authored by a human or an LLM and survives regeneration. "
                 "See `log.md`."
             )
@@ -230,6 +232,7 @@ def _log_md(counts: dict[str, int]) -> str:
         f"- Markers: {counts.get('Marker', 0)}",
         f"- Rules: {counts.get('Rule', 0)}",
         f"- Process: {counts.get('Process', 0)}",
+        f"- Reference: {counts.get('Reference', 0)}",
         "",
         "### Extensible zone (authored, preserved across regeneration)",
     ]
@@ -243,11 +246,13 @@ def generate(repo_root: Path, out: Path) -> dict[str, int]:
     marker_nodes = markers.extract(repo_root)
     rule_nodes = rules.extract(repo_root)
     process_nodes = process.extract(repo_root)
+    reference_nodes = reference.extract(repo_root)
     doc_nodes = docs.extract(repo_root)
     linker.link(marker_nodes, rule_nodes)
     linker.link_docs(doc_nodes, marker_nodes)
+    linker.link_reference(rule_nodes, reference_nodes)
 
-    nodes = marker_nodes + rule_nodes + process_nodes + doc_nodes
+    nodes = marker_nodes + rule_nodes + process_nodes + reference_nodes + doc_nodes
 
     paths = [n.path for n in nodes]
     if len(set(paths)) != len(paths):
@@ -311,7 +316,7 @@ def main(argv: list[str] | None = None) -> int:
     counts = generate(repo_root, out)
     total = sum(counts.values())
     print(f"Generated {total} nodes -> {out}")
-    for kind in ("Guide", "Section", "Marker", "Rule", "Process"):
+    for kind in ("Guide", "Section", "Marker", "Rule", "Process", "Reference"):
         print(f"  {kind}: {counts.get(kind, 0)}")
 
     mirrors = list(args.mirror)

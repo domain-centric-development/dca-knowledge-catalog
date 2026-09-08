@@ -26,7 +26,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 - [Value objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md)
 - [Value objects must not contain aggregate roots or entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
 - [Value Objects must be records or immutable classes with attribute equality](/rule/tactical/value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md)
-- [Domain classes must not use technical suffixes (Manager, Helper, Util, Impl)](/rule/naming/domain-classes-must-not-use-technical-suffixes-manager-helper-util-impl.md)
+- [Domain classes must not use technical suffixes (Manager, Helper, Util, Impl, Implementation)](/rule/naming/domain-classes-must-not-use-technical-suffixes-manager-helper-util-impl-implementation.md)
 
 ## Anchors
 

@@ -12,6 +12,52 @@ tags: [tactical, marker]
 
 Interface for Domain Events.
 
+Domain Events represent something that happened in the domain that domain experts care about.
+They are internal to a bounded context and can evolve freely without versioning concerns.
+
+**Characteristics:**
+
+- Immutable (final classes or records)
+- Named in the past tense (e.g., ProductCreated, CartCleared, PriceChanged)
+- Include timestamp, unique ID, and event-specific data
+- Should NOT have Spring annotations (@Component, @EventListener)
+- Part of the Ubiquitous Language
+- Internal to a bounded context — no versioning needed
+
+**Use Cases:**
+
+- Triggering side effects in other aggregates or contexts
+- Enabling eventual consistency between bounded contexts
+- Audit trail and event sourcing
+- Decoupling bounded contexts
+
+**Required Methods:**
+
+- `eventId()` - Unique identifier for this event instance
+- `occurredOn()` - When the event occurred
+
+For events that cross bounded context boundaries, see `t` which adds
+versioning for backward compatibility.
+
+**Example:**
+
+```java
+public record ProductCreated(
+    UUID eventId,
+    ProductId productId,
+    Instant occurredOn) implements DomainEvent {
+
+  public static ProductCreated now(ProductId productId) {
+    return new ProductCreated(UUID.randomUUID(), productId, Instant.now());
+  }
+}
+```
+
+**References:**
+
+- Eric Evans' Domain-Driven Design (2003)
+- Vaughn Vernon's Implementing Domain-Driven Design (2013), Chapter 8: "Domain Events"
+
 ## Governed by
 
 - [Domain Events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md)

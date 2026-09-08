@@ -4,14 +4,21 @@ Sources (both under ``dca-java/``):
 
 * ``rules.json`` — the rule catalog the library renders from its own code
   (``./gradlew :dca-archunit:rulesCatalog``): one entry per rule with the
-  stable id (``DCA-TAC-006``), the rule set, the title and the rationale.
+  stable id (``DCA-TAC-006``), the rule set, the title, the rationale and the
+  two mechanics texts ``selects`` (which classes the rule looks at) and
+  ``checks`` (what it asserts, including what does not count). Both are
+  mandatory — a rule without them fails generation.
   Titles are *resolved* — a rule whose title embeds a configured suffix is
   rendered for the default layout — so this file, not the Java source, is the
   authority for what a rule says.
 * ``dca-archunit/src/main/java/.../rules/<Set>Rules.java`` — the implementation.
   The ``DcaRule.of(...)`` / ``DcaRule.check(...)`` expression that constructs a
-  rule is carried verbatim as a fenced code block (lossless, no semantic
-  parsing) and scanned by the linker for marker references.
+  rule — including its ``.selecting(...).checking(...)`` completion — is carried
+  verbatim as a fenced code block (lossless, no semantic parsing) and scanned by
+  the linker for marker references. The private helpers the expression calls
+  (``publishAfterSaving()``, ``repositoryInterfaces(arch)``, …) are copied into
+  the node too, so the node is readable without the source; the
+  ``DcaArchitecture`` methods it uses are listed by name.
 
 Each rule becomes one OKF ``Rule`` node. Node paths are derived from the title
 so links from the authored zone stay stable across implementation changes.
@@ -76,9 +83,183 @@ def _expression_at(source: str, id_literal: str) -> str | None:
         elif ch == ")":
             depth -= 1
             if depth == 0:
-                return source[start : i + 1]
+                return source[start : _chain_end(source, i + 1)]
         i += 1
     return source[start:]
+
+
+def _chain_end(source: str, i: int) -> int:
+    """End of the ``.selecting(...).checking(...)`` chain that follows a factory
+    call: the position of the terminating ``;`` (exclusive)."""
+    n = len(source)
+    while i < n:
+        j = i
+        while j < n and source[j].isspace():
+            j += 1
+        if j < n and source[j] == ".":
+            k = source.index("(", j)
+            depth, in_string, escaped = 0, False, False
+            while k < n:
+                ch = source[k]
+                if in_string:
+                    if escaped:
+                        escaped = False
+                    elif ch == "\\":
+                        escaped = True
+                    elif ch == '"':
+                        in_string = False
+                elif ch == '"':
+                    in_string = True
+                elif ch == "(":
+                    depth += 1
+                elif ch == ")":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                k += 1
+            i = k + 1
+            continue
+        return i
+    return n
+
+
+_CALL_RE = re.compile(r"(?<![\w.])([a-z]\w*)\s*\(")
+_MEMBER_CALL_RE = re.compile(r"\.([a-z]\w*)\s*\(")
+_JAVA_KEYWORDS = frozenset(
+    "if for while do switch catch synchronized return new throw super this try assert".split()
+)
+_ARCH_CALL_RE = re.compile(r"\barch\.(\w+)\s*\(")
+_SHARED_HELPER_CLASSES = ("IntraClassCalls", "TypeInspection", "CollectedViolations")
+
+
+def _method_source(source: str, name: str) -> str | None:
+    """The declarations of method ``name`` in ``source`` (every overload) — javadoc
+    included, bodies matched by braces — or ``None`` when the class declares no such
+    method."""
+    found = _method_sources(source, name)
+    return "\n\n".join(found) if found else None
+
+
+def _method_sources(source: str, name: str) -> list[str]:
+    found: list[str] = []
+    for m in re.finditer(rf"(?m)^  (?! )(?:(?:public|private|protected|static|final|synchronized)\s+)*[\w<>\[\],?. ]+?\s+{re.escape(name)}\s*\(", source):
+        start = m.start()
+        # take the javadoc directly above, if any
+        before = source[:start]
+        doc = before.rstrip()
+        if doc.endswith("*/"):
+            doc_start = doc.rfind("/**")
+            if doc_start >= 0:
+                start = doc_start
+        brace = source.find("{", m.end())
+        semi = source.find(";", m.end())
+        if brace < 0 or (0 <= semi < brace):
+            continue  # abstract/interface declaration — not a helper body
+        depth, i, in_string, escaped = 0, brace, False, False
+        while i < len(source):
+            ch = source[i]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif ch == "\\":
+                    escaped = True
+                elif ch == '"':
+                    in_string = False
+            elif ch == '"':
+                in_string = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    found.append(_dedent_block(source[start : i + 1]))
+                    break
+            i += 1
+    return found
+
+
+def _dedent_block(code: str) -> str:
+    lines = code.splitlines()
+    indents = [len(ln) - len(ln.lstrip()) for ln in lines if ln.strip()]
+    pad = min(indents) if indents else 0
+    return "\n".join(ln[pad:] if len(ln) >= pad else ln for ln in lines)
+
+
+def _helpers(expression: str, class_source: str, shared: dict[str, str]) -> tuple[list[tuple[str, str, str]], list[str]]:
+    """``([(class, name, source)], [DcaArchitecture method names])``: the helper
+    methods the expression calls — transitively, within the rule class and the
+    shared helper classes of the rules package — and the ``arch.*`` methods used
+    anywhere along the way. Rules from ``DcaRule`` itself and ArchUnit's fluent
+    API are not methods of these classes and are skipped naturally."""
+    found: list[tuple[str, str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    arch_methods: set[str] = set()
+    queue: list[tuple[str, str]] = [("", expression)]
+    while queue:
+        owner, code = queue.pop(0)
+        arch_methods.update(_ARCH_CALL_RE.findall(code))
+        for name in dict.fromkeys(_CALL_RE.findall(code)):
+            if name in _JAVA_KEYWORDS:
+                continue
+            candidates = [("", class_source)] + [(c, src) for c, src in shared.items() if owner == c]
+            for cls, src in candidates:
+                if (cls, name) in seen:
+                    continue
+                body = _method_source(src, name)
+                if body is None:
+                    continue
+                seen.add((cls, name))
+                found.append((cls, name, body))
+                queue.append((cls, body))
+                break
+        # methods invoked on the shared helper classes (``calls.entryPointsOf(unit)``,
+        # ``TypeInspection.instanceFields(current)``) — embedded when that class is in play
+        referenced = [c for c in shared if f"{c}." in code or f"new {c}(" in code or f" {c} " in code or owner == c]
+        for name in dict.fromkeys(_MEMBER_CALL_RE.findall(code)):
+            for cls in referenced:
+                if (cls, name) in seen:
+                    continue
+                body = _method_source(shared[cls], name)
+                if body is None:
+                    continue
+                seen.add((cls, name))
+                found.append((cls, name, body))
+                queue.append((cls, body))
+                break
+    return found, sorted(arch_methods)
+
+
+def _body(code: str, selects: str, checks: str, helpers, arch_methods, dotnet: dict | None) -> str:
+    parts = [f"## Selection\n\n{selects}", f"## Check\n\n{checks}"]
+    if (
+        dotnet
+        and dotnet.get("selects")
+        and dotnet.get("checks")
+        and (dotnet["selects"] != selects or dotnet["checks"] != checks)
+    ):
+        parts.append(
+            "## .NET reading\n\n**Selection.** "
+            + dotnet.get("selects", "")
+            + "\n\n**Check.** "
+            + dotnet.get("checks", "")
+        )
+    if code:
+        parts.append(f"## Implementation\n\n```java\n{code}\n```")
+    if helpers:
+        blocks = []
+        for cls, name, src in helpers:
+            label = f"{cls}.{name}" if cls else name
+            blocks.append(f"### `{label}`\n\n```java\n{src}\n```")
+        parts.append("## Helpers\n\n" + "\n\n".join(blocks))
+    if arch_methods:
+        parts.append(
+            "## Architecture queries\n\n"
+            "[DcaArchitecture](/reference/architecture.md) methods the rule relies on: "
+            + ", ".join(f"`{m}()`" for m in arch_methods)
+            + " - how they resolve packages is described there and in "
+            "[DcaLayout](/reference/layout.md)."
+        )
+    return "\n\n".join(parts)
 
 
 def _dedent(code: str) -> str:
@@ -147,11 +328,24 @@ def extract(repo_root: Path) -> list[Node]:
         )
     entries = json.loads(catalog_path.read_text(encoding="utf-8"))
     sources: dict[str, str] = {}
+    shared_sources = {
+        c: (repo_root / RULES_SRC_REL / f"{c}.java").read_text(encoding="utf-8")
+        for c in _SHARED_HELPER_CLASSES
+        if (repo_root / RULES_SRC_REL / f"{c}.java").exists()
+    }
+    undescribed = [e["id"] for e in entries if not e.get("selects") or not e.get("checks")]
+    if undescribed:
+        raise SystemExit(
+            f"{len(undescribed)} rule(s) in {RULES_JSON_REL} carry no selects/checks text: "
+            + ", ".join(undescribed)
+            + " — every rule must describe its mechanics (DcaRule.selecting/checking)."
+        )
     nodes: list[Node] = []
     for entry in entries:
         rule_set, rule_id, title, rationale = (
             entry["set"], entry["id"], entry["title"], entry["rationale"],
         )
+        selects, checks = entry["selects"], entry["checks"]
         class_name = _RULE_SET_CLASS.get(rule_set)
         if class_name is None:
             print(
@@ -170,12 +364,15 @@ def extract(repo_root: Path) -> list[Node]:
         else:
             code = _dedent(expression)
         implementations = ["java"] + (["dotnet"] if rule_id in dotnet_ported else [])
+        helpers, arch_methods = _helpers(code, sources[class_name], shared_sources) if code else ([], [])
         fm = {
             "type": "Rule",
             "id": rule_id,
             "title": title,
             "rule": rationale.rstrip(".") + ".",
             "constraint": _constraint(title),
+            "selects": selects,
+            "checks": checks,
             "enforced_by": f"{class_name}#{rule_id}",
             "status": _status(title, code),
             "rule_set": rule_set,
@@ -185,14 +382,15 @@ def extract(repo_root: Path) -> list[Node]:
         }
         if rule_id in dotnet_na:
             fm["not_applicable_dotnet"] = dotnet_na[rule_id]
-        body = f"```java\n{code}\n```" if code else ""
-        dotnet_ported.pop(rule_id, None)
+        dotnet_entry = dotnet_ported.pop(rule_id, None)
+        body = _body(code, selects, checks, helpers, arch_methods, dotnet_entry)
+        scan_text = code + "\n" + "\n".join(src for _, _, src in helpers)
         nodes.append(
             Node(
                 path=f"rule/{rule_set}/{slugify(title)}.md",
                 frontmatter=fm,
                 body=body,
-                meta={"name": title, "kind": "rule", "scan_text": code},
+                meta={"name": title, "kind": "rule", "scan_text": scan_text},
             )
         )
     # Rules that exist only in the .NET library (rule set ``dotnet``, ids DCA-NET-…).
@@ -208,6 +406,8 @@ def extract(repo_root: Path) -> list[Node]:
                     "title": title,
                     "rule": rationale.rstrip(".") + ".",
                     "constraint": _constraint(title),
+                    "selects": entry.get("selects", ""),
+                    "checks": entry.get("checks", ""),
                     "enforced_by": f"{class_name}#{rule_id}",
                     "status": "enforced",
                     "rule_set": rule_set,
@@ -215,7 +415,11 @@ def extract(repo_root: Path) -> list[Node]:
                     "resource": (Path(DOTNET_RULES_SRC_REL) / f"{class_name}.cs").as_posix(),
                     "tags": [rule_set, "archunitnet"],
                 },
-                body="",
+                body=(
+                    f"## Selection\n\n{entry['selects']}\n\n## Check\n\n{entry['checks']}"
+                    if entry.get("selects") and entry.get("checks")
+                    else ""
+                ),
                 meta={"name": title, "kind": "rule", "scan_text": ""},
             )
         )

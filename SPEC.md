@@ -50,7 +50,7 @@ marketplace, slash commands, or any other specific agent product. Enforced by
 
 ## DCA node types
 
-This profile defines ten `type` values. All carry `title` and `tags`;
+This profile defines eleven `type` values. All carry `title` and `tags`;
 generated-zone nodes also carry `resource` (the canonical source URI).
 
 ### `Guide`
@@ -77,8 +77,10 @@ A marker interface / annotation from the `dca-building-blocks` library
   `…ddd.strategic.relationships`, `…hexagonal.port.in`, `…hexagonal.port.out`, `…application`)
 - `kind`: `interface | class | annotation`
 - `signature`: the Java declaration (generics + supertypes)
+- `generics`: the type's own type-parameter block, verbatim without brackets, e.g. `T extends AggregateRoot<T, ID>, ID extends Id` (optional)
+- `modifiers`: class modifiers such as `[public, abstract]` (class markers only)
 - `extends`: supertype marker names (optional)
-- `methods`: declared method signatures (optional)
+- `methods`: declared non-private method headers, comments and annotations stripped, `default`/`public`/`static` modifiers and annotation-element defaults kept — e.g. `default boolean sameIdentityAs(T other)`, `String description() default ""` (optional)
 - Link sections: **Extends**, **Governed by** (rules), **Discussed in** (the
   guide sections that primarily discuss the marker — title match or dense
   mentions, capped at 10 to stay low-noise).
@@ -90,6 +92,11 @@ One rule of the `dca-archunit` rule library — an enforceable architecture rule
 - `rule`: the rationale (the `because(...)` text — the *why*)
 - `constraint`: the rule as a single-line actionable precondition (the *what*, from the
   title) — what an LLM satisfies while generating; recipes surface these as checklists
+- `selects`: which classes the rule looks at — the set the assertion runs over, in terms of the
+  layout (`<module>.application..`, "the configured use-case suffix", marker assignability).
+  Mandatory; a class outside this set is never reported.
+- `checks`: what the rule asserts about each selected class, including what does *not* satisfy
+  it and what it deliberately does not establish. Mandatory.
 - `enforced_by`: `<RuleSetClass>#<id>`
 - `status`: `enforced | informational | disabled`
 - `rule_set`: the rule set name (`tactical`, `hexagonal`, `contextmap`, …)
@@ -98,13 +105,33 @@ One rule of the `dca-archunit` rule library — an enforceable architecture rule
   (`DCA-NET-…`) exist only in .NET.
 - `not_applicable_dotnet` (optional): the reason when the .NET library deliberately does not
   port a Java rule (e.g. it only checks a Spring annotation)
-- Body: the rule's `DcaRule.of(...)` / `DcaRule.check(...)` expression, verbatim, in a
-  fenced block.
-- Link section: **Applies to markers**.
+- Body, in this order: **Selection** and **Check** (the two texts above as prose); **.NET
+  reading** when the .NET library's texts differ from the Java ones; **Implementation** — the
+  rule's `DcaRule.of(...)` / `DcaRule.check(...)` expression with its `.selecting(...).checking(...)`
+  completion, verbatim, in a fenced block; **Helpers** — every private helper method the
+  expression calls, transitively, copied from the rule class or the rules package's shared
+  helper classes, one fenced block each; **Architecture queries** — the `DcaArchitecture`
+  methods used, by name. A reader of the node needs no source file to predict the rule.
+- Link sections: **Applies to markers**, **Configured by** (the two `Reference` nodes).
 
 ### `Process`
 A how-to for sustaining the architecture's conventions (currently: how to write
 an ADR). Body is the procedure + section skeleton.
+
+### `Reference`
+One of the two classes every rule is parameterised by, rendered from the Java source
+and its .NET twin — never typed by hand, so a default cannot drift from the node.
+- `subject`: `layout | architecture`
+- `resource`: the Java source; `resource_dotnet`: the C# source (both dropped in mirrors)
+- `reference/layout.md` — `DcaLayout`: every setting with default and `with*` override,
+  the third-party packages the domain may use, the building-block package constants, the
+  derived patterns, the framework annotations (`FrameworkAnnotations.spring()`) — and the same
+  for .NET (`ForRootNamespace`, `FrameworkTypes.AspNetCore()`).
+- `reference/architecture.md` — `DcaArchitecture`: how bounded contexts (declared),
+  the shared kernel and module roots (structural) are discovered, and every public query the
+  rules select through, with its javadoc; the .NET API as a table.
+- Link section: **See also** (the other reference node). Every Rule node links both under
+  **Configured by**; a rule's *Architecture queries* paragraph names the queries it uses.
 
 ### Extensible-zone types (authored)
 

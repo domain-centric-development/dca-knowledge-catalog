@@ -1,4 +1,4 @@
 # port-in
 
-- [InputPort](inputport.md) — Marker interface for Input Ports (Hexagonal Architecture).
-- [UseCase<INPUT, OUTPUT>](usecase.md) — Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Architecture).
+- [InputPort](inputport.md) — Marker interface for Input Ports (Hexagonal Architecture). Input ports are the entry points to the application layer....
+- [UseCase<INPUT, OUTPUT>](usecase.md) — Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Architecture). An input port represents ...

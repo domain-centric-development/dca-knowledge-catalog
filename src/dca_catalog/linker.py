@@ -135,3 +135,15 @@ def link_docs(docs: list[Node], markers: list[Node]) -> None:
         )[:_DISCUSS_MAX_LINKS]
         sections = sorted((n for _t, _c, n in ranked), key=lambda x: x.path)
         marker.add_section("Discussed in", [_link(s) for s in sections])
+
+
+def link_reference(rules: list[Node], references: list[Node]) -> None:
+    """Every rule is parameterised by the layout and selects through the
+    architecture's discovery queries — link each rule to both reference nodes
+    ("Configured by"), and the two reference nodes to each other."""
+    refs = sorted(references, key=lambda n: n.path)
+    for rule in rules:
+        if rule.meta.get("kind") == "rule":
+            rule.add_section("Configured by", [_link(r) for r in refs])
+    for ref in refs:
+        ref.add_section("See also", [_link(o) for o in refs if o is not ref])

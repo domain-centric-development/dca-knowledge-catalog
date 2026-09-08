@@ -9,7 +9,38 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [tactical, marker]
 ---
 
-Marker for Value.
+Marker interface for Value Objects.
+
+A Value Object describes a characteristic - an amount of money, an address, a quantity - and
+has no identity: two values with the same attributes are the same value. It is immutable; a
+change produces a new instance. Because it has no life cycle of its own, it is never loaded or
+saved on its own - it travels inside the Entity or Aggregate Root that holds it.
+
+**Characteristics:**
+
+- Immutable: all fields final, no setters; a record is the natural shape
+- Equality by attributes, not by reference or identifier
+- Self-validating: the constructor rejects values that make no sense in the domain
+- Behaviour is side-effect free and returns new values (`money.add(other)`)
+- Must not reference Aggregate Roots or Entities
+
+**Example:**
+
+```java
+public record Money(BigDecimal amount, Currency currency) implements Value {
+  public Money {
+    Objects.requireNonNull(amount, "amount");
+    Objects.requireNonNull(currency, "currency");
+  }
+
+  public Money add(Money other) {
+    requireSameCurrency(other);
+    return new Money(amount.add(other.amount), currency);
+  }
+}
+```
+
+Identifiers are Value Objects too, but carry their own marker: `d`.
 
 ## Governed by
 

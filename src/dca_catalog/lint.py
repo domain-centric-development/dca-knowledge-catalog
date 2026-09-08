@@ -42,7 +42,7 @@ _TAG_VOCABULARY = frozenset({
     "factory", "domain-service", "gateway", "port", "dto",
     "bounded-context", "shared-kernel", "subdomain", "context-map",
     "anti-corruption-layer", "package-structure", "feature", "naming", "testing",
-    "archunit", "spring", "modulith", "rest", "persistence", "bootstrap",
+    "archunit", "archunitnet", "reference", "spring", "modulith", "rest", "persistence", "bootstrap",
     "cqrs", "event-sourcing", "security", "performance", "migration",
 })
 
@@ -85,10 +85,17 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
             if not (bundle / t.lstrip("/")).exists():
                 findings.append(("ERROR", "broken-link", rel, t))
 
+        # 1b. rule mechanics — every Rule node names what it selects and what it checks
+        if fm.get("type") == "Rule":
+            for field in ("selects", "checks"):
+                if not str(fm.get(field) or "").strip():
+                    findings.append(("ERROR", "undescribed-rule", rel, f"missing '{field}' frontmatter"))
+
         # 2. stale resource — generated node's source file vanished
-        resource = fm.get("resource")
-        if resource and not (repo_root / resource).exists():
-            findings.append(("ERROR", "stale-resource", rel, resource))
+        for key in ("resource", "resource_dotnet"):
+            resource = fm.get(key)
+            if resource and not (repo_root / resource).exists():
+                findings.append(("ERROR", "stale-resource", rel, resource))
 
         # 3 & 4. authored-node health (extensible zone)
         if top in _EXTENSIBLE_DIRS:

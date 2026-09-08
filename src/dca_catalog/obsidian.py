@@ -53,6 +53,7 @@ _GRAPH_COLORS = {
     "marker": 0xF58518,    # orange
     "rule": 0xE45756,      # red
     "process": 0x9D755D,   # brown
+    "reference": 0x4C78A8, # blue
     "recipe": 0x54A24B,    # green
     "decision": 0xEECA3B,  # yellow
     "pitfall": 0xFF9DA6,   # rose

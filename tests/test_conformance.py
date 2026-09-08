@@ -51,6 +51,7 @@ def test_counts(bundle: Path):
     assert types["Marker"] == 29
     assert types["Rule"] == 120
     assert types["Process"] == 1
+    assert types["Reference"] == 2
     # the book and the sample's ADRs are deliberately not in the bundle
     assert "Chapter" not in types
     assert "ADR" not in types
@@ -92,7 +93,7 @@ def test_reserved_indexes_present(bundle: Path):
 def test_bundle_relative_links_resolve(bundle: Path):
     # Only validate links into our own top-level dirs; copied guide prose may
     # carry unrelated absolute links that are not part of the OKF graph.
-    prefixes = ("/guide/", "/marker/", "/rule/", "/process/")
+    prefixes = ("/guide/", "/marker/", "/rule/", "/process/", "/reference/")
     link_re = re.compile(r"\]\((/[^)]+)\)")
     broken = []
     for p in bundle.rglob("*.md"):
@@ -340,7 +341,7 @@ def test_lint_catches_problems(tmp_path):
 
 
 def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
-    graph_dirs = ("guide", "marker", "rule", "process",
+    graph_dirs = ("guide", "marker", "rule", "process", "reference",
                   "recipe", "decision", "pitfall", "template", "note")
     leading = re.compile(r"\]\((/(?:" + "|".join(graph_dirs) + r")/[^)]+)\)")
 
@@ -489,3 +490,193 @@ def test_idempotent(tmp_path):
     assert files_a == files_b
     for rel in files_a:
         assert (a / rel).read_text() == (b / rel).read_text(), f"non-deterministic: {rel}"
+
+
+# --- marker method extraction -------------------------------------------------
+
+_METHOD_HEADER = re.compile(
+    r"^(?:(?:public|protected|default|static|abstract)\s+)*(?:<[^>]+>\s+)?"
+    r"[\w.<>\[\],? ]+?\s+\w+\([^()]*\)(?: default .+)?$"
+)
+
+_MARKER_ORACLE = {
+    "tactical/baseaggregateroot.md": [
+        "public void registerEvent(DomainEvent event)",
+        "public List<DomainEvent> domainEvents()",
+        "public void clearDomainEvents()",
+    ],
+    "tactical/entity.md": ["ID id()", "default boolean sameIdentityAs(T other)"],
+    "application/transactionboundary.md": [
+        "<T> T inTransaction(Supplier<T> work)",
+        "default void inTransaction(Runnable work)",
+    ],
+    "strategic/externalupstream.md": [
+        "String name()",
+        "Upstream.Translation translation()",
+        "Interaction interaction()",
+        "String[] contractPackages() default {}",
+        'String protocol() default ""',
+        'String exchanges() default ""',
+        'String rationale() default ""',
+        "Upstream.Status status() default Upstream.Status.IMPLEMENTED",
+    ],
+}
+
+
+def _marker_methods(bundle: Path, rel: str) -> list[str]:
+    fm, _ = _split_frontmatter((bundle / "marker" / rel).read_text(encoding="utf-8"))
+    raw = fm.get("methods", "")
+    assert raw.startswith("[") and raw.endswith("]"), f"{rel}: methods not a list: {raw!r}"
+    import json
+
+    return json.loads(raw)
+
+
+def test_marker_methods_oracle(bundle: Path):
+    """Class methods, default methods and annotation-element defaults are extracted
+    as declared — the three nodes the regex extractor got wrong, plus the annotation
+    with an array default."""
+    for rel, expected in _MARKER_ORACLE.items():
+        assert _marker_methods(bundle, rel) == expected, rel
+
+
+def test_marker_methods_are_headers_not_body_fragments(bundle: Path):
+    for p in (bundle / "marker").rglob("*.md"):
+        if p.name == "index.md":
+            continue
+        fm, _ = _split_frontmatter(p.read_text(encoding="utf-8"))
+        if "methods" not in fm:
+            continue
+        for m in _marker_methods(bundle, p.relative_to(bundle / "marker").as_posix()):
+            assert _METHOD_HEADER.match(m), f"{p.name}: not a method header: {m!r}"
+            for forbidden in ("throw ", "return ", "/*", "*/", "@"):
+                assert forbidden not in m, f"{p.name}: body fragment leaked: {m!r}"
+
+
+def test_marker_method_count_matches_source(bundle: Path):
+    """Independent count: in google-java-format output every member of a top-level
+    type starts at two-space indentation. Count the 2-space-indented, comment-free
+    lines that open a non-private, non-constructor member with a parameter list and
+    compare with what the scanner extracted — a method the scanner drops or invents
+    shows up as a mismatch."""
+    from dca_catalog import markers
+
+    base = REPO_ROOT / markers.MARKER_REL
+    member_line = re.compile(r"^  (?![ @/*}])(?!private\b)(?!(?:class|interface|enum|record)\b).*\w+\(.*", re.M)
+    checked = 0
+    for src_path in sorted(base.rglob("*.java")):
+        source = src_path.read_text(encoding="utf-8")
+        decl = markers._DECL_RE.search(source)
+        if not decl:
+            continue
+        name = decl.group(2)
+        body = markers._mask(source, literals=False)[source.index("{", decl.start()) + 1 :]
+        # only the outermost body: drop nested type bodies by indentation (4+ spaces stay, 2-space '}' ends nested type)
+        expected = 0
+        nested = False
+        for line in body.splitlines():
+            if re.match(r"^  (?:public |protected |static )*(?:@interface|interface|class|enum|record)\b", line):
+                nested = True
+            elif nested and line.startswith("  }"):
+                nested = False
+            elif not nested and member_line.match(line) and not re.match(rf"^  (?:public |protected )?{name}\(", line):
+                expected += 1
+        node = next(bundle.joinpath("marker").rglob(f"{markers.slugify(name)}.md"), None)
+        assert node is not None, f"no node for {name}"
+        fm, _ = _split_frontmatter(node.read_text(encoding="utf-8"))
+        got = len(_marker_methods(bundle, node.relative_to(bundle / "marker").as_posix())) if "methods" in fm else 0
+        assert got == expected, f"{name}: scanner {got} vs source {expected}"
+        checked += 1
+    assert checked >= 20
+
+
+# --- rule mechanics ----------------------------------------------------------------
+
+
+def _rule_files(bundle: Path) -> list[Path]:
+    return [p for p in (bundle / "rule").rglob("*.md") if p.name != "index.md"]
+
+
+def test_every_rule_node_describes_selection_and_check(bundle: Path):
+    """Decision: the two mechanics texts are mandatory for every rule, so a reader can
+    predict from the node alone whether a rule applies and what it will say."""
+    for p in _rule_files(bundle):
+        fm, body = _split_frontmatter(p.read_text(encoding="utf-8"))
+        assert fm.get("selects", "").strip(), f"{p.name}: no selects"
+        assert fm.get("checks", "").strip(), f"{p.name}: no checks"
+        assert "## Selection" in body and "## Check" in body, f"{p.name}: body lacks Selection/Check"
+
+
+def test_rule_nodes_embed_referenced_helpers(bundle: Path):
+    """Every helper method the implementation block calls that the rule class (or a
+    shared helper class of the rules package) defines appears as a `### ...` block in
+    the node — nobody should need the sources jar to see what `publishAfterSaving()`
+    does."""
+    from dca_catalog import rules
+
+    src_dir = REPO_ROOT / rules.RULES_SRC_REL
+    class_sources = {p.stem: p.read_text(encoding="utf-8") for p in src_dir.glob("*.java")}
+    checked = 0
+    for p in _rule_files(bundle):
+        fm, body = _split_frontmatter(p.read_text(encoding="utf-8"))
+        if "java" not in fm.get("implementations", ""):
+            continue
+        impl = re.search(r"## Implementation\n\n```java\n(.*?)\n```", body, re.S)
+        assert impl, f"{p.name}: no implementation block"
+        class_name = fm["enforced_by"].strip('"').split("#")[0]
+        source = class_sources[class_name]
+        for name in set(rules._CALL_RE.findall(impl.group(1))):
+            if name in rules._JAVA_KEYWORDS or rules._method_source(source, name) is None:
+                continue
+            assert f"### `{name}`" in body, f"{p.name}: helper {name}() not embedded"
+            checked += 1
+    assert checked >= 20, "expected many helper embeddings across the catalog"
+
+
+def test_lint_flags_undescribed_rule(tmp_path: Path):
+    b = tmp_path / "bundle"
+    (b / "rule" / "x").mkdir(parents=True)
+    (b / "rule" / "x" / "r.md").write_text(
+        "---\ntype: Rule\nid: DCA-X-001\ntitle: t\nrule: r.\nconstraint: c.\nenforced_by: X#DCA-X-001\n"
+        "status: enforced\nrule_set: x\nimplementations: [java]\ntags: [x]\n---\n\nbody\n",
+        encoding="utf-8",
+    )
+    kinds = {f[1] for f in lint.lint(b, REPO_ROOT)}
+    assert "undescribed-rule" in kinds
+
+
+# --- reference nodes ----------------------------------------------------------------
+
+
+def test_reference_nodes_render_every_setting_and_query(bundle: Path):
+    """The two reference nodes are rendered from the sources: every `with*` override of
+    DcaLayout, every FrameworkAnnotations.spring() name and every public method of
+    DcaArchitecture must appear — a new setting or query cannot go missing silently."""
+    from dca_catalog import reference
+
+    java = REPO_ROOT / reference.JAVA_SRC_REL
+    layout = (bundle / "reference" / "layout.md").read_text(encoding="utf-8")
+    arch = (bundle / "reference" / "architecture.md").read_text(encoding="utf-8")
+
+    for setter in re.findall(r"public DcaLayout (with\w+)\(", (java / "DcaLayout.java").read_text()):
+        assert f"`{setter}(" in layout, f"{setter} missing from dca-layout.md"
+    for fqn in re.findall(r'"(org\.springframework[\w.]+)"', (java / "FrameworkAnnotations.java").read_text()):
+        assert fqn in layout, f"{fqn} missing from dca-layout.md"
+    assert "`java..`" in layout and "`org.jspecify.annotations..`" in layout
+    assert "`System`" in layout and "ForRootNamespace" in layout  # .NET half
+
+    arch_src = (java / "DcaArchitecture.java").read_text()
+    for name in set(re.findall(r"(?m)^  public (?:static )?[\w<>\[\],?. ]+? (\w+)\(", arch_src)):
+        assert f"{name}(" in arch, f"{name}() missing from dca-architecture.md"
+    assert "moduleRoots()" in arch and "AllDomainPatterns()" in arch
+
+    for p in _rule_files(bundle):
+        text = p.read_text(encoding="utf-8")
+        assert "## Configured by" in text and "/reference/layout.md" in text, p.name
+
+
+def test_mirror_strips_dotnet_resource():
+    text = "---\ntype: Reference\nresource: a/b.java\nresource_dotnet: c/d.cs\ntags: [x]\n---\n\nbody\n"
+    stripped = generate._strip_resource(text)
+    assert "resource" not in stripped.split("---")[1]
+    assert "body" in stripped

@@ -19,6 +19,7 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 | `bundle/marker/**` | `dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java` |
 | `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule); `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`) for `implementations`, `not_applicable_dotnet` and the .NET-only `DCA-NET` rules |
 | `bundle/process/creating-an-adr.md` | `dca-guide/adr-template.md` |
+| `bundle/reference/layout.md`, `bundle/reference/architecture.md` | `dca-java/dca-archunit/src/main/java/.../DcaLayout.java`, `FrameworkAnnotations.java`, `DcaArchitecture.java` + `dca-dotnet/src/DomainCentric.ArchRules/DcaLayout.cs`, `FrameworkTypes.cs`, `DcaArchitecture.cs` (javadoc/XML doc, defaults, constants, public API — rendered, never typed) |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
 are the **skeleton** it anchors to.
@@ -50,7 +51,7 @@ The bundle is one OKF graph in two zones (see `SPEC.md`):
 
 | Zone | Dirs | Edit by hand? |
 |------|------|---------------|
-| **Generated** | `guide/ marker/ rule/ process/` | ❌ no — derived, wiped + rebuilt each run |
+| **Generated** | `guide/ marker/ rule/ process/ reference/` | ❌ no — derived, wiped + rebuilt each run |
 | **Extensible** | `recipe/ decision/ pitfall/ template/ note/` | ✅ yes — authored, **preserved** across `generate` |
 
 `generate` rebuilds the generated zone, preserves authored node files in the
@@ -100,11 +101,18 @@ document acquired an outward reference: fix it there.
   which is a **guide** bug — fix the guide, not the generator.
 - `markers.py` — parses the building-block `.java` types (declaration anchored at column 0 to
   avoid matching javadoc example code); bundle category from the package path, `package:` kept.
-- `rules.py` — reads `dca-java/rules.json` (id, set, resolved title, rationale) and attaches the
-  verbatim `DcaRule.of/check(...)` expression from the matching `<Set>Rules.java`; merges
-  `dca-dotnet/rules.json` (implementation flag, n/a reasons, `DCA-NET` nodes without code body).
+- `rules.py` — reads `dca-java/rules.json` (id, set, resolved title, rationale, **mandatory** `selects`/`checks`)
+  and attaches the verbatim `DcaRule.of/check(...).selecting(...).checking(...)` expression from the matching
+  `<Set>Rules.java` plus every private helper it calls (transitively, shared helper classes included); merges
+  `dca-dotnet/rules.json` (implementation flag, n/a reasons, `.NET reading` block where the texts differ,
+  `DCA-NET` nodes). Every rule node links both `reference/` nodes ("Configured by").
 - `process.py` — builds the Process node from the ADR template.
-- `linker.py` — string-based cross-linking (rule↔marker, section→marker),
+- `reference.py` — renders the two `Reference` nodes (`DcaLayout`, `DcaArchitecture`) from the Java
+  sources and their .NET twins: settings with defaults and `with*` overrides, derived patterns,
+  building-block constants, third-party allow-lists, `FrameworkAnnotations.spring()` /
+  `FrameworkTypes.AspNetCore()`, and every public discovery query with its javadoc. A test asserts every
+  `with*` method, Spring FQN and public `DcaArchitecture` method appears.
+- `linker.py` — string-based cross-linking (rule↔marker, section→marker, rule→reference),
   sorted for determinism.
 - `generate.py` — orchestrates; zone-aware (rebuilds the generated zone, preserves the
   authored extensible zone); writes `index.md` per directory + `log.md`; mirrors to the plugin.

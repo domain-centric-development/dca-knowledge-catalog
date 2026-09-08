@@ -9,7 +9,34 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [tactical, marker]
 ---
 
-Marker for Id.
+Marker interface for typed identifiers of Entities and Aggregate Roots.
+
+An identifier is a Value Object whose only job is to name one Entity for its whole life.
+Giving every Entity its own identifier type (`ProductId`, `OrderId`) instead of a
+bare `UUID` or `String` lets the compiler reject a cart id passed where a product id
+is expected, and lets a Repository's signature say which aggregate it manages.
+
+**Characteristics:**
+
+- Immutable, with attribute equality - a record is the natural shape
+- Validates its own wrapped value (never null, well-formed)
+- Carries no behaviour beyond identity; generation (`newId()`) may live on the type
+- Lives in the domain layer of the context that owns the Entity; identifiers shared across
+contexts belong in the shared kernel
+
+**Example:**
+
+```java
+public record ProductId(UUID value) implements Id {
+  public ProductId {
+    Objects.requireNonNull(value, "value");
+  }
+
+  public static ProductId newId() {
+    return new ProductId(UUID.randomUUID());
+  }
+}
+```
 
 ## Governed by
 

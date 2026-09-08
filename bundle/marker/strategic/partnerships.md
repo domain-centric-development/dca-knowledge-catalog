@@ -10,4 +10,6 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [strategic, marker]
 ---
 
-Container annotation for repeatable Partnership declarations.
+Container annotation for repeatable `p` declarations.
+
+Not used directly — apply multiple `@Partnership` annotations instead.
