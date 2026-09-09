@@ -63,7 +63,7 @@ downstream's domain layer
 - [External system contract types must respect the declared translation and interaction](/rule/contextmap/external-system-contract-types-must-respect-the-declared-translation-and-interaction.md)
 - [ExternalUpstream declarations must be well-formed and unique per name and interaction](/rule/contextmap/externalupstream-declarations-must-be-well-formed-and-unique-per-name-and-interaction.md)
 - [Implemented Upstream declarations must be backed by an actual code dependency](/rule/contextmap/implemented-upstream-declarations-must-be-backed-by-an-actual-code-dependency.md)
-- [Upstream declarations and Spring Modulith allowedDependencies must agree](/rule/contextmap/upstream-declarations-and-spring-modulith-alloweddependencies-must-agree.md)
+- [Upstream declarations and the module declaration's allowed dependencies must agree](/rule/contextmap/upstream-declarations-and-the-module-declaration-s-allowed-dependencies-must-agree.md)
 - [Upstream declarations must be unique per context and channel, and via must not be empty](/rule/contextmap/upstream-declarations-must-be-unique-per-context-and-channel-and-via-must-not-be-empty.md)
 - [Upstream declarations must reference an existing bounded context and never the declaring context itself](/rule/contextmap/upstream-declarations-must-reference-an-existing-bounded-context-and-never-the-declaring-context-itself.md)
 - [Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages](/rule/contextmap/upstream-externalupstream-and-partnership-may-only-be-declared-on-bounded-context-packages.md)

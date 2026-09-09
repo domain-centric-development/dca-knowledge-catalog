@@ -24,7 +24,11 @@ tags: [guide, section]
 | Build / test | Gradle, JUnit 5 | `dotnet build` / `dotnet test`, xUnit |
 
 The rules do not care which framework you register with — they check that framework types stay out of
-`domain` and `application` (`DcaLayout.withFrameworkAnnotations(...)` / `WithFrameworkTypes(...)` names them).
+`domain` and `application`, resolved by *role* through `DcaLayout.withFrameworkAnnotations(...)` /
+`WithFrameworkTypes(...)`. Java ships presets for Spring (default), Jakarta EE, Quarkus, Micronaut and none; .NET
+ships ASP.NET Core (default) and none. A Jakarta or Quarkus project therefore reads the Java column with CDI's
+`@ApplicationScoped` for `@Service`, `jakarta.transaction.Transactional` for `@Transactional`, `@Path` for
+`@RestController` and `@Observes` for `@EventListener` — the rule ids and texts are the same.
 
 ## Related markers
 

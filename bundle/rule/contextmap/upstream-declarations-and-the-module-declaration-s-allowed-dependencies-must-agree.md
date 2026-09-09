@@ -1,10 +1,10 @@
 ---
 type: Rule
 id: DCA-MAP-006
-title: Upstream declarations and Spring Modulith allowedDependencies must agree
+title: Upstream declarations and the module declaration's allowed dependencies must agree
 rule: Neither the context map nor the module boundary may know more than the other — an edge that exists only on one side is stale.
-constraint: Upstream declarations and Spring Modulith allowedDependencies must agree.
-selects: "Every package carrying @BoundedContext, provided the layout names a module annotation (Spring Modulith's @ApplicationModule) that is on the class path; reads its @Upstream declarations (context(), via(); PLANNED included) and, reflectively, the module annotation's allowedDependencies attribute. Without a configured and loadable module annotation the rule selects nothing and passes."
+constraint: Upstream declarations and the module declaration's allowed dependencies must agree.
+selects: "Every package carrying @BoundedContext, provided the layout configures a module declaration annotation (a module system's per-package declaration, for example Spring Modulith's) that is on the class path; reads its @Upstream declarations (context(), via(); PLANNED included) and, reflectively, the module declaration's allowedDependencies attribute. Without a configured and loadable module declaration the rule selects nothing and passes."
 checks: "The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored; a context whose package-info carries no module annotation contributes an empty set, so its @Upstream declarations are reported as unmatched."
 enforced_by: "ContextMapRules#DCA-MAP-006"
 status: enforced
@@ -12,12 +12,12 @@ rule_set: contextmap
 implementations: [java]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
-not_applicable_dotnet: Upstream declarations and Spring Modulith allowedDependencies must agree — .NET has no module system annotation; project boundaries take that role
+not_applicable_dotnet: Upstream declarations and the module declaration's allowed dependencies must agree — .NET has no module-declaration attribute; project boundaries take that role
 ---
 
 ## Selection
 
-Every package carrying @BoundedContext, provided the layout names a module annotation (Spring Modulith's @ApplicationModule) that is on the class path; reads its @Upstream declarations (context(), via(); PLANNED included) and, reflectively, the module annotation's allowedDependencies attribute. Without a configured and loadable module annotation the rule selects nothing and passes.
+Every package carrying @BoundedContext, provided the layout configures a module declaration annotation (a module system's per-package declaration, for example Spring Modulith's) that is on the class path; reads its @Upstream declarations (context(), via(); PLANNED included) and, reflectively, the module declaration's allowedDependencies attribute. Without a configured and loadable module declaration the rule selects nothing and passes.
 
 ## Check
 
@@ -28,13 +28,13 @@ The set of declared edges 'context :: channel' equals the set of allowedDependen
 ```java
 DcaRule.check(
         "DCA-MAP-006",
-        "Upstream declarations and Spring Modulith allowedDependencies must agree",
+        "Upstream declarations and the module declaration's allowed dependencies must agree",
         "Neither the context map nor the module boundary may know more than the other — an edge"
             + " that exists only on one side is stale",
         arch -> {
           CollectedViolations violations = CollectedViolations.withoutHeader();
-          Optional<Class<? extends Annotation>> moduleAnnotation = moduleAnnotationType();
-          if (moduleAnnotation.isEmpty()) {
+          List<Class<? extends Annotation>> moduleAnnotations = moduleAnnotationTypes();
+          if (moduleAnnotations.isEmpty()) {
             return;
           }
           Set<String> moduleNames = moduleNames(arch);
@@ -42,7 +42,7 @@ DcaRule.check(
             String source = arch.contextName(pkg);
             Set<String> declared = declaredEdges(arch, pkg);
             Set<String> allowed = new LinkedHashSet<>();
-            for (String entry : allowedDependencies(arch, pkg, moduleAnnotation.get())) {
+            for (String entry : allowedDependencies(arch, pkg, moduleAnnotations)) {
               String normalized = entry.replaceAll("\\s*::\\s*", " :: ").trim();
               if (normalized.contains(" :: ")
                   && moduleNames.contains(normalized.split(" :: ")[0])) {
@@ -55,19 +55,20 @@ DcaRule.check(
                     + source
                     + "': @Upstream declarations "
                     + new TreeSet<>(declared)
-                    + " and @ApplicationModule.allowedDependencies named-interface entries "
+                    + " and the module declaration's allowedDependencies named-interface entries "
                     + new TreeSet<>(allowed)
                     + " must describe the same edges — neither side may know more than the other");
           }
           violations.throwIfAny();
         })
     .selecting(
-        "Every package carrying @BoundedContext, provided the layout names a module"
-            + " annotation (Spring Modulith's @ApplicationModule) that is on the class"
-            + " path; reads its @Upstream declarations (context(), via(); PLANNED included)"
-            + " and, reflectively, the module annotation's allowedDependencies attribute."
-            + " Without a configured and loadable module annotation the rule selects"
-            + " nothing and passes.")
+        "Every package carrying @BoundedContext, provided the layout configures at least one"
+            + " module declaration annotation (a module system's per-package declaration, for"
+            + " example Spring Modulith's) that is on the class path; reads its @Upstream"
+            + " declarations (context(), via(); PLANNED included) and, reflectively, the"
+            + " allowedDependencies attribute of every configured and loadable module"
+            + " declaration the package carries. Without a configured and loadable module"
+            + " declaration the rule selects nothing and passes.")
     .checking(
         "The set of declared edges 'context :: channel' equals the set of"
             + " allowedDependencies entries of the form 'module :: named-interface' whose"
@@ -79,22 +80,22 @@ DcaRule.check(
 
 ## Helpers
 
-### `moduleAnnotationType`
+### `moduleAnnotationTypes`
 
 ```java
-private Optional<Class<? extends Annotation>> moduleAnnotationType() {
-  if (!layout.frameworkAnnotations().hasApplicationModule()) {
-    return Optional.empty();
+private List<Class<? extends Annotation>> moduleAnnotationTypes() {
+  List<Class<? extends Annotation>> types = new ArrayList<>();
+  for (String name : layout.frameworkAnnotations().moduleDeclaration()) {
+    try {
+      Class<?> type = Class.forName(name, false, Thread.currentThread().getContextClassLoader());
+      if (type.isAnnotation()) {
+        types.add((Class<? extends Annotation>) type);
+      }
+    } catch (ClassNotFoundException e) {
+      // not on the class path - a declaration the project does not use
+    }
   }
-  String name = layout.frameworkAnnotations().applicationModule();
-  try {
-    Class<?> type = Class.forName(name, false, Thread.currentThread().getContextClassLoader());
-    return type.isAnnotation()
-        ? Optional.of((Class<? extends Annotation>) type)
-        : Optional.empty();
-  } catch (ClassNotFoundException e) {
-    return Optional.empty();
-  }
+  return types;
 }
 ```
 
@@ -126,20 +127,31 @@ private static Set<String> moduleNames(DcaArchitecture arch) {
 ### `allowedDependencies`
 
 ```java
-private static List<String> allowedDependencies(
-    DcaArchitecture arch, String pkg, Class<? extends Annotation> moduleAnnotation) {
-  Optional<? extends Annotation> module = arch.packageAnnotation(pkg, moduleAnnotation);
-  if (module.isEmpty()) {
-    return List.of();
+/**
+   * The {@code allowedDependencies} of every module declaration the package actually carries - a
+   * package may use any of the configured declarations, and a package carrying none contributes
+   * nothing.
+   */
+  private static List<String> allowedDependencies(
+      DcaArchitecture arch, String pkg, List<Class<? extends Annotation>> moduleAnnotations) {
+    List<String> allowed = new ArrayList<>();
+    for (Class<? extends Annotation> moduleAnnotation : moduleAnnotations) {
+      Optional<? extends Annotation> module = arch.packageAnnotation(pkg, moduleAnnotation);
+      if (module.isEmpty()) {
+        continue;
+      }
+      try {
+        Method attribute = moduleAnnotation.getMethod("allowedDependencies");
+        Object value = attribute.invoke(module.get());
+        if (value instanceof String[]) {
+          allowed.addAll(Arrays.asList((String[]) value));
+        }
+      } catch (ReflectiveOperationException e) {
+        // a declaration without that attribute contributes nothing
+      }
+    }
+    return allowed;
   }
-  try {
-    Method attribute = moduleAnnotation.getMethod("allowedDependencies");
-    Object value = attribute.invoke(module.get());
-    return value instanceof String[] ? Arrays.asList((String[]) value) : List.of();
-  } catch (ReflectiveOperationException e) {
-    return List.of();
-  }
-}
 ```
 
 ### `CollectedViolations.check`

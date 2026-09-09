@@ -12,9 +12,9 @@ tags: [tactical, marker]
 Marker interface for typed identifiers of Entities and Aggregate Roots.
 
 An identifier is a Value Object whose only job is to name one Entity for its whole life.
-Giving every Entity its own identifier type (`ProductId`, `OrderId`) instead of a
-bare `UUID` or `String` lets the compiler reject a cart id passed where a product id
-is expected, and lets a Repository's signature say which aggregate it manages.
+Giving every Entity its own identifier type (`ContractId`, `ShipmentId`) instead of a
+bare `UUID` or `String` lets the compiler reject one aggregate's id passed where
+another's is expected, and lets a Repository's signature say which aggregate it manages.
 
 **Characteristics:**
 

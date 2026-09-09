@@ -26,7 +26,7 @@ details.
 
 - Stateless or with minimal state
 - Return fully formed, valid objects
-- Should NOT have Spring annotations (@Component, @Service)
+- Carries no container stereotype - a factory is a domain object
 - Part of the domain model
 
 **Example:**
@@ -48,7 +48,7 @@ Domain Object"
 
 ## Governed by
 
-- [Factories must not have Spring annotations](/rule/advanced/factories-must-not-have-spring-annotations.md)
+- [Factories must not carry container annotations](/rule/advanced/factories-must-not-carry-container-annotations.md)
 - [Factories must reside in domain package](/rule/advanced/factories-must-reside-in-domain-package.md)
 - [Factories should be stateless (only final fields for dependencies)](/rule/advanced/factories-should-be-stateless-only-final-fields-for-dependencies.md)
 - [Factories should implement Factory Marker Interface](/rule/advanced/factories-should-implement-factory-marker-interface.md)

@@ -38,7 +38,7 @@ package com.acme.shop.checkout;
 
 - Only packages annotated with `t` may
 declare `@ExternalUpstream`
-- `name` must not be blank and must not collide with an internal context's module name
+- `name` must not be blank and must not collide with an internal context's name
 - `(name, interaction)` must be unique per declaring context
 - `ANTI_CORRUPTION_LAYER`: types from `contractPackages()` appear only in the
 adapter matching the interaction (outgoing for `OUTBOUND`, incoming for `INBOUND`)

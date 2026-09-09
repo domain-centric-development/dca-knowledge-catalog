@@ -20,7 +20,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 ## Rules to satisfy (build-time checklist)
 
 - [Input port extends UseCase and the impl is the InputPort](/marker/port-in/usecase.md)
-- [Use case classes must be annotated with @Service](/rule/naming/use-case-classes-must-be-annotated-with-service.md)
+- [Use case classes must be annotated with @Service](/rule/naming/use-case-classes-must-carry-the-injectable-stereotype-the-container-needs.md)
 - [Commands must end with `Command` and reside in the application package](/rule/usecase/use-case-commands-must-end-with-command-and-reside-in-application-package.md)
 - [Queries must end with `Query` and reside in the application package](/rule/usecase/use-case-queries-must-end-with-query-and-reside-in-application-package.md)
 - [Result models must end with `Result` and reside in the application package](/rule/usecase/use-case-result-models-must-end-with-result-and-reside-in-application-package.md)

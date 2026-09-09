@@ -2,17 +2,17 @@
 type: Rule
 id: DCA-USE-013
 title: Declaratively transactional use cases must not call remote-capable output ports
-rule: "A @Transactional use case holds a database connection for its whole run. Calling an output port that may leave the process (another context's API, a payment provider, a mail gateway) inside it blocks that connection for the remote round trip; under load the pool runs dry, and a rollback cannot undo the remote effect. Only transactional resources belong inside the boundary: Repository, Store, DomainEventPublisher, IntegrationEventPublisher. Everything else is called before the transaction - draw the boundary by hand with TransactionBoundary.inTransaction(...) - or after it, as a reaction to an integration event."
+rule: "A declaratively transactional use case holds a database connection for its whole run. Calling an output port that may leave the process (another context's API, a payment provider, a mail gateway) inside it blocks that connection for the remote round trip; under load the pool runs dry, and a rollback cannot undo the remote effect. Only transactional resources belong inside the boundary: Repository, Store, DomainEventPublisher, IntegrationEventPublisher. Everything else is called before the transaction - draw the boundary by hand with TransactionBoundary.inTransaction(...) - or after it, as a reaction to an integration event."
 constraint: Declaratively transactional use cases must not call remote-capable output ports.
 selects: "Non-interface classes in <module>.application.. whose simple name ends with the configured use-case suffix."
-checks: "Every method that runs under the configured @Transactional - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without @Transactional (explicit TransactionBoundary or none) is selected but never reported."
+checks: "Every method that runs under one of the configured transactional annotations - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without such an annotation (explicit TransactionBoundary or none) is selected but never reported; with an empty role nothing is ever reported."
 enforced_by: "UseCaseRules#DCA-USE-013"
 status: enforced
 rule_set: usecase
 implementations: [java]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
-not_applicable_dotnet: "Guards against remote-capable output ports called inside a @Transactional use case. .NET has no declarative transaction metadata on use cases — the boundary is a decorator or an explicit ITransactionBoundary.InTransactionAsync — so the rule has nothing to anchor on; DCA-NET-006 keeps transaction and persistence frameworks out of the application layer instead"
+not_applicable_dotnet: Guards against remote-capable output ports called inside a declaratively transactional use case. .NET has no declarative transaction metadata on use cases — the boundary is a decorator or an explicit ITransactionBoundary.InTransactionAsync — so the rule has nothing to anchor on; DCA-NET-006 keeps transaction and persistence frameworks out of the application layer instead
 ---
 
 ## Selection
@@ -21,7 +21,7 @@ Non-interface classes in <module>.application.. whose simple name ends with the 
 
 ## Check
 
-Every method that runs under the configured @Transactional - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without @Transactional (explicit TransactionBoundary or none) is selected but never reported.
+Every method that runs under one of the configured transactional annotations - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without such an annotation (explicit TransactionBoundary or none) is selected but never reported; with an empty role nothing is ever reported.
 
 ## Implementation
 
@@ -29,7 +29,8 @@ Every method that runs under the configured @Transactional - on the class, on it
 DcaRule.of(
         "DCA-USE-013",
         "Declaratively transactional use cases must not call remote-capable output ports",
-        "A @Transactional use case holds a database connection for its whole run. Calling an"
+        "A declaratively transactional use case holds a database connection for its whole run."
+            + " Calling an"
             + " output port that may leave the process (another context's API, a payment provider,"
             + " a mail gateway) inside it blocks that connection for the remote round trip; under"
             + " load the pool runs dry, and a rollback cannot undo the remote effect. Only"
@@ -52,7 +53,12 @@ DcaRule.of(
     .selecting(
         "Non-interface classes in <module>.application.. whose simple name ends with the configured use-case suffix.")
     .checking(
-        "Every method that runs under the configured @Transactional - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without @Transactional (explicit TransactionBoundary or none) is selected but never reported.")
+        "Every method that runs under one of the configured transactional annotations - on the"
+            + " class, on itself, or on a method that reaches it within the class - calls no"
+            + " OutputPort other than Repository, Store, DomainEventPublisher or"
+            + " IntegrationEventPublisher. A use case without such an annotation (explicit"
+            + " TransactionBoundary or none) is selected but never reported; with an empty role"
+            + " nothing is ever reported.")
 ```
 
 ## Helpers
@@ -61,7 +67,7 @@ DcaRule.of(
 
 ```java
 private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
-    String transactional) {
+    List<String> transactional) {
   return new ArchCondition<>("not call remote-capable output ports while transactional") {
     @Override
     public void check(JavaClass item, ConditionEvents events) {
@@ -86,8 +92,8 @@ private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
                   item.getSimpleName()
                       + "."
                       + unit.getName()
-                      + " runs under @"
-                      + simpleName(transactional)
+                      + " runs under "
+                      + FrameworkAnnotations.describe(transactional, "a transaction annotation")
                       + " and calls "
                       + String.join(", ", remotePorts)
                       + " inside the transaction - call it before, or draw the boundary with"
@@ -108,9 +114,10 @@ private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
    * enough to matter (a remote call inside a transaction).
    */
   private static boolean isTransactional(
-      JavaClass item, JavaCodeUnit unit, IntraClassCalls calls, String transactional) {
-    return item.isMetaAnnotatedWith(transactional)
-        || calls.callersOf(unit).stream().anyMatch(u -> u.isMetaAnnotatedWith(transactional));
+      JavaClass item, JavaCodeUnit unit, IntraClassCalls calls, List<String> transactional) {
+    return AnnotationRoles.isMetaAnnotatedWithAny(item, transactional)
+        || calls.callersOf(unit).stream()
+            .anyMatch(u -> AnnotationRoles.isMetaAnnotatedWithAny(u, transactional));
   }
 ```
 
@@ -128,12 +135,18 @@ private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
   }
 ```
 
-### `simpleName`
+### `AnnotationRoles.isMetaAnnotatedWithAny`
 
 ```java
-private static String simpleName(String annotation) {
-  return annotation.substring(annotation.lastIndexOf('.') + 1);
-}
+/** Meta-annotated with any annotation of the role; false for an empty role. */
+  static boolean isMetaAnnotatedWithAny(CanBeAnnotated item, List<String> role) {
+    for (String fqn : role) {
+      if (item.isMetaAnnotatedWith(fqn)) {
+        return true;
+      }
+    }
+    return false;
+  }
 ```
 
 ### `IntraClassCalls.callersOf`

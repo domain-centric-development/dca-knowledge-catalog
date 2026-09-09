@@ -17,7 +17,7 @@ An aggregate method takes the caller as a parameter and branches on their role o
 
 There is no ArchUnit rule that counts a `User` parameter, so authorization-on-an-aggregate is primarily a **design smell** — but the moment it reaches for real access-control machinery it also breaks mechanical rules:
 
-- [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) — a `@PreAuthorize` on a domain method fails here.
+- [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-carry-container-or-persistence-annotations.md) — a `@PreAuthorize` on a domain method fails here.
 - [The Domain Model should be framework independent and should not use 3rd party libraries when possible](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md) — importing Spring Security's `SecurityContextHolder`/`AccessDeniedException` into the domain is a framework leak.
 - [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md) — identity resolution is infrastructure, reached only via an output port.
 
@@ -34,7 +34,7 @@ For the full layer split of validation vs. authorization vs. invariants, see [Wh
 ## Anchors
 
 - Markers: [OutputPort](/marker/port-out/outputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) · [The Domain Model should be framework independent](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
+- Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-carry-container-or-persistence-annotations.md) · [The Domain Model should be framework independent](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
 - Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
 - Recipe: [Add an identity port](/recipe/add-an-identity-port.md)

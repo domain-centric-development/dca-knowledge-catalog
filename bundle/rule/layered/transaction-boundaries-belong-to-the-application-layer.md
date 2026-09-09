@@ -4,7 +4,7 @@ id: DCA-LAY-004
 title: Transaction boundaries belong to the application layer
 rule: Transactions are an application-layer concern - domain and incoming adapters must not manage them.
 constraint: Transaction boundaries belong to the application layer.
-selects: "Methods and classes under scan that carry the configured transactional annotation directly (meta-annotations do not count)."
+selects: "Methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count); with an empty role nothing is selected."
 checks: "Each annotated method is declared in, and each annotated class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere. An annotation in a domain, incoming-adapter or infrastructure package is reported; all findings are collected into one violation. Programmatic boundaries (TransactionBoundary) are not checked."
 enforced_by: "LayeredRules#DCA-LAY-004"
 status: enforced
@@ -16,7 +16,7 @@ tags: [layered, archunit]
 
 ## Selection
 
-Methods and classes under scan that carry the configured transactional annotation directly (meta-annotations do not count).
+Methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count); with an empty role nothing is selected.
 
 ## Check
 
@@ -24,7 +24,7 @@ Each annotated method is declared in, and each annotated class resides in, an ap
 
 ## .NET reading
 
-**Selection.** Types under scan that have any dependency on the configured transaction type (by default System.Transactions.TransactionScope) - a field, a local, a method call or a using block all count.
+**Selection.** Types under scan that have any dependency on the configured transaction type (by default System.Transactions.TransactionScope) - a field, a local, a method call or a using block all count. With no transaction type configured nothing is selected.
 
 **Check.** Each resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below). A use in a domain, incoming-adapter or infrastructure namespace is reported; all findings are collected into one violation. The check is per type, not per method, and other transaction APIs (a DbContext transaction, TransactionScope subclasses) are not looked for.
 
@@ -36,7 +36,7 @@ DcaRule.check(
         "Transaction boundaries belong to the application layer",
         rationale,
         arch -> {
-          String transactional = layout.frameworkAnnotations().transactional();
+          List<String> transactional = layout.frameworkAnnotations().transactional();
           List<String> allowedPatterns =
               new ArrayList<>(List.of(arch.allApplicationPatterns()));
           allowedPatterns.add(
@@ -45,8 +45,7 @@ DcaRule.check(
           CollectedViolations violations = CollectedViolations.withoutHeader();
           violations.addAll(
               methods()
-                  .that()
-                  .areAnnotatedWith(transactional)
+                  .that(AnnotationRoles.annotatedWithAny(transactional))
                   .should()
                   .beDeclaredInClassesThat()
                   .resideInAnyPackage(allowed)
@@ -55,8 +54,7 @@ DcaRule.check(
               rationale);
           violations.addAll(
               classes()
-                  .that()
-                  .areAnnotatedWith(transactional)
+                  .that(AnnotationRoles.annotatedWithAny(transactional))
                   .should()
                   .resideInAnyPackage(allowed)
                   .allowEmptyShould(true),
@@ -65,8 +63,9 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Methods and classes under scan that carry the configured transactional annotation"
-            + " directly (meta-annotations do not count).")
+        "Methods and classes under scan that carry one of the configured transactional"
+            + " annotations directly (meta-annotations do not count); with an empty role nothing"
+            + " is selected.")
     .checking(
         "Each annotated method is declared in, and each annotated class resides in, an"
             + " application package of some module root (<module>.application..) or an outgoing"
@@ -125,6 +124,38 @@ DcaRule.check(
   void addAll(ArchRule rule, JavaClasses classes) {
     addAll(rule, classes, "");
   }
+```
+
+### `AnnotationRoles.annotatedWithAny`
+
+```java
+/** Directly annotated with any annotation of the role; never true for an empty role. */
+  static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String> role) {
+    if (role.isEmpty()) {
+      return DescribedPredicate.<CanBeAnnotated>alwaysFalse()
+          .as("annotated with a configured annotation (none configured)");
+    }
+    DescribedPredicate<CanBeAnnotated> predicate =
+        CanBeAnnotated.Predicates.annotatedWith(role.get(0));
+    for (String fqn : role.subList(1, role.size())) {
+      predicate = predicate.or(CanBeAnnotated.Predicates.annotatedWith(fqn));
+    }
+    return predicate.as("annotated with any of " + role);
+  }
+
+static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles) {
+  DescribedPredicate<CanBeAnnotated> predicate = null;
+  for (List<String> role : roles) {
+    if (role.isEmpty()) {
+      continue;
+    }
+    predicate = predicate == null ? annotatedWithAny(role) : predicate.or(annotatedWithAny(role));
+  }
+  return predicate == null
+      ? DescribedPredicate.<CanBeAnnotated>alwaysFalse()
+          .as("annotated with a configured annotation (none configured)")
+      : predicate;
+}
 ```
 
 ### `CollectedViolations.throwIfAny`

@@ -56,6 +56,7 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `useCaseSuffix` | `UseCase` | `withUseCaseSuffix(...)` | Suffix of use-case implementations, e.g. `"UseCase"` or `"ApplicationService"`. |
 | `controllerSuffix` | `Controller` | `withControllerSuffix(...)` | Suffix of MVC (server-rendered) controllers, e.g. `"Controller"` (default) or `"Page"`. Read by the naming rule for classes carrying the configured `@Controller` annotation and by the rule that keeps controllers away from repositories; the REST suffix is configured separately. |
 | `restControllerSuffix` | `Resource` | `withRestControllerSuffix(...)` | Suffix of REST controllers, e.g. `"Resource"` or `"Controller"`. |
+| `frameworkCandidates` | `detection.candidates()` | constructor only |  |
 
 ## Third-party packages the domain may depend on (Java default)
 
@@ -107,19 +108,20 @@ ArchUnit pattern syntax: `..` any number of sub-packages, `*` exactly one segmen
 | `String incomingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.incoming..` - the same pattern below the given context or module package. |
 | `String outgoingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.outgoing..` - the same pattern below the given context or module package. |
 
-## Framework annotations the rules look for (Java, `FrameworkAnnotations.spring()`)
+## Framework annotations the rules look for (Java, `FrameworkAnnotations`)
 
-Annotations are matched by fully qualified name; the rule library has no framework dependency. Replace the set with `withFrameworkAnnotations(FrameworkAnnotations.of(...))` for another container.
+Annotations are matched by fully qualified name and grouped by *role*; the rule library has no framework dependency. `DcaLayout.forBasePackage` detects the preset from the framework on the test class path (Spring when nothing is found) and the report names the choice; `withFrameworkPreset(name)` or `dca.framework=<name>` in the properties selects one by name, `withFrameworkAnnotations(...)` sets one in code and always wins. A library contributes a preset through the `FrameworkAnnotationsProvider` SPI (`ServiceLoader`). Start from a preset — `spring()`, `jakarta()`, `quarkus()`, `micronaut()`, `none()` — and adjust single roles with `withInjectable(...)`, `withTransactional(...)` and their siblings; `none()` leaves every role empty, so rules that forbid a role have nothing to forbid and rules that require one select nothing. A rule that forbids a role treats every listed annotation as forbidden; a rule that requires a role accepts any of them. The preset in use is named in the test report.
 
-| Role | Default annotation | Used for |
-|---|---|---|
-| `service` | `org.springframework.stereotype.Service` | stereotype for application services / use-case beans |
-| `component` | `org.springframework.stereotype.Component` | generic component stereotype |
-| `controller` | `org.springframework.stereotype.Controller` | MVC controller stereotype |
-| `restController` | `org.springframework.web.bind.annotation.RestController` | REST controller stereotype |
-| `transactional` | `org.springframework.transaction.annotation.Transactional` | transaction demarcation |
-| `eventListener` | `org.springframework.context.event.EventListener` | in-process event listener |
-| `applicationModule` | `org.springframework.modulith.ApplicationModule` | module declaration on `package-info` (Spring Modulith's `@ApplicationModule`); may be `null` when the project uses no module system |
+| Role | `spring()` | `jakarta()` | `quarkus()` | `micronaut()` | Used for |
+|---|---|---|---|---|---|
+| `injectable` | `org.springframework.stereotype.Service`<br>`org.springframework.stereotype.Component` | `jakarta.enterprise.context.ApplicationScoped`<br>`jakarta.enterprise.context.Dependent`<br>`jakarta.enterprise.context.RequestScoped`<br>`jakarta.inject.Singleton` | `jakarta.enterprise.context.ApplicationScoped`<br>`jakarta.enterprise.context.Dependent`<br>`jakarta.enterprise.context.RequestScoped`<br>`jakarta.inject.Singleton` | `jakarta.inject.Singleton`<br>`io.micronaut.context.annotation.Prototype`<br>`io.micronaut.context.annotation.Bean` | stereotypes of container-managed components |
+| `webController` | `org.springframework.stereotype.Controller` | `jakarta.mvc.Controller` | — | — | stereotype of server-rendering controllers |
+| `restController` | `org.springframework.web.bind.annotation.RestController` | `jakarta.ws.rs.Path` | `jakarta.ws.rs.Path` | `io.micronaut.http.annotation.Controller` | stereotype of REST endpoint classes |
+| `transactional` | `org.springframework.transaction.annotation.Transactional`<br>`jakarta.transaction.Transactional` | `jakarta.transaction.Transactional` | `jakarta.transaction.Transactional` | `io.micronaut.transaction.annotation.Transactional`<br>`jakarta.transaction.Transactional` | declarative transaction demarcation |
+| `eventListener` | `org.springframework.context.event.EventListener` | `jakarta.enterprise.event.Observes` | `jakarta.enterprise.event.Observes`<br>`io.quarkus.vertx.ConsumeEvent` | `io.micronaut.runtime.event.annotation.EventListener` | in-process event listener |
+| `moduleDeclaration` | `org.springframework.modulith.ApplicationModule` | — | — | — | module declaration on `package-info` |
+| `publishedInterface` | `org.springframework.modulith.NamedInterface` | — | — | — | published-package declaration on `package-info` |
+| `persistenceEntity` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table`<br>`io.micronaut.data.annotation.MappedEntity` | ORM mapping annotations of a persistent class |
 
 ## .NET twin: `DcaLayout` in `DomainCentric.ArchRules`
 
@@ -224,14 +226,16 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 
 ### Framework types the rules look for (.NET, `FrameworkTypes.AspNetCore()`)
 
-| Role | Default type | Used for |
-|---|---|---|
-| `ControllerBase` | `Microsoft.AspNetCore.Mvc.ControllerBase` | Base class of MVC / API controllers. |
-| `ApiControllerAttribute` | `Microsoft.AspNetCore.Mvc.ApiControllerAttribute` | Attribute marking API controllers. |
-| `PageModelBase` | `Microsoft.AspNetCore.Mvc.RazorPages.PageModel` | Base class of Razor Pages page models. |
-| `TransactionScope` | `System.Transactions.TransactionScope` | Type used for explicit transaction demarcation. |
+Types are matched by full name and grouped by role; `DcaLayout` defaults to the `AspNetCore()` preset, `None()` leaves every role empty (controllers are then recognised by suffix only), and a `with` expression adjusts single roles. The preset in use is part of the layout's `ToString()`.
 
-.NET has no `@Service`/`@Component`-style stereotypes; the Java rules that depend on them have no .NET reading and are listed as not applicable in the rule catalog.
+| Role | `AspNetCore()` | Used for |
+|---|---|---|
+| `ControllerBase` | `Name` | Base class of server-rendering and API controllers. |
+| `ApiControllerAttribute` | `DcaLayout.ToString` | Attribute marking API controllers. |
+| `PageModelBase` | `ControllerBase` | Base class of page models (server-rendered pages without a controller). |
+| `TransactionScope` | `ApiControllerAttribute` | Type used for explicit transaction demarcation. |
+
+.NET has no injectable stereotype attribute; the Java rules that depend on one have no .NET reading and are listed as not applicable in the rule catalog.
 
 ## See also
 

@@ -16,7 +16,7 @@ Domain classes that import Spring or JPA — `@Entity`, `@Component`, `@Service`
 ## What forbids it
 
 - [The Domain Model should be framework independent and should not use 3rd party libraries when possible](/rule/onion/the-domain-model-should-be-framework-independent-and-should-not-use-3rd-party-libraries-when-possible.md)
-- [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-have-spring-jpa-annotations.md) — mechanically blocks the annotations this anti-pattern relies on.
+- [Domain Models must not have Spring/JPA annotations](/rule/onion/domain-models-must-not-carry-container-or-persistence-annotations.md) — mechanically blocks the annotations this anti-pattern relies on.
 - [Domain must not have dependencies on Infrastructure](/rule/layered/domain-must-not-have-dependencies-on-infrastructure.md)
 
 ## Do instead

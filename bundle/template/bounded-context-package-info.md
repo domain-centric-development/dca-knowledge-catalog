@@ -61,7 +61,7 @@ A context without upstreams keeps only `@BoundedContext` (and `@ApplicationModul
 ## Realizes / governed by
 
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@Upstream](/marker/strategic/upstream.md) · [@Partnership](/marker/strategic/partnership.md)
-- Rules: [Diagnostic: Display discovered bounded contexts](/rule/strategic/diagnostic-display-discovered-bounded-contexts.md) · [Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages](/rule/contextmap/upstream-externalupstream-and-partnership-may-only-be-declared-on-bounded-context-packages.md) · [Upstream declarations and Spring Modulith allowedDependencies must agree](/rule/contextmap/upstream-declarations-and-spring-modulith-alloweddependencies-must-agree.md)
+- Rules: [Diagnostic: Display discovered bounded contexts](/rule/strategic/diagnostic-display-discovered-bounded-contexts.md) · [Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages](/rule/contextmap/upstream-externalupstream-and-partnership-may-only-be-declared-on-bounded-context-packages.md) · [Upstream declarations and Spring Modulith allowedDependencies must agree](/rule/contextmap/upstream-declarations-and-the-module-declaration-s-allowed-dependencies-must-agree.md)
 - Reference: [DcaArchitecture](/reference/architecture.md) (how contexts and module roots are discovered)
 - Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Spring Modulith core concepts](/guide/spring-modulith/core-concepts.md)
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)

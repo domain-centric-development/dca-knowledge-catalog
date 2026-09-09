@@ -1,11 +1,11 @@
 ---
 type: Rule
 id: DCA-ADV-015
-title: Factories must not have Spring annotations
-rule: Factories should be framework-independent.
-constraint: Factories must not have Spring annotations.
+title: Factories must not carry container annotations
+rule: Factories are framework-independent domain objects.
+constraint: Factories must not carry container annotations.
 selects: "Non-interface classes in <module>.domain.. of every module root that are assignable to Factory."
-checks: "None carries the configured component or service annotation directly on the class. Only these two annotations are checked - others, and meta-annotations, are not. An empty selection passes."
+checks: "None carries one of the configured injectable stereotypes directly on the class. Only the configured annotations are checked - others, and meta-annotations, are not. An empty selection passes, and so does an empty role."
 enforced_by: "AdvancedPatternRules#DCA-ADV-015"
 status: enforced
 rule_set: advanced
@@ -20,7 +20,7 @@ Non-interface classes in <module>.domain.. of every module root that are assigna
 
 ## Check
 
-None carries the configured component or service annotation directly on the class. Only these two annotations are checked - others, and meta-annotations, are not. An empty selection passes.
+None carries one of the configured injectable stereotypes directly on the class. Only the configured annotations are checked - others, and meta-annotations, are not. An empty selection passes, and so does an empty role.
 
 ## .NET reading
 
@@ -33,26 +33,53 @@ None carries the configured component or service annotation directly on the clas
 ```java
 DcaRule.of(
         "DCA-ADV-015",
-        "Factories must not have Spring annotations",
-        "Factories should be framework-independent",
+        "Factories must not carry container annotations",
+        "Factories are framework-independent domain objects",
         arch ->
             noClasses()
                 .that()
                 .implement(Factory.class)
                 .and()
                 .resideInAnyPackage(arch.allDomainPatterns())
-                .should()
-                .beAnnotatedWith(layout.frameworkAnnotations().component())
-                .orShould()
-                .beAnnotatedWith(layout.frameworkAnnotations().service())
+                .should(AnnotationRoles.beAnnotatedWithAny(annotations.injectable()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.domain.. of every module root that are assignable to"
             + " Factory.")
     .checking(
-        "None carries the configured component or service annotation directly on the class. Only these"
-            + " two annotations are checked - others, and meta-annotations, are not. An empty selection"
-            + " passes.")
+        "None carries one of the configured injectable stereotypes directly on the class. Only"
+            + " the configured annotations are checked - others, and meta-annotations, are not."
+            + " An empty selection passes, and so does an empty role.")
+```
+
+## Helpers
+
+### `AnnotationRoles.beAnnotatedWithAny`
+
+```java
+static ArchCondition<JavaClass> beAnnotatedWithAny(List<String>... roles) {
+  List<String> all = new ArrayList<>();
+  for (List<String> role : roles) {
+    for (String fqn : role) {
+      if (!all.contains(fqn)) {
+        all.add(fqn);
+      }
+    }
+  }
+  if (all.isEmpty()) {
+    return new ArchCondition<>("be annotated with a configured annotation (none configured)") {
+      @Override
+      public void check(JavaClass item, ConditionEvents events) {
+        // nothing configured, nothing to record
+      }
+    };
+  }
+  ArchCondition<JavaClass> condition = ArchConditions.beAnnotatedWith(all.get(0));
+  for (String fqn : all.subList(1, all.size())) {
+    condition = condition.or(ArchConditions.beAnnotatedWith(fqn));
+  }
+  return condition;
+}
 ```
 
 ## Architecture queries

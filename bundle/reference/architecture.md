@@ -83,12 +83,12 @@ Such a package is not a discovered context; whether it owns layers — and is th
 The identifier of a context package: its name relative to the base package, e.g. `com.acme.shop.cart → cart` and `com.acme.shop.sales.order → sales.order`.
 
 This is the name a context is referenced by in `@Upstream(context = ...)`, in the
-rendered context map, and in rule messages. It deliberately matches how Spring Modulith derives
-an application-module identifier (`JavaPackage.getTrailingName`), so the two agree
-without a mapping layer. For a context that is a direct child of the base package it is the
-last segment, so nothing changes for a flat layout; grouped contexts keep their group in the
-name, which is also what makes them unambiguous — two contexts named `order` under
-different groups would otherwise collide.
+rendered context map, and in rule messages. It deliberately matches the identifier a module
+system derives from the package tree - the package name trailing the base package - so a module
+declaration and the context map agree without a mapping layer. For a context that is a direct
+child of the base package it is the last segment, so nothing changes for a flat layout; grouped
+contexts keep their group in the name, which is also what makes them unambiguous — two contexts
+named `order` under different groups would otherwise collide.
 
 #### `static String simpleContextName(String contextPackage)`
 

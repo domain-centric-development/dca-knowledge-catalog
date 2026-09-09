@@ -2,10 +2,10 @@
 type: Rule
 id: DCA-NAM-005
 title: Controller classes must end with 'Controller'
-rule: "@Controller annotated classes should follow naming conventions."
+rule: Classes carrying the web-controller stereotype should follow naming conventions.
 constraint: Controller classes must end with 'Controller'.
-selects: "Classes in <module>.adapter.incoming.. of every module root that are directly annotated with the configured @Controller annotation."
-checks: "The simple name ends with the configured controller suffix (default Controller). A class carrying only the REST-controller annotation is not selected here, and a controller outside an incoming-adapter package is not checked. An empty selection passes."
+selects: "Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes."
+checks: "The simple name ends with the configured controller suffix (default Controller). A class carrying only a REST-controller stereotype is not selected here, and a controller outside an incoming-adapter package is not checked. An empty selection passes - which is always the case when the role is empty."
 enforced_by: "NamingRules#DCA-NAM-005"
 status: enforced
 rule_set: naming
@@ -16,11 +16,11 @@ tags: [naming, archunit]
 
 ## Selection
 
-Classes in <module>.adapter.incoming.. of every module root that are directly annotated with the configured @Controller annotation.
+Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes.
 
 ## Check
 
-The simple name ends with the configured controller suffix (default Controller). A class carrying only the REST-controller annotation is not selected here, and a controller outside an incoming-adapter package is not checked. An empty selection passes.
+The simple name ends with the configured controller suffix (default Controller). A class carrying only a REST-controller stereotype is not selected here, and a controller outside an incoming-adapter package is not checked. An empty selection passes - which is always the case when the role is empty.
 
 ## .NET reading
 
@@ -34,24 +34,59 @@ The simple name ends with the configured controller suffix (default Controller).
 DcaRule.of(
         "DCA-NAM-005",
         "Controller classes must end with '" + layout.controllerSuffix() + "'",
-        "@Controller annotated classes should follow naming conventions",
+        "Classes carrying the web-controller stereotype should follow naming conventions",
         arch ->
             classes()
                 .that()
                 .resideInAnyPackage(arch.allIncomingAdapterPatterns())
-                .and()
-                .areAnnotatedWith(layout.frameworkAnnotations().controller())
+                .and(
+                    AnnotationRoles.annotatedWithAny(
+                        layout.frameworkAnnotations().webController()))
                 .should()
                 .haveSimpleNameEndingWith(layout.controllerSuffix())
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root that are directly"
-            + " annotated with the configured @Controller annotation.")
+            + " annotated with one of the configured web-controller stereotypes.")
     .checking(
         "The simple name ends with the configured controller suffix (default Controller). A"
-            + " class carrying only the REST-controller annotation is not selected here, and a"
+            + " class carrying only a REST-controller stereotype is not selected here, and a"
             + " controller outside an incoming-adapter package is not checked. An empty"
-            + " selection passes.")
+            + " selection passes - which is always the case when the role is empty.")
+```
+
+## Helpers
+
+### `AnnotationRoles.annotatedWithAny`
+
+```java
+/** Directly annotated with any annotation of the role; never true for an empty role. */
+  static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String> role) {
+    if (role.isEmpty()) {
+      return DescribedPredicate.<CanBeAnnotated>alwaysFalse()
+          .as("annotated with a configured annotation (none configured)");
+    }
+    DescribedPredicate<CanBeAnnotated> predicate =
+        CanBeAnnotated.Predicates.annotatedWith(role.get(0));
+    for (String fqn : role.subList(1, role.size())) {
+      predicate = predicate.or(CanBeAnnotated.Predicates.annotatedWith(fqn));
+    }
+    return predicate.as("annotated with any of " + role);
+  }
+
+static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles) {
+  DescribedPredicate<CanBeAnnotated> predicate = null;
+  for (List<String> role : roles) {
+    if (role.isEmpty()) {
+      continue;
+    }
+    predicate = predicate == null ? annotatedWithAny(role) : predicate.or(annotatedWithAny(role));
+  }
+  return predicate == null
+      ? DescribedPredicate.<CanBeAnnotated>alwaysFalse()
+          .as("annotated with a configured annotation (none configured)")
+      : predicate;
+}
 ```
 
 ## Architecture queries

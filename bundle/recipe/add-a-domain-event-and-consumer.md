@@ -24,7 +24,7 @@ Does the consumer live in another bounded context or an external system? Then yo
 - [Domain events must implement the DomainEvent marker and be records](/rule/advanced/domain-events-must-implement-domainevent-marker-interface-and-be-records.md)
 - [Domain events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md)
 - [Domain events must reside in the domain package](/rule/advanced/domain-events-must-reside-in-domain-package.md)
-- [Domain events must not have Spring annotations](/rule/advanced/domain-events-must-not-have-spring-annotations.md)
+- [Domain events must not have Spring annotations](/rule/advanced/domain-events-must-not-carry-container-annotations.md)
 - [Domain events that are not integration events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)
 
 ## Anchors

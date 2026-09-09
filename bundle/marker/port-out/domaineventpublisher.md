@@ -37,7 +37,7 @@ domainEventPublisher.publishAndClearEvents(product);
 - Supports eventual consistency across aggregates
 - Easy to swap implementations or mock for testing
 
-**Order of operations — save, dispatch, then clear.** The use case calls `publishAndClearEvents` after `save`, inside the same transaction, so an event is never
+**Sequence of operations — save, dispatch, then clear.** The use case calls `publishAndClearEvents` after `save`, inside the same transaction, so an event is never
 dispatched for state that was not persisted. The implementation dispatches the collected events
 first and clears the aggregate *afterwards*: clearing is the acknowledgement that every
 listener has seen the event. A listener that throws therefore fails the use case and leaves the

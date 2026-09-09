@@ -18,9 +18,9 @@ They are internal to a bounded context and can evolve freely without versioning 
 **Characteristics:**
 
 - Immutable (final classes or records)
-- Named in the past tense (e.g., ProductCreated, CartCleared, PriceChanged)
+- Named in the past tense (e.g., ContractSigned, ShipmentDispatched, PriceChanged)
 - Include timestamp, unique ID, and event-specific data
-- Should NOT have Spring annotations (@Component, @EventListener)
+- Carries no container stereotype and no listener annotation - it is data, not a bean
 - Part of the Ubiquitous Language
 - Internal to a bounded context — no versioning needed
 
@@ -62,7 +62,7 @@ public record ProductCreated(
 
 - [Domain Events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md)
 - [Domain Events must implement DomainEvent Marker Interface and be records](/rule/advanced/domain-events-must-implement-domainevent-marker-interface-and-be-records.md)
-- [Domain Events must not have Spring annotations](/rule/advanced/domain-events-must-not-have-spring-annotations.md)
+- [Domain Events must not carry container annotations](/rule/advanced/domain-events-must-not-carry-container-annotations.md)
 - [Domain Events must reside in domain package](/rule/advanced/domain-events-must-reside-in-domain-package.md)
 - [Domain Events should be immutable (final or records)](/rule/advanced/domain-events-should-be-immutable-final-or-records.md)
 - [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)

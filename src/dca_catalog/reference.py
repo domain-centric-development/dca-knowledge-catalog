@@ -144,15 +144,24 @@ def _java_pattern_methods(source: str) -> list[tuple[str, str]]:
     return result
 
 
-def _framework_annotations(source: str) -> list[tuple[str, str, str]]:
-    """``(component, fqn, description)`` for ``FrameworkAnnotations.spring()``."""
+def _framework_annotations(source: str) -> tuple[list[tuple[str, str]], dict[str, dict[str, list[str]]]]:
+    """``([(role, description)], {preset: {role: [fqn, ...]}})`` for every ``List<String>`` role of
+    ``FrameworkAnnotations`` and every ``public static FrameworkAnnotations <preset>()`` literal."""
     params = re.findall(r"@param (\w+) (.+?)(?=\n \* @param|\n \*/)", source, re.S)
     descriptions = {name: re.sub(r"\s*\n\s*\*\s*", " ", text).strip() for name, text in params}
     masked = _mask(source)
-    components = re.findall(r"^\s{4}String (\w+),?\)?", source[: masked.index("{")], re.M)
-    spring = source[masked.index("spring()") :]
-    values = re.findall(r"\"([\w.]+)\"", spring[: spring.index(";")])
-    return [(c, v, _unescape(descriptions.get(c, ""))) for c, v in zip(components, values)]
+    header = source[: masked.index("{")]
+    roles = re.findall(r"^\s{4}List<String> (\w+),?\)?", header, re.M)
+    presets: dict[str, dict[str, list[str]]] = {}
+    for m in re.finditer(r"public static FrameworkAnnotations (\w+)\(\) \{(.*?)\n  \}", source, re.S):
+        body = m.group(2)
+        groups = re.findall(r"List\.of\(([^)]*)\)", body)
+        if len(groups) != len(roles):
+            continue
+        presets[m.group(1)] = {
+            role: re.findall(r"\"([\w.]+)\"", group) for role, group in zip(roles, groups)
+        }
+    return [(r, _unescape(descriptions.get(r, ""))) for r in roles], presets
 
 
 # --------------------------------------------------------------------------- .net
@@ -309,12 +318,25 @@ def _layout_body(java: str, annotations: str, cs: str, types: str) -> str:
         + _table(["Accessor", "Yields"], pat_rows)
     )
 
-    fa = _framework_annotations(annotations)
+    roles, presets = _framework_annotations(annotations)
+    named = [p for p in presets if any(presets[p].values())]
+    rows = []
+    for role, description in roles:
+        rows.append(
+            [f"`{role}`"]
+            + ["<br>".join(f"`{v}`" for v in presets[p].get(role, [])) or "—" for p in named]
+            + [description]
+        )
     parts.append(
-        "## Framework annotations the rules look for (Java, `FrameworkAnnotations.spring()`)\n\n"
-        "Annotations are matched by fully qualified name; the rule library has no framework dependency. "
-        "Replace the set with `withFrameworkAnnotations(FrameworkAnnotations.of(...))` for another container.\n\n"
-        + _table(["Role", "Default annotation", "Used for"], [[f"`{c}`", f"`{v}`", d] for c, v, d in fa])
+        "## Framework annotations the rules look for (Java, `FrameworkAnnotations`)\n\n"
+        "Annotations are matched by fully qualified name and grouped by *role*; the rule library has no framework "
+        "dependency. `DcaLayout.forBasePackage` detects the preset from the framework on the test class path (Spring when nothing is found) and the report names the choice; `withFrameworkPreset(name)` or `dca.framework=<name>` in the properties selects one by name, `withFrameworkAnnotations(...)` sets one in code and always wins. A library contributes a preset through the `FrameworkAnnotationsProvider` SPI (`ServiceLoader`). Start from a preset — "
+        + ", ".join(f"`{p}()`" for p in presets)
+        + " — and adjust single roles with `withInjectable(...)`, `withTransactional(...)` and their siblings; "
+        "`none()` leaves every role empty, so rules that forbid a role have nothing to forbid and rules that require "
+        "one select nothing. A rule that forbids a role treats every listed annotation as forbidden; a rule that "
+        "requires a role accepts any of them. The preset in use is named in the test report.\n\n"
+        + _table(["Role"] + [f"`{p}()`" for p in named] + ["Used for"], rows)
     )
 
     # ---- .NET
@@ -345,11 +367,14 @@ def _layout_body(java: str, annotations: str, cs: str, types: str) -> str:
         "Patterns are .NET regular expressions over full namespace names for ArchUnitNET's `ResideInNamespaceMatching`.\n\n"
         + _table(["Member", "Yields"], pat_rows)
     )
-    ft = _framework_types(types)
+    ft = [(c, v, d) for c, v, d in _framework_types(types) if c != "Name"]
     parts.append(
         "### Framework types the rules look for (.NET, `FrameworkTypes.AspNetCore()`)\n\n"
-        + _table(["Role", "Default type", "Used for"], [[f"`{c}`", f"`{v}`", d] for c, v, d in ft])
-        + "\n\n.NET has no `@Service`/`@Component`-style stereotypes; the Java rules that depend on them have no .NET reading and are listed as not applicable in the rule catalog."
+        "Types are matched by full name and grouped by role; `DcaLayout` defaults to the `AspNetCore()` preset, "
+        "`None()` leaves every role empty (controllers are then recognised by suffix only), and a `with` expression "
+        "adjusts single roles. The preset in use is part of the layout's `ToString()`.\n\n"
+        + _table(["Role", "`AspNetCore()`", "Used for"], [[f"`{c}`", f"`{v}`", d] for c, v, d in ft])
+        + "\n\n.NET has no injectable stereotype attribute; the Java rules that depend on one have no .NET reading and are listed as not applicable in the rule catalog."
     )
     return "\n\n".join(p for p in parts if p.strip())
 

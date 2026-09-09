@@ -27,7 +27,7 @@ satisfies certain criteria and can be combined to create complex business rules.
 - Immutable value objects
 - Combinable (AND, OR, NOT operations)
 - Express business rules in the Ubiquitous Language
-- Should NOT have Spring annotations
+- Carries no container stereotype - a specification is a value object
 - Part of the domain model
 
 **Example:**
@@ -57,7 +57,7 @@ Pattern
 ## Governed by
 
 - [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md)
-- [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md)
+- [Specifications must not carry container annotations](/rule/advanced/specifications-must-not-carry-container-annotations.md)
 
 ## Discussed in
 

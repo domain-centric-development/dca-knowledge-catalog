@@ -1,11 +1,11 @@
 ---
 type: Rule
 id: DCA-ADV-018
-title: Specifications must not have Spring annotations
-rule: Specifications should be framework-independent value objects.
-constraint: Specifications must not have Spring annotations.
+title: Specifications must not carry container annotations
+rule: Specifications are framework-independent value objects.
+constraint: Specifications must not carry container annotations.
 selects: "Classes in <module>.domain.. of every module root whose simple name ends with Specification - interfaces included."
-checks: "None carries the configured component or service annotation directly on the class. Only these two annotations are checked - others, and meta-annotations, are not. An empty selection passes."
+checks: "None carries one of the configured injectable stereotypes directly on the class. Only the configured annotations are checked - others, and meta-annotations, are not. An empty selection passes, and so does an empty role."
 enforced_by: "AdvancedPatternRules#DCA-ADV-018"
 status: enforced
 rule_set: advanced
@@ -20,7 +20,7 @@ Classes in <module>.domain.. of every module root whose simple name ends with Sp
 
 ## Check
 
-None carries the configured component or service annotation directly on the class. Only these two annotations are checked - others, and meta-annotations, are not. An empty selection passes.
+None carries one of the configured injectable stereotypes directly on the class. Only the configured annotations are checked - others, and meta-annotations, are not. An empty selection passes, and so does an empty role.
 
 ## .NET reading
 
@@ -33,26 +33,53 @@ None carries the configured component or service annotation directly on the clas
 ```java
 DcaRule.of(
         "DCA-ADV-018",
-        "Specifications must not have Spring annotations",
-        "Specifications should be framework-independent value objects",
+        "Specifications must not carry container annotations",
+        "Specifications are framework-independent value objects",
         arch ->
             noClasses()
                 .that()
                 .haveSimpleNameEndingWith("Specification")
                 .and()
                 .resideInAnyPackage(arch.allDomainPatterns())
-                .should()
-                .beAnnotatedWith(layout.frameworkAnnotations().component())
-                .orShould()
-                .beAnnotatedWith(layout.frameworkAnnotations().service())
+                .should(AnnotationRoles.beAnnotatedWithAny(annotations.injectable()))
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.domain.. of every module root whose simple name ends with Specification -"
             + " interfaces included.")
     .checking(
-        "None carries the configured component or service annotation directly on the class. Only these"
-            + " two annotations are checked - others, and meta-annotations, are not. An empty selection"
-            + " passes.")
+        "None carries one of the configured injectable stereotypes directly on the class. Only"
+            + " the configured annotations are checked - others, and meta-annotations, are not."
+            + " An empty selection passes, and so does an empty role.")
+```
+
+## Helpers
+
+### `AnnotationRoles.beAnnotatedWithAny`
+
+```java
+static ArchCondition<JavaClass> beAnnotatedWithAny(List<String>... roles) {
+  List<String> all = new ArrayList<>();
+  for (List<String> role : roles) {
+    for (String fqn : role) {
+      if (!all.contains(fqn)) {
+        all.add(fqn);
+      }
+    }
+  }
+  if (all.isEmpty()) {
+    return new ArchCondition<>("be annotated with a configured annotation (none configured)") {
+      @Override
+      public void check(JavaClass item, ConditionEvents events) {
+        // nothing configured, nothing to record
+      }
+    };
+  }
+  ArchCondition<JavaClass> condition = ArchConditions.beAnnotatedWith(all.get(0));
+  for (String fqn : all.subList(1, all.size())) {
+    condition = condition.or(ArchConditions.beAnnotatedWith(fqn));
+  }
+  return condition;
+}
 ```
 
 ## Architecture queries

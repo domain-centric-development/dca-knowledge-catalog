@@ -69,6 +69,6 @@ decision link.
 ## Realizes / governed by
 
 - Marker: [Specification<T>](/marker/tactical/specification.md)
-- Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-have-spring-annotations.md)
+- Rules: [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md) · [Specifications must not have Spring annotations](/rule/advanced/specifications-must-not-carry-container-annotations.md)
 - Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Decisions: [Specification or query method](/decision/specification-vs-query-method.md)

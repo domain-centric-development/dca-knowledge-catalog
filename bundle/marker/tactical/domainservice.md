@@ -18,15 +18,15 @@ a single Aggregate.
 **Characteristics:**
 
 - Stateless (only final fields for dependencies)
-- Named after activities or actions (e.g., PricingService, CartTotalCalculator)
+- Named after activities or actions (e.g., TariffCalculator, RouteOptimizer)
 - Express domain concepts in the Ubiquitous Language
-- Should NOT have Spring annotations (@Service, @Component)
+- Carries no container stereotype - the domain does not know the container
 - Instantiated by Application Services
 
 **Examples:**
 
-- Calculating cart totals with complex tax rules (involves multiple items)
-- Applying pricing rules and discounts (domain logic not belonging to a single entity)
+- Calculating a total across several items under complex tax rules
+- Applying tariff and discount rules (domain logic not belonging to a single entity)
 - Validating business constraints that span multiple aggregates
 
 **Reference:** Eric Evans' Domain-Driven Design (2003), Chapter 5: "A Model Expressed in
@@ -35,7 +35,7 @@ Software"
 ## Governed by
 
 - [Domain Services must implement DomainService Marker Interface and reside in domain.service](/rule/advanced/domain-services-must-implement-domainservice-marker-interface-and-reside-in-domain-service.md)
-- [Domain Services must not have Spring annotations](/rule/advanced/domain-services-must-not-have-spring-annotations.md)
+- [Domain Services must not carry container annotations](/rule/advanced/domain-services-must-not-carry-container-annotations.md)
 - [Domain Services must reside in domain package](/rule/advanced/domain-services-must-reside-in-domain-package.md)
 - [Domain Services should be stateless (only final fields for dependencies)](/rule/advanced/domain-services-should-be-stateless-only-final-fields-for-dependencies.md)
 - [Incoming Adapters must not depend on domain services](/rule/hexagonal/incoming-adapters-must-not-depend-on-domain-services.md)

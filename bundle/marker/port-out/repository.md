@@ -30,7 +30,7 @@ in-memory collection.
 - Interface resides in the application layer as an output port (e.g., `product.application.shared.ProductRepository`)
 - Implementation resides in an outgoing adapter (e.g., `product.adapter.outgoing.persistence.InMemoryProductRepository`)
 - Methods use ubiquitous language (e.g., `findBySku()`, `findByCategory()`)
-- Should NOT have Spring annotations in the interface
+- Carries no framework annotations - the interface is plain Java
 - Collections should be immutable when returned
 
 **Common Methods:**

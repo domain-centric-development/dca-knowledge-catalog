@@ -129,7 +129,7 @@ _JAVA_KEYWORDS = frozenset(
     "if for while do switch catch synchronized return new throw super this try assert".split()
 )
 _ARCH_CALL_RE = re.compile(r"\barch\.(\w+)\s*\(")
-_SHARED_HELPER_CLASSES = ("IntraClassCalls", "TypeInspection", "CollectedViolations")
+_SHARED_HELPER_CLASSES = ("IntraClassCalls", "TypeInspection", "CollectedViolations", "AnnotationRoles")
 
 
 def _method_source(source: str, name: str) -> str | None:
