@@ -27,8 +27,3 @@ no use case depends on it, so it deliberately carries no marker.
 ## Extends
 
 - [OutputPort](/marker/port-out/outputport.md)
-
-## Governed by
-
-- [Output Ports in application.shared must extend OutputPort](/rule/hexagonal/output-ports-in-application-shared-must-extend-outputport.md)
-- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)

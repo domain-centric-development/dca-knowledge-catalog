@@ -54,12 +54,7 @@ evaluates the specification for one candidate.
 - Martin Fowler's Specifications
 Pattern
 
-## Governed by
-
-- [Specifications must end with 'Specification'](/rule/advanced/specifications-must-end-with-specification.md)
-- [Specifications must not carry container annotations](/rule/advanced/specifications-must-not-carry-container-annotations.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [ELEMENTS](/guide/readme/elements.md)

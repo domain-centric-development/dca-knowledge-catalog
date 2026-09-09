@@ -75,16 +75,15 @@ The bundle is one OKF graph in two zones (see `SPEC.md`):
 
 | Zone | Dirs | Edit by hand? |
 |------|------|---------------|
-| **Generated** | `guide/ marker/ rule/ process/ reference/` | ❌ no — derived, wiped + rebuilt each run |
-| **Extensible** | `recipe/ decision/ pitfall/ template/ note/` | ✅ yes — authored, **preserved** across `generate` |
+| **Generated** | `guide/ marker/ rule/ process/ reference/ evidence/` | ❌ no — derived, wiped + rebuilt each run |
+| **Extensible** | `recipe/ decision/ pitfall/ template/ note/` | Edit `authored/` source counterparts, then regenerate output |
 
 `generate` rebuilds the generated zone, preserves authored node files in the
 extensible zone, and regenerates every `index.md` + `log.md` (scanning both zones,
 so authored nodes are catalogued automatically). To add knowledge that isn't
 derived from a source — a task playbook, a design-fork decision, an anti-pattern,
-a saved query answer — drop an OKF node (`type:` + `title:` + `tags:` from the
-SPEC.md tag taxonomy) into the matching extensible dir; do **not** edit the
-generated zone. Authored nodes can also be written **in Obsidian**: `make obsidian`,
+a saved query answer — write an OKF source (`type`, `title`, `tags`, `review`, `owner`, `evidence`)
+under `authored/<zone>/`; do **not** edit any bundle or mirror file. Authored nodes can also be written **in Obsidian**: `make obsidian`,
 edit/author in the vault, then `make obsidian-import` (imports extensible-zone
 edits, regenerates indexes, lints).
 
@@ -182,3 +181,20 @@ catalog. When any of
 those change, regenerate the bundle (see the root `AGENTS.md` cross-project
 checklist). Changing the sample's ADRs or a book chapter does **not** affect the
 bundle. All persisted content is English.
+
+Rule nodes use stable `rule/<set>/<id-lowercase>.md` paths. `redirects.json` preserves
+legacy path mappings; the generator migrates authored links mechanically. Rule titles
+may change without moving nodes. The generator accepts legacy rule arrays and the
+`rules`/`retired` envelope documented in `SPEC.md`; the whole-bundle conformance test
+includes the real authored nodes. Frontmatter outside the documented flat subset
+fails lint rather than losing metadata silently.
+
+Reviewed authored revisions live under `authored/<zone>/<slug>.md`. Generation copies these explicit source inputs before link migration and indexing; other extensible nodes survive unchanged. Edit the source and regenerate; never edit `bundle/` or the marketplace mirror by hand.
+
+WP-40 B (2026-09-09): `manifest.json` identifies source revisions/content digests and library versions;
+resource-normalized bundle digests also verify mirrors. Exact id retrieval starts with `rule/index-compact.md`.
+All .NET implementations carry extracted C# evidence; large full nodes gain heading-based `evidence/` slices.
+Authored sources carry review/owner/evidence; draft/superseded are non-normative and never auto-promoted.
+Template language/framework metadata and both router verification commands prevent incorrect framework routing.
+Only the reviewed `applicability.py` mapping creates normative applicability edges; text matching is labelled heuristic.
+All edits go through source inputs and generation, including owning-repository Obsidian import.

@@ -50,15 +50,7 @@ OutputPort (marker)
 abstractions rather than concrete implementations. The application defines what it needs (the
 interface), and the infrastructure provides concrete implementations.
 
-## Governed by
-
-- [Output Ports in application.shared must extend OutputPort](/rule/hexagonal/output-ports-in-application-shared-must-extend-outputport.md)
-- [Output ports must not reside in the domain layer](/rule/hexagonal/output-ports-must-not-reside-in-the-domain-layer.md)
-- [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
-- [Aggregate Roots must not hold references to Repositories or other Output Ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)

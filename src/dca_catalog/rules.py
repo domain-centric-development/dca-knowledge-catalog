@@ -20,8 +20,7 @@ Sources (both under ``dca-java/``):
   the node too, so the node is readable without the source; the
   ``DcaArchitecture`` methods it uses are listed by name.
 
-Each rule becomes one OKF ``Rule`` node. Node paths are derived from the title
-so links from the authored zone stay stable across implementation changes.
+Each rule becomes one OKF ``Rule`` node. Node paths use immutable rule ids, independent of titles.
 """
 
 from __future__ import annotations
@@ -31,7 +30,7 @@ import re
 import sys
 from pathlib import Path
 
-from .okf import Node, slugify
+from .okf import Node
 
 JAVA_REL = "dca-java"
 RULES_JSON_REL = f"{JAVA_REL}/rules.json"
@@ -54,7 +53,7 @@ _RULE_SET_CLASS = {
     "cycles": "CycleRules",
 }
 
-_FACTORY_RE = re.compile(r"DcaRule\.(?:of|check)\s*\(")
+_FACTORY_RE = re.compile(r"DcaRule\.(?:of|check|informational)\s*\(", re.I)
 
 
 def _expression_at(source: str, id_literal: str) -> str | None:
@@ -129,7 +128,7 @@ _JAVA_KEYWORDS = frozenset(
     "if for while do switch catch synchronized return new throw super this try assert".split()
 )
 _ARCH_CALL_RE = re.compile(r"\barch\.(\w+)\s*\(")
-_SHARED_HELPER_CLASSES = ("IntraClassCalls", "TypeInspection", "CollectedViolations", "AnnotationRoles")
+_SHARED_HELPER_CLASSES = ("IntraClassCalls", "TypeInspection", "CollectedViolations", "AnnotationRoles", "DomainMetadata", "OperationPolicy", "EventFreeAggregate")
 
 
 def _method_source(source: str, name: str) -> str | None:
@@ -298,6 +297,22 @@ def _constraint(title: str) -> str:
     return " ".join(title.split()).rstrip(".") + "."
 
 
+def _catalog(path: Path) -> tuple[list[dict], list[dict]]:
+    """Legacy arrays and the versioned rules/retired envelope are accepted."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    entries, retired = (data, []) if isinstance(data, list) else (data["rules"], data.get("retired", []))
+    ids = [e["id"] for e in entries + retired]
+    if len(ids) != len(set(ids)):
+        raise ValueError(f"duplicate active/retired id in {path}")
+    for entry in entries:
+        if entry.get("status", "enforced") not in {"enforced", "informational", "n/a"}:
+            raise ValueError(f"invalid rule status: {entry}")
+    for entry in retired:
+        if not all(entry.get(key) for key in ("id", "reason", "replacement", "since")):
+            raise ValueError(f"incomplete retirement: {entry}")
+    return entries, retired
+
+
 def _dotnet_catalog(repo_root: Path) -> tuple[dict[str, dict], dict[str, str]]:
     """``(ported, not_applicable)`` from ``dca-dotnet/rules.json`` — ported entries keyed by
     id; not-applicable ids mapped to the reason. Both empty when the file is absent."""
@@ -307,7 +322,7 @@ def _dotnet_catalog(repo_root: Path) -> tuple[dict[str, dict], dict[str, str]]:
         return {}, {}
     ported: dict[str, dict] = {}
     not_applicable: dict[str, str] = {}
-    for entry in json.loads(path.read_text(encoding="utf-8")):
+    for entry in _catalog(path)[0]:
         if entry.get("status") == "n/a":
             not_applicable[entry["id"]] = entry["reason"]
         else:
@@ -319,6 +334,23 @@ def _dotnet_class(rule_set: str) -> str:
     return _RULE_SET_CLASS.get(rule_set, "DotnetRules")
 
 
+def _cs_evidence(repo_root: Path, rule_set: str, rule_id: str) -> str:
+    path = repo_root / DOTNET_RULES_SRC_REL / (_dotnet_class(rule_set) + ".cs")
+    if not path.exists():
+        return ""
+    source = path.read_text(encoding="utf-8")
+    expression = _expression_at(source, rule_id)
+    if not expression:
+        raise ValueError(f"no C# rule expression for {rule_id}")
+    body = "### C# expression\n\n```csharp\n" + _dedent(expression) + "\n```\n"
+    # Shared policy helpers carry the semantics behind short factory expressions.
+    for name in ("OperationPolicy", "DomainMetadata", "EventFreeAggregate", "IntraClassCalls"):
+        if name + "." in expression or "new " + name + "(" in expression:
+            helper = path.parent / (name + ".cs")
+            body += "\n### C# helper " + name + "\n\n```csharp\n" + helper.read_text().strip() + "\n```\n"
+    return body
+
+
 def extract(repo_root: Path) -> list[Node]:
     dotnet_ported, dotnet_na = _dotnet_catalog(repo_root)
     catalog_path = repo_root / RULES_JSON_REL
@@ -326,7 +358,16 @@ def extract(repo_root: Path) -> list[Node]:
         raise SystemExit(
             f"{catalog_path} not found — run `./gradlew :dca-archunit:rulesCatalog` in {JAVA_REL}/ first."
         )
-    entries = json.loads(catalog_path.read_text(encoding="utf-8"))
+    entries, retired = _catalog(catalog_path)
+    retired_by_id = {entry["id"]: entry for entry in retired}
+    dotnet_path = repo_root / DOTNET_RULES_JSON_REL
+    if dotnet_path.exists():
+        for entry in _catalog(dotnet_path)[1]:
+            if entry["id"] in retired_by_id and retired_by_id[entry["id"]] != entry:
+                raise ValueError(f"conflicting retirement: {entry['id']}")
+            retired_by_id[entry["id"]] = entry
+    if set(retired_by_id) & ({e["id"] for e in entries} | set(dotnet_ported)):
+        raise ValueError("retired id remains active in another implementation")
     sources: dict[str, str] = {}
     shared_sources = {
         c: (repo_root / RULES_SRC_REL / f"{c}.java").read_text(encoding="utf-8")
@@ -374,7 +415,7 @@ def extract(repo_root: Path) -> list[Node]:
             "selects": selects,
             "checks": checks,
             "enforced_by": f"{class_name}#{rule_id}",
-            "status": _status(title, code),
+            "status": entry.get("status", _status(title, code)),
             "rule_set": rule_set,
             "implementations": implementations,
             "resource": (Path(RULES_SRC_REL) / f"{class_name}.java").as_posix(),
@@ -384,12 +425,17 @@ def extract(repo_root: Path) -> list[Node]:
             fm["not_applicable_dotnet"] = dotnet_na[rule_id]
         dotnet_entry = dotnet_ported.pop(rule_id, None)
         body = _body(code, selects, checks, helpers, arch_methods, dotnet_entry)
+        if dotnet_entry:
+            if "## .NET reading" not in body:
+                body += "\n\n## .NET reading\n"
+            body += "\n" + _cs_evidence(repo_root, rule_set, rule_id)
+            fm["resource_dotnet"] = (Path(DOTNET_RULES_SRC_REL) / (_dotnet_class(rule_set) + ".cs")).as_posix()
         scan_text = code + "\n" + "\n".join(src for _, _, src in helpers)
         nodes.append(
             Node(
-                path=f"rule/{rule_set}/{slugify(title)}.md",
+                path=f"rule/{rule_set}/{rule_id.lower()}.md",
                 frontmatter=fm,
-                body=body,
+                body=f"# {title}\n\n" + body,
                 meta={"name": title, "kind": "rule", "scan_text": scan_text},
             )
         )
@@ -399,7 +445,7 @@ def extract(repo_root: Path) -> list[Node]:
         class_name = _dotnet_class(rule_set)
         nodes.append(
             Node(
-                path=f"rule/{rule_set}/{slugify(title)}.md",
+                path=f"rule/{rule_set}/{rule_id.lower()}.md",
                 frontmatter={
                     "type": "Rule",
                     "id": rule_id,
@@ -409,18 +455,29 @@ def extract(repo_root: Path) -> list[Node]:
                     "selects": entry.get("selects", ""),
                     "checks": entry.get("checks", ""),
                     "enforced_by": f"{class_name}#{rule_id}",
-                    "status": "enforced",
+                    "status": entry.get("status", "enforced"),
                     "rule_set": rule_set,
                     "implementations": ["dotnet"],
                     "resource": (Path(DOTNET_RULES_SRC_REL) / f"{class_name}.cs").as_posix(),
                     "tags": [rule_set, "archunitnet"],
                 },
                 body=(
-                    f"## Selection\n\n{entry['selects']}\n\n## Check\n\n{entry['checks']}"
+                    f"## Selection\n\n{entry['selects']}\n\n## Check\n\n{entry['checks']}\n\n" + _cs_evidence(repo_root, rule_set, rule_id)
                     if entry.get("selects") and entry.get("checks")
                     else ""
                 ),
                 meta={"name": title, "kind": "rule", "scan_text": ""},
             )
         )
+    if retired_by_id:
+        body = ["# Retired rules", "", "Retired ids are never reused. They no longer enforce a check."]
+        for rule_id, entry in sorted(retired_by_id.items()):
+            body.extend(["", f"## {rule_id}", "", entry["reason"], "",
+                         f"Replacement: {entry['replacement']}", "", f"Since: {entry['since']}"])
+        nodes.append(Node(
+            path="rule/retired.md",
+            frontmatter={"type": "Reference", "title": "Retired rules", "tags": ["governance"]},
+            body="\n".join(body),
+            meta={"retired_ids": sorted(retired_by_id)},
+        ))
     return nodes

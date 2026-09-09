@@ -45,17 +45,7 @@ public class LineItem implements Entity<LineItem, LineItemId> {
 }
 ```
 
-## Governed by
-
-- [Domain model classes must not have public setter methods](/rule/tactical/domain-model-classes-must-not-have-public-setter-methods.md)
-- [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md)
-- [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md)
-- [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md)
-- [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
-- [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- [Use Case Result Models must not expose aggregate roots or entities](/rule/usecase/use-case-result-models-must-not-expose-aggregate-roots-or-entities.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
@@ -64,4 +54,5 @@ public class LineItem implements Entity<LineItem, LineItemId> {
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [References & Further Reading](/guide/readme/references-further-reading.md)
 - [RULES](/guide/readme/rules.md)

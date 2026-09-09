@@ -255,8 +255,19 @@ def _framework_types(source: str) -> list[tuple[str, str, str]]:
     params = dict(re.findall(r"<param name=\"(\w+)\">(.*?)</param>", source, re.S))
     decl_end = re.search(r"\)\s*\n\{", source)
     components = re.findall(r"^\s{4}string (\w+),?\)?$", source[: decl_end.start()] if decl_end else source, re.M)
-    values = re.findall(r"\"([\w.]+)\"", source[source.index("AspNetCore()") :])
-    return [(c, v, _xml_to_markdown([params.get(c, "")])) for c, v in zip(components, values)]
+    preset = re.search(r"public static FrameworkTypes AspNetCore\(\).*?(?=\n    ///)", source, re.S)
+    body = preset.group() if preset else ""
+    values = re.findall(r'"([\w.]+)"', body)
+    result = [(c, v, _xml_to_markdown([params.get(c, "")])) for c, v in zip(components, values)]
+    for member, doc in _cs_public_members(source):
+        role = re.search(r"(?:IReadOnlyList<string>|string) (\w+)", member)
+        if not role:
+            continue
+        name = role.group(1)
+        assignment = re.search(r"\b" + re.escape(name) + r"\s*=\s*Array.AsReadOnly\(new\[\]\s*\{([^}]+)\}", body)
+        prefixes = re.findall(r'"([\w.]+)"', assignment.group(1)) if assignment else []
+        result.append((name, ", ".join(prefixes) or "(empty)", doc))
+    return result
 
 
 # --------------------------------------------------------------------------- render
@@ -284,6 +295,10 @@ def _layout_body(java: str, annotations: str, cs: str, types: str) -> str:
             continue
         setter = "with" + name[0].upper() + name[1:]
         rows.append([f"`{name}`", f"`{value}`", f"`{setter}(...)`" if setter in setters else "constructor only", setters.get(setter, "")])
+    represented = {"with" + name[0].upper() + name[1:] for name, _ in defaults}
+    for setter, description in setters.items():
+        if setter not in represented and setter != "allowingInDomain":
+            rows.append([f"`{setter[4:]}`", "see declaration", f"`{setter}(...)`", description])
     parts.append("## Settings and defaults (Java)\n\nCreate the default layout with `DcaLayout.forBasePackage(String)`; every setting has a fluent override.\n\n" + _table(["Setting", "Default", "Override", "Meaning"], rows))
 
     third = _java_list_constant(java, "DEFAULT_THIRD_PARTY_ALLOWED_IN_DOMAIN")

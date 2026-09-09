@@ -31,7 +31,7 @@ The restriction is deliberately asymmetric. An incoming adapter reads and format
 
 "Framework-free domain" is enforced strictly for frameworks (Spring, JPA, Jackson, messaging), but compile-time-only conveniences without runtime coupling (Lombok, `commons-lang3`, JSpecify nullability annotations) are permitted. The boundary is behavioral coupling, not the import statement.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

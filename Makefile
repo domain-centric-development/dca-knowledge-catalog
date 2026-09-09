@@ -8,7 +8,7 @@ help:
 	@echo "check            CI gate: generate(no mirror) + lint + test + freshness diff"
 	@echo "hooks            install the git pre-commit hook"
 	@echo "obsidian         export a browsable Obsidian vault to bundle-obsidian/"
-	@echo "obsidian-import  write extensible-zone edits from the vault back to bundle/"
+	@echo "obsidian-import  write edits to owning authored/ sources and regenerate"
 
 generate:
 	$(PY) -m dca_catalog.generate

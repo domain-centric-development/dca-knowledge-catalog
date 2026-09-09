@@ -1,0 +1,49 @@
+{
+  "bundle_sha256": "57fb1edb8b96b61f88b90b027b56f66b960cc2fe8e6af93392e6a3e253a0ae75",
+  "counts": {
+    "Decision": 22,
+    "Guide": 11,
+    "Marker": 29,
+    "Note": 1,
+    "Pitfall": 28,
+    "Process": 1,
+    "Recipe": 19,
+    "Reference": 104,
+    "Rule": 119,
+    "Section": 119,
+    "Template": 25
+  },
+  "digest_algorithm": "sha256:sorted-path-NUL-resource-normalized-content-NUL",
+  "format": "dca-bundle-manifest-v1",
+  "library_versions": {
+    "dotnet": {
+      "DomainCentric.ArchRules": "0.4.0",
+      "DomainCentric.ArchRules.Xunit": "0.4.0",
+      "DomainCentric.BuildingBlocks": "0.1.0"
+    },
+    "java": {
+      "archunitSpringModulithVersion": "0.2.0-SNAPSHOT",
+      "archunitVersion": "0.4.0",
+      "buildingBlocksVersion": "0.2.0",
+      "dcaSpringVersion": "0.2.0-SNAPSHOT"
+    }
+  },
+  "sources": {
+    "dca-dotnet": {
+      "revision": "b7f49ca63d475d977759b9921323d20fee581b31",
+      "source_sha256": "52f5acacb789cecf5749df44eeb7000585e22089d6f43378795a3a8ca4586e15"
+    },
+    "dca-guide": {
+      "revision": "b49b5977608f991a5e64a8f3e610a93da145f6d6",
+      "source_sha256": "fad4c91862bd83f21d75096f8c11331315c7cc7a8949742f29979107aab5982c"
+    },
+    "dca-java": {
+      "revision": "f0f9db3722e7f1e48e5a735a7d28eff292fed0b1",
+      "source_sha256": "b7c8bc7ca89cfab1eee3909811252277ef60d4fa2602095cc5882675317d7972"
+    },
+    "dca-knowledge-catalog": {
+      "revision": "189564fa1645279423acb288700399e878d15d74",
+      "source_sha256": "5d512befd1629c048c258f9066459366ab6ba042e0120299940e8a41cb0c361b"
+    }
+  }
+}

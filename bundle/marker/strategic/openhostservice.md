@@ -41,10 +41,6 @@ public class ProductCatalogService {
 }
 ```
 
-## Governed by
-
-- [Open Host Services must be published: in the api package or as an incoming adapter](/rule/strategic/open-host-services-must-be-published-in-the-api-package-or-as-an-incoming-adapter.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)

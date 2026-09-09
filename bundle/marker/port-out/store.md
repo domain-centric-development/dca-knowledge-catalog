@@ -17,8 +17,8 @@ aggregate lifecycle.
 
 - Use `y` for **Aggregate Roots** with identity and lifecycle (findById,
 save, delete).
-- Use `e` for **Value Objects, Events, or operational data** without
-identity-based access (record, count, exists).
+- Use `e` for **Value Objects, Events, or operational data** without aggregate
+lifecycle (record, count, exists, lookup by key).
 
 **Examples of Stores:**
 
@@ -28,7 +28,8 @@ identity-based access (record, count, exists).
 
 **Rules of thumb:**
 
-- Need `findById()`? → `y` (object has identity)
+- Lookup by key (`findById()`) is allowed on a Store; aggregate lifecycle requires a
+Repository
 - Need `record()` or `count()`? → `e` (object is recorded, not managed)
 - In doubt: if the stored object is a `Value` or a record, it's almost always a Store.
 
@@ -36,15 +37,7 @@ identity-based access (record, count, exists).
 
 - [OutputPort](/marker/port-out/outputport.md)
 
-## Governed by
-
-- [Store implementations must reside in the adapter.outgoing package](/rule/tactical/store-implementations-must-reside-in-the-adapter-outgoing-package.md)
-- [Store interfaces must extend the Store marker, not Repository](/rule/tactical/store-interfaces-must-extend-the-store-marker-not-repository.md)
-- [Store interfaces must not declare findById or save methods](/rule/tactical/store-interfaces-must-not-declare-findbyid-or-save-methods.md)
-- [Store interfaces must reside in the application layer's shared output-port package](/rule/tactical/store-interfaces-must-reside-in-the-application-layer-s-shared-output-port-package.md)
-- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [DEVIATIONS FROM THE LITERATURE](/guide/readme/deviations-from-the-literature.md)

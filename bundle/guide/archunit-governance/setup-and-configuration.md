@@ -68,11 +68,11 @@ DcaLayout.forBasePackage("com.company.project")
     .withFrameworkAnnotations(FrameworkAnnotations.jakarta());   // default: spring()
 ```
 
-The rules never name a framework. Where a rule needs one — the stereotype a use case must carry, the
+The rules never name a framework. Where a rule needs one — the optional stereotype of a use case, the
 annotations a domain model must not carry, the transactional annotation, the controller stereotypes,
 a module system's declarations — it reads a *role* from `FrameworkAnnotations`: `injectable`,
 `webController`, `restController`, `transactional`, `eventListener`, `moduleDeclaration`,
-`publishedInterface`, `persistenceEntity`. Each role is a list of fully qualified annotation names.
+`publishedInterface`, `persistenceEntity`, `injectionSite`, `persistenceMapping`. Each role is a list of fully qualified annotation names.
 Presets fill them: `spring()` (the default), `jakarta()` (CDI scopes, JAX-RS, JTA, JPA), `quarkus()`,
 `micronaut()`, and `none()` for a hand-wired application. Adjust a single role when your platform
 has its own annotation:
@@ -196,7 +196,7 @@ per bounded context is fine — pass all assemblies. Differences worth knowing:
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [InputPort](/marker/port-in/inputport.md)

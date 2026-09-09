@@ -20,6 +20,6 @@ This document describes the core Domain-Centric Architecture patterns and princi
 - **[Domain Services with Data Dependencies](/guide/domain-services-with-data-dependencies.md)** - DomainGateway and Strategy/Callback patterns for Domain Services that need external data
 - **[Language Mappings](/guide/language-mappings.md)** - Java/Spring ↔ C#/.NET: building blocks, ports, context declaration, transactions, events, solution layout
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainGateway](/marker/tactical/domaingateway.md)

@@ -57,6 +57,8 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `controllerSuffix` | `Controller` | `withControllerSuffix(...)` | Suffix of MVC (server-rendered) controllers, e.g. `"Controller"` (default) or `"Page"`. Read by the naming rule for classes carrying the configured `@Controller` annotation and by the rule that keeps controllers away from repositories; the REST suffix is configured separately. |
 | `restControllerSuffix` | `Resource` | `withRestControllerSuffix(...)` | Suffix of REST controllers, e.g. `"Resource"` or `"Controller"`. |
 | `frameworkCandidates` | `detection.candidates()` | constructor only |  |
+| `OperationContainers` | see declaration | `withOperationContainers(...)` | Organisational package segments ignored when measuring operation depth; empty by default. |
+| `FrameworkPreset` | see declaration | `withFrameworkPreset(...)` | The preset registered under the given name — built-in (`spring`, `jakarta`, `quarkus`, `micronaut`, `none`) or contributed by a library through `FrameworkAnnotationsProvider`. This is what `dca.framework=` in `dca-archunit.properties` applies; an unknown name fails, a typo must not fall back silently. |
 
 ## Third-party packages the domain may depend on (Java default)
 
@@ -122,6 +124,8 @@ Annotations are matched by fully qualified name and grouped by *role*; the rule 
 | `moduleDeclaration` | `org.springframework.modulith.ApplicationModule` | — | — | — | module declaration on `package-info` |
 | `publishedInterface` | `org.springframework.modulith.NamedInterface` | — | — | — | published-package declaration on `package-info` |
 | `persistenceEntity` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table` | `jakarta.persistence.Entity`<br>`jakarta.persistence.Table`<br>`io.micronaut.data.annotation.MappedEntity` | ORM mapping annotations of a persistent class |
+| `injectionSite` | `org.springframework.beans.factory.annotation.Autowired`<br>`jakarta.inject.Inject`<br>`jakarta.annotation.Resource` | `jakarta.inject.Inject` | `jakarta.inject.Inject` | `jakarta.inject.Inject` | constructor, field or setter injection annotations |
+| `persistenceMapping` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version`<br>`io.micronaut.data.annotation.Id`<br>`io.micronaut.data.annotation.MappedProperty`<br>`io.micronaut.data.annotation.Relation` | member-level persistence mapping annotations |
 
 ## .NET twin: `DcaLayout` in `DomainCentric.ArchRules`
 
@@ -230,13 +234,29 @@ Types are matched by full name and grouped by role; `DcaLayout` defaults to the 
 
 | Role | `AspNetCore()` | Used for |
 |---|---|---|
-| `ControllerBase` | `Name` | Base class of server-rendering and API controllers. |
-| `ApiControllerAttribute` | `DcaLayout.ToString` | Attribute marking API controllers. |
-| `PageModelBase` | `ControllerBase` | Base class of page models (server-rendered pages without a controller). |
-| `TransactionScope` | `ApiControllerAttribute` | Type used for explicit transaction demarcation. |
+| `ControllerBase` | `Microsoft.AspNetCore.Mvc.ControllerBase` | Base class of server-rendering and API controllers. |
+| `ApiControllerAttribute` | `Microsoft.AspNetCore.Mvc.ApiControllerAttribute` | Attribute marking API controllers. |
+| `PageModelBase` | `Microsoft.AspNetCore.Mvc.RazorPages.PageModel` | Base class of page models (server-rendered pages without a controller). |
+| `TransactionScope` | `System.Transactions.TransactionScope` | Type used for explicit transaction demarcation. |
+| `TransactionalAttribute` | `(empty)` | Optional declarative transaction attribute used to cover publication entry paths. |
+| `PersistenceAttributeNamespaces` | `System.ComponentModel.DataAnnotations.Schema, Microsoft.EntityFrameworkCore` | Attribute namespaces classified as persistence metadata, including derived attributes. |
+| `InjectionAttributeNamespaces` | `Microsoft.Extensions.DependencyInjection` | Attribute namespaces classified as injection-site metadata. |
+| `TransactionAttributeNamespaces` | `(empty)` | Attribute namespaces classified as transaction metadata. |
+| `ContainerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as container stereotypes. |
+| `role` | `(empty)` | Whether a role is configured (non-blank). |
+| `ToString` | `(empty)` |  |
 
 .NET has no injectable stereotype attribute; the Java rules that depend on one have no .NET reading and are listed as not applicable in the rule catalog.
 
 ## See also
 
 - [DcaArchitecture](/reference/architecture.md)
+
+## Evidence slices
+
+- [Overview](/evidence/reference/layout/overview.md)
+- [Settings and defaults (.NET)](/evidence/reference/layout/settings-and-defaults-net.md)
+- [Third-party namespaces the domain may depend on (.NET default)](/evidence/reference/layout/third-party-namespaces-the-domain-may-depend-on-net-default.md)
+- [Building-block namespace constants (.NET)](/evidence/reference/layout/building-block-namespace-constants-net.md)
+- [Derived namespaces and patterns (.NET)](/evidence/reference/layout/derived-namespaces-and-patterns-net.md)
+- [Framework types the rules look for (.NET, `FrameworkTypes.AspNetCore()`)](/evidence/reference/layout/framework-types-the-rules-look-for-net-frameworktypes-aspnetcore.md)

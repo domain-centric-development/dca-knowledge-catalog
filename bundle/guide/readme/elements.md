@@ -457,8 +457,8 @@ public interface CustomerAccountRepository extends Repository<CustomerAccount, C
 
 **Store** — records or queries operational data without an own aggregate lifecycle.
 
-- Exists for **Value Objects, Events, or technical state** without identity-based access
-- Append-/record-style semantics: `record()`, `count()`, `exists()`, `reset()` — no `findById()` / `save()`
+- Exists for **Value Objects, Events, or technical state** without an aggregate lifecycle
+- Append-/record-style semantics: `record()`, `count()`, `exists()`, `reset()` — lookup by key is allowed; no aggregate `save()` / `delete()` semantics
 - Extends the `Store` marker (`Store extends OutputPort`) — never the `Repository` marker
 - Implementation lives in `adapter.outgoing/`
 
@@ -475,13 +475,13 @@ public interface LoginProtectionStore extends Store {
 | Criterion | Repository | Store |
 |---|---|---|
 | Stored object | Aggregate Root | Value Object / operational data |
-| Identity & lifecycle | yes — `findById`, `save`, `delete` | no — `record`, `count`, `exists` |
+| Aggregate lifecycle | yes — `save`, `delete` | no — `record`, `count`, `exists`; lookup by key allowed |
 | Marker | `extends Repository<T, ID>` | `extends Store` |
 | Examples | `CustomerAccountRepository`, `OrderRepository` | `LoginProtectionStore`, `AuditLogStore`, `EventStore` |
 
 **Rules of thumb:**
 
-1. Need `findById()`? → Repository (the object has identity).
+1. Lookup by key (`findById`) is allowed on a Store too; aggregate lifecycle determines Repository semantics.
 2. Need `record()` or `count()`? → Store (the object is recorded, not managed).
 3. In doubt: if the stored object is a `Value` or a record, it's almost always a Store.
 
@@ -629,7 +629,7 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 }
 ```
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [InputPort](/marker/port-in/inputport.md)
@@ -656,3 +656,12 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 - [IntegrationEvent](/marker/tactical/integrationevent.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
 - [Specification<T>](/marker/tactical/specification.md)
+
+## Evidence slices
+
+- [Domain Layer (Enterprise Business Rules)](/evidence/guide/readme/elements/domain-layer-enterprise-business-rules.md)
+- [Application Layer (Use Cases / Application Business Rules)](/evidence/guide/readme/elements/application-layer-use-cases-application-business-rules.md)
+- [Adapter Layer (Interface Adapters)](/evidence/guide/readme/elements/adapter-layer-interface-adapters.md)
+- [Infrastructure Layer (Frameworks & Drivers)](/evidence/guide/readme/elements/infrastructure-layer-frameworks-drivers.md)
+- [Strategic Architecture](/evidence/guide/readme/elements/strategic-architecture.md)
+- [Repository vs. Store](/evidence/guide/readme/elements/repository-vs-store.md)

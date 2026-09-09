@@ -49,11 +49,10 @@ marker/rule nodes — only the contracts and the rules that shape them.
 ## Regenerate
 
 The `bundle/` has **two zones** (see `SPEC.md`). The **generated zone** (`guide/
-marker/ rule/ process/ reference/`) is a derived artifact — **never hand-edit it**; edit the
+marker/ rule/ process/ reference/ evidence/`) is a derived artifact — **never hand-edit it**; edit the
 source (the guide / `dca-java` markers and rules) and regenerate. The rule source is
 `dca-java/rules.json` — refresh it with `./gradlew :dca-archunit:rulesCatalog` after changing rules — plus `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`). The **extensible zone**
-(`recipe/ decision/ pitfall/ template/ note/`) is authored by hand or by an LLM and
-**survives regeneration**.
+(`recipe/ decision/ pitfall/ template/ note/`) is rendered from the editable `authored/` source counterparts; these sources **survive regeneration**.
 
 ```bash
 PYTHONPATH=src python3 -m dca_catalog.generate   # stdlib-only, no install
@@ -106,8 +105,8 @@ maintains.
    *source* — `dca-guide/`, the marker
    markers or rules in `dca-java/` — then
    `make generate && make lint && make test`. Never hand-edit the generated zone.
-2. **Authored node, directly**: drop `bundle/{recipe|decision|pitfall|template|note}/<slug>.md`
-   with frontmatter `type:` + `title:` + `tags:` (pick tags from the SPEC.md
+2. **Authored node, directly**: write `authored/{recipe|decision|pitfall|template|note}/<slug>.md`
+   with frontmatter `type:`, `title:`, `tags:`, `review:`, `owner:` and `evidence:` (pick tags from the SPEC.md
    [tag taxonomy](SPEC.md#tag-taxonomy)), body that *synthesizes*, and
    bundle-relative links (leading `/`) into the skeleton. `make generate`
    catalogues it into the indexes; `make lint` checks anchoring, links, and tags.
@@ -161,11 +160,11 @@ they run from within the monorepo, not from this repository alone.
 The canonical bundle uses OKF **bundle-relative** links (leading `/`) that LLMs and
 the tests rely on but Obsidian does not resolve. Export a browsable vault (relative
 links, aliases, graph view with per-type colors, backlinks) without touching the
-canonical bundle — and write authored nodes back:
+canonical bundle — and prepare authored sources in the owning checkout:
 
 ```bash
 make obsidian            # -> bundle-obsidian/ (gitignored; open as an Obsidian vault)
-make obsidian-import     # write extensible-zone edits from the vault back to bundle/
+make obsidian-import     # write extensible-zone edits to owning authored/ sources, then regenerate
                          # (then regenerates indexes + lints)
 ```
 
@@ -200,3 +199,20 @@ MIT — see [LICENSE](LICENSE).
 
 Contributions are accepted under the MIT licence, and the copyright holder may additionally publish
 them under other licences (for example a documentation licence for prose).
+
+Rule nodes use stable `rule/<set>/<id-lowercase>.md` paths. `redirects.json` preserves
+legacy path mappings; the generator migrates authored links mechanically. Rule titles
+may change without moving nodes. The generator accepts legacy rule arrays and the
+`rules`/`retired` envelope documented in `SPEC.md`; the whole-bundle conformance test
+includes the real authored nodes. Frontmatter outside the documented flat subset
+fails lint rather than losing metadata silently.
+
+Reviewed authored revisions live under `authored/<zone>/<slug>.md`. Generation copies these explicit source inputs before link migration and indexing; other extensible nodes survive unchanged. Edit the source and regenerate; never edit `bundle/` or the marketplace mirror by hand.
+
+WP-40 B (2026-09-09): `manifest.json` identifies source revisions/content digests and library versions;
+resource-normalized bundle digests also verify mirrors. Exact id retrieval starts with `rule/index-compact.md`.
+All .NET implementations carry extracted C# evidence; large full nodes gain heading-based `evidence/` slices.
+Authored sources carry review/owner/evidence; draft/superseded are non-normative and never auto-promoted.
+Template language/framework metadata and both router verification commands prevent incorrect framework routing.
+Only the reviewed `applicability.py` mapping creates normative applicability edges; text matching is labelled heuristic.
+All edits go through source inputs and generation, including owning-repository Obsidian import.

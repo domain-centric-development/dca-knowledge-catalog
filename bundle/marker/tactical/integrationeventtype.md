@@ -27,8 +27,3 @@ events carry no `version` data field on the instance.
 public record CartCheckedOutEvent(UUID eventId, Instant occurredOn, ...)
     implements IntegrationEvent {}
 ```
-
-## Governed by
-
-- [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md)
-- [Integration Events must not have a version field](/rule/advanced/integration-events-must-not-have-a-version-field.md)

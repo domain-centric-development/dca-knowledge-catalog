@@ -38,7 +38,7 @@ public readonly record struct OrderId(Guid Value) : IId;
 public sealed class Order : AggregateRootBase<Order, OrderId> { … }
 ```
 
-## Related markers
+## Related mentions (heuristic)
 
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)

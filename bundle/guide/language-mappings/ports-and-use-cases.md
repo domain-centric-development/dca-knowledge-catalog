@@ -40,7 +40,7 @@ public sealed record PlaceOrderCommand(CustomerId CustomerId, IReadOnlyList<Line
 public sealed record PlaceOrderResult(OrderId OrderId, OrderStatus Status);
 ```
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [InputPort](/marker/port-in/inputport.md)

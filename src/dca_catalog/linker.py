@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 
 from .okf import Node, bundle_link
+from .applicability import APPLIES_TO
 
 # ArchUnit constant -> marker simple name
 _CONST_MARKER = {
@@ -59,7 +60,10 @@ def link(markers: list[Node], rules: list[Node]) -> None:
 
     # Rule -> markers
     for rule in rule_nodes:
-        names = _marker_refs(rule.meta["scan_text"], by_name, prose=False)
+        mentions = _marker_refs(rule.meta["scan_text"] + "\n" + str(rule.frontmatter.get("selects", "")), by_name, prose=False)
+        mentions |= {name for name in by_name if re.search(r"\b" + re.escape(name) + r"\b", str(rule.frontmatter.get("selects", "")))}
+        names = set(APPLIES_TO.get(rule.frontmatter.get("id"), ())) & set(by_name)
+        rule.add_section("Related mentions (heuristic)", [_link(by_name[n]) for n in sorted(mentions - names)])
         targets = sorted((by_name[n] for n in names), key=lambda x: x.path)
         rule.add_section("Applies to markers", [_link(m) for m in targets])
         for n in names:
@@ -118,7 +122,7 @@ def link_docs(docs: list[Node], markers: list[Node]) -> None:
         text = node.meta.get("scan_text", "")
         names = _marker_refs(text, by_name, prose=True)
         mtargets = sorted((by_name[n] for n in names), key=lambda x: x.path)
-        node.add_section("Related markers", [_link(m) for m in mtargets])
+        node.add_section("Related mentions (heuristic)", [_link(m) for m in mtargets])
 
         title = str(node.frontmatter.get("title", ""))
         for name in by_name:
@@ -134,7 +138,7 @@ def link_docs(docs: list[Node], markers: list[Node]) -> None:
             key=lambda t: (not t[0], -t[1], t[2].path),
         )[:_DISCUSS_MAX_LINKS]
         sections = sorted((n for _t, _c, n in ranked), key=lambda x: x.path)
-        marker.add_section("Discussed in", [_link(s) for s in sections])
+        marker.add_section("Related mentions in guides (heuristic)", [_link(s) for s in sections])
 
 
 def link_reference(rules: list[Node], references: list[Node]) -> None:

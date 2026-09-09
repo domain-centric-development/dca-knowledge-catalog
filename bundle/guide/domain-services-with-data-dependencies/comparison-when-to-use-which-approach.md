@@ -45,6 +45,6 @@ START: Domain Service needs data it does not have
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainGateway](/marker/tactical/domaingateway.md)

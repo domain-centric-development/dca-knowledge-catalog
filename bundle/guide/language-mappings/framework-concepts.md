@@ -30,6 +30,6 @@ ships ASP.NET Core (default) and none. A Jakarta or Quarkus project therefore re
 `@ApplicationScoped` for `@Service`, `jakarta.transaction.Transactional` for `@Transactional`, `@Path` for
 `@RestController` and `@Observes` for `@EventListener` — the rule ids and texts are the same.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)

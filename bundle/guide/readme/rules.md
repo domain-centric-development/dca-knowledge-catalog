@@ -34,7 +34,7 @@ tags: [guide, section]
 - Value Objects compared by all attributes
 - Replace entire Value Object instead of modifying
 - Value Objects can be shared freely
-- Value Objects validate themselves
+- Value Objects validate themselves; state the numeric range and rounding of every monetary value object. Reconstitution, deserialisation and default struct construction must not bypass invalid-state checks.
 - Side-effect-free methods only
 
 #### Aggregate Rules
@@ -47,7 +47,7 @@ tags: [guide, section]
 - One transaction modifies one aggregate only
 - Eventual consistency between aggregates
 - Delete aggregate deletes all contained entities
-- Never inject repositories or services into aggregates — pass dependencies as method parameters
+- Never inject repositories or remote services into aggregates. Use cases retrieve facts; domain services calculate over supplied snapshots. A callback parameter does not make external-data responsibility belong on the aggregate.
 - Two factories, two purposes: `create(...)` enforces creation invariants and registers the creation event; `reconstitute(...)` rebuilds a stored aggregate from persisted state and registers nothing. Persistence adapters use only the latter — rebuilding through `create` publishes a phantom creation on the next save
 - Domain events leave the aggregate through one call, `DomainEventPublisher.publishAndClearEvents(aggregate)`, after the save: dispatch everything, clear only when every listener returned. Iterating `domainEvents()` and calling `publish` per event is not the sanctioned form
 - Protect against lost updates with optimistic concurrency: version field on the root, incremented per state change; persistence rejects saves with a stale expected version
@@ -74,7 +74,7 @@ tags: [guide, section]
 
 #### Integration Event Rules (Cross-Bounded Context)
 - Integration Events are DTOs representing domain events for external systems
-- Integration Events defined in `{context}/adapter/outgoing/messaging/event/` package
+- Integration Events defined in `{context}/events/` package
 - Integration Events use past tense + "Event" suffix (e.g., OrderCreatedEvent)
 - Integration Events must be serializable (JSON, Protobuf, Avro)
 - Integration Events include: event ID, timestamp, correlation ID; the schema version and
@@ -114,7 +114,7 @@ START: Something happened in the domain
    │     ↓
    │
    └─ Create Integration Event (for external consumers)
-         - Define in: {context}/adapter/outgoing/messaging/event/
+         - Define in: {context}/events/
          - Name: past tense + "Event" suffix (e.g., OrderCreatedEvent)
          - Contains: only primitives and serializable types
          - Created by: Event Mapper in adapter layer
@@ -130,7 +130,7 @@ START: Something happened in the domain
 - One topic per bounded context or per event type
 - Order inside the use case: `save`, then `publishAndClearEvents` — same transaction, never before the save
 - The publisher dispatches first and clears the aggregate afterwards; the clear is the acknowledgement that every listener saw the event. A throwing listener fails the use case and leaves the events on the aggregate
-- Integration events go through a **transactional outbox**: the publication is written *inside* the aggregate's transaction (Spring Modulith's event publication registry, an outbox table, an in-process stand-in), released to the dispatcher after commit, discarded on rollback. Registering only after commit leaves a crash window between commit and outbox entry
+- Integration events go through a **transactional outbox**: the publication is written *inside* the aggregate's transaction (Spring Modulith's event publication registry, an outbox table, an in-process stand-in), made eligible atomically with commit and followed by an after-commit wakeup, discarded on rollback. Registering only after commit leaves a crash window between commit and outbox entry
 - Delivery is asynchronous and at least once: failures are retried with backoff, permanently failing publications stay visible (`Failed`), outstanding ones are replayed on restart
 
 #### Event Consumption Rules
@@ -168,7 +168,7 @@ START: Something happened in the domain
 - Use case transforms domain objects to DTOs
 - Use case assembles the `*Result` (static factory, use-case body or `*Assembler`); a result carries values, never aggregate roots or entities (`DCA-USE-015`)
 - Command results are small (ids, status, what the caller needs next); the view comes from a query or read model
-- A use case that saves an aggregate publishes and clears its domain events after the save (`publishAndClearEvents`, `DCA-USE-009`) — whether the action raised any or not
+- A use case that saves an aggregate publishes and clears its domain events after the save (`publishAndClearEvents`, `DCA-USE-009`) — unless the aggregate is proven never to register events
 - A query use case carries no transaction and no publisher; it loads and assembles
 - A bulk operation (delete all, archive everything before a date) is a method on the port — the port is freely extensible beyond `findById`/`save`/`deleteById` — that the use case calls without loading or saving a single aggregate: no domain event, no publisher, a declarative transaction. If other contexts must learn about it, one integration event describes the bulk fact
 - A number derived from a list (the count of open items on a list page) is a field of the list query's result, not a use case of its own and not a read model
@@ -514,7 +514,7 @@ Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a 
 
 > **Note:** For Spring Modulith module organization, see [Spring Modulith Implementation](/guide/spring-modulith.md)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
@@ -524,3 +524,17 @@ Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a 
 - [@Partnership](/marker/strategic/partnership.md)
 - [@Upstream](/marker/strategic/upstream.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
+
+## Evidence slices
+
+- [THE FUNDAMENTAL DEPENDENCY RULE](/evidence/guide/readme/rules/the-fundamental-dependency-rule.md)
+- [DOMAIN LAYER RULES](/evidence/guide/readme/rules/domain-layer-rules.md)
+- [APPLICATION LAYER RULES](/evidence/guide/readme/rules/application-layer-rules.md)
+- [ADAPTER LAYER RULES](/evidence/guide/readme/rules/adapter-layer-rules.md)
+- [INFRASTRUCTURE LAYER RULES](/evidence/guide/readme/rules/infrastructure-layer-rules.md)
+- [STRATEGIC DESIGN RULES](/evidence/guide/readme/rules/strategic-design-rules.md)
+- [BOUNDARY CROSSING RULES](/evidence/guide/readme/rules/boundary-crossing-rules.md)
+- [TESTING RULES](/evidence/guide/readme/rules/testing-rules.md)
+- [ERROR HANDLING RULES](/evidence/guide/readme/rules/error-handling-rules.md)
+- [TRANSACTION RULES](/evidence/guide/readme/rules/transaction-rules.md)
+- [PACKAGING RULES](/evidence/guide/readme/rules/packaging-rules.md)

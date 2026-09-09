@@ -48,18 +48,9 @@ clearing to the caller and is not the sanctioned form.
 
 ## Governed by
 
-- [Aggregate Roots must implement AggregateRoot<T, ID>](/rule/tactical/aggregate-roots-must-implement-aggregateroot-t-id.md)
-- [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/aggregate-roots-must-not-have-fields-with-other-aggregate-root-types.md)
-- [Aggregate Roots must not hold references to Repositories or other Output Ports](/rule/tactical/aggregate-roots-must-not-hold-references-to-repositories-or-other-output-ports.md)
-- [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md)
-- [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/entities-must-not-be-instantiated-directly-from-outside-the-aggregate.md)
-- [Entities must not have fields with Aggregate Root types](/rule/tactical/entities-must-not-have-fields-with-aggregate-root-types.md)
-- [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md)
-- [Repository methods must not return non-root Entities](/rule/tactical/repository-methods-must-not-return-non-root-entities.md)
-- [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- [Use Case Result Models must not expose aggregate roots or entities](/rule/usecase/use-case-result-models-must-not-expose-aggregate-roots-or-entities.md)
+- [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/dca-tac-003.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)

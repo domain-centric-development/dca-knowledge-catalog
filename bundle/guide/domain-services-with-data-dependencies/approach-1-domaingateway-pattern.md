@@ -263,7 +263,7 @@ public class CalculateBundleDiscountUseCase implements CalculateBundleDiscountIn
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

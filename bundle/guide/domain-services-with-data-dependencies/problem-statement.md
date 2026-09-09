@@ -28,6 +28,6 @@ The Dependency Rule forbids the Domain Layer to access the Application Layer or 
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainService](/marker/tactical/domainservice.md)

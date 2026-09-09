@@ -13,18 +13,19 @@ plugin so /dca-knowledge ships a vendored copy that never drifts from source.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import sys
 from collections import defaultdict
 from pathlib import Path
 
-from . import docs, linker, markers, process, reference, rules
+from . import docs, linker, markers, process, reference, rules, retrieval
 from .mirror import mirror_bundle as _mirror, strip_resource as _strip_resource  # noqa: F401 — re-exported for tests
 from .okf import Node, RESERVED
 
 # Generated zone — derived from the sources, wiped and rebuilt on every run.
-_GENERATED_DIRS = ("guide", "marker", "rule", "process", "reference")
+_GENERATED_DIRS = ("guide", "marker", "rule", "process", "reference", "evidence")
 
 # Extensible zone — authored (by a human or an LLM), survives regeneration.
 # Each entry: (dir, OKF node type, blurb). Node *files* are authored; their
@@ -71,25 +72,61 @@ _DEFAULT_MIRROR_REL = "dca-marketplace/plugins/dca-core/skills/dca-knowledge/cat
 
 
 def _parse_front(text: str) -> tuple[dict, str]:
-    """Minimal frontmatter reader for authored extensible-zone nodes."""
-    if not text.startswith("---"):
+    """Read the documented flat scalar/flow-list subset; never ignore YAML syntax."""
+    if not text.startswith("---\n"):
+        if text.startswith("---"):
+            raise ValueError("invalid frontmatter delimiter")
         return {}, text
-    end = text.find("\n---", 3)
-    if end == -1:
-        return {}, text
-    head, body = text[3:end].strip("\n"), text[end + 4:].lstrip("\n")
+    end = text.find("\n---\n", 3)
+    if end < 0:
+        raise ValueError("unterminated frontmatter")
+
+    def scalar(value: str) -> str:
+        if value.startswith('"'):
+            try:
+                result = json.loads(value)
+            except ValueError as exc:
+                raise ValueError("invalid quoted scalar") from exc
+            if not isinstance(result, str):
+                raise ValueError("expected string scalar")
+            return result
+        if value.startswith("'"):
+            if not re.fullmatch(r"'(?:[^']|'')*'", value):
+                raise ValueError("invalid single-quoted scalar")
+            return value[1:-1].replace("''", "'")
+        if not value or value[0] in "-?:,[]{}#&*!|>%@`" or re.search(r":\s|\s#", value):
+            raise ValueError("unsupported scalar syntax; quote the value")
+        return value
+
     fm: dict = {}
-    for line in head.splitlines():
-        if ":" in line and not line.startswith(" "):
-            key, value = line.split(":", 1)
-            value = value.strip()
-            if value.startswith("[") and value.endswith("]"):
-                fm[key.strip()] = [
-                    v.strip().strip('"') for v in value[1:-1].split(",") if v.strip()
-                ]
-            else:
-                fm[key.strip()] = value.strip('"')
-    return fm, body
+    for line in text[4:end].splitlines():
+        if not line.strip():
+            continue
+        match = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_-]*):[ \t]*(.*)", line)
+        if not match:
+            raise ValueError(f"unsupported frontmatter line: {line!r}")
+        key, value = match.groups()
+        value = value.strip()
+        if key in fm:
+            raise ValueError(f"duplicate frontmatter key: {key}")
+        if value.startswith("["):
+            if not value.endswith("]"):
+                raise ValueError("unterminated flow list")
+            inner = value[1:-1].strip()
+            items, position = [], 0
+            token_re = re.compile(r'\s*("(?:[^"\\]|\\.)*"|\'(?:[^\']|\'\')*\'|[^,]+?)\s*(,|$)')
+            while position < len(inner):
+                token = token_re.match(inner, position)
+                if not token:
+                    raise ValueError("invalid flow list")
+                items.append(scalar(token.group(1).strip()))
+                position = token.end()
+                if token.group(2) and position == len(inner):
+                    raise ValueError("trailing list comma")
+            fm[key] = items
+        else:
+            fm[key] = scalar(value)
+    return fm, text[end + 5:].lstrip("\n")
 
 
 def _load_authored(out: Path) -> list[Node]:
@@ -253,11 +290,78 @@ def generate(repo_root: Path, out: Path) -> dict[str, int]:
     linker.link_reference(rule_nodes, reference_nodes)
 
     nodes = marker_nodes + rule_nodes + process_nodes + reference_nodes + doc_nodes
+    nodes += retrieval.evidence_slices(nodes)
 
     paths = [n.path for n in nodes]
     if len(set(paths)) != len(paths):
         dupes = sorted({p for p in paths if paths.count(p) > 1})
         raise SystemExit(f"Duplicate node paths (slug collision): {dupes}")
+
+    # Seed missing extensible nodes from the canonical source graph so fresh outputs have its link closure.
+    canonical_authored = repo_root / "dca-knowledge-catalog/bundle"
+    if canonical_authored.resolve() != out.resolve():
+        for zone, _, _ in _EXTENSIBLE_ZONE:
+            for source in sorted((canonical_authored / zone).rglob("*.md")):
+                if source.name in RESERVED:
+                    continue
+                target = out / source.relative_to(canonical_authored)
+                if not target.exists():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(source, target)
+
+    # Reviewed authored inputs override only explicitly owned nodes. Other extensible nodes survive.
+    authored_source = repo_root / "dca-knowledge-catalog/authored"
+    if authored_source.exists():
+        for source in sorted(authored_source.rglob("*.md")):
+            relative = source.relative_to(authored_source)
+            if relative.parts[0] not in {name for name, _, _ in _EXTENSIBLE_ZONE} or source.name in RESERVED:
+                raise ValueError(f"invalid authored source: {relative}")
+            _parse_front(source.read_text(encoding="utf-8"))
+            target = out / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+
+    # Capture legacy identities before wiping generated files. Persist the mapping once;
+    # later title changes must never manufacture new title-based identities.
+    redirect_file = out / "redirects.json"
+    redirects = json.loads(redirect_file.read_text()) if redirect_file.exists() else {}
+    by_id = {n.frontmatter["id"]: n.path for n in rule_nodes if "id" in n.frontmatter}
+    for node in rule_nodes:
+        for rule_id in node.meta.get("retired_ids", []):
+            by_id[rule_id] = f"rule/retired.md#{rule_id.lower()}"
+            for old in list(redirects):
+                if redirects[old].endswith(f"/{rule_id.lower()}.md"):
+                    redirects[old] = by_id[rule_id]
+    for old in sorted((out / "rule").rglob("*.md")):
+        fm, _ = _parse_front(old.read_text(encoding="utf-8"))
+        target = by_id.get(fm.get("id"))
+        previous = old.relative_to(out).as_posix()
+        if target and previous != target:
+            redirects.setdefault(previous, target)
+    # Fresh builds use the checked-in migration registry, not current titles.
+    canonical = repo_root / "dca-knowledge-catalog/bundle/redirects.json"
+    if canonical.exists() and canonical.resolve() != redirect_file.resolve():
+        for old, target in json.loads(canonical.read_text()).items():
+            redirects.setdefault(old, target)
+    for old, target in list(redirects.items()):
+        target_id = Path(target.split("#", 1)[0]).stem.upper()
+        if target_id in by_id:
+            redirects[old] = by_id[target_id]
+    # Id paths of retired rules also migrate to their anchored registry entry.
+    for node in rule_nodes:
+        for rule_id in node.meta.get("retired_ids", []):
+            for old in sorted((out / "rule").rglob(f"{rule_id.lower()}.md")):
+                redirects[old.relative_to(out).as_posix()] = by_id[rule_id]
+    for name, _, _ in _EXTENSIBLE_ZONE:
+        for authored_path in sorted((out / name).rglob("*.md")):
+            original = authored_path.read_text(encoding="utf-8")
+            migrated = re.sub(
+                r"(\]\()/([^ )#]+)(#[^ )]+)?(\))",
+                lambda m: m[1] + "/" + redirects.get(m[2], m[2]) + (m[3] or "") + m[4],
+                original,
+            )
+            if migrated != original:
+                authored_path.write_text(migrated, encoding="utf-8")
 
     # Zone-aware wipe: rebuild the generated zone, PRESERVE authored node files in
     # the extensible zone (only their index.md is regenerated).
@@ -272,6 +376,7 @@ def generate(repo_root: Path, out: Path) -> dict[str, int]:
         if (out / reserved).exists():
             (out / reserved).unlink()
     _scaffold_extensible(out)
+    (out / "redirects.json").write_text(json.dumps(redirects, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     for node in nodes:
         target = out / node.path
@@ -291,6 +396,9 @@ def generate(repo_root: Path, out: Path) -> dict[str, int]:
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
         (out / rel).write_text(content, encoding="utf-8")
     (out / "log.md").write_text(_log_md(counts), encoding="utf-8")
+
+    (out / "rule/index-compact.md").write_text(retrieval.compact_index(index_nodes), encoding="utf-8")
+    retrieval.write_manifest(repo_root, out, dict(counts))
 
     assert "index.md" in RESERVED and "log.md" in RESERVED  # spec invariants
     return dict(counts)

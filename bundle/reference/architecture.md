@@ -293,3 +293,13 @@ namespace — the .NET stand-in for Java's `package-info`. Therefore the assembl
 ## See also
 
 - [DcaLayout](/reference/layout.md)
+
+## Evidence slices
+
+- [Overview](/evidence/reference/architecture/overview.md)
+- [Construction and access](/evidence/reference/architecture/construction-and-access.md)
+- [Bounded-context discovery](/evidence/reference/architecture/bounded-context-discovery.md)
+- [package-info annotations](/evidence/reference/architecture/package-info-annotations.md)
+- [Module discovery — structural, unlike context discovery](/evidence/reference/architecture/module-discovery-structural-unlike-context-discovery.md)
+- [Pattern helpers: context* over declared bounded contexts, all* over module roots](/evidence/reference/architecture/pattern-helpers-context-over-declared-bounded-contexts-all-over-module-roots.md)
+- [.NET API](/evidence/reference/architecture/net-api.md)

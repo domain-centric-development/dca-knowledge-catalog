@@ -49,9 +49,13 @@ def test_counts(bundle: Path):
     # skeleton from dca-java (building blocks + rule library) plus the .NET-only rules of
     # dca-dotnet (DCA-NET) — exact (regression guard)
     assert types["Marker"] == 29
-    assert types["Rule"] == 120
+    from dca_catalog.rules import _catalog
+    java_rules, java_retired = _catalog(REPO_ROOT / "dca-java/rules.json")
+    net_rules, _ = _catalog(REPO_ROOT / "dca-dotnet/rules.json")
+    expected_ids = {r["id"] for r in java_rules + net_rules if r.get("status") != "n/a"}
+    assert types["Rule"] == len(expected_ids)
     assert types["Process"] == 1
-    assert types["Reference"] == 2
+    assert types["Reference"] == 2 + bool(java_retired) + sum(1 for p in (bundle / "evidence").rglob("*.md") if p.name not in RESERVED)
     # the book and the sample's ADRs are deliberately not in the bundle
     assert "Chapter" not in types
     assert "ADR" not in types
@@ -98,7 +102,7 @@ def test_bundle_relative_links_resolve(bundle: Path):
     broken = []
     for p in bundle.rglob("*.md"):
         for target in link_re.findall(p.read_text(encoding="utf-8")):
-            if target.startswith(prefixes) and not (bundle / target.lstrip("/")).exists():
+            if target.startswith(prefixes) and not (bundle / target.lstrip("/").split("#", 1)[0]).exists():
                 broken.append((str(p.relative_to(bundle)), target))
     assert not broken, f"broken bundle-relative links: {broken}"
 
@@ -206,7 +210,7 @@ def test_bundle_is_tool_agnostic():
     tooling. Scans the committed bundle so authored extensible-zone nodes are
     covered too (the generated fixture would miss them)."""
     committed = Path(__file__).resolve().parents[1] / "bundle"
-    tool_ref = re.compile(r"claude|dca-core|dca-marketplace|slash command|plugin skill|/dca-\w", re.IGNORECASE)
+    tool_ref = re.compile(r"claude|dca-core|dca-marketplace|slash command|plugin skill|/dca-(?![a-z]+-\d{3}(?:\.md|/))\w", re.IGNORECASE)
     hits = []
     for p in committed.rglob("*.md"):
         for line in p.read_text(encoding="utf-8").splitlines():
@@ -298,7 +302,7 @@ def test_extensible_dirs_scaffolded(bundle: Path):
 
 def test_extensible_zone_survives_regeneration(tmp_path):
     out = tmp_path / "bundle"
-    generate.generate(REPO_ROOT, out)
+    before_counts = generate.generate(REPO_ROOT, out)
 
     authored = out / "note" / "_survives.md"
     authored.write_text(
@@ -310,7 +314,7 @@ def test_extensible_zone_survives_regeneration(tmp_path):
     counts = generate.generate(REPO_ROOT, out)  # regenerate over the same dir
 
     assert authored.exists(), "authored extensible-zone node was wiped by regeneration"
-    assert counts.get("Note") == 1, "authored node not counted"
+    assert counts.get("Note") == before_counts.get("Note", 0) + 1, "authored node not counted"
     assert "Survivor" in (out / "note" / "index.md").read_text(), "authored node not catalogued"
     # generated zone still rebuilt correctly alongside it
     assert (out / "marker" / "tactical" / "integrationevent.md").exists()
@@ -376,18 +380,19 @@ def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
 def test_marker_discussed_in(bundle: Path):
     # reverse edge: markers link the sections that primarily discuss them
     text = (bundle / "marker" / "port-out" / "repository.md").read_text(encoding="utf-8")
-    assert "## Discussed in" in text
+    assert "## Related mentions in guides (heuristic)" in text
     links = re.findall(r"\]\((/guide/[^)]+\.md)\)",
-                       text.split("## Discussed in", 1)[1])
+                       text.split("## Related mentions in guides (heuristic)", 1)[1])
     assert 0 < len(links) <= 10, f"expected 1..10 discussed-in links, got {len(links)}"
     for target in links:
-        assert (bundle / target.lstrip("/")).exists(), f"unresolved: {target}"
+        assert (bundle / target.lstrip("/").split("#", 1)[0]).exists(), f"unresolved: {target}"
 
 
 def test_obsidian_roundtrip_is_noop(bundle: Path, tmp_path):
     # export then import with no edits must leave the bundle byte-identical
     import shutil
 
+    (tmp_path / "src/dca_catalog").mkdir(parents=True)
     b = tmp_path / "b"
     shutil.copytree(bundle, b)
     authored = b / "note" / "roundtrip.md"
@@ -417,6 +422,7 @@ def test_obsidian_roundtrip_is_noop(bundle: Path, tmp_path):
 def test_obsidian_import_authored_edit(bundle: Path, tmp_path):
     import shutil
 
+    (tmp_path / "src/dca_catalog").mkdir(parents=True)
     b = tmp_path / "b"
     shutil.copytree(bundle, b)
     vault = tmp_path / "vault"
@@ -437,7 +443,8 @@ def test_obsidian_import_authored_edit(bundle: Path, tmp_path):
 
     changed, problems = obsidian.import_back(vault, b)
 
-    imported = (b / "note" / "from-vault.md").read_text(encoding="utf-8")
+    assert not (b / "note" / "from-vault.md").exists()
+    imported = (tmp_path / "authored/note/from-vault.md").read_text(encoding="utf-8")
     assert "[the marker](/marker/port-in/usecase.md)" in imported  # wikilink converted
     assert "](/process/index.md)" in imported  # relative -> bundle-relative
     assert changed == 1
@@ -452,7 +459,7 @@ def test_root_index_router_line(bundle: Path, tmp_path):
 
     b = tmp_path / "b"
     shutil.copytree(bundle, b)
-    assert "Building something?" not in (b / "index.md").read_text()
+    assert "Building something?" in (b / "index.md").read_text()  # canonical authored router is seeded
     (b / "recipe" / "build-a-dca-application.md").write_text(
         "---\ntype: Recipe\ntitle: \"Build a DCA application\"\ntags: [recipe, bootstrap]\n---\n\n"
         "Router. [UseCase](/marker/port-in/usecase.md)\n",
@@ -501,7 +508,7 @@ _METHOD_HEADER = re.compile(
 
 _MARKER_ORACLE = {
     "tactical/baseaggregateroot.md": [
-        "public void registerEvent(DomainEvent event)",
+        "protected void registerEvent(DomainEvent event)",
         "public List<DomainEvent> domainEvents()",
         "public void clearDomainEvents()",
     ],
@@ -594,7 +601,7 @@ def test_marker_method_count_matches_source(bundle: Path):
 
 
 def _rule_files(bundle: Path) -> list[Path]:
-    return [p for p in (bundle / "rule").rglob("*.md") if p.name != "index.md"]
+    return [p for p in (bundle / "rule").rglob("*.md") if p.name not in RESERVED and _split_frontmatter(p.read_text())[0].get("type") == "Rule"]
 
 
 def test_every_rule_node_describes_selection_and_check(bundle: Path):
@@ -689,3 +696,242 @@ def test_slugify_is_ascii_only():
     assert slugify("Default-Regel: Pure Domain Services (90% der Fälle)") == "default-regel-pure-domain-services-90-der-falle"
     assert slugify("Größe & Maß") == "grosse-mass"
     assert slugify("日本語 title").isascii()
+
+
+def test_real_authored_bundle_survives_title_change(tmp_path, monkeypatch):
+    import shutil
+    from dca_catalog import rules
+    canonical = REPO_ROOT / 'dca-knowledge-catalog/bundle'
+    out = tmp_path / 'bundle'
+    shutil.copytree(canonical, out)
+    before = {p.relative_to(out): p.read_text() for name, _, _ in generate._EXTENSIBLE_ZONE
+              for p in (out / name).glob('*.md') if p.name not in RESERVED}
+    generate.generate(REPO_ROOT, out)
+    import json
+    redirects = json.loads((out / 'redirects.json').read_text())
+    for relative, text in before.items():
+        for old, new in redirects.items():
+            text = text.replace('](/' + old + ')', '](/' + new + ')')
+        assert (out / relative).read_text() == text
+    original_extract = rules.extract
+    def renamed(root):
+        nodes = original_extract(root)
+        for node in nodes:
+            if node.frontmatter.get('type') == 'Rule':
+                node.frontmatter['title'] = 'Revised title ' + node.frontmatter['id']
+        return nodes
+    monkeypatch.setattr(rules, 'extract', renamed)
+    generate.generate(REPO_ROOT, out)
+    assert not [f for f in lint.lint(out, REPO_ROOT) if f[0] in {'ERROR', 'WARN'}]
+    snapshot = {p.relative_to(out): p.read_bytes() for p in out.rglob('*') if p.is_file()}
+    generate.generate(REPO_ROOT, out)
+    assert snapshot == {p.relative_to(out): p.read_bytes() for p in out.rglob('*') if p.is_file()}
+    mirror = tmp_path / 'mirror'
+    generate._mirror(out, [mirror])
+    assert not [f for f in lint.lint(mirror, REPO_ROOT) if f[0] in {'ERROR', 'WARN'}]
+
+
+@pytest.mark.parametrize('head', [
+    'tags:\n  - domain', 'title: |\n  multiline', 'type: Note\ntype: Rule',
+    'tags: [a,,b]', 'tags: [a,]', 'tags: [a', 'title: &alias text',
+    'title: "unterminated', 'title: {nested: value}', '  title: indented',
+])
+def test_strict_frontmatter_rejects_unsupported_yaml(head, tmp_path):
+    text = '---\n' + head + '\n---\nBody\n'
+    with pytest.raises(ValueError):
+        generate._parse_front(text)
+    (tmp_path / 'note').mkdir()
+    (tmp_path / 'note/bad.md').write_text(text)
+    assert any(f[:2] == ('ERROR', 'frontmatter') for f in lint.lint(tmp_path, REPO_ROOT))
+
+
+def test_frontmatter_quoted_list_roundtrip():
+    from dca_catalog.okf import Node
+    fm = {'type': 'Note', 'title': 'A "quote" \\ path', 'tags': ['one, two', 'three']}
+    assert generate._parse_front(Node('note/test.md', fm).render())[0] == fm
+
+
+def test_optional_retirement_schema(tmp_path):
+    import json
+    from dca_catalog import rules
+    java = tmp_path / 'dca-java'
+    java.mkdir()
+    registry = {'rules': [], 'retired': [
+        {'id': 'DCA-ADV-003', 'reason': 'Duplicate check.',
+         'replacement': 'DCA-ADV-001', 'since': '0.4.0'}]}
+    (java / 'rules.json').write_text(json.dumps(registry))
+    nodes = rules.extract(tmp_path)
+    retired = next(n for n in nodes if n.path == 'rule/retired.md')
+    assert '## DCA-ADV-003' in retired.body
+    assert 'DCA-ADV-001' in retired.body
+    assert retired.meta['retired_ids'] == ['DCA-ADV-003']
+    registry['retired'][0].pop('replacement')
+    (java / 'rules.json').write_text(json.dumps(registry))
+    with pytest.raises(ValueError, match='incomplete retirement'):
+        rules.extract(tmp_path)
+
+
+def test_explicit_status_overrides_legacy_derivation(tmp_path):
+    import json
+    from dca_catalog import rules
+    java = tmp_path / 'dca-java'
+    java.mkdir()
+    (java / 'rules.json').write_text(json.dumps({'rules': [{
+        'id': 'DCA-LAY-001', 'set': 'layered', 'title': 'A descriptive title',
+        'rationale': 'Documentation', 'selects': 'All classes', 'checks': 'No assertion',
+        'status': 'informational'}], 'retired': []}))
+    node = rules.extract(tmp_path)[0]
+    assert node.path == 'rule/layered/dca-lay-001.md'
+    assert node.frontmatter['status'] == 'informational'
+    assert node.body.startswith('# A descriptive title')
+
+
+def test_retirement_migrates_existing_inbound_links(tmp_path, monkeypatch):
+    import json
+    import shutil
+    from dca_catalog import rules
+    out = tmp_path / 'bundle'
+    shutil.copytree(REPO_ROOT / 'dca-knowledge-catalog/bundle', out)
+    generate.generate(REPO_ROOT, out)
+    real = rules.extract
+    old = 'rule/advanced/dca-adv-003.md'
+    (out / 'note/retirement-probe.md').write_text(
+        '---\ntype: Note\ntitle: Retirement probe\ntags: [note]\n---\n'
+        f'[Retiring rule](/{old})\n')
+    def retiring(root):
+        from dca_catalog.okf import Node
+        return [n for n in real(root) if n.frontmatter.get('id') != 'DCA-ADV-003' and n.path != 'rule/retired.md'] + [Node(
+            'rule/retired.md', {'type': 'Reference', 'title': 'Retired rules', 'tags': ['governance']},
+            '# Retired rules\n\n## DCA-ADV-003\n\nCovered by DCA-ADV-001.\n\n## DCA-MAP-003\n\nRenderer.\n\n## DCA-TAC-022\n\nValue rules.',
+            meta={'retired_ids': ['DCA-ADV-003', 'DCA-MAP-003', 'DCA-TAC-022']})]
+    monkeypatch.setattr(rules, 'extract', retiring)
+    generate.generate(REPO_ROOT, out)
+    assert '](/rule/retired.md#dca-adv-003)' in (out / 'note/retirement-probe.md').read_text()
+    assert json.loads((out / 'redirects.json').read_text())[old] == 'rule/retired.md#dca-adv-003'
+    assert not [f for f in lint.lint(out, REPO_ROOT) if f[0] == 'ERROR']
+
+
+def test_framework_member_metadata_roles_are_rendered_from_presets():
+    from dca_catalog.reference import _framework_annotations, _framework_types
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    java = root / "dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/FrameworkAnnotations.java"
+    roles, presets = _framework_annotations(java.read_text())
+    assert {"injectionSite", "persistenceMapping"} <= {r for r, _ in roles}
+    for name in ("spring", "jakarta", "quarkus", "micronaut"):
+        assert "jakarta.inject.Inject" in presets[name]["injectionSite"]
+        assert "jakarta.persistence.Column" in presets[name]["persistenceMapping"]
+    assert presets["none"]["injectionSite"] == []
+    assert presets["none"]["persistenceMapping"] == []
+    cs = root / "dca-dotnet/src/DomainCentric.ArchRules/FrameworkTypes.cs"
+    defaults = {r: v for r, v, _ in _framework_types(cs.read_text())}
+    assert "System.ComponentModel.DataAnnotations.Schema" in defaults["PersistenceAttributeNamespaces"]
+    assert "Microsoft.Extensions.DependencyInjection" in defaults["InjectionAttributeNamespaces"]
+    assert defaults["TransactionAttributeNamespaces"] == "(empty)"
+    assert defaults["ContainerAttributeNamespaces"] == "(empty)"
+
+
+def test_reviewed_mapping_mentions_its_selected_marker():
+    from dca_catalog.applicability import APPLIES_TO
+    from dca_catalog.rules import _catalog
+    entries = {r['id']: r for r in _catalog(REPO_ROOT / 'dca-java/rules.json')[0]}
+    for rule_id, markers in APPLIES_TO.items():
+        assert rule_id in entries
+        for marker in markers:
+            assert re.search(r'\b' + marker + r'\b', entries[rule_id]['selects']), (rule_id, marker)
+
+
+def test_exclusion_mention_does_not_create_applicability():
+    from dca_catalog import linker
+    from dca_catalog.okf import Node
+    marker = Node('marker/tactical/value.md', {'type': 'Marker', 'title': 'Value'}, meta={'name': 'Value'})
+    rule = Node('rule/custom/dca-custom-001.md', {'type': 'Rule', 'id': 'DCA-CUSTOM-001', 'title': 'Custom', 'selects': 'Classes excluding classes assignable to Value'}, meta={'kind': 'rule', 'scan_text': 'excluding classes assignable to Value'})
+    linker.link([marker], [rule])
+    assert 'Applies to' not in rule.render()
+    assert 'Governed by' not in marker.render()
+    assert 'Related mentions (heuristic)' in rule.render()
+    positive = Node('rule/tactical/dca-tac-008.md', {'type': 'Rule', 'id': 'DCA-TAC-008', 'title': 'Value boundary', 'selects': 'Types assignable to Value'}, meta={'kind': 'rule', 'scan_text': 'Value.class'})
+    linker.link([marker], [positive])
+    assert 'Applies to markers' in positive.render()
+    assert 'Governed by' in marker.render()
+
+
+def test_editorial_metadata_and_supersession(tmp_path):
+    b = tmp_path / 'bundle'
+    (b / 'note').mkdir(parents=True)
+    (b / 'note/new.md').write_text('---\ntype: Note\ntitle: New\ntags: [note]\n---\n\nProposal.\n')
+    findings = lint.lint(b, REPO_ROOT)
+    assert any(f[1] == 'editorial-metadata' and f[0] == 'WARN' for f in findings)
+    (b / 'note/new.md').write_text('---\ntype: Note\ntitle: New\ntags: [note]\nreview: superseded\nowner: Maintainers\nevidence: []\n---\n\nOld proposal.\n')
+    assert any(f[1] == 'editorial-superseded' and f[0] == 'ERROR' for f in lint.lint(b, REPO_ROOT))
+    skill = (REPO_ROOT / 'dca-marketplace/plugins/dca-core/skills/dca-knowledge/SKILL.md').read_text()
+    assert 'draft' in skill and 'superseded' in skill and 'non-normative' in skill
+
+
+def test_manifest_and_compact_view_are_mirrored(bundle, tmp_path):
+    import json
+    from dca_catalog.retrieval import bundle_digest
+    from dca_catalog.mirror import mirror_bundle
+    manifest = json.loads((bundle / 'manifest.json').read_text())
+    assert manifest['bundle_sha256'] == bundle_digest(bundle)
+    assert manifest['sources']['dca-java']['source_sha256']
+    assert manifest['library_versions']['java']['archunitVersion']
+    assert 'timestamp' not in json.dumps(manifest).lower()
+    mirror = tmp_path / 'mirror'
+    mirror_bundle(bundle, [mirror])
+    assert (mirror / 'manifest.json').read_bytes() == (bundle / 'manifest.json').read_bytes()
+    assert bundle_digest(mirror) == manifest['bundle_sha256']
+    compact = (bundle / 'rule/index-compact.md').read_text()
+    for p in _rule_files(bundle):
+        fm, _ = _split_frontmatter(p.read_text())
+        assert fm['id'] in compact
+    assert 'Selects (excerpt)' in compact and 'Languages' in compact
+
+
+def test_all_dotnet_rules_have_extracted_csharp_evidence(bundle):
+    from dca_catalog.rules import _catalog, _expression_at, _dotnet_class, DOTNET_RULES_SRC_REL
+    entries = [r for r in _catalog(REPO_ROOT / 'dca-dotnet/rules.json')[0] if r.get('status') != 'n/a']
+    for entry in entries:
+        path = bundle / 'rule' / entry['set'] / (entry['id'].lower() + '.md')
+        text = path.read_text()
+        source = (REPO_ROOT / DOTNET_RULES_SRC_REL / (_dotnet_class(entry['set']) + '.cs')).read_text()
+        assert _expression_at(source, entry['id'])
+        assert '```csharp' in text and 'DcaRule.' in text, entry['id']
+        if not entry['id'].startswith('DCA-NET-'):
+            assert '## .NET reading' in text
+
+
+def test_evidence_slices_keep_full_nodes_and_ignore_headings_in_code():
+    from dca_catalog.okf import Node
+    from dca_catalog.retrieval import evidence_slices
+    body = '# Full\n\n### First\n\n' + 'long context ' * 20 + '\n```java\n### inside a code fence\n```\n\n### Second\n\nEnd.\n'
+    node = Node('rule/example/test.md', {'type': 'Rule', 'title': 'Test'}, body)
+    slices = evidence_slices([node], threshold=100)
+    assert node.body == body
+    assert len(slices) == 3  # overview and two real headings
+    assert any('### inside a code fence' in s.body for s in slices)
+    assert not any('inside-a-code-fence' in s.path for s in slices)
+    assert all('Full node and context' in s.body for s in slices)
+    assert [s.path for s in slices] == [s.path for s in evidence_slices([Node(node.path, node.frontmatter, body)], threshold=100)]
+
+
+def test_templates_have_applicability_and_router_has_both_commands(bundle):
+    for p in (bundle / 'template').glob('*.md'):
+        if p.name in RESERVED:
+            continue
+        fm, _ = _split_frontmatter(p.read_text())
+        assert fm.get('applies_to') and fm.get('framework'), p.name
+    router = (bundle / 'recipe/build-a-dca-application.md').read_text()
+    assert './gradlew test-architecture' in router and 'dotnet test -c Debug' in router
+
+
+def test_obsidian_import_refuses_read_only_mirror(bundle: Path, tmp_path):
+    import shutil
+    mirror = tmp_path / "mirror"
+    shutil.copytree(bundle, mirror)
+    vault = tmp_path / "vault"
+    obsidian.export(mirror, vault)
+    changed, problems = obsidian.import_back(vault, mirror)
+    assert changed == 0
+    assert any("REJECTED" in message and "read-only" in message for message in problems)
+    assert not (tmp_path / "authored").exists()

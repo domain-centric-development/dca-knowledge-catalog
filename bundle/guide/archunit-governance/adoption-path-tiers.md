@@ -54,7 +54,7 @@ Some rules cannot be expressed as static checks at all. They belong in ADRs and 
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

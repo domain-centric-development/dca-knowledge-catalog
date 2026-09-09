@@ -45,6 +45,6 @@ tags: [guide, section]
 - [ADDITIONAL TOPICS](#additional-topics)
 - [REFERENCES & FURTHER READING](#references--further-reading)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [Factory](/marker/tactical/factory.md)

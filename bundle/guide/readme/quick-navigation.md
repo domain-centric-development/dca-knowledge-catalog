@@ -40,6 +40,6 @@ tags: [guide, section]
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [Factory](/marker/tactical/factory.md)

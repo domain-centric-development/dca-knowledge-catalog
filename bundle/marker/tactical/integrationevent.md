@@ -81,15 +81,12 @@ public class CartCheckedOutEventPublisher {
 
 ## Governed by
 
-- [Domain Events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md)
-- [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)
-- [Integration Events must be annotated with IntegrationEventType](/rule/advanced/integration-events-must-be-annotated-with-integrationeventtype.md)
-- [Integration Events must not have a version field](/rule/advanced/integration-events-must-not-have-a-version-field.md)
-- [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/integration-events-must-be-in-events-or-adapter-outgoing-event-packages.md)
-- [Integration Events should be immutable records](/rule/strategic/integration-events-should-be-immutable-records.md)
+- [Integration Events must be annotated with IntegrationEventType](/rule/advanced/dca-adv-005.md)
+- [Integration events carry the schema version in their type metadata, not in the payload](/rule/advanced/dca-adv-006.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
+- [References & Further Reading](/guide/readme/references-further-reading.md)
 - [RULES](/guide/readme/rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

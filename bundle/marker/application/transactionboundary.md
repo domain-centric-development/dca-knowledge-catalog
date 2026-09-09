@@ -59,13 +59,7 @@ with a rollback-only flag.
 - Use the annotation when the whole use case is local; use `TransactionBoundary` when
 it is not.
 
-## Governed by
-
-- [Transaction boundaries belong to the application layer](/rule/layered/transaction-boundaries-belong-to-the-application-layer.md)
-- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/use-cases-that-publish-domain-events-must-have-a-transaction-boundary.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [ELEMENTS](/guide/readme/elements.md)
 - [RULES](/guide/readme/rules.md)

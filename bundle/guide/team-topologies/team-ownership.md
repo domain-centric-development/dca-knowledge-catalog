@@ -49,7 +49,7 @@ Order Team owns Order Bounded Context
 
 **Team API Responsibilities:**
 - **Synchronous APIs:** REST endpoints (in `adapter/incoming/web/`)
-- **Asynchronous APIs:** Integration Events (in `adapter/outgoing/messaging/event/`)
+- **Asynchronous APIs:** Integration Events (in `events/`)
 - **Domain APIs:** Input Ports (in `application/{usecasename}/`)
 
 **API Management:**

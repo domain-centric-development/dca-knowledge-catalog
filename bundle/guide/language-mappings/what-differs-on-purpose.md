@@ -21,7 +21,7 @@ tags: [guide, section]
 
 Everything not listed here is the same architecture, spelled the way the language spells it.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [@Partnerships](/marker/strategic/partnerships.md)
 - [@Upstreams](/marker/strategic/upstreams.md)

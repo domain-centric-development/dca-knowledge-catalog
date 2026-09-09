@@ -52,17 +52,8 @@ after commit, at least once; their consumers are idempotent.
 
 - [OutputPort](/marker/port-out/outputport.md)
 
-## Governed by
+## Related mentions in guides (heuristic)
 
-- [Output Ports in application.shared must extend OutputPort](/rule/hexagonal/output-ports-in-application-shared-must-extend-outputport.md)
-- [The shared kernel's output-port markers must all be interfaces](/rule/layered/the-shared-kernel-s-output-port-markers-must-all-be-interfaces.md)
-- [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/declaratively-transactional-use-cases-must-not-call-remote-capable-output-ports.md)
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/use-cases-that-publish-domain-events-must-have-a-transaction-boundary.md)
-- [Use cases that save an aggregate must publish its domain events](/rule/usecase/use-cases-that-save-an-aggregate-must-publish-its-domain-events.md)
-
-## Discussed in
-
-- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Interface vs Implementation Placement](/guide/architecture-reference-guide/interface-vs-implementation-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Ports and Adapters](/guide/architecture-reference-guide/ports-and-adapters.md)

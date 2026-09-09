@@ -1,6 +1,6 @@
 # Open Knowledge Format — DCA Profile (v0.1)
 
-This catalog adopts the **Open Knowledge Format (OKF)**: knowledge represented as
+This catalog pins its profile to **Open Knowledge Format (OKF) v0.1**: knowledge represented as
 plain markdown files with YAML frontmatter, organized as a navigable graph that
 LLMs/agents consume directly — no SDK, no query language. *If you can `cat` a
 file you can read it; if you can `git clone` a repo you can ship it.*
@@ -13,7 +13,7 @@ file you can read it; if you can `git clone` a repo you can ship it.*
   delimited by `---`. The only mandatory frontmatter field is **`type`** — a
   short, self-explanatory string.
 - Reserved filenames: **`index.md`** (directory listing for progressive
-  disclosure) and **`log.md`** (changelog).
+  disclosure), **`log.md`** (changelog), and **`index-compact.md`** (DCA retrieval extension).
 - Concepts link to each other with standard markdown links. This catalog uses
   **bundle-relative** targets (leading `/`, e.g. `/marker/port-out/repository.md`).
 - Recommended frontmatter: `title`, `description`/body, `resource` (canonical URI
@@ -25,7 +25,7 @@ file you can read it; if you can `git clone` a repo you can ship it.*
 
 The bundle is one OKF graph split into two zones:
 
-- **Generated zone** — `guide/`, `marker/`, `rule/`, `process/`.
+- **Generated zone** — `guide/`, `marker/`, `rule/`, `process/`, `reference/`, `evidence/`.
   Derived from the sources, **wiped and rebuilt on every `generate` run**. Never
   hand-edit (changes are overwritten); edit the source and regenerate.
 - **Extensible zone** — `recipe/`, `decision/`, `pitfall/`, `template/`, `note/`.
@@ -98,7 +98,7 @@ One rule of the `dca-archunit` rule library — an enforceable architecture rule
 - `checks`: what the rule asserts about each selected class, including what does *not* satisfy
   it and what it deliberately does not establish. Mandatory.
 - `enforced_by`: `<RuleSetClass>#<id>`
-- `status`: `enforced | informational | disabled`
+- `status`: `enforced | informational | retired`
 - `rule_set`: the rule set name (`tactical`, `hexagonal`, `contextmap`, …)
 - `implementations`: the languages the rule is implemented in (`java`, `dotnet`; read from
   `dca-java/rules.json` and `dca-dotnet/rules.json`). Rules in the `dotnet` rule set
@@ -205,3 +205,59 @@ deterministic output, resolving bundle-relative links, and **preservation of the
 extensible zone across regeneration** (see `tests/`). A built bundle's ongoing health
 (no broken links, no stale `resource:` pointers, no unanchored/orphan authored nodes) is
 checked by `python3 -m dca_catalog.lint`.
+
+## Frontmatter subset and stable rule identity
+
+Frontmatter is a flat mapping with unique keys (`[A-Za-z_][A-Za-z0-9_-]*`).
+Values are single-line plain strings, JSON double-quoted strings, YAML single-quoted
+strings (doubled apostrophe escaping), or inline lists of such strings. Quote strings
+with YAML syntax. Block lists, nested mappings, block scalars, aliases, anchors,
+comments after values, duplicate keys and malformed delimiters are errors, never
+silently discarded. Multiline content belongs in the body.
+
+Rule paths are `rule/<set>/<id-lowercase>.md`; the title is an H1 and may change
+without moving the node. `redirects.json` records legacy paths as keys and canonical
+paths as values. Generation captures existing legacy nodes before replacing the
+rule zone and mechanically migrates authored Markdown links; subsequent runs retain
+this registry. Lint rejects links to legacy paths even if a file still exists there.
+
+The rules catalog accepts the legacy JSON array or an object with `rules` and
+`retired` arrays. Active entries optionally specify `status: enforced|informational`;
+absent status retains title/empty-body detection for Java and enforced for .NET-only
+rules. The existing .NET `n/a` records remain supported. Retirement entries require
+`id`, `reason`, `replacement` (explanatory text), and `since`; ids cannot occur in both
+arrays, be duplicated or remain active in another implementation. The merged registry
+renders `rule/retired.md` with `#dca-<set>-<nnn>` anchors. No index is emitted when the
+registry is absent or empty. Retired ids are never reassigned.
+
+## Review and retrieval profile (2026-09-09)
+
+Authored source revisions live in `authored/<zone>/<slug>.md`; generator copies them to the output before
+link migration/indexing. Fresh outputs seed the canonical authored graph so its links resolve. Do not edit
+bundle or mirror files. The owning repository's Obsidian import writes authored sources, then generation publishes them.
+
+Authored frontmatter uses `review: draft|reviewed|superseded`, `owner`, `evidence` (flow list of bundle-relative
+links), and `superseded_by` (required resolving link for superseded nodes). Missing review/owner/evidence warns;
+invalid review or superseded without a successor errors. Draft, missing-review and superseded nodes are non-normative
+proposals/history; generation never promotes them. Existing unreviewed material starts as draft. Reviewed nodes
+are the explicitly reviewed source revisions, not a claim that every linked draft has been reviewed.
+Templates also carry `applies_to` (languages) and `framework`; these route retrieval and do not add dependencies.
+
+`manifest.json` records source Git revisions, source-content SHA256 digests, declared library versions, node counts
+and a bundle SHA256 digest, without timestamps. Digest input is sorted relative path + NUL + content + NUL,
+excluding manifest.json; markdown resource/resource_dotnet frontmatter is stripped for hashing. Thus canonical
+and mirror share the same verifiable digest although only the canonical copy carries local source provenance.
+Uncommitted source changes are represented by content digests; a Git revision alone is not a snapshot claim.
+
+`rule/index-compact.md` contains id, title, short selects/checks excerpts, languages and status. Search the id's
+row before reading the full node. Excerpts are routing aids; full selection/check and caveats remain authoritative.
+Shared rules include extracted C# expressions under `.NET reading`; .NET-only rules include C# evidence too.
+Nodes over 16,000 bytes retain their full text and gain fence-aware level-three evidence slices under `evidence/`.
+Slice paths derive from parent identity and heading, not mutable rule titles. A slice must be read with parent
+selection/check and context. A single very large subsection can still exceed the threshold; no summary replaces it.
+
+Only `applicability.py`'s small reviewed rule-to-marker mapping produces `Governed by` / `Applies to markers`.
+Tests require a mapped marker to appear in selects; human review establishes positive selection. Prose/code matches,
+including exclusions in selects, produce only explicitly labelled `Related mentions (heuristic)` navigation.
+
+Source provenance records the latest commit affecting the hashed input files, rather than repository HEAD. A commit containing only derived outputs therefore leaves provenance stable. Freshness CI checks out full history to resolve those input commits.
