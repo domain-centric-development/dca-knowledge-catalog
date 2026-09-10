@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-USE-009
 title: Use cases that save an aggregate must publish its domain events
-rule: "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be published out of context. Publishing belongs after the save, in the use case that owns the unit of work - unless the aggregate is proven never to register an event. Checked per entry path, following calls within the use case class: every entry point that reaches a save - a method callable from outside the class, or one nothing in the class calls - must also reach a publication; a wrapper that publishes does not cover a direct call of the public method it wraps, and a helper two methods share does not connect them. That the publication follows the save and concerns the same aggregate is not established statically. Only DomainEventPublisher.publishAndClearEvents counts as a publication: iterating domainEvents() and calling publish(event), even followed by clearDomainEvents(), separates dispatch from acknowledgement and is not accepted."
+rule: "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be published out of context. Publishing belongs after the save, in the use case that owns the unit of work - unless the aggregate is proven never to register an event: its whole hierarchy is under scan and no code unit of it, of a helper it calls, or of any other scanned class registering on that aggregate (a nested class it never calls) calls registerEvent; a helper in another top-level class cannot reach the protected method; an unresolved type argument keeps the requirement. Checked per entry path, following calls within the use case class: every entry point that reaches a save - a method callable from outside the class, or one nothing in the class calls - must also reach a publication; a wrapper that publishes does not cover a direct call of the public method it wraps, and a helper two methods share does not connect them. That the publication follows the save and concerns the same aggregate is not established statically. Only DomainEventPublisher.publishAndClearEvents counts as a publication: iterating domainEvents() and calling publish(event), even followed by clearDomainEvents(), separates dispatch from acknowledgement and is not accepted."
 constraint: Use cases that save an aggregate must publish its domain events.
 selects: "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix."
 checks: "Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes."
@@ -40,7 +40,10 @@ DcaRule.of(
         "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the"
             + " instance they may later be published out of context. Publishing belongs after the"
             + " save, in the use case that owns the unit of work - unless the aggregate is proven never to register an"
-            + " event. Checked per entry path, following calls within the use case class: every"
+            + " event: its whole hierarchy is under scan and no code unit of it, of a helper it calls, or of any other"
+            + " scanned class registering on that aggregate (a nested class it never calls) calls registerEvent;"
+            + " a helper in another top-level class cannot reach the protected method; an unresolved type argument keeps the"
+            + " requirement. Checked per entry path, following calls within the use case class: every"
             + " entry point that reaches a save - a method callable from outside the class, or one"
             + " nothing in the class calls - must also reach a publication; a wrapper that publishes"
             + " does not cover a direct call of the public method it wraps, and a helper two methods"
@@ -94,7 +97,7 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
             events.add(
                 SimpleConditionEvent.violated(
                     item,
-                    item.getSimpleName()
+                    item.getName()
                         + "."
                         + pathName(entry, unit)
                         + " saves an aggregate without publishing its domain events - no"
@@ -148,12 +151,14 @@ static boolean repository(JavaClass repository, DcaArchitecture arch) {
   arch.classes().forEach(c -> scanned.put(c.getName(), c));
   JavaClass current = scanned.get(concrete.getName());
   if (current == null) return false;
+  Set<String> hierarchy = new HashSet<>();
   while (current != null && !platform(current.getName())) {
     if (!scanned.containsKey(current.getName())
         || !noRegistration(current, scanned, new HashSet<>())) return false;
+    hierarchy.add(current.getName());
     current = current.getRawSuperclass().orElse(null);
   }
-  return true;
+  return noExternalRegistration(hierarchy, scanned);
 }
 ```
 
@@ -244,6 +249,31 @@ private static boolean noRegistration(
     }
   return true;
 }
+```
+
+### `EventFreeAggregate.noExternalRegistration`
+
+```java
+/**
+   * A class outside the aggregate's hierarchy that registers an event on it (a same-package helper
+   * reaching the protected method) is invisible from the aggregate's own code units, so every
+   * scanned class is inspected: a registration whose target is the aggregate or one of its
+   * supertypes disables the exemption.
+   */
+  private static boolean noExternalRegistration(
+      Set<String> hierarchy, Map<String, JavaClass> scanned) {
+    for (JavaClass type : scanned.values()) {
+      if (hierarchy.contains(type.getName())) continue;
+      for (var unit : type.getCodeUnits())
+        for (var call : unit.getCallsFromSelf()) {
+          var owner = call.getTargetOwner();
+          if (call.getTarget().getName().equals("registerEvent")
+              && owner.isAssignableTo(AggregateRoot.class)
+              && (hierarchy.contains(owner.getName()) || platform(owner.getName()))) return false;
+        }
+    }
+    return true;
+  }
 ```
 
 ### `IntraClassCalls.callersOf`
@@ -711,6 +741,7 @@ internal sealed class IntraClassCalls
 - [`EventFreeAggregate.aggregate`](/evidence/rule/usecase/dca-use-009/eventfreeaggregate-aggregate.md)
 - [`EventFreeAggregate.platform`](/evidence/rule/usecase/dca-use-009/eventfreeaggregate-platform.md)
 - [`EventFreeAggregate.noRegistration`](/evidence/rule/usecase/dca-use-009/eventfreeaggregate-noregistration.md)
+- [`EventFreeAggregate.noExternalRegistration`](/evidence/rule/usecase/dca-use-009/eventfreeaggregate-noexternalregistration.md)
 - [`IntraClassCalls.callersOf`](/evidence/rule/usecase/dca-use-009/intraclasscalls-callersof.md)
 - [`IntraClassCalls.isEntryPoint`](/evidence/rule/usecase/dca-use-009/intraclasscalls-isentrypoint.md)
 - [`IntraClassCalls.closure`](/evidence/rule/usecase/dca-use-009/intraclasscalls-closure.md)

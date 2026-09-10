@@ -41,7 +41,7 @@ Trends to observe, not pass/fail gates — report instead of failing the build (
 
 - Component size (classes per context or package)
 - Coupling metrics: instability, abstractness, distance from the main sequence (ArchUnit metrics API, `com.tngtech.archunit.library.metrics`)
-- Naming heuristics (e.g., flagging `*Manager` or `*Util` classes in the domain)
+- Naming heuristics (e.g., flagging `*Helper` or `*Util` classes in the domain)
 
 ### Not Statically Testable
 

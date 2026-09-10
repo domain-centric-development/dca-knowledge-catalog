@@ -22,11 +22,13 @@ static boolean repository(JavaClass repository, DcaArchitecture arch) {
   arch.classes().forEach(c -> scanned.put(c.getName(), c));
   JavaClass current = scanned.get(concrete.getName());
   if (current == null) return false;
+  Set<String> hierarchy = new HashSet<>();
   while (current != null && !platform(current.getName())) {
     if (!scanned.containsKey(current.getName())
         || !noRegistration(current, scanned, new HashSet<>())) return false;
+    hierarchy.add(current.getName());
     current = current.getRawSuperclass().orElse(null);
   }
-  return true;
+  return noExternalRegistration(hierarchy, scanned);
 }
 ```

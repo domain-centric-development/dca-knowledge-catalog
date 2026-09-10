@@ -32,7 +32,7 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
             events.add(
                 SimpleConditionEvent.violated(
                     item,
-                    item.getSimpleName()
+                    item.getName()
                         + "."
                         + pathName(entry, unit)
                         + " saves an aggregate without publishing its domain events - no"

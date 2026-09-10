@@ -70,7 +70,7 @@ DcaRule.of(
 ```csharp
 DcaRule.Of(
         "DCA-NAM-010",
-        "Domain classes must not use technical suffixes (Helper, Util, Impl)",
+        "Domain classes must not use technical suffixes (Helper, Util, Impl, Implementation)",
         "Domain names come from the ubiquitous language - name services by their specialty, not by technical role",
         arch =>
             Types()

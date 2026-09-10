@@ -91,8 +91,8 @@ static void check(DcaArchitecture arch, String id) {
         .forEach(ctor -> inspect(ctor, ctor.getFullName(), violations, roles.injectionSite()));
   }
   if (!violations.isEmpty())
-    throw new AssertionError(
-        id + ": prohibited domain metadata\n" + String.join("\n", violations));
+    throw new dev.domaincentric.dca.archunit.DcaRuleViolation(
+        id + ": prohibited domain metadata", violations);
 }
 ```
 
@@ -133,7 +133,7 @@ DcaRule.Check("DCA-ONI-003", "Domain models must not carry prohibited framework 
         "Domain metadata does not configure infrastructure concerns",
         arch => DomainMetadata.Check(arch, "DCA-ONI-003"))
     .Selecting("Domain.Model types except events, services, factories and specifications, which have exclusive ADV ownership.")
-    .Checking("Configured attribute namespaces classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed. Missing runtime types are skipped; wiring is not established.")
+    .Checking("Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. Missing runtime types are skipped; wiring is not established.")
 ```
 
 ### C# helper DomainMetadata
@@ -171,24 +171,24 @@ internal static class DomainMetadata
             if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns()))) continue;
             var runtime = arch.RuntimeType(type);
             if (runtime is null) continue;
-            Inspect(runtime, violations, roles.ContainerAttributeNamespaces, roles.PersistenceAttributeNamespaces, roles.TransactionAttributeNamespaces);
+            Inspect(runtime, violations, roles.PersistenceAttributeTypes, roles.ContainerAttributeNamespaces, roles.PersistenceAttributeNamespaces, roles.TransactionAttributeNamespaces);
             const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-            foreach (var field in runtime.GetFields(flags)) Inspect(field, violations, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
-            foreach (var property in runtime.GetProperties(flags)) Inspect(property, violations, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
-            foreach (var method in runtime.GetMethods(flags)) Inspect(method, violations, roles.TransactionAttributeNamespaces,
+            foreach (var field in runtime.GetFields(flags)) Inspect(field, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
+            foreach (var property in runtime.GetProperties(flags)) Inspect(property, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
+            foreach (var method in runtime.GetMethods(flags)) Inspect(method, violations, Array.Empty<string>(), roles.TransactionAttributeNamespaces,
                 id == "DCA-ADV-004" ? Array.Empty<string>() : roles.InjectionAttributeNamespaces);
-            foreach (var ctor in runtime.GetConstructors(flags)) Inspect(ctor, violations, roles.InjectionAttributeNamespaces);
+            foreach (var ctor in runtime.GetConstructors(flags)) Inspect(ctor, violations, Array.Empty<string>(), roles.InjectionAttributeNamespaces);
         }
         DcaRule.Fail(id + ": prohibited domain metadata", violations);
     }
 
-    private static void Inspect(MemberInfo target, List<string> violations, params IReadOnlyList<string>[] roles)
+    private static void Inspect(MemberInfo target, List<string> violations, IReadOnlyList<string> typeNames, params IReadOnlyList<string>[] roles)
     {
         foreach (var attribute in target.GetCustomAttributesData())
         {
             for (var type = attribute.AttributeType; type is not null; type = type.BaseType)
             {
-                if (!roles.SelectMany(r => r).Any(prefix => DcaLayout.IsBelow(type.Namespace ?? "", prefix))) continue;
+                if (!typeNames.Contains(type.FullName ?? "") && !roles.SelectMany(r => r).Any(prefix => DcaLayout.IsBelow(type.Namespace ?? "", prefix))) continue;
                 violations.Add($"{target.DeclaringType?.FullName ?? (target as Type)?.FullName}.{target.Name} carries prohibited metadata {attribute.AttributeType.FullName}");
                 break;
             }

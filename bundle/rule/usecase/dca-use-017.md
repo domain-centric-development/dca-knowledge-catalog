@@ -5,7 +5,7 @@ title: Use cases expose no public operation outside their input port
 rule: The input port describes the complete externally callable operation surface.
 constraint: Use cases expose no public operation outside their input port.
 selects: "Concrete non-nested application operations selected by InputPort marker or configured use-case suffix, with loadable runtime classes."
-checks: "Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded."
+checks: "Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. A use case selected by suffix only, without an InputPort interface, has no permitted operation and is reported in full - implement the input port. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded."
 enforced_by: "UseCaseRules#DCA-USE-017"
 status: enforced
 rule_set: usecase
@@ -23,7 +23,7 @@ Concrete non-nested application operations selected by InputPort marker or confi
 
 ## Check
 
-Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded.
+Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. A use case selected by suffix only, without an InputPort interface, has no permitted operation and is reported in full - implement the input port. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded.
 
 ## .NET reading
 
@@ -42,7 +42,7 @@ DcaRule.check(
     .selecting(
         "Concrete non-nested application operations selected by InputPort marker or configured use-case suffix, with loadable runtime classes.")
     .checking(
-        "Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded.")
+        "Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. A use case selected by suffix only, without an InputPort interface, has no permitted operation and is reported in full - implement the input port. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded.")
 ```
 ### C# expression
 
@@ -50,7 +50,7 @@ DcaRule.check(
 DcaRule.Check("DCA-USE-017", "Use cases expose no public operation outside their input port",
         "The input port describes the complete externally callable operation surface", OperationPolicy.Surface)
     .Selecting("Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types.")
-    .Checking("The effective public instance surface maps through the implemented IInputPort interface maps. Inherited and explicit implementations pass; unrelated-interface methods and public properties outside the contract fail. Constructors, object/ValueType methods and compiler-generated members are exempt; special-name property accessors alone are not exempt.")
+    .Checking("The effective public instance surface maps through the implemented IInputPort interface maps. Inherited and explicit implementations pass; unrelated-interface methods and public properties outside the contract fail (a property is reported once). Constructors, object/ValueType methods and compiler-generated members are exempt; special-name property accessors alone are not exempt. A use case selected by suffix only, without an input-port interface, has no permitted operation and is reported in full — implement the input port.")
 ```
 
 ### C# helper OperationPolicy
@@ -116,8 +116,8 @@ internal static class OperationPolicy
                 if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(ValueType)
                     || method.GetBaseDefinition().DeclaringType == typeof(object)
                     || method.IsDefined(typeof(CompilerGeneratedAttribute), false) || methods.Contains(method)) continue;
-                // Auto-property accessors have CompilerGeneratedAttribute too; the property's public
-                // surface is user-defined and must still belong to an input port.
+                // Property accessors (auto or computed) are reported once, as their property, below.
+                if (method.IsSpecialName && (method.Name.StartsWith("get_", StringComparison.Ordinal) || method.Name.StartsWith("set_", StringComparison.Ordinal))) continue;
                 violations.Add($"{type.FullName} exposes {method} outside its input port");
             }
             foreach (var property in runtime.GetProperties(BindingFlags.Public | BindingFlags.Instance))

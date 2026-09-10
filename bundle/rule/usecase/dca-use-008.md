@@ -73,7 +73,7 @@ DcaRule.Of(
     .Selecting(
         "Types under the root namespace whose name ends with Response.")
     .Checking(
-        "Each resides in an incoming-adapter namespace of some module root"
+        "Each resides in an adapter namespace (incoming or outgoing) of some module root"
             + " (<module>.Adapter or below), the shared kernel's included.")
 ```
 

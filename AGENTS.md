@@ -191,7 +191,8 @@ fails lint rather than losing metadata silently.
 
 Reviewed authored revisions live under `authored/<zone>/<slug>.md`. Generation copies these explicit source inputs before link migration and indexing; other extensible nodes survive unchanged. Edit the source and regenerate; never edit `bundle/` or the marketplace mirror by hand.
 
-WP-40 B (2026-09-09): `manifest.json` identifies source revisions/content digests and library versions;
+WP-40 B (2026-09-09): `manifest.json` identifies sibling source revisions/content digests and library versions (the
+catalog's own entry is digest-only — the carrying commit is its revision, so sources and bundle may land in one commit);
 resource-normalized bundle digests also verify mirrors. Exact id retrieval starts with `rule/index-compact.md`.
 All .NET implementations carry extracted C# evidence; large full nodes gain heading-based `evidence/` slices.
 Authored sources carry review/owner/evidence; draft/superseded are non-normative and never auto-promoted.

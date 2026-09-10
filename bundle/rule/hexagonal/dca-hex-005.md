@@ -39,7 +39,10 @@ DcaRule.check(
         "Outgoing adapters must not use another module's infrastructure",
         "Technical infrastructure reuse preserves module isolation",
         arch -> {
-          List<String> violations = new ArrayList<>();
+          CollectedViolations violations =
+              CollectedViolations.withHeader(
+                  "Outgoing adapters must not use another module's infrastructure\nbecause"
+                      + " technical infrastructure reuse preserves module isolation");
           for (var adapter : arch.classes()) {
             if (!com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
                     arch.allOutgoingAdapterPatterns())
@@ -63,11 +66,92 @@ DcaRule.check(
                 violations.add(dependency.getDescription());
             }
           }
-          if (!violations.isEmpty()) throw new AssertionError(String.join("\n", violations));
+          violations.throwIfAny();
         })
     .selecting("Classes in every module's outgoing adapter package.")
     .checking(
         "Dependencies on global infrastructure and the adapter's own module infrastructure pass; infrastructure of another module fails. Module boundaries use exact package segments.")
+```
+
+## Helpers
+
+### `CollectedViolations.check`
+
+```java
+/** Evaluates every rule, then throws all their violations at once. */
+  static void check(List<ArchRule> rules, JavaClasses classes) {
+    CollectedViolations collected = withoutHeader();
+    rules.forEach(rule -> collected.addAll(rule, classes));
+    collected.throwIfAny();
+  }
+```
+
+### `CollectedViolations.withHeader`
+
+```java
+/** A collector whose report starts with the given statement of what the rule demands. */
+  static CollectedViolations withHeader(String header) {
+    return new CollectedViolations(header);
+  }
+```
+
+### `CollectedViolations.add`
+
+```java
+/** Records one violation. */
+  void add(String violation) {
+    violations.add(Objects.requireNonNull(violation, "violation"));
+  }
+```
+
+### `CollectedViolations.throwIfAny`
+
+```java
+/**
+   * Throws the collected violations as one {@link DcaRuleViolation}; nothing when there are none.
+   */
+  void throwIfAny() {
+    if (!violations.isEmpty()) {
+      throw new DcaRuleViolation(header, violations);
+    }
+  }
+```
+
+### `CollectedViolations.withoutHeader`
+
+```java
+/** A collector whose report is the bare list of violations. */
+  static CollectedViolations withoutHeader() {
+    return new CollectedViolations("");
+  }
+```
+
+### `CollectedViolations.addAll`
+
+```java
+/**
+   * Evaluates one ArchUnit rule and records each of its violation details, suffixed with the
+   * explanation of what the rule was checking — the detail alone ({@code Class A depends on B})
+   * does not say why that dependency is wrong.
+   */
+  void addAll(ArchRule rule, JavaClasses classes, String explanation) {
+    for (String detail : rule.evaluate(classes).getFailureReport().getDetails()) {
+      add(explanation.isEmpty() ? detail : detail + " - " + explanation);
+    }
+  }
+
+/** Evaluates one ArchUnit rule and records its violation details as they are. */
+  void addAll(ArchRule rule, JavaClasses classes) {
+    addAll(rule, classes, "");
+  }
+```
+
+### `CollectedViolations.isEmpty`
+
+```java
+boolean isEmpty() {
+  return violations.isEmpty();
+}
 ```
 
 ## Architecture queries

@@ -10,7 +10,7 @@ evidence_for: "/rule/usecase/dca-use-012.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check("DCA-USE-012", "Publishing use cases require a transaction boundary on every entry path",
+DcaRule.Check("DCA-USE-012", "Use cases that publish domain events must have a transaction boundary",
         "Integration-event capture joins the modeled transaction; publication outside a transaction cannot rely on commit semantics",
         arch => {
             var violations = new List<string>();

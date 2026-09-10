@@ -46,7 +46,7 @@ Identifiers are Value Objects too, but carry their own marker: `d`.
 
 - [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/dca-tac-008.md)
 - [Value Object classes should be final (immutability)](/rule/tactical/dca-tac-009.md)
-- [Value Object fields must be final (deep immutability)](/rule/tactical/dca-tac-010.md)
+- [Value Object fields must be final (shallow immutability)](/rule/tactical/dca-tac-010.md)
 - [Value Objects must not have setter methods](/rule/tactical/dca-tac-011.md)
 
 ## Related mentions in guides (heuristic)

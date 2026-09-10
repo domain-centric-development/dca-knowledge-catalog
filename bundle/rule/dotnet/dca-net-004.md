@@ -48,9 +48,9 @@ DcaRule.Check(
             }
 
             DcaRule.Fail(
-                "Struct value objects must be readonly\nbecause records are the C# way to write a Value Object",
+                "Struct value objects must be readonly\nbecause a mutable struct value can be changed in place after construction",
                 violations,
-                "Declare the value object as `public sealed record X(...)` or `public readonly record struct X(...)`.");
+                "Declare the struct as `readonly struct` (a `readonly record struct` qualifies); classes are governed by TAC-009/010/012.");
         })
     .Selecting(
         "Non-interface, non-abstract types in <module>.Domain of every module root that"

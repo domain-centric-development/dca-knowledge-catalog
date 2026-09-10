@@ -5,7 +5,7 @@ title: "Use Case Queries should be immutable (final or records)"
 rule: "Use case queries should be immutable (value objects)."
 constraint: "Use Case Queries should be immutable (final or records)."
 selects: "Non-interface classes, including records, in <module>.application.. whose simple name ends with Query."
-checks: "The type is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected."
+checks: "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected."
 enforced_by: "UseCaseRules#DCA-USE-005"
 status: enforced
 rule_set: usecase
@@ -23,7 +23,7 @@ Non-interface classes, including records, in <module>.application.. whose simple
 
 ## Check
 
-The type is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected.
+The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected.
 
 ## .NET reading
 
@@ -42,7 +42,7 @@ DcaRule.of(
     .selecting(
         "Non-interface classes, including records, in <module>.application.. whose simple name ends with Query.")
     .checking(
-        "The type is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected.")
+        "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected.")
 ```
 
 ## Helpers
@@ -95,7 +95,7 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
             .noneMatch(
                 m ->
                     !m.getModifiers().contains(JavaModifier.STATIC)
-                        && m.getName().startsWith("set")
+                        && SETTER_NAME.matcher(m.getName()).matches()
                         && !m.getRawParameterTypes().isEmpty()
                         && m.getRawReturnType().getName().equals("void"));
   }

@@ -152,9 +152,10 @@ Note the type-parameter side needs no rule. `Repository<T extends AggregateRoot<
 already makes a repository for a non-root entity a compile error.
 
 **Repository vs. Store.** Both are output ports, but they promise different things: a `Repository`
-manages an Aggregate Root by identity (`findById`, `save`, `delete`), a `Store` records or queries
-operational data that has no aggregate lifecycle (`record`, `count`, `exists`). Without rules the
-distinction is doctrine only — a `*Store` can quietly grow a `findById` and nothing fails.
+manages an Aggregate Root's lifecycle (`save`, `delete`, invariants), a `Store` records or queries
+operational data that has no aggregate lifecycle (`record`, `count`, `exists`) — it may look an
+operational record up by key (`findById`); the difference is lifecycle, not lookup. Without rules the
+distinction is doctrine only — a `*Store` can quietly grow a `save` and nothing fails.
 
 ```java
 @ArchTest
@@ -196,15 +197,15 @@ static void stores_should_not_have_repository_methods(JavaClasses classes) {
                   && c.isAssignableTo(Store.class)
                   && !c.getSimpleName().equals("Store"))
         .flatMap(store -> store.getMethods().stream())
-        .filter(m -> Set.of("findById", "save", "deleteById", "delete").contains(m.getName()))
+        .filter(m -> Set.of("save", "deleteById", "delete").contains(m.getName()))
         .map(m -> m.getFullName() + " — Repository semantics on a Store")
         .toList();
 
     assertThat(violations)
-        .as("Stores use record/count/exists semantics, not findById/save")
+        .as("Stores use record/count/exists/lookup semantics, not save/delete")
         .isEmpty();
 }
 ```
 
-If a Store legitimately needs `findById`, the stored object has identity — rename the port to
-`*Repository` and model the object as an Aggregate Root.
+If a Store legitimately needs `save` or `delete`, the stored object has a lifecycle with invariants —
+rename the port to `*Repository` and model the object as an Aggregate Root.

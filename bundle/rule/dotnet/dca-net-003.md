@@ -31,9 +31,16 @@ DcaRule.Check("DCA-NET-003", "Use cases implement IUseCase<TIn,TOut>.ExecuteAsyn
             var violations = new List<string>();
             foreach (var type in arch.Classes) {
                 var runtime = arch.RuntimeType(type);
-                if (runtime is null || runtime.IsAbstract || !(OperationPolicy.Operation(type, arch) || ImplementsUseCase(runtime))) continue;
+                if (runtime is null || runtime.IsAbstract) continue;
                 var contracts = runtime.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IUseCase<,>)).ToArray();
-                if (contracts.Length == 0) violations.Add($"{type.FullName} must implement IUseCase<TIn,TOut>; a plain Task ExecuteAsync does not satisfy the contract");
+                if (contracts.Length == 0)
+                {
+                    // A marker-only IInputPort sub-interface without an operation is not a NET-003 case (USE-017 governs
+                    // its surface). Only an operation that spells the contract by name without implementing it is.
+                    if (OperationPolicy.Operation(type, arch) && runtime.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Any(m => m.Name == "ExecuteAsync"))
+                        violations.Add($"{type.FullName} declares ExecuteAsync without implementing IUseCase<TIn,TOut>; a plain Task ExecuteAsync does not satisfy the contract");
+                    continue;
+                }
                 foreach (var contract in contracts) {
                     var map = runtime.GetInterfaceMap(contract);
                     foreach (var method in map.TargetMethods) {
@@ -46,8 +53,8 @@ DcaRule.Check("DCA-NET-003", "Use cases implement IUseCase<TIn,TOut>.ExecuteAsyn
             }
             DcaRule.Fail("Use cases implement the generic asynchronous input contract", violations);
         })
-    .Selecting("Concrete application operations selected by marker or suffix, plus concrete IUseCase<TIn,TOut> implementations anywhere under scan, with loadable runtime types.")
-    .Checking("An IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>. Explicit, inherited and ordinary implementations pass. A plain Task method without the generic contract fails; other public members are checked by USE-017, not counted here.")
+    .Selecting("Concrete classes under scan implementing IUseCase<TIn,TOut> (directly, inherited or explicitly), plus application operations (marker or suffix) that declare a public ExecuteAsync without the generic contract, with loadable runtime types. A marker-only IInputPort implementation without ExecuteAsync is not selected.")
+    .Checking("Every IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>; explicit, inherited and ordinary implementations pass. An ExecuteAsync declared without the generic contract (plain Task, own signature) fails. Other public members are checked by USE-017, not counted here.")
 ```
 
 ### C# helper OperationPolicy
@@ -113,8 +120,8 @@ internal static class OperationPolicy
                 if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(ValueType)
                     || method.GetBaseDefinition().DeclaringType == typeof(object)
                     || method.IsDefined(typeof(CompilerGeneratedAttribute), false) || methods.Contains(method)) continue;
-                // Auto-property accessors have CompilerGeneratedAttribute too; the property's public
-                // surface is user-defined and must still belong to an input port.
+                // Property accessors (auto or computed) are reported once, as their property, below.
+                if (method.IsSpecialName && (method.Name.StartsWith("get_", StringComparison.Ordinal) || method.Name.StartsWith("set_", StringComparison.Ordinal))) continue;
                 violations.Add($"{type.FullName} exposes {method} outside its input port");
             }
             foreach (var property in runtime.GetProperties(BindingFlags.Public | BindingFlags.Instance))

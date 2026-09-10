@@ -46,7 +46,7 @@ DcaRule.Check(
                 }
                 else if (!IsRecord(type, runtime) || !runtime.IsDefined(typeof(System.Runtime.CompilerServices.IsReadOnlyAttribute), false))
                 {
-                    violations.Add($"{runtime.FullName} implements IId but is a plain struct, not a record struct");
+                    violations.Add($"{runtime.FullName} implements IId but is not a readonly record struct");
                 }
             }
 

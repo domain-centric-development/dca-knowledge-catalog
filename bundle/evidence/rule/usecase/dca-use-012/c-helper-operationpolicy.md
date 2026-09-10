@@ -70,8 +70,8 @@ internal static class OperationPolicy
                 if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(ValueType)
                     || method.GetBaseDefinition().DeclaringType == typeof(object)
                     || method.IsDefined(typeof(CompilerGeneratedAttribute), false) || methods.Contains(method)) continue;
-                // Auto-property accessors have CompilerGeneratedAttribute too; the property's public
-                // surface is user-defined and must still belong to an input port.
+                // Property accessors (auto or computed) are reported once, as their property, below.
+                if (method.IsSpecialName && (method.Name.StartsWith("get_", StringComparison.Ordinal) || method.Name.StartsWith("set_", StringComparison.Ordinal))) continue;
                 violations.Add($"{type.FullName} exposes {method} outside its input port");
             }
             foreach (var property in runtime.GetProperties(BindingFlags.Public | BindingFlags.Instance))

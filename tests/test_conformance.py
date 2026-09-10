@@ -864,7 +864,10 @@ def test_editorial_metadata_and_supersession(tmp_path):
     assert any(f[1] == 'editorial-metadata' and f[0] == 'WARN' for f in findings)
     (b / 'note/new.md').write_text('---\ntype: Note\ntitle: New\ntags: [note]\nreview: superseded\nowner: Maintainers\nevidence: []\n---\n\nOld proposal.\n')
     assert any(f[1] == 'editorial-superseded' and f[0] == 'ERROR' for f in lint.lint(b, REPO_ROOT))
-    skill = (REPO_ROOT / 'dca-marketplace/plugins/dca-core/skills/dca-knowledge/SKILL.md').read_text()
+    skill_path = REPO_ROOT / 'dca-marketplace/plugins/dca-core/skills/dca-knowledge/SKILL.md'
+    if not skill_path.exists():
+        pytest.skip('dca-marketplace checkout not present beside the catalog (CI checks out sources only)')
+    skill = skill_path.read_text()
     assert 'draft' in skill and 'superseded' in skill and 'non-normative' in skill
 
 

@@ -68,9 +68,9 @@ DcaRule.of(
 ```csharp
 DcaRule.Check(
     "DCA-TAC-014",
-    "Repository interfaces must reside in the application layer's shared output-port namespace",
+    "Repository interfaces must reside in the application layer (local to a use case or shared)",
     "Repository interfaces are output ports in the application layer (Hexagonal Architecture)",
-    arch => RequireNamespace(RepositoryInterfaces(arch), DcaLayout.AnyOf(arch.AllApplicationPatterns()), "Repository interfaces", "the application layer's Shared namespace"))
+    arch => RequireNamespace(RepositoryInterfaces(arch), DcaLayout.AnyOf(arch.AllApplicationPatterns()), "Repository interfaces", "an application namespace of its module (use-case-local or Shared)"))
     .Selecting(
         "Interfaces below the root namespace assignable to IRepository, whatever "
         + "their name; an interface named exactly Repository excluded.")

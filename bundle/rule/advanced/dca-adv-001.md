@@ -5,7 +5,7 @@ title: Domain Events must implement DomainEvent and have immutable shape
 rule: "Domain events should have immutable state implementing DomainEvent (named in past tense, e.g., ProductCreated, CartCleared)."
 constraint: Domain Events must implement DomainEvent and have immutable shape.
 selects: Non-interface classes anywhere on the classpath under scan that are assignable to DomainEvent - directly or through a supertype.
-checks: "The class is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected. Interfaces are excluded."
+checks: "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded; an enum implementing DomainEvent is final by construction and passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-001"
 status: enforced
 rule_set: advanced
@@ -23,7 +23,7 @@ Non-interface classes anywhere on the classpath under scan that are assignable t
 
 ## Check
 
-The class is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected. Interfaces are excluded.
+The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded; an enum implementing DomainEvent is final by construction and passes.
 
 ## .NET reading
 
@@ -51,8 +51,8 @@ DcaRule.of(
         "Non-interface classes anywhere on the classpath under scan that are assignable to DomainEvent"
             + " - directly or through a supertype.")
     .checking(
-        "The class is final or a record with final inherited instance fields and no instance set*(x): void methods."
-            + " Referenced objects and collection contents are not inspected. Interfaces are excluded.")
+        "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter)."
+            + " Referenced objects and collection contents are not inspected. Interfaces are excluded; an enum implementing DomainEvent is final by construction and passes.")
 ```
 
 ## Helpers
@@ -88,7 +88,7 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
             .noneMatch(
                 m ->
                     !m.getModifiers().contains(JavaModifier.STATIC)
-                        && m.getName().startsWith("set")
+                        && SETTER_NAME.matcher(m.getName()).matches()
                         && !m.getRawParameterTypes().isEmpty()
                         && m.getRawReturnType().getName().equals("void"));
   }

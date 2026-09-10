@@ -80,22 +80,33 @@ def _revision(path: Path, files: list[Path]) -> str | None:
 
 
 def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> None:
+    from .docs import _SKIP
     sources = {}
+    # Only files the generator actually reads: a commit elsewhere in these repositories must not move the manifest.
     inputs = {
         "dca-guide": ["*.md"],
         "dca-java": ["dca-building-blocks/src/main/**/*.java", "dca-archunit/src/main/**/*.java", "rules.json", "gradle.properties"],
-        "dca-dotnet": ["src/**/*.cs", "src/**/*.csproj", "rules.json"],
+        "dca-dotnet": ["src/DomainCentric.ArchRules/**/*.cs", "src/*/*.csproj", "rules.json"],
         "dca-knowledge-catalog": ["src/**/*.py", "authored/**/*.md"],
     }
     for name, patterns in inputs.items():
         repo = repo_root / name
         if not repo.exists():
             continue
-        files = sorted({p for pattern in patterns for p in repo.glob(pattern) if p.is_file() and not {"bin", "obj", "__pycache__"}.intersection(p.parts)})
+        files = sorted({p for pattern in patterns for p in repo.glob(pattern)
+                        if p.is_file() and not {"bin", "obj", "__pycache__"}.intersection(p.parts)
+                        and not (name == "dca-guide" and p.name in _SKIP)})
         digest = hashlib.sha256()
         for path in files:
             digest.update(path.relative_to(repo).as_posix().encode() + b"\0" + path.read_bytes() + b"\0")
-        sources[name] = {"revision": _revision(repo, files), "source_sha256": digest.hexdigest()}
+        entry = {"revision": _revision(repo, files), "source_sha256": digest.hexdigest()}
+        if name == "dca-knowledge-catalog":
+            # The bundle is committed into this very repository: the commit that carries the manifest cannot be
+            # named by the manifest, and the last input-touching commit would move as soon as sources and bundle
+            # land together (the freshness gate would then reject the commit). Content digest only.
+            entry = {"revision": None, "source_sha256": digest.hexdigest(),
+                     "note": "own repository: the carrying commit is the revision; content digest only"}
+        sources[name] = entry
     versions = {}
     props = repo_root / "dca-java/gradle.properties"
     if props.exists():

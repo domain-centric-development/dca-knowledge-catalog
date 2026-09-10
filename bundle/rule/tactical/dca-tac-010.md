@@ -1,9 +1,9 @@
 ---
 type: Rule
 id: DCA-TAC-010
-title: "Value Object fields must be final (deep immutability)"
+title: "Value Object fields must be final (shallow immutability)"
 rule: Records have implicitly final fields and enums are immutable by design; a hand-written value class must make every instance field final itself.
-constraint: "Value Object fields must be final (deep immutability)."
+constraint: "Value Object fields must be final (shallow immutability)."
 selects: "Non-interface, non-record, non-enum classes anywhere under scan assignable to Value."
 checks: Every field - inherited ones included - is final or static. A non-final instance field is reported; static fields are not part of the object's state and pass.
 enforced_by: "TacticalPatternRules#DCA-TAC-010"
@@ -15,7 +15,7 @@ tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
 ---
 
-# Value Object fields must be final (deep immutability)
+# Value Object fields must be final (shallow immutability)
 
 ## Selection
 
@@ -36,7 +36,7 @@ Every field - inherited ones included - is final or static. A non-final instance
 ```java
 DcaRule.check(
         "DCA-TAC-010",
-        "Value Object fields must be final (deep immutability)",
+        "Value Object fields must be final (shallow immutability)",
         "Records have implicitly final fields and enums are immutable by design; a hand-written"
             + " value class must make every instance field final itself",
         arch -> {
@@ -55,7 +55,7 @@ DcaRule.check(
             }
           }
           fail(
-              "Value Object fields must be final for deep immutability (Vernon's DDD).",
+              "Value Object fields must be final for shallow immutability (Vernon's DDD).",
               violations);
         })
     .selecting(

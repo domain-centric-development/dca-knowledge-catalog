@@ -19,6 +19,7 @@ Types are matched by full name and grouped by role; `DcaLayout` defaults to the 
 | `TransactionScope` | `System.Transactions.TransactionScope` | Type used for explicit transaction demarcation. |
 | `TransactionalAttribute` | `(empty)` | Optional declarative transaction attribute used to cover publication entry paths. |
 | `PersistenceAttributeNamespaces` | `System.ComponentModel.DataAnnotations.Schema, Microsoft.EntityFrameworkCore` | Attribute namespaces classified as persistence metadata, including derived attributes. |
+| `PersistenceAttributeTypes` | `System.ComponentModel.DataAnnotations.KeyAttribute, System.ComponentModel.DataAnnotations.TimestampAttribute, System.ComponentModel.DataAnnotations.ConcurrencyCheckAttribute` | Full attribute type names classified as persistence metadata (base types included) — for mapping attributes that live in a namespace whose other attributes are harmless, such as the key/concurrency attributes beside the validation attributes of System.ComponentModel.DataAnnotations. Mappings of other persistence libraries are added per project via a with-expression. |
 | `InjectionAttributeNamespaces` | `Microsoft.Extensions.DependencyInjection` | Attribute namespaces classified as injection-site metadata. |
 | `TransactionAttributeNamespaces` | `(empty)` | Attribute namespaces classified as transaction metadata. |
 | `ContainerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as container stereotypes. |

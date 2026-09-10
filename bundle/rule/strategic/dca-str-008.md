@@ -5,7 +5,7 @@ title: Integration Events should have immutable shape
 rule: "Integration Events must be immutable to ensure event integrity across contexts (Event Sourcing best practice)."
 constraint: Integration Events should have immutable shape.
 selects: Non-interface classes assignable to IntegrationEvent - directly or through a sub-interface - anywhere on the classpath under scan.
-checks: "The class is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected. Interfaces are excluded."
+checks: "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded."
 enforced_by: "StrategicPatternRules#DCA-STR-008"
 status: enforced
 rule_set: strategic
@@ -23,7 +23,7 @@ Non-interface classes assignable to IntegrationEvent - directly or through a sub
 
 ## Check
 
-The class is final or a record with final inherited instance fields and no instance set*(x): void methods. Referenced objects and collection contents are not inspected. Interfaces are excluded.
+The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded.
 
 ## .NET reading
 
@@ -49,7 +49,7 @@ DcaRule.of(
         "Non-interface classes assignable to IntegrationEvent - directly or through a"
             + " sub-interface - anywhere on the classpath under scan.")
     .checking(
-        "The class is final or a record with final inherited instance fields and no instance set*(x): void methods."
+        "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter)."
             + " Referenced objects and collection contents are not inspected. Interfaces are excluded.")
 ```
 
@@ -86,7 +86,7 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
             .noneMatch(
                 m ->
                     !m.getModifiers().contains(JavaModifier.STATIC)
-                        && m.getName().startsWith("set")
+                        && SETTER_NAME.matcher(m.getName()).matches()
                         && !m.getRawParameterTypes().isEmpty()
                         && m.getRawReturnType().getName().equals("void"));
   }

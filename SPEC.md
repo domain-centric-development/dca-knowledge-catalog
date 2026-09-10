@@ -248,6 +248,11 @@ and a bundle SHA256 digest, without timestamps. Digest input is sorted relative 
 excluding manifest.json; markdown resource/resource_dotnet frontmatter is stripped for hashing. Thus canonical
 and mirror share the same verifiable digest although only the canonical copy carries local source provenance.
 Uncommitted source changes are represented by content digests; a Git revision alone is not a snapshot claim.
+Hashed inputs are exactly the files the generator reads (guide chapters without the skipped agent files, `dca-java`
+building-block and rule sources plus `rules.json`/`gradle.properties`, `dca-dotnet` rule sources, `*.csproj` and `rules.json`,
+the catalog's own `src/` and `authored/`); a sibling revision is the last commit touching those files. The catalog's own
+entry carries no revision: the commit that contains the bundle is its revision, and recording the last input-touching
+commit would make every commit that lands sources and bundle together stale under the freshness gate.
 
 `rule/index-compact.md` contains id, title, short selects/checks excerpts, languages and status. Search the id's
 row before reading the full node. Excerpts are routing aids; full selection/check and caveats remain authoritative.
