@@ -34,7 +34,7 @@ tags: [guide, section]
 - Value Objects compared by all attributes
 - Replace entire Value Object instead of modifying
 - Value Objects can be shared freely
-- Value Objects validate themselves
+- Value Objects validate themselves; state the numeric range and rounding of every monetary value object. Reconstitution, deserialisation and default struct construction must not bypass invalid-state checks.
 - Side-effect-free methods only
 
 #### Aggregate Rules
@@ -47,7 +47,7 @@ tags: [guide, section]
 - One transaction modifies one aggregate only
 - Eventual consistency between aggregates
 - Delete aggregate deletes all contained entities
-- Never inject repositories or services into aggregates — pass dependencies as method parameters
+- Never inject repositories or remote services into aggregates. Use cases retrieve facts; domain services calculate over supplied snapshots. A callback parameter does not make external-data responsibility belong on the aggregate.
 - Two factories, two purposes: `create(...)` enforces creation invariants and registers the creation event; `reconstitute(...)` rebuilds a stored aggregate from persisted state and registers nothing. Persistence adapters use only the latter — rebuilding through `create` publishes a phantom creation on the next save
 - Domain events leave the aggregate through one call, `DomainEventPublisher.publishAndClearEvents(aggregate)`, after the save: dispatch everything, clear only when every listener returned. Iterating `domainEvents()` and calling `publish` per event is not the sanctioned form
 - Protect against lost updates with optimistic concurrency: version field on the root, incremented per state change; persistence rejects saves with a stale expected version
@@ -74,7 +74,7 @@ tags: [guide, section]
 
 #### Integration Event Rules (Cross-Bounded Context)
 - Integration Events are DTOs representing domain events for external systems
-- Integration Events defined in `{context}/adapter/outgoing/messaging/event/` package
+- Integration Events defined in `{context}/events/` package
 - Integration Events use past tense + "Event" suffix (e.g., OrderCreatedEvent)
 - Integration Events must be serializable (JSON, Protobuf, Avro)
 - Integration Events include: event ID, timestamp, correlation ID; the schema version and
@@ -114,7 +114,7 @@ START: Something happened in the domain
    │     ↓
    │
    └─ Create Integration Event (for external consumers)
-         - Define in: {context}/adapter/outgoing/messaging/event/
+         - Define in: {context}/events/
          - Name: past tense + "Event" suffix (e.g., OrderCreatedEvent)
          - Contains: only primitives and serializable types
          - Created by: Event Mapper in adapter layer
@@ -130,7 +130,7 @@ START: Something happened in the domain
 - One topic per bounded context or per event type
 - Order inside the use case: `save`, then `publishAndClearEvents` — same transaction, never before the save
 - The publisher dispatches first and clears the aggregate afterwards; the clear is the acknowledgement that every listener saw the event. A throwing listener fails the use case and leaves the events on the aggregate
-- Integration events go through a **transactional outbox**: the publication is written *inside* the aggregate's transaction (Spring Modulith's event publication registry, an outbox table, an in-process stand-in), released to the dispatcher after commit, discarded on rollback. Registering only after commit leaves a crash window between commit and outbox entry
+- Integration events go through a **transactional outbox**: the publication is written *inside* the aggregate's transaction (Spring Modulith's event publication registry, an outbox table, an in-process stand-in), made eligible atomically with commit and followed by an after-commit wakeup, discarded on rollback. Registering only after commit leaves a crash window between commit and outbox entry
 - Delivery is asynchronous and at least once: failures are retried with backoff, permanently failing publications stay visible (`Failed`), outstanding ones are replayed on restart
 
 #### Event Consumption Rules
@@ -168,7 +168,7 @@ START: Something happened in the domain
 - Use case transforms domain objects to DTOs
 - Use case assembles the `*Result` (static factory, use-case body or `*Assembler`); a result carries values, never aggregate roots or entities (`DCA-USE-015`)
 - Command results are small (ids, status, what the caller needs next); the view comes from a query or read model
-- A use case that saves an aggregate publishes and clears its domain events after the save (`publishAndClearEvents`, `DCA-USE-009`) — whether the action raised any or not
+- A use case that saves an aggregate publishes and clears its domain events after the save (`publishAndClearEvents`, `DCA-USE-009`) — unless the aggregate is proven never to register events
 - A query use case carries no transaction and no publisher; it loads and assembles
 - A bulk operation (delete all, archive everything before a date) is a method on the port — the port is freely extensible beyond `findById`/`save`/`deleteById` — that the use case calls without loading or saving a single aggregate: no domain event, no publisher, a declarative transaction. If other contexts must learn about it, one integration event describes the bulk fact
 - A number derived from a list (the count of open items on a list page) is a field of the list query's result, not a use case of its own and not a read model
@@ -426,6 +426,7 @@ public class OrderExceptionHandler {
 #### Transaction Boundary Placement
 - **Transaction boundaries live at the use case level** (application layer)
 - One transaction = one aggregate modification (single aggregate rule)
+- **Every use case that saves or deletes an aggregate draws the boundary, events or not** — a repository may write one aggregate (root, entities, value objects) as several statements across several tables and draws no boundary of its own; the use case owns the unit of work (`DCA-USE-012`)
 - Use `@Transactional` (or equivalent) on use case implementations **whose work is entirely local** — repositories, stores, event publishers
 - **Never call a remote-capable port inside the transaction.** A port that may leave the process (another context's API, a payment provider, a mail gateway) called inside `@Transactional` holds the database connection for the remote round trip; under load the pool runs dry, and a rollback cannot undo the remote effect
 - Use cases that need such a port **draw the boundary by hand** with `TransactionBoundary` (an application-layer execution abstraction — not a port; implemented in infrastructure): remote reads first, then `transactionBoundary.inTransaction(load, mutate, save, publish)`; remote effects after the commit, as a reaction to an integration event
@@ -497,7 +498,7 @@ public class AddItemToCartUseCase implements AddItemToCartInputPort {
 }
 ```
 
-Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a use case that publishes domain events has a transaction boundary — declarative `@Transactional` **or** an explicit `TransactionBoundary.inTransaction`; `DCA-USE-013` — a `@Transactional` use case calls no output port other than `Repository`, `Store`, `DomainEventPublisher`, `IntegrationEventPublisher` (`TransactionBoundary` is not a port; a use case that needs remote reads draws the explicit boundary instead of the annotation). In .NET the boundary is a decorator around `IUseCase<,>` or `ITransactionBoundary.InTransactionAsync`; `DCA-NET-006` keeps EF Core, `System.Data` and `System.Transactions` out of the application layer.
+Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a use case that saves or deletes an aggregate through a `Repository`, or publishes domain events, has a transaction boundary — declarative `@Transactional` **or** an explicit `TransactionBoundary.inTransaction` (the repository may write one aggregate as several statements; the use case owns the unit of work even when no event is published); `DCA-USE-013` — a `@Transactional` use case calls no output port other than `Repository`, `Store`, `DomainEventPublisher`, `IntegrationEventPublisher` (`TransactionBoundary` is not a port; a use case that needs remote reads draws the explicit boundary instead of the annotation). In .NET the boundary is a decorator around `IUseCase<,>` or `ITransactionBoundary.InTransactionAsync`; `DCA-NET-006` keeps EF Core, `System.Data` and `System.Transactions` out of the application layer.
 
 **Note:** For complex multi-aggregate workflows, consider the **Saga pattern** (orchestration or choreography). This is an advanced topic beyond the scope of basic domain-centric architecture.
 
@@ -514,7 +515,7 @@ Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a 
 
 > **Note:** For Spring Modulith module organization, see [Spring Modulith Implementation](/guide/spring-modulith.md)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
@@ -524,3 +525,17 @@ Two rules of the DCA catalog make this a compile-time fact: `DCA-USE-012` — a 
 - [@Partnership](/marker/strategic/partnership.md)
 - [@Upstream](/marker/strategic/upstream.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
+
+## Evidence slices
+
+- [THE FUNDAMENTAL DEPENDENCY RULE](/evidence/guide/readme/rules/the-fundamental-dependency-rule.md)
+- [DOMAIN LAYER RULES](/evidence/guide/readme/rules/domain-layer-rules.md)
+- [APPLICATION LAYER RULES](/evidence/guide/readme/rules/application-layer-rules.md)
+- [ADAPTER LAYER RULES](/evidence/guide/readme/rules/adapter-layer-rules.md)
+- [INFRASTRUCTURE LAYER RULES](/evidence/guide/readme/rules/infrastructure-layer-rules.md)
+- [STRATEGIC DESIGN RULES](/evidence/guide/readme/rules/strategic-design-rules.md)
+- [BOUNDARY CROSSING RULES](/evidence/guide/readme/rules/boundary-crossing-rules.md)
+- [TESTING RULES](/evidence/guide/readme/rules/testing-rules.md)
+- [ERROR HANDLING RULES](/evidence/guide/readme/rules/error-handling-rules.md)
+- [TRANSACTION RULES](/evidence/guide/readme/rules/transaction-rules.md)
+- [PACKAGING RULES](/evidence/guide/readme/rules/packaging-rules.md)

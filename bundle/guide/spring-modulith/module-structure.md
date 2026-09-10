@@ -83,6 +83,6 @@ package com.company.ecommerce.order.api;
 package com.company.ecommerce.order.events;
 ```
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)

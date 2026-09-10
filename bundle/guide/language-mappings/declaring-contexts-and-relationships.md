@@ -48,7 +48,7 @@ The context map — tables plus a Mermaid diagram rendered from these declaratio
 libraries (`ContextMapRenderer`), and the `contextmap` rules verify that declarations and real
 dependencies agree.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@ExternalUpstream](/marker/strategic/externalupstream.md)

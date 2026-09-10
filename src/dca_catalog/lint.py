@@ -12,6 +12,7 @@ stale resources), 0 otherwise — pass ``--strict`` to fail on warnings too.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -62,12 +63,18 @@ def _links(text: str) -> list[str]:
 def lint(bundle: Path, repo_root: Path) -> list[Finding]:
     findings: list[Finding] = []
     files = _concept_files(bundle)
+    registry = bundle / "redirects.json"
+    redirects = json.loads(registry.read_text()) if registry.exists() else {}
     inbound: dict[str, int] = {}
 
     parsed: dict[Path, tuple[dict, str, list[str]]] = {}
     for p in files:
         text = p.read_text(encoding="utf-8")
-        fm, body = _parse_front(text)
+        try:
+            fm, body = _parse_front(text)
+        except ValueError as exc:
+            findings.append(("ERROR", "frontmatter", p.relative_to(bundle).as_posix(), str(exc)))
+            fm, body = {}, text
         targets = _links(text)
         parsed[p] = (fm, body, targets)
         rel = p.relative_to(bundle).as_posix()
@@ -82,12 +89,17 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
 
         # 1. broken links (every zone)
         for t in targets:
-            if not (bundle / t.lstrip("/")).exists():
+            target, _, anchor = t.lstrip("/").partition("#")
+            if target in redirects:
+                findings.append(("ERROR", "legacy-rule-link", rel, t))
+            if not (bundle / target).exists():
                 findings.append(("ERROR", "broken-link", rel, t))
 
         # 1b. rule mechanics — every Rule node names what it selects and what it checks
         if fm.get("type") == "Rule":
-            for field in ("selects", "checks"):
+            if fm.get("status") not in {"enforced", "informational", "retired"}:
+                findings.append(("ERROR", "rule-status", rel, str(fm.get("status"))))
+            for field in (() if fm.get("status") == "retired" else ("selects", "checks")):
                 if not str(fm.get(field) or "").strip():
                     findings.append(("ERROR", "undescribed-rule", rel, f"missing '{field}' frontmatter"))
 
@@ -99,6 +111,20 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
 
         # 3 & 4. authored-node health (extensible zone)
         if top in _EXTENSIBLE_DIRS:
+            review = fm.get("review")
+            if not review or not fm.get("owner") or not fm.get("evidence"):
+                findings.append(("WARN", "editorial-metadata", rel, "authored node needs review, owner and evidence; missing review is non-normative"))
+            if review and review not in {"draft", "reviewed", "superseded"}:
+                findings.append(("ERROR", "editorial-review", rel, str(review)))
+            if review == "superseded" and not fm.get("superseded_by"):
+                findings.append(("ERROR", "editorial-superseded", rel, "superseded requires superseded_by"))
+            for evidence in fm.get("evidence", []):
+                target = str(evidence).lstrip("/").split("#", 1)[0]
+                if str(evidence).startswith("/") and not (bundle / target).exists():
+                    findings.append(("ERROR", "editorial-evidence", rel, str(evidence)))
+            successor = fm.get("superseded_by")
+            if successor and not (bundle / str(successor).lstrip("/").split("#", 1)[0]).exists():
+                findings.append(("ERROR", "editorial-successor", rel, str(successor)))
             if not any(t.startswith(_GENERATED_PREFIXES) for t in targets):
                 findings.append(
                     ("WARN", "unanchored-authored", rel, "no link into the generated skeleton")

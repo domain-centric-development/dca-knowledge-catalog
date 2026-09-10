@@ -8,7 +8,7 @@ package: dev.domaincentric.dca.buildingblocks.ddd.tactical
 generics: "T extends AggregateRoot<T, ID>, ID extends Id"
 modifiers: [public, abstract]
 extends: [AggregateRoot]
-methods: ["public void registerEvent(DomainEvent event)", "public List<DomainEvent> domainEvents()", "public void clearDomainEvents()"]
+methods: ["protected void registerEvent(DomainEvent event)", "public List<DomainEvent> domainEvents()", "public void clearDomainEvents()"]
 resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/ddd/tactical/BaseAggregateRoot.java
 tags: [tactical, marker]
 ---

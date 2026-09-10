@@ -60,14 +60,9 @@ public record ProductCreated(
 
 ## Governed by
 
-- [Domain Events must have a timestamp field](/rule/advanced/domain-events-must-have-a-timestamp-field.md)
-- [Domain Events must implement DomainEvent Marker Interface and be records](/rule/advanced/domain-events-must-implement-domainevent-marker-interface-and-be-records.md)
-- [Domain Events must not carry container annotations](/rule/advanced/domain-events-must-not-carry-container-annotations.md)
-- [Domain Events must reside in domain package](/rule/advanced/domain-events-must-reside-in-domain-package.md)
-- [Domain Events should be immutable (final or records)](/rule/advanced/domain-events-should-be-immutable-final-or-records.md)
-- [Domain Events that are not Integration Events must not have a version field](/rule/advanced/domain-events-that-are-not-integration-events-must-not-have-a-version-field.md)
+- [Domain Events must implement DomainEvent and have immutable shape](/rule/advanced/dca-adv-001.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)

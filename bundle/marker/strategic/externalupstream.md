@@ -47,11 +47,3 @@ adapter matching the interaction (outgoing for `OUTBOUND`, incoming for `INBOUND
 Without `contractPackages()` (plain HTTP, no vendor SDK) the translation rules have
 nothing to check — the declaration then documents the relationship and feeds the generated
 context map.
-
-## Governed by
-
-- [Diagnostic: Display declared context map](/rule/contextmap/diagnostic-display-declared-context-map.md)
-- [Distinct external system names must not collide after mermaid id normalization](/rule/contextmap/distinct-external-system-names-must-not-collide-after-mermaid-id-normalization.md)
-- [External system contract types must respect the declared translation and interaction](/rule/contextmap/external-system-contract-types-must-respect-the-declared-translation-and-interaction.md)
-- [ExternalUpstream declarations must be well-formed and unique per name and interaction](/rule/contextmap/externalupstream-declarations-must-be-well-formed-and-unique-per-name-and-interaction.md)
-- [Upstream, ExternalUpstream, and Partnership may only be declared on bounded context packages](/rule/contextmap/upstream-externalupstream-and-partnership-may-only-be-declared-on-bounded-context-packages.md)

@@ -1,20 +1,19 @@
 # advanced
 
-- [Domain Events must have a timestamp field](domain-events-must-have-a-timestamp-field.md) — An event records something that happened — without a timestamp the fact cannot be ordered, replayed or audited.
-- [Domain Events must implement DomainEvent Marker Interface and be records](domain-events-must-implement-domainevent-marker-interface-and-be-records.md) — Domain events should be immutable records implementing DomainEvent (named in past tense, e.g., ProductCreated, CartCl...
-- [Domain Events must not carry container annotations](domain-events-must-not-carry-container-annotations.md) — Domain events are framework-independent plain objects - neither managed components nor listeners.
-- [Domain Events must reside in domain package](domain-events-must-reside-in-domain-package.md) — Domain events are part of the domain layer (named in past tense).
-- [Domain Events should be immutable (final or records)](domain-events-should-be-immutable-final-or-records.md) — Domain events should be immutable (final classes or records).
-- [Domain Events that are not Integration Events must not have a version field](domain-events-that-are-not-integration-events-must-not-have-a-version-field.md) — Versioning is a contract concern of integration events — a purely internal domain event has no wire contract to version.
-- [Domain Services must implement DomainService Marker Interface and reside in domain.service](domain-services-must-implement-domainservice-marker-interface-and-reside-in-domain-service.md) — Domain services implement DomainService marker and reside in domain.service packages (named descriptively, e.g., Pric...
-- [Domain Services must not carry container annotations](domain-services-must-not-carry-container-annotations.md) — Domain services are framework-independent - the application layer instantiates or wires them, the domain does not kno...
-- [Domain Services must reside in domain package](domain-services-must-reside-in-domain-package.md) — Domain services are part of the domain layer, not application layer.
-- [Domain Services should be stateless (only final fields for dependencies)](domain-services-should-be-stateless-only-final-fields-for-dependencies.md) — Domain services should be stateless (only final fields for dependencies).
-- [Factories must not carry container annotations](factories-must-not-carry-container-annotations.md) — Factories are framework-independent domain objects.
-- [Factories must reside in domain package](factories-must-reside-in-domain-package.md) — Factories are part of the domain layer (complex aggregate creation logic).
-- [Factories should be stateless (only final fields for dependencies)](factories-should-be-stateless-only-final-fields-for-dependencies.md) — Factories should be stateless (only final fields for dependencies).
-- [Factories should implement Factory Marker Interface](factories-should-implement-factory-marker-interface.md) — Classes implementing Factory marker should have 'Factory' in their name.
-- [Integration Events must be annotated with IntegrationEventType](integration-events-must-be-annotated-with-integrationeventtype.md) — @IntegrationEventType(name, version) is the contract identity of every integration event — the serializer keys (name,...
-- [Integration Events must not have a version field](integration-events-must-not-have-a-version-field.md) — The schema version is a class property (@IntegrationEventType), never per-instance payload data — a version data fiel...
-- [Specifications must end with 'Specification'](specifications-must-end-with-specification.md) — Specification implementations are part of the domain layer.
-- [Specifications must not carry container annotations](specifications-must-not-carry-container-annotations.md) — Specifications are framework-independent value objects.
+- [Domain Events must implement DomainEvent and have immutable shape](dca-adv-001.md) — Domain events should have immutable state implementing DomainEvent (named in past tense, e.g., ProductCreated, CartCl...
+- [Domain Events must reside in domain package](dca-adv-002.md) — Domain events are part of the domain layer (named in past tense).
+- [Domain events must not carry prohibited framework metadata](dca-adv-004.md) — Domain objects carry no metadata for container management, persistence or transaction coordination.
+- [Integration Events must be annotated with IntegrationEventType](dca-adv-005.md) — @IntegrationEventType(name, version) is the contract identity of every integration event — the serializer keys (name,...
+- [Integration events carry the schema version in their type metadata, not in the payload](dca-adv-006.md) — The schema version is a class property (@IntegrationEventType), never per-instance payload data — an explicit schema-...
+- [Domain events that are not integration events carry no schema version](dca-adv-007.md) — Versioning is a contract concern of integration events — a purely internal domain event has no wire contract to version.
+- [Domain Events must have a timestamp field](dca-adv-008.md) — An event records something that happened — without a timestamp the fact cannot be ordered, replayed or audited.
+- [Marked domain services reside in the configured domain service segment](dca-adv-009.md) — Domain services implement DomainService marker and reside in domain.service packages (named descriptively, e.g., Pric...
+- [Marked domain services reside in a module domain](dca-adv-010.md) — Domain services are part of the domain layer, not application layer.
+- [Domain services must not carry prohibited framework metadata](dca-adv-011.md) — Domain objects carry no metadata for container management, persistence or transaction coordination.
+- [Domain Services should be stateless (only final fields for dependencies)](dca-adv-012.md) — Domain services should be stateless (only final fields for dependencies).
+- [Factories should implement Factory Marker Interface](dca-adv-013.md) — Classes implementing Factory marker should have 'Factory' in their name.
+- [Factories must reside in domain package](dca-adv-014.md) — Factories are part of the domain layer (complex aggregate creation logic).
+- [Factories must not carry prohibited framework metadata](dca-adv-015.md) — Domain objects carry no metadata for container management, persistence or transaction coordination.
+- [Factories should be stateless (only final fields for dependencies)](dca-adv-016.md) — Factories should be stateless (only final fields for dependencies).
+- [Specifications must end with 'Specification'](dca-adv-017.md) — Specification implementations are part of the domain layer.
+- [Specifications must not carry prohibited framework metadata](dca-adv-018.md) — Domain objects carry no metadata for container management, persistence or transaction coordination.

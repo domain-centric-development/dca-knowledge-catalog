@@ -46,16 +46,14 @@ InputPort (marker)
 
 ## Governed by
 
-- [Incoming Adapters must depend on input port interfaces, not on use case classes](/rule/hexagonal/incoming-adapters-must-depend-on-input-port-interfaces-not-on-use-case-classes.md)
-- [Application layer InputPort implementations must end with 'UseCase'](/rule/naming/application-layer-inputport-implementations-must-end-with-usecase.md)
-- [InputPort interfaces must end with 'InputPort'](/rule/naming/inputport-interfaces-must-end-with-inputport.md)
-- [Base InputPort interface must be in the building-blocks port in package](/rule/usecase/base-inputport-interface-must-be-in-the-building-blocks-port-in-package.md)
+- [The base InputPort contract is not redeclared in the project](/rule/usecase/dca-use-001.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [ELEMENTS](/guide/readme/elements.md)
 - [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
+- [References & Further Reading](/guide/readme/references-further-reading.md)
 - [RULES](/guide/readme/rules.md)

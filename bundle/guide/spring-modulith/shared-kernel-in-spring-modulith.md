@@ -63,7 +63,7 @@ package com.company.ecommerce.order;
 - Inventory → shared ✅
 - Shared → (no dependencies on other modules) ✅
 
-## Related markers
+## Related mentions (heuristic)
 
 - [InputPort](/marker/port-in/inputport.md)
 - [OutputPort](/marker/port-out/outputport.md)

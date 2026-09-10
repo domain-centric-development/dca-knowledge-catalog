@@ -41,7 +41,7 @@ Trends to observe, not pass/fail gates — report instead of failing the build (
 
 - Component size (classes per context or package)
 - Coupling metrics: instability, abstractness, distance from the main sequence (ArchUnit metrics API, `com.tngtech.archunit.library.metrics`)
-- Naming heuristics (e.g., flagging `*Manager` or `*Util` classes in the domain)
+- Naming heuristics (e.g., flagging `*Helper` or `*Util` classes in the domain)
 
 ### Not Statically Testable
 
@@ -54,7 +54,7 @@ Some rules cannot be expressed as static checks at all. They belong in ADRs and 
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

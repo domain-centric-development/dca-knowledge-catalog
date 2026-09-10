@@ -169,6 +169,100 @@ Domain-Centric Architecture stands on the shoulders of giants. Special recogniti
 
 This documentation is a living resource. Contributions, corrections, and improvements are welcome. The patterns and practices described here continue to evolve based on real-world experience and community feedback.
 
-## Related markers
+Repository and Store interfaces may live in the use-case package that alone needs
+them; move reused ports into `application/shared`. A `*Response` belongs to an
+adapter, incoming or outgoing: a provider response is an outgoing adapter model.
 
+Entity constructors may be public. Construction belongs to the entity itself or
+to an aggregate, entity or cooperating factory in the same context's domain layer.
+Adapters reconstitute through the aggregate's or factory's reconstitution method,
+without raising a creation event. The architecture check cannot identify ownership
+inside a context: another aggregate in that same context passes, so review must
+verify the actual invariant boundary.
+
+### Wiring and domain metadata
+
+Use cases may be registered by configuration or carry an injectable stereotype. A
+static reference does not prove registration, and runtime scanning need not leave one;
+`DCA-NAM-002` therefore only lists unannotated Java operations as an informational
+diagnostic. It never fails. .NET registration is code and has no stereotype counterpart.
+Outgoing adapters may reuse global and own-module infrastructure; another module's
+infrastructure remains private (`DCA-HEX-005`).
+
+Domain metadata is classified by configured roles, including members and composed
+metadata. Types prohibit injectable/container, persistence-entity and transactional
+roles; fields (and .NET properties) prohibit injection-site and persistence-mapping
+roles; methods prohibit transaction and event-listener roles, plus setter injection
+except on events; constructors prohibit injection-site metadata. Java detects direct
+and meta-annotations. .NET checks an attribute's namespace and every base attribute
+type against persistence, injection, transaction and container namespace lists; no
+event-listener attribute role is configured by default. Unclassified metadata is
+allowed by this check, without claiming it harmless. Events, services, factories and
+specifications have exclusive `ADV-004/011/015/018` ownership; `ONI-003` owns the
+remaining domain-model types, so one type is never reported twice for metadata.
+
+### Operation boundaries and declared contracts
+
+Ordinary use cases do not invoke other use cases, whether directly, through an
+input port, or through an application helper. Shared collaborators that do not call
+operations remain valid. `DCA-USE-016` follows dependencies within the module's
+application layer and reports `Caller -> Target [via Helper]`. Explicit coordination
+uses a caller-side exception, for example
+`dca.rule.DCA-USE-016.ignore=^com\.example\.module\.application\.coordinate\.CoordinatorUseCase -> `.
+This permits the coordinator to invoke operations; it does not permit an operation
+to invoke the coordinator, and `DCA-CYC-005` still detects coordination cycles,
+including two operations inside the same feature. No coordinator marker is implied.
+When a reliable exception cannot be expressed, use WARN with a recorded reason and
+review the coordinator's transaction boundaries and partial-failure semantics manually.
+Reflection, container lookups and calls through interfaces outside the InputPort
+hierarchy also require manual review.
+
+The input port describes the complete effective public instance surface (`DCA-USE-017`).
+Declared and inherited business methods, unrelated-interface methods and public
+properties/getters/setters must be in the input-port contract. Constructors, Object
+members and compiler-generated members are exempt; a property accessor is not exempt
+merely because it has a special runtime name. Ordinary, inherited and explicit
+input-port implementations are valid. In .NET, `DCA-NET-003` separately validates
+`IUseCase<TIn,TOut>.ExecuteAsync(input, CancellationToken)` returning `Task<T>` through
+the interface map; it does not count declared public methods.
+
+For every declared ACL interaction, the matching adapter must contain a class that
+uses that upstream's channel contract and the declaring context's own domain or
+application model (`DCA-MAP-008`). Two translators for different upstreams may share
+an adapter package. Evidence for one upstream does not satisfy another interaction.
+This identifies a structural translation site, without proving translation quality.
+
+### Optional events and reliable delivery
+
+Events are optional: an aggregate that never registers a fact needs no publisher dependency. `DCA-USE-009`
+exempts a save only when the repository type argument and the aggregate's complete hierarchy can be inspected
+and no registration is found; unresolved arguments, incomplete scans and undecidable external helpers retain the check.
+Contracts belong in the configured `{context}/events/` segment. Translators belong in `adapter/outgoing/event/`;
+transport and storage are separate adapters. Schema versions belong in integration-event type metadata.
+`DCA-ADV-006/007` use a name heuristic for `schemaVersion`, `eventVersion`, `contractVersion`; a business `version` is allowed.
+
+An in-process registry may deliver domain events within a context **or integration events between contexts**.
+Process location does not determine event classification. Synchronous delivery is atomic only for local resources
+participating in the same transaction; a synchronous remote effect cannot be rolled back with the aggregate.
+For an external effect, either (A) an own-context async consumer receives a durably captured domain fact, or
+(B) an own-context synchronous translator captures an integration contract consumed asynchronously. Cross-context
+consumers always use the integration contract. No broker is required to cross a context boundary.
+
+Capture the publication in the aggregate transaction; establish delivery eligibility with commit, then wake the
+worker after commit. Recovery reads committed publications even when that wakeup was lost. Track completion per
+consumer/effect, retry only unfinished work with bounded attempts and exponential backoff, retain terminal failures
+for inspection and deliberate replay. Reuse the original payload and `eventId + consumer + effect` identity.
+Provider acceptance is the acknowledgement point. If the process stops after acceptance but before local acknowledgement,
+provider-supported idempotency can deduplicate a repeated key; without it, a duplicate external effect remains possible.
+For each concrete effect, decide whether rendering/template version and recipient are captured or resolved later;
+the event snapshot alone does not decide these. No universal email policy is implied.
+
+`DCA-USE-012` checks transaction-boundary evidence in Java and .NET (`FrameworkTypes.TransactionalAttribute` is empty
+by default). Static call graphs cannot prove lambda containment: publishing after an empty boundary in the same
+method passes this check. Verify runtime containment and rollback separately. `.NET DCA-USE-013` remains unavailable;
+review remote-capable calls and transaction scope explicitly.
+
+## Related mentions (heuristic)
+
+- [InputPort](/marker/port-in/inputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

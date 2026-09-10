@@ -167,6 +167,6 @@ The call in the Use Case stays identical — Java's lambda compatibility ensures
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainService](/marker/tactical/domainservice.md)

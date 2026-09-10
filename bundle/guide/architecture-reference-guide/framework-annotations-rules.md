@@ -266,7 +266,7 @@ public class JpaOrderRepository implements OrderRepository {
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

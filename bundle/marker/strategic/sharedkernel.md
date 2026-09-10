@@ -39,13 +39,7 @@ import dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships.SharedKe
 - Context-specific business logic
 - Infrastructure concerns
 
-## Governed by
-
-- [Diagnostic: Display discovered bounded contexts](/rule/strategic/diagnostic-display-discovered-bounded-contexts.md)
-- [Shared Kernel must not have dependencies on any bounded context](/rule/strategic/shared-kernel-must-not-have-dependencies-on-any-bounded-context.md)
-- [Repositories must only exist for Aggregate Roots](/rule/tactical/repositories-must-only-exist-for-aggregate-roots.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)

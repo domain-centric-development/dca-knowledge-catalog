@@ -33,7 +33,7 @@ Use case folders are lowercase in Java (`placeorder`) because Java packages are;
 (`PlaceOrder`) because .NET namespaces are. Feature folders follow the same rule (`cartrecovery` /
 `CartRecovery`). The rules read whatever the host language's convention produces.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)

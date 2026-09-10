@@ -34,13 +34,10 @@ Software"
 
 ## Governed by
 
-- [Domain Services must implement DomainService Marker Interface and reside in domain.service](/rule/advanced/domain-services-must-implement-domainservice-marker-interface-and-reside-in-domain-service.md)
-- [Domain Services must not carry container annotations](/rule/advanced/domain-services-must-not-carry-container-annotations.md)
-- [Domain Services must reside in domain package](/rule/advanced/domain-services-must-reside-in-domain-package.md)
-- [Domain Services should be stateless (only final fields for dependencies)](/rule/advanced/domain-services-should-be-stateless-only-final-fields-for-dependencies.md)
-- [Incoming Adapters must not depend on domain services](/rule/hexagonal/incoming-adapters-must-not-depend-on-domain-services.md)
+- [Marked domain services reside in the configured domain service segment](/rule/advanced/dca-adv-009.md)
+- [Marked domain services reside in a module domain](/rule/advanced/dca-adv-010.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
@@ -49,4 +46,5 @@ Software"
 - [Default Rule: Pure Domain Services (90% of Cases)](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md)
 - [Problem Statement](/guide/domain-services-with-data-dependencies/problem-statement.md)
 - [ELEMENTS](/guide/readme/elements.md)
+- [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
 - [RULES](/guide/readme/rules.md)

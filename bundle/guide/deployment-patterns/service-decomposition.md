@@ -241,6 +241,6 @@ order-bounded-context/ (Git Repository)
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Related markers
+## Related mentions (heuristic)
 
 - [Repository<T, ID>](/marker/port-out/repository.md)

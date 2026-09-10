@@ -3,6 +3,7 @@
 - [Additional Resources](additional-resources.md) — 1. Add ArchUnit dependency to your project
 - [Adoption Path (Tiers)](adoption-path-tiers.md) — Introduce rules in tiers, ordered by how statically verifiable and how settled each rule is — not all at once.
 - [Best Practices](best-practices.md) — Create separate test classes for different rule categories:
+- [Catalog kinds and retired identities (2026-09-09)](catalog-kinds-and-retired-identities-2026-09-09.md) — Catalog entries distinguish enforced rules from informational diagnostics: LAY-001, STR-001, STR-010, MAP-013,
 - [CI/CD Integration](ci-cd-integration.md) — ArchUnit tests run automatically with:
 - [Common Pitfalls and Solutions](common-pitfalls-and-solutions.md) — @AnalyzeClasses(
 - [Complete Test Suites](complete-test-suites.md) — package com.company.project.architecture;

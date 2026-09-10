@@ -1,10 +1,10 @@
 # guide
 
 - [architecture-reference-guide/](architecture-reference-guide/index.md) (7)
-- [archunit-governance/](archunit-governance/index.md) (12)
+- [archunit-governance/](archunit-governance/index.md) (13)
 - [clean-architecture-comparison/](clean-architecture-comparison/index.md) (11)
 - [deployment-patterns/](deployment-patterns/index.md) (6)
-- [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (7)
+- [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (8)
 - [e2e-testing/](e2e-testing/index.md) (10)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (17)
 - [language-mappings/](language-mappings/index.md) (11)

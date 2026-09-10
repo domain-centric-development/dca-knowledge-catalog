@@ -38,11 +38,7 @@ public record ProductId(UUID value) implements Id {
 }
 ```
 
-## Governed by
-
-- [Entities must have an ID field](/rule/tactical/entities-must-have-an-id-field.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)

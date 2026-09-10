@@ -95,6 +95,12 @@ This structure shows **ALL possible subdivisions** for a fully-featured bounded 
 
 #### Grouping use cases into features
 
+`withOperationContainers("usecases")` (C#: `WithOperationContainers("UseCases")`)
+can declare an organisational segment such as `application/usecases/<usecase>`.
+Configured segments do not contribute to flat/grouped depth; the operation class's
+marker or suffix determines the root. Supporting subfolders are allowed. A context
+mixing flat and feature-grouped operations remains invalid after normalization.
+
 DCA has three scales below the system: the **bounded context**, the **layer**, and the **use case**. When the
 application layer of one context grows — a dozen use-case packages in one flat list — a fourth, optional scale
 fills the gap between layer and use case: the **feature**.
@@ -430,7 +436,7 @@ APPLICATION LAYER
 - ✅ **Easy Navigation** - Find everything related to a use case in one place
 - ✅ **Better Scalability** - Structure grows linearly with use cases
 - ✅ **Minimal Coupling** - Use cases are independent, share only via output ports
-- ✅ **Clear Dependencies** - Use case depends on domain + shared output ports only
+- ✅ **Clear Dependencies** - Use case depends on domain + application output ports (local or shared)
 - ✅ **Adapters clearly separated** - `adapter/incoming` and `adapter/outgoing`
 - ✅ **Self-documenting** - Folder name = business operation name
 - ✅ **Team-friendly** - Different developers can work on different use cases independently
@@ -457,7 +463,7 @@ The use-case packages are untouched by the move — only their parent changes. T
 mirrored: `Order` serves `ordering`, `fulfilment` and `reporting` alike. See
 [Grouping use cases into features](#grouping-use-cases-into-features) for the rules.
 
-## Related markers
+## Related mentions (heuristic)
 
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [InputPort](/marker/port-in/inputport.md)
@@ -471,3 +477,8 @@ mirrored: `Order` serves `ordering`, `fulfilment` and `reporting` alike. See
 - [@Upstream](/marker/strategic/upstream.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [Specification<T>](/marker/tactical/specification.md)
+
+## Evidence slices
+
+- [Standard Structure (Fully Elaborated)](/evidence/guide/readme/java-package-structure/standard-structure-fully-elaborated.md)
+- [Structure Evolution Example: From Startup to Maturity](/evidence/guide/readme/java-package-structure/structure-evolution-example-from-startup-to-maturity.md)

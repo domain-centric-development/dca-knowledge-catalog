@@ -12,7 +12,7 @@ import unicodedata
 from dataclasses import dataclass, field
 
 # Reserved OKF filenames that are not concept documents.
-RESERVED = {"index.md", "log.md"}
+RESERVED = {"index.md", "log.md", "index-compact.md"}
 
 
 def slugify(text: str) -> str:

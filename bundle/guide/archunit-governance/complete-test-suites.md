@@ -198,7 +198,7 @@ public class NamingConventionTest {
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)

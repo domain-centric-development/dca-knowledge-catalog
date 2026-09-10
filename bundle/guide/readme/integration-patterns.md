@@ -287,98 +287,33 @@ public class CompositeArticleDataAdapter implements ArticleDataPort {
 - ✅ Isolates cross-context coupling to adapter layer
 - ❌ Use cases never import OHS directly
 
-### Resolver Pattern
+### Domain services over supplied facts
 
-When **domain logic** needs external data (e.g., current prices) without infrastructure dependencies, use a **Resolver** - a functional interface injected into domain methods.
+An aggregate answers questions about its own state. When a calculation combines facts from other aggregates or
+contexts, the use case retrieves them through output ports and passes immutable snapshots to a domain service.
+Moving a lookup behind a resolver/callback parameter does not change who owns the calculation. Neither the aggregate
+nor the service receives a repository or remote port. A domain-owned `DomainGateway` is an explicit exception with
+an effect and dependency rationale; a pure algorithmic strategy is different from a hidden external lookup.
 
-```
-Application Layer                      Domain Layer
-┌───────────────────────────────┐     ┌─────────────────────────────────┐
-│ Use Case                      │     │ Aggregate                       │
-│ - fetches data via port       │     │ - calculateTotal(Resolver)      │
-│ - builds resolver from data   │────▶│ - validateItems(Resolver)       │
-│ - passes resolver to domain   │     │ - confirm(Resolver)             │
-└───────────────────────────────┘     └─────────────────────────────────┘
-```
-
-**Example:**
 ```java
-// Domain - Functional interface for resolving prices
-@FunctionalInterface
-public interface ArticlePriceResolver {
-    ArticlePrice resolve(ProductId productId);
+// Domain service: the use case has already retrieved the article facts.
+public final class CartPricing implements DomainService {
+    public record Line(ProductId productId, Quantity quantity) implements Value {}
 
-    record ArticlePrice(Money price, boolean isAvailable, int availableStock) implements Value {}
-}
-
-// Domain - Aggregate uses resolver
-public class ShoppingCart extends BaseAggregateRoot<ShoppingCart, CartId> {
-
-    public Money calculateTotal(ArticlePriceResolver resolver) {
-        Money total = Money.zero();
-        for (CartItem item : items) {
-            ArticlePrice price = resolver.resolve(item.productId());
-            total = total.add(price.price().multiply(item.quantity()));
+    public Money calculateTotal(List<Line> lines, Map<ProductId, ArticlePrice> facts) {
+        Money total = Money.euro(0);
+        for (Line line : lines) {
+            total = total.add(facts.get(line.productId()).price().multiply(line.quantity().value()));
         }
         return total;
     }
-
-    public CartValidationResult validateForCheckout(ArticlePriceResolver resolver) {
-        List<ValidationError> errors = new ArrayList<>();
-        for (CartItem item : items) {
-            ArticlePrice price = resolver.resolve(item.productId());
-            if (!price.isAvailable()) {
-                errors.add(ValidationError.productUnavailable(item.productId()));
-            }
-        }
-        return errors.isEmpty() ? CartValidationResult.valid()
-                                : CartValidationResult.withErrors(errors);
-    }
-}
-
-// Application - Use case builds resolver from fetched data
-@Service
-public class CheckoutCartUseCase implements CheckoutCartInputPort {
-    private final ArticleDataPort articleDataPort;  // Output port
-
-    @Override
-    public CheckoutCartResult execute(CheckoutCartCommand command) {
-        ShoppingCart cart = cartRepository.findById(command.cartId())...;
-
-        // Fetch data via port
-        Map<ProductId, ArticleData> articleData =
-            articleDataPort.getArticleData(cart.productIds());
-
-        // Build resolver from fetched data
-        ArticlePriceResolver resolver = productId -> {
-            ArticleData data = articleData.get(productId);
-            return new ArticlePrice(data.currentPrice(), data.isAvailable(), data.availableStock());
-        };
-
-        // Domain uses resolver - no infrastructure dependency
-        CartValidationResult validation = cart.validateForCheckout(resolver);
-        if (!validation.isValid()) {
-            throw new ValidationException(validation.errors());
-        }
-
-        cart.checkout();
-        return CheckoutCartResult.success(cart.id());
-    }
 }
 ```
 
-**Benefits:**
-- ✅ Domain remains **framework-independent** - no external service calls
-- ✅ **Fresh data** - resolver provides current prices at execution time
-- ✅ **Testable** - easily mock resolver in domain tests
-- ✅ **Explicit dependency** - domain method signature shows data need
-
-**Rules:**
-- ✅ Resolver is a `@FunctionalInterface` in domain layer
-- ✅ Resolver's return type (`ArticlePrice`) is a domain Value Object
-- ✅ Use case fetches data via port, builds resolver, passes to domain
-- ❌ Domain never calls external services directly
-- ❌ Resolver never used to modify external state (read-only)
+The service owns the external-fact calculation; the aggregate owns the state transition. Pass the assessment or facts
+into that transition, then save and publish in the use case. Presentation enrichment stays a separate value model.
+`DCA-TAC-002` checks fields, not semantic responsibility: callback parameters need manual review. No marker proves
+that an operation belongs on a particular object.
 
 ### Enriched Read Model Pattern
 
@@ -457,7 +392,11 @@ public record CheckoutCart(
 - ✅ **Immutable** - Value Object, safe to pass around
 - ✅ **Real-world metaphor** - like a smart shopping cart display
 
-**Note:** Enriched Read Model is a Value Object, **not** an Aggregate. It has no lifecycle or events.
+**Note:** An enriched read model is a Value Object, not an Aggregate. It has no lifecycle or events.
+Its name follows the domain: `ExtendedCart` and `CartWithCurrentPrices` are equally valid
+alternatives to `EnrichedCart`. Neither an `Enriched` prefix nor record syntax defines the
+role. Implement `Value` and follow its identity, immutability and equality contracts;
+immutable classes with equality are valid too. Enrichment itself is guidance.
 
 ### Factory for Cross-Context Assembly
 
@@ -522,7 +461,7 @@ public class StartCheckoutUseCase implements StartCheckoutInputPort {
 - ✅ Factory validates all required data is present
 - ❌ Factory never fetches data itself (no port injection)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [OutputPort](/marker/port-out/outputport.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
@@ -531,5 +470,18 @@ public class StartCheckoutUseCase implements StartCheckoutInputPort {
 - [@Partnership](/marker/strategic/partnership.md)
 - [@SharedKernel](/marker/strategic/sharedkernel.md)
 - [@Upstream](/marker/strategic/upstream.md)
-- [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)
+- [DomainGateway](/marker/tactical/domaingateway.md)
+- [DomainService](/marker/tactical/domainservice.md)
 - [Factory](/marker/tactical/factory.md)
+
+## Evidence slices
+
+- [Same Bounded Context](/evidence/guide/readme/integration-patterns/same-bounded-context.md)
+- [Different Bounded Contexts](/evidence/guide/readme/integration-patterns/different-bounded-contexts.md)
+- [A Bounded Context Is a Deep Module](/evidence/guide/readme/integration-patterns/a-bounded-context-is-a-deep-module.md)
+- [Declaring Context Relationships in Code](/evidence/guide/readme/integration-patterns/declaring-context-relationships-in-code.md)
+- [Open Host Service Pattern](/evidence/guide/readme/integration-patterns/open-host-service-pattern.md)
+- [Composite Adapter Pattern](/evidence/guide/readme/integration-patterns/composite-adapter-pattern.md)
+- [Domain services over supplied facts](/evidence/guide/readme/integration-patterns/domain-services-over-supplied-facts.md)
+- [Enriched Read Model Pattern](/evidence/guide/readme/integration-patterns/enriched-read-model-pattern.md)
+- [Factory for Cross-Context Assembly](/evidence/guide/readme/integration-patterns/factory-for-cross-context-assembly.md)

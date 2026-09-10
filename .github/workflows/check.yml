@@ -17,17 +17,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           path: dca-knowledge-catalog
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           repository: domain-centric-development/dca-guide
           path: dca-guide
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           repository: domain-centric-development/dca-java
           path: dca-java
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           repository: domain-centric-development/dca-dotnet
           path: dca-dotnet
       - uses: actions/setup-python@v5

@@ -251,7 +251,7 @@ def _strip_injected_alias(text: str) -> str:
 
 
 def import_back(vault: Path, bundle: Path) -> tuple[int, list[str]]:
-    """Write extensible-zone edits from ``vault`` back into ``bundle``.
+    """Write extensible-zone edits into the owning checkout’s authored sources.
 
     Returns (files changed, problem messages). Generated-zone edits and vault
     deletions are reported, never applied. Frontmatter must carry a non-empty
@@ -259,6 +259,9 @@ def import_back(vault: Path, bundle: Path) -> tuple[int, list[str]]:
     """
     problems: list[str] = []
     changed = 0
+    if not (bundle.parent / "src/dca_catalog").is_dir():
+        return 0, ["REJECTED: import requires the owning catalog checkout; mirrors are read-only"]
+    source_dir = bundle.parent / "authored"
     slugs = _slug_map(vault)
 
     for d in _EXTENSIBLE_DIRS:
@@ -280,6 +283,7 @@ def import_back(vault: Path, bundle: Path) -> tuple[int, list[str]]:
             dest = bundle / rel
             if dest.exists() and dest.read_text(encoding="utf-8") == canonical:
                 continue
+            dest = source_dir / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_text(canonical, encoding="utf-8")
             changed += 1
@@ -292,7 +296,7 @@ def import_back(vault: Path, bundle: Path) -> tuple[int, list[str]]:
                     continue
                 rel = p.relative_to(bundle).as_posix()
                 if not (vault / rel).exists():
-                    problems.append(f"{rel}: deleted in vault — NOT deleted from bundle (remove by hand if intended)")
+                    problems.append(f"{rel}: deleted in vault — NOT deleted; mark the owning authored source superseded if intended")
 
     # generated-zone edits: report and ignore
     for d in _GENERATED_DIRS:
@@ -338,7 +342,7 @@ def main(argv: list[str] | None = None) -> int:
         changed, problems = import_back(out, bundle)
         for msg in problems:
             print(f"  WARN {msg}")
-        print(f"Import: {changed} authored node(s) written back to {bundle}")
+        print(f"Import: {changed} authored node(s) written to owning sources at {bundle.parent / 'authored'}")
         if changed:
             print("Now run: make generate && make lint  (re-catalogue indexes, check OKF health)")
         return 1 if any("REJECTED" in m for m in problems) else 0

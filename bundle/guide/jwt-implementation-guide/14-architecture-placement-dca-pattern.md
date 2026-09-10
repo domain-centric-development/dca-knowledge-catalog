@@ -86,7 +86,7 @@ Controllers receive the adapter model (absent → guest) and map it into the dom
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [OutputPort](/marker/port-out/outputport.md)

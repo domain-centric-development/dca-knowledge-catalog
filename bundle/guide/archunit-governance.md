@@ -26,3 +26,4 @@ tags: [guide, guide]
 - [CI/CD Integration](/guide/archunit-governance/ci-cd-integration.md)
 - [Common Pitfalls and Solutions](/guide/archunit-governance/common-pitfalls-and-solutions.md)
 - [Additional Resources](/guide/archunit-governance/additional-resources.md)
+- [Catalog kinds and retired identities (2026-09-09)](/guide/archunit-governance/catalog-kinds-and-retired-identities-2026-09-09.md)

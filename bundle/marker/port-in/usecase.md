@@ -57,12 +57,7 @@ and needs no method of its own.
 
 - [InputPort](/marker/port-in/inputport.md)
 
-## Governed by
-
-- [Application layer InputPort implementations must end with 'UseCase'](/rule/naming/application-layer-inputport-implementations-must-end-with-usecase.md)
-- [InputPort interfaces must end with 'InputPort'](/rule/naming/inputport-interfaces-must-end-with-inputport.md)
-
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)

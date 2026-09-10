@@ -271,7 +271,7 @@ public interface OrderRepository {
 
 > **See:** [Domain-Centric Architecture - Integration Patterns](/guide/readme/integration-patterns.md)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)

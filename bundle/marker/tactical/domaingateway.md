@@ -45,7 +45,7 @@ exposes external capability (cryptography, availability check, geocoding, …).
 
 **Reference:** The pattern follows Vaughn Vernon's IDDD (2013) sample code (`iddd_identityaccess`, `User` aggregate using `EncryptionService` via the `DomainRegistry`), generalized as a typed marker rather than a service locator.
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)

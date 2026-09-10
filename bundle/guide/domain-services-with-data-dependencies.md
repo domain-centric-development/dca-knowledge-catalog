@@ -20,3 +20,4 @@ tags: [guide, guide]
 - [Comparison: When to Use Which Approach](/guide/domain-services-with-data-dependencies/comparison-when-to-use-which-approach.md)
 - [ArchUnit Governance](/guide/domain-services-with-data-dependencies/archunit-governance.md)
 - [References](/guide/domain-services-with-data-dependencies/references.md)
+- [Boundary validation and responsibility (review 2026-09-09)](/guide/domain-services-with-data-dependencies/boundary-validation-and-responsibility-review-2026-09-09.md)

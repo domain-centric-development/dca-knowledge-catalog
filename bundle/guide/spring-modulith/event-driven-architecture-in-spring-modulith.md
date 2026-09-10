@@ -82,7 +82,7 @@ public record OrderCreatedEvent(
 | **Versioning** | Not required | Required |
 | **Delivery** | Sync (in-tx) *or* async (registry-backed) | Async, externalized via registry |
 | **Persistence** | Only when delivered async (registry) | Yes (Event Publication Registry) |
-| **Retry** | Only when delivered async (registry) | Yes (automatic) |
+| **Retry** | Resubmission supported for registry-backed listeners | Configure bounded retries, backoff and manual replay |
 | **Visibility** | Private to module | Public to all modules |
 
 > **Delivery mode is orthogonal to event type.** Persistence and retry come from
@@ -561,6 +561,18 @@ public record OrderCreatedEvent(
 - Domain Events: Past tense, no suffix (e.g., `OrderCreated`, `PaymentProcessed`)
 - Integration Events: Past tense + "Event" suffix (e.g., `OrderCreatedEvent`, `PaymentProcessedEvent`)
 
-## Related markers
+## Related mentions (heuristic)
 
 - [DomainEvent](/marker/tactical/domainevent.md)
+
+## Evidence slices
+
+- [Domain Events vs Integration Events](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/domain-events-vs-integration-events.md)
+- [Event Architecture Comparison](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/event-architecture-comparison.md)
+- [Spring Modulith Event Publication Registry](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/spring-modulith-event-publication-registry.md)
+- [Event Publishing Pattern](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/event-publishing-pattern.md)
+- [Event Consumption Pattern](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/event-consumption-pattern.md)
+- [Idempotent Consumers](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/idempotent-consumers.md)
+- [Anti-Corruption Layer (ACL) Pattern](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/anti-corruption-layer-acl-pattern.md)
+- [Event Mapper Pattern (Domain Event → Integration Event)](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/event-mapper-pattern-domain-event-integration-event.md)
+- [Best Practices](/evidence/guide/spring-modulith/event-driven-architecture-in-spring-modulith/best-practices.md)

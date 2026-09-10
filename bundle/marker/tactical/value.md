@@ -44,15 +44,12 @@ Identifiers are Value Objects too, but carry their own marker: `d`.
 
 ## Governed by
 
-- [Enriched Domain Models must be Value Object records](/rule/tactical/enriched-domain-models-must-be-value-object-records.md)
-- [Value Object classes should be final (immutability)](/rule/tactical/value-object-classes-should-be-final-immutability.md)
-- [Value Object fields must be final (deep immutability)](/rule/tactical/value-object-fields-must-be-final-deep-immutability.md)
-- [Value Objects must be records or immutable classes with attribute equality](/rule/tactical/value-objects-must-be-records-or-immutable-classes-with-attribute-equality.md)
-- [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/value-objects-must-not-contain-aggregate-roots-or-entities.md)
-- [Value Objects must not have setter methods](/rule/tactical/value-objects-must-not-have-setter-methods.md)
-- [Use Case Result Models must end with 'Result' and reside in application package](/rule/usecase/use-case-result-models-must-end-with-result-and-reside-in-application-package.md)
+- [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/dca-tac-008.md)
+- [Value Object classes should be final (immutability)](/rule/tactical/dca-tac-009.md)
+- [Value Object fields must be final (shallow immutability)](/rule/tactical/dca-tac-010.md)
+- [Value Objects must not have setter methods](/rule/tactical/dca-tac-011.md)
 
-## Discussed in
+## Related mentions in guides (heuristic)
 
 - [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
 - [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)

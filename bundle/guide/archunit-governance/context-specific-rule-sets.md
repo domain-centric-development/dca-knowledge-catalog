@@ -38,6 +38,6 @@ The structural baseline (layer dependencies, cycles, context isolation) still ap
 
 ---
 
-## Related markers
+## Related mentions (heuristic)
 
 - [Value](/marker/tactical/value.md)
