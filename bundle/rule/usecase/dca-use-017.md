@@ -29,7 +29,7 @@ Every effective public instance method, declared or inherited, matches a method 
 
 **Selection.** Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types.
 
-**Check.** The effective public instance surface maps through the implemented IInputPort interface maps. Inherited and explicit implementations pass; unrelated-interface methods and public properties outside the contract fail. Constructors, object/ValueType methods and compiler-generated members are exempt; special-name property accessors alone are not exempt.
+**Check.** The effective public instance surface maps through the implemented IInputPort interface maps. Inherited and explicit implementations pass; unrelated-interface methods and public properties outside the contract fail (a property is reported once). Constructors, object/ValueType methods and compiler-generated members are exempt; special-name property accessors alone are not exempt. A use case selected by suffix only, without an input-port interface, has no permitted operation and is reported in full — implement the input port.
 
 ## Implementation
 

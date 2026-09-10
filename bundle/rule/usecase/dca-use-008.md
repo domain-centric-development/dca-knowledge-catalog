@@ -29,7 +29,7 @@ Each resides in an adapter package of some module root (<module>.adapter..), the
 
 **Selection.** Types under the root namespace whose name ends with Response.
 
-**Check.** Each resides in an incoming-adapter namespace of some module root (<module>.Adapter or below), the shared kernel's included.
+**Check.** Each resides in an adapter namespace (incoming or outgoing) of some module root (<module>.Adapter or below), the shared kernel's included.
 
 ## Implementation
 

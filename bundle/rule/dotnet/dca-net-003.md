@@ -4,8 +4,8 @@ id: DCA-NET-003
 title: "Use cases implement IUseCase<TIn,TOut>.ExecuteAsync(input, CancellationToken) returning Task<T>"
 rule: The generic asynchronous input contract supports host cancellation.
 constraint: "Use cases implement IUseCase<TIn,TOut>.ExecuteAsync(input, CancellationToken) returning Task<T>."
-selects: "Concrete application operations selected by marker or suffix, plus concrete IUseCase<TIn,TOut> implementations anywhere under scan, with loadable runtime types."
-checks: "An IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>. Explicit, inherited and ordinary implementations pass. A plain Task method without the generic contract fails; other public members are checked by USE-017, not counted here."
+selects: "Concrete classes under scan implementing IUseCase<TIn,TOut> (directly, inherited or explicitly), plus application operations (marker or suffix) that declare a public ExecuteAsync without the generic contract, with loadable runtime types. A marker-only IInputPort implementation without ExecuteAsync is not selected."
+checks: "Every IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>; explicit, inherited and ordinary implementations pass. An ExecuteAsync declared without the generic contract (plain Task, own signature) fails. Other public members are checked by USE-017, not counted here."
 enforced_by: "DotnetRules#DCA-NET-003"
 status: enforced
 rule_set: dotnet
@@ -16,11 +16,11 @@ tags: [dotnet, archunitnet]
 
 ## Selection
 
-Concrete application operations selected by marker or suffix, plus concrete IUseCase<TIn,TOut> implementations anywhere under scan, with loadable runtime types.
+Concrete classes under scan implementing IUseCase<TIn,TOut> (directly, inherited or explicitly), plus application operations (marker or suffix) that declare a public ExecuteAsync without the generic contract, with loadable runtime types. A marker-only IInputPort implementation without ExecuteAsync is not selected.
 
 ## Check
 
-An IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>. Explicit, inherited and ordinary implementations pass. A plain Task method without the generic contract fails; other public members are checked by USE-017, not counted here.
+Every IUseCase<TIn,TOut> interface map supplies ExecuteAsync(input, CancellationToken) returning Task<T>; explicit, inherited and ordinary implementations pass. An ExecuteAsync declared without the generic contract (plain Task, own signature) fails. Other public members are checked by USE-017, not counted here.
 
 ### C# expression
 

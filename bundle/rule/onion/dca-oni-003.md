@@ -29,7 +29,7 @@ Direct or meta-annotations: types prohibit injectable, persistenceEntity and tra
 
 **Selection.** Domain.Model types except events, services, factories and specifications, which have exclusive ADV ownership.
 
-**Check.** Configured attribute namespaces classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed. Missing runtime types are skipped; wiring is not established.
+**Check.** Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. Missing runtime types are skipped; wiring is not established.
 
 ## Implementation
 
