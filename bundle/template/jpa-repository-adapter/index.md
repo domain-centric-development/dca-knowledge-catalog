@@ -1,0 +1,3 @@
+# jpa-repository-adapter
+
+- [JPA repository adapter (same output port, Spring Data + entity + mapper) — Java](java.md) — The Java code of JPA repository adapter (same output port, Spring Data + entity + mapper). The prose, the evidence an...

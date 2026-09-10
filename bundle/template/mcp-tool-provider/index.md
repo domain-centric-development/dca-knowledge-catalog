@@ -1,0 +1,3 @@
+# mcp-tool-provider
+
+- [MCP tool provider skeleton (incoming adapter exposing use cases as MCP tools) — Java](java.md) — The Java code of MCP tool provider skeleton (incoming adapter exposing use cases as MCP tools). The prose, the eviden...

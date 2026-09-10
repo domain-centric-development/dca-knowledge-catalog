@@ -13,64 +13,12 @@ Domain-free skeleton for a **ViewModel**: a page-specific record that transforms
 
 This is the web/MVC sibling of the API `*Response` DTO in the [REST resource template](/template/rest-resource.md): both are edge DTOs mapped from a `Result`, but a `Response` serialises to JSON for an API client while a ViewModel feeds a template. Keep the three layers distinct: `Result` (application) → ViewModel (web adapter) → DTO/`Response` (api adapter).
 
-## `{Page}PageViewModel.java` — presentation record (web adapter)
+## Languages
 
-```java
-package {basePackage}.{context}.adapter.incoming.web;
+The code lives in one child node per language, so the prose below is written once and a
+further language is one more file rather than a second copy of this node.
 
-import {basePackage}.{context}.application.{usecasename}.{Name}Result;
-import {basePackage}.{context}.domain.model.Enriched{Name};
-import java.math.BigDecimal;
-
-/** Page-specific ViewModel: primitives only, tailored to the {Page} page. */
-public record {Page}PageViewModel(
-    String {name}Id,
-    String name,
-    BigDecimal priceAmount,
-    String priceCurrency,
-    int stockQuantity,
-    boolean isAvailable,
-    String pageTitle
-) {
-
-    // Factory maps the domain read model to primitives for the template.
-    public static {Page}PageViewModel fromResult(final {Name}Result result) {
-        final Enriched{Name} {name} = result.{name}();   // domain read model
-        return new {Page}PageViewModel(
-            {name}.{name}Id().value().toString(),
-            {name}.name(),
-            {name}.currentPrice().amount(),
-            {name}.currentPrice().currency().getCurrencyCode(),
-            {name}.stockQuantity(),
-            {name}.isAvailable(),
-            {name}.name());
-    }
-}
-```
-
-```java
-// Controller converts Result → ViewModel, then hands primitives to the template.
-final {Page}PageViewModel viewModel = {Page}PageViewModel.fromResult(result);
-model.addAttribute("{name}", viewModel);
-```
-
-The ViewModel holds **no** domain type — a template must never dereference
-`Money` or a typed id. It lives in the adapter package, so it depends on the
-application `Result` and the domain read model, never the other way round.
-When a read needs *no* cross-context enrichment at all, map the plain
-use-case `Result` straight to the ViewModel and skip the enriched model.
-
-## When a ViewModel is the wrong tool
-
-A ViewModel only shapes data for one presentation surface — it does not decide
-*how the read is produced*. Before building the read behind it, consult
-[Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md):
-if the aggregate's repository can answer the query, a plain query use case feeds
-the ViewModel; only a proven read/write skew or reporting need justifies a
-dedicated CQRS read side. When the display combines state from several contexts,
-put the cross-context rules in an [enriched domain model](/template/enriched-domain-model.md)
-and let the ViewModel flatten it — don't push formatting or cross-context logic
-into the ViewModel factory beyond primitive mapping.
+- Java — [`view-model/java.md`](/template/view-model/java.md)
 
 ## Realizes / governed by
 

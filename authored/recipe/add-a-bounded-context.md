@@ -20,7 +20,7 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 3. **Keep the domain framework-free** — no cross-context imports. Reference other contexts only through their Open Host Service ([Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)) or by reacting to their integration events ([Publish a cross-context event](/recipe/publish-a-cross-context-event.md)).
 4. **Seed the first slice** — one aggregate ([Add an aggregate](/recipe/add-an-aggregate.md)), one use case ([Add a use case](/recipe/add-a-use-case.md)), one incoming adapter ([Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)).
 5. **Record the decision** — add the context to the context map with its subdomain type and relationships; capture the pattern-style choice in an ADR.
-6. **Verify** — `./gradlew test-architecture`; the isolation rules below run per context.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project); the isolation rules below run per context.
 
 ## Rules to satisfy (build-time checklist)
 

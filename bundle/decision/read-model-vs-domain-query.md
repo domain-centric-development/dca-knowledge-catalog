@@ -2,8 +2,8 @@
 type: Decision
 title: Plain query use case or a dedicated read model
 tags: [decision, application, use-case, cqrs, repository, performance]
-review: draft
-owner: DCA catalog maintainers
+review: reviewed
+owner: Christoph Bloemer
 evidence: [/guide/readme/elements.md, /guide/readme/integration-patterns.md, /marker/port-in/usecase.md, /marker/port-out/repository.md, /rule/usecase/dca-use-003.md]
 ---
 

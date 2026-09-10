@@ -16,7 +16,7 @@ Publish the public, stable capabilities of a bounded context so *other* contexts
 3. **Depend on input ports, delegate to use cases.** Like a REST resource, an OHS injects your **input port interfaces** and calls `execute(...)` — it must never touch a repository or output port directly, and holds no business logic of its own. Generate the class from the [Open Host Service template](/template/open-host-service.md).
 4. **Return DTOs in a published language — never domain objects.** Expose small records (e.g. a `ProductInfo` record) built from the use-case `Result`. Aggregates, entities, and internal value objects must not cross the boundary. Publish only what other contexts genuinely need; a narrow, intention-revealing contract is the whole point of an OHS.
 5. **Tell consumers how to consume it.** A consuming context must **not** call your OHS from its use cases. It defines its *own* output port in its `application/shared/`, implemented by an outgoing adapter in `adapter/outgoing/{yourcontext}/` that calls your OHS (wrapping it in an anti-corruption layer if the models differ). Only that adapter changes if you later extract the provider into a separate service.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

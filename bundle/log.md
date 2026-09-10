@@ -16,6 +16,6 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 - Recipe: 19
 - Decision: 22
 - Pitfall: 28
-- Template: 25
+- Template: 49
 - Note: 1
-- Total authored: 95
+- Total authored: 119

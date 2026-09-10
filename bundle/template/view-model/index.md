@@ -1,0 +1,3 @@
+# view-model
+
+- [ViewModel skeleton (page-specific, primitive-only presentation record) — Java](java.md) — The Java code of ViewModel skeleton (page-specific, primitive-only presentation record). The prose, the evidence and ...

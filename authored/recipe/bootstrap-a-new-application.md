@@ -17,7 +17,7 @@ Stand up a fresh Domain-Centric Architecture app from nothing: the building-bloc
 3a. **Make transactions real before the first write use case** — an in-memory start has no transaction manager, and `@Transactional` is then silently inert while every rule stays green. Add `spring-boot-transaction`, a `PlatformTransactionManager` bean of your own (a visible placeholder until persistence arrives) and, with Modulith, `spring-modulith-events-api` — see [Declarative transaction without a transaction manager](/pitfall/declarative-transaction-without-a-transaction-manager.md).
 4. **Set up ADRs** — copy the ADR template and record the foundational decisions (hexagonal architecture, shared kernel, ArchUnit governance, pattern selection). See [How to write an ADR](/process/creating-an-adr.md).
 5. **Add the first bounded context** — classify its subdomain, then follow [Add a bounded context](/recipe/add-a-bounded-context.md) and seed one vertical slice with [Add a use case](/recipe/add-a-use-case.md).
-6. **Verify** — `./gradlew build && ./gradlew test-architecture`; the suite is green on an empty-but-correct skeleton.
+6. **Verify** — the project's build and architecture suite (`./gradlew build && ./gradlew test-architecture`, or `dotnet build && dotnet test -c Debug` against the architecture-test project); the suite is green on an empty-but-correct skeleton.
 
 ## Rules to satisfy (build-time checklist)
 

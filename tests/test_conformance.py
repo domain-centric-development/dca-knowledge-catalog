@@ -919,7 +919,7 @@ def test_evidence_slices_keep_full_nodes_and_ignore_headings_in_code():
 
 
 def test_templates_have_applicability_and_router_has_both_commands(bundle):
-    for p in (bundle / 'template').glob('*.md'):
+    for p in (bundle / 'template').rglob('*.md'):
         if p.name in RESERVED:
             continue
         fm, _ = _split_frontmatter(p.read_text())
@@ -938,3 +938,62 @@ def test_obsidian_import_refuses_read_only_mirror(bundle: Path, tmp_path):
     assert changed == 0
     assert any("REJECTED" in message and "read-only" in message for message in problems)
     assert not (tmp_path / "authored").exists()
+
+
+def test_template_code_lives_in_language_children(bundle):
+    """One concept node per template, one code node per language below it.
+
+    The prose, the evidence and the links are written once; a further language is one more
+    file, not a second copy of the node. Enforced here as well as in the lint so a hand-edit
+    of the authored zone cannot reintroduce a Java-only node with the code inline.
+    """
+    concepts = {
+        p for p in (bundle / 'template').glob('*.md')
+        if p.name not in RESERVED and (bundle / 'template' / p.stem).is_dir()
+    }
+    assert concepts, 'no template concept node has language children'
+    for concept in sorted(concepts):
+        fm, body = _split_frontmatter(concept.read_text())
+        assert '```' not in body, f'{concept.name} carries code although it has language children'
+        children = sorted((bundle / 'template' / concept.stem).glob('*.md'))
+        languages = set()
+        for child in children:
+            if child.name in RESERVED:
+                continue
+            child_fm, child_body = _split_frontmatter(child.read_text())
+            assert child_fm.get('parent') == f'/template/{concept.stem}.md', child.name
+            assert '```' in child_body, f'{child.name} is a code node without code'
+            languages.update(child_fm.get('applies_to') or [])
+        assert set(fm.get('applies_to') or []) == languages, concept.name
+
+
+def test_cited_draft_reports_only_unreviewed_nodes(bundle: Path, tmp_path):
+    """`lint --cited-by` names the authored nodes a run leaned on that are still proposals.
+
+    Reviewing the authored zone on stock is the wrong order; what a run cites is the list worth
+    reading. A node that has been reviewed must not appear, or the report becomes noise and gets
+    ignored — which is the same as having no report.
+    """
+    from dca_catalog.lint import cited_drafts
+
+    drafted = reviewed = None
+    for path in sorted((bundle / 'decision').glob('*.md')):
+        if path.name in RESERVED:
+            continue
+        fm, _ = _split_frontmatter(path.read_text())
+        review = str(fm.get('review') or '')
+        if review == 'draft' and drafted is None:
+            drafted = path
+        if review == 'reviewed' and reviewed is None:
+            reviewed = path
+    assert drafted and reviewed, 'need one draft and one reviewed decision node for this test'
+
+    run = tmp_path / 'tasks' / 'STORY-1'
+    run.mkdir(parents=True)
+    (run / 'plan.md').write_text(
+        f"Shape from [a](/decision/{drafted.name}) and [b](/decision/{reviewed.name}).\n"
+    )
+    findings = cited_drafts(bundle, tmp_path / 'tasks')
+    named = {rel for _severity, _kind, rel, _detail in findings}
+    assert f'decision/{drafted.name}' in named
+    assert f'decision/{reviewed.name}' not in named

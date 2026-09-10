@@ -241,7 +241,18 @@ links), and `superseded_by` (required resolving link for superseded nodes). Miss
 invalid review or superseded without a successor errors. Draft, missing-review and superseded nodes are non-normative
 proposals/history; generation never promotes them. Existing unreviewed material starts as draft. Reviewed nodes
 are the explicitly reviewed source revisions, not a claim that every linked draft has been reviewed.
+Reviewing follows **use**, not stock: `lint --cited-by <run artefacts>` reports the authored nodes a delivery
+run actually leaned on that are still `draft`. A stage that decided a design question from a draft decided it
+from a proposal, and the list of nodes worth reading is therefore the list a run cites — not the whole zone.
 Templates also carry `applies_to` (languages) and `framework`; these route retrieval and do not add dependencies.
+
+A template is split into a **concept node** and one **code node per language**: `template/<concept>.md` carries the
+prose, the `evidence` and the links and holds **no** code fence; `template/<concept>/<language>.md` carries the
+skeleton and names its concept node in `parent`. The concept node's `applies_to` is exactly the union of its
+children's, so a language the catalog cannot serve is visible in the metadata instead of hidden. The reason for the
+split is that the doctrine is language-independent while the code is not: a further language is then one more file,
+never a second copy of the prose, and every node that cites a template keeps citing the one concept path. A code
+node needs no link into the generated skeleton and no inbound link — its concept node carries both.
 
 `manifest.json` records source Git revisions, source-content SHA256 digests, declared library versions, node counts
 and a bundle SHA256 digest, without timestamps. Digest input is sorted relative path + NUL + content + NUL,

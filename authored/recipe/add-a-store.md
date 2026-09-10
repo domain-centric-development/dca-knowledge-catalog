@@ -15,7 +15,7 @@ Give a context a persistence port for operational data that has **no aggregate o
 2. **Define the interface** `{Name}Store extends Store` in `application/shared/` — an output port, so interfaces only. Name the methods for the operational role in the ubiquitous language: `record(...)`, `count(...)`, `findAll()`, `exists(...)`. Do **not** expose aggregate-lifecycle methods (`findById`, `save`, `deleteById`) — that shape belongs to a Repository.
 3. **Implement in an outgoing adapter** — e.g. `InMemory{Name}Store` or `Jdbc{Name}Store` in `adapter/outgoing/persistence/`, generated from the [store + in-memory adapter template](/template/store-with-in-memory-adapter.md). The implementation may use framework/persistence types; the interface must not.
 4. **Wire by inversion** — use cases depend on the `{Name}Store` interface (constructor injection); only the adapter knows the store technology. Controllers and resources never touch it directly — they go through an input port.
-5. **Verify** — `./gradlew test-architecture`. Four rules govern Store, so a violation of steps 2 and 3 fails the build rather than surviving review.
+5. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project). Four rules govern Store, so a violation of steps 2 and 3 fails the build rather than surviving review.
 
 ## Rules to satisfy (build-time checklist)
 

@@ -20,7 +20,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 3. **Keep it immutable** — records give you final fields and value equality for free; a class must be final, hold only final fields, and implement `equals`/`hashCode` itself. No setters; derive new values by returning new instances.
 4. **Name from the ubiquitous language** — no technical suffixes (`Manager`, `Helper`, `Util`, `Impl`) and no primitive obsession (wrap the primitive, don't pass a bare `String`).
 5. **Never embed an aggregate root or entity** inside a value object; hold their `Id` if a reference is needed.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

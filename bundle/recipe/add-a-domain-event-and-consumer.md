@@ -20,7 +20,7 @@ Does the consumer live in another bounded context or an external system? Then yo
 3. **Publish after persistence** — the use case saves the aggregate, then publishes and clears the registered events (`publishAndClearEvents`, inside `@Transactional` or a `TransactionBoundary` block). No events escape before the transaction commits. On Spring the publisher is `SpringDomainEventPublisher` from the `dca-spring` dependency, auto-configured — nothing to write; check that a transaction manager exists, or the after-commit consumer is skipped silently ([pitfall](/pitfall/declarative-transaction-without-a-transaction-manager.md)).
 4. **Consume in-context** — a listener in the same context reacts. Depend on the event type, not the publishing use case; for Spring Modulith, invert the dependency so the listener owns the interface ([Module communication](/guide/spring-modulith/module-communication.md)).
 5. **Keep the domain framework-free** — no Spring annotations on the event record itself.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

@@ -17,7 +17,7 @@ Perform one operation over many aggregates at once — delete all, archive every
 4. **Register no domain event** — nothing was loaded, so no aggregate registered anything, and inventing events per row would fake N facts for one action. If another context must learn about the bulk fact, publish **one** integration event describing it from the use case (`TasksArchivedEvent` with the cutoff and count) through the `IntegrationEventPublisher` ([Domain event or integration event](/decision/domain-event-vs-integration-event.md)); whether an *ordinary* writer should register events nobody consumes yet is a different question — [Register domain events nobody listens to yet?](/decision/domain-events-without-a-consumer.md)).
 5. **Draw the boundary declaratively** — class-level `@Transactional` is the right form: the port method is the whole unit of work, and only local ports are called ([Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md)).
 6. **Implement the method in every adapter** — the in-memory adapter filters its map, the JDBC adapter runs one `DELETE … WHERE` or `UPDATE … WHERE`, the JPA adapter a bulk query. Add the case to the port's contract test so every implementation agrees on what "before the cutoff" means.
-7. **Verify** — `./gradlew test-architecture`.
+7. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Why the two-aggregates pitfall does not apply
 

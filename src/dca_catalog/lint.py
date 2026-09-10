@@ -15,6 +15,7 @@ import argparse
 import json
 import re
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 from .generate import _GENERATED_DIRS, _EXTENSIBLE_ZONE, _parse_front, _repo_root_default
@@ -82,10 +83,22 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
             if t.lstrip("/") != rel:  # self-links don't count as inbound
                 inbound[t.lstrip("/")] = inbound.get(t.lstrip("/"), 0) + 1
 
+    # Template concept nodes and their language children: the prose is written once in the
+    # concept node, the code once per language below it. Collected first so both directions
+    # (child without parent, parent whose applies_to does not match its children) can be checked.
+    template_children: dict[str, list[Path]] = defaultdict(list)
+    for p in files:
+        rel = p.relative_to(bundle).as_posix()
+        parts = rel.split("/")
+        if parts[0] == "template" and len(parts) == 3:
+            template_children[f"template/{parts[1]}.md"].append(p)
+
     for p in files:
         fm, body, targets = parsed[p]
         rel = p.relative_to(bundle).as_posix()
         top = rel.split("/", 1)[0]
+        parts = rel.split("/")
+        is_template_child = parts[0] == "template" and len(parts) == 3
 
         # 1. broken links (every zone)
         for t in targets:
@@ -125,14 +138,48 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
             successor = fm.get("superseded_by")
             if successor and not (bundle / str(successor).lstrip("/").split("#", 1)[0]).exists():
                 findings.append(("ERROR", "editorial-successor", rel, str(successor)))
-            if not any(t.startswith(_GENERATED_PREFIXES) for t in targets):
+            if not is_template_child and not any(t.startswith(_GENERATED_PREFIXES) for t in targets):
                 findings.append(
                     ("WARN", "unanchored-authored", rel, "no link into the generated skeleton")
                 )
-            if inbound.get(rel, 0) == 0:
+            if not is_template_child and inbound.get(rel, 0) == 0:
                 findings.append(
                     ("INFO", "orphan", rel, "no inbound links from other nodes")
                 )
+            # 4b. template language children — one concept node, one code node per language
+            if is_template_child:
+                parent = str(fm.get("parent") or "").lstrip("/")
+                if not parent:
+                    findings.append((
+                        "ERROR", "template-child-parent", rel,
+                        "a language node under template/<concept>/ needs `parent:` naming its concept node",
+                    ))
+                elif not (bundle / parent).exists():
+                    findings.append(("ERROR", "template-child-parent", rel, f"parent {parent} does not exist"))
+                elif parent != f"template/{parts[1]}.md":
+                    findings.append((
+                        "ERROR", "template-child-parent", rel,
+                        f"parent is {parent}, expected template/{parts[1]}.md",
+                    ))
+            if rel in template_children:
+                if "```" in body:
+                    findings.append((
+                        "ERROR", "template-parent-code", rel,
+                        "a concept node with language children carries no code fence — the code "
+                        "belongs in the child, so a further language stays one more file",
+                    ))
+                declared = {str(x) for x in (fm.get("applies_to") or [])}
+                provided = set()
+                for child in template_children[rel]:
+                    child_fm, _, _ = parsed[child]
+                    provided.update(str(x) for x in (child_fm.get("applies_to") or []))
+                if declared != provided:
+                    findings.append((
+                        "ERROR", "template-applies-to", rel,
+                        f"applies_to {sorted(declared)} but its language children provide "
+                        f"{sorted(provided)}",
+                    ))
+
             # 5. tag vocabulary drift (see SPEC.md "Tag taxonomy")
             tags = fm.get("tags") or []
             if isinstance(tags, str):
@@ -147,11 +194,49 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
     return sorted(findings, key=lambda f: (f[1], f[2], f[3]))
 
 
+
+def cited_drafts(bundle: Path, run_dir: Path) -> list[Finding]:
+    """Which nodes a delivery run leaned on that are still proposals.
+
+    A `review: draft` node is explicitly non-normative, so a stage that decided a design question
+    from one decided it from a proposal — and says so in its file. Reviewing the whole authored zone
+    on stock is the wrong order; what a run actually cites is the list worth reading. Point this at a
+    project's run artefacts (`tasks/`) and it names exactly those.
+    """
+    findings: list[Finding] = []
+    cited: dict[str, set[str]] = {}
+    for path in sorted(run_dir.rglob("*.md")):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        for target in _LINK_RE.findall(text) + re.findall(r"[`(](/[\w./-]+\.md)", text):
+            rel = target.lstrip("/").split("#", 1)[0]
+            if rel.split("/", 1)[0] in _EXTENSIBLE_DIRS and (bundle / rel).exists():
+                cited.setdefault(rel, set()).add(path.name)
+    for rel, files in sorted(cited.items()):
+        fm, _ = _parse_front((bundle / rel).read_text(encoding="utf-8"))
+        review = str(fm.get("review") or "").strip()
+        if review != "reviewed":
+            findings.append((
+                "WARN", "cited-draft", rel,
+                f"leaned on by {', '.join(sorted(files))} but review is "
+                f"{review or 'missing'} — a proposal decided a design question",
+            ))
+    return findings
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Lint a built DCA OKF bundle.")
     parser.add_argument("--bundle", type=Path, default=None, help="bundle dir (default: <catalog>/bundle)")
     parser.add_argument("--repo-root", type=Path, default=_repo_root_default())
     parser.add_argument("--strict", action="store_true", help="exit 1 on warnings too")
+    parser.add_argument(
+        "--cited-by",
+        type=Path,
+        default=None,
+        help="a delivery run's artefact dir (e.g. a project's tasks/): report the nodes it cites "
+             "that are still review: draft, so reviewing follows use instead of stock",
+    )
     args = parser.parse_args(argv)
     bundle = (args.bundle or (Path(__file__).resolve().parents[2] / "bundle")).resolve()
     if not bundle.exists():
@@ -159,6 +244,12 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     findings = lint(bundle, args.repo_root.resolve())
+    if args.cited_by:
+        run_dir = args.cited_by.resolve()
+        if not run_dir.exists():
+            print(f"No run artefacts at {run_dir}.")
+            return 2
+        findings = findings + cited_drafts(bundle, run_dir)
     if not findings:
         print(f"lint: clean ({sum(1 for _ in _concept_files(bundle))} nodes)")
         return 0

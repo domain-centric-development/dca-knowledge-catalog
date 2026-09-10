@@ -20,7 +20,7 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 3. **Implement the ACL in an outgoing adapter** in an `acl` package under `adapter/outgoing/` — it calls the foreign contract and maps the foreign model to your domain types (and your requests to theirs). All translation lives here.
 4. **For event-driven integration**, consume the other context's integration event in `adapter/incoming/messaging/`, translate it through the ACL, then invoke your own use case ([Publish a cross-context event](/recipe/publish-a-cross-context-event.md)).
 5. **Keep the boundary one-directional** — foreign types stay inside the ACL; nothing foreign appears in your domain or application layer.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

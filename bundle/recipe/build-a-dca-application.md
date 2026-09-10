@@ -69,7 +69,7 @@ When the task sits on a fork, resolve the decision before picking the recipe:
 2. **Generate** — emit from the linked template; satisfy the recipe's
    "Rules to satisfy" checklist *while* generating (each entry links a
    [rule](/rule/index.md) whose `constraint:` is the one-line precondition).
-3. **Verify** — run `./gradlew test-architecture`; the ArchUnit suite enforces
+3. **Verify** — run the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project); the ArchUnit suite enforces
    what the checklist promised.
 4. **Record** — a non-trivial pattern choice gets an ADR
    ([Creating an ADR](/process/creating-an-adr.md)).
@@ -83,6 +83,6 @@ When the task sits on a fork, resolve the decision before picking the recipe:
 
 ## Verification by language
 
-Java: `./gradlew test-architecture` (or the project Maven architecture-test target).
+Java: the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project) (or the project Maven architecture-test target).
 .NET: `dotnet test -c Debug` against the architecture-test project and all production assemblies.
 Read the resolved framework preset; do not add Spring to a .NET or framework-neutral consumer.

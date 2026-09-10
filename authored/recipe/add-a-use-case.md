@@ -18,7 +18,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 5. **Implement `execute`** — load aggregate(s) via ports, run business logic *on the aggregate* (not in the service), persist, then publish + clear domain events for writes (in that order — `save` first), then assemble `{Name}Result`: values only — ids, value objects, nested part records named by content, read models — never the aggregate or an entity, also not inside a `List`/`Optional`. A command answers small (ids, status, what the caller needs next); a query answers with the read model or snapshot. Assemble in the application layer: static `from(...)` on the result, the use-case body when several ports feed it, a `*Assembler` when it grows or is shared. See [Result shape and assembly](/decision/result-shape-and-assembly.md).
 6. **Draw the transaction boundary** — class-level `@Transactional` when every port is local; when the use case also reads from a remote-capable port (another context's API, a payment provider), do the remote reads first and wrap load–mutate–save–publish in `transactionBoundary.inTransaction(...)` instead. Read-only use cases get neither. See [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md).
 7. **Expose it** from an incoming adapter (`*Resource`/`*PageController`) that maps `{Name}Result` → a `*Response` DTO at the edge.
-8. **Verify** — run `./gradlew test-architecture`; the rules below are checked.
+8. **Verify** — run the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project); the rules below are checked.
 
 ## Rules to satisfy (build-time checklist)
 

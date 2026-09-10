@@ -20,7 +20,7 @@ Give an aggregate root a persistence port: an interface in the application layer
 4. **Implement in an outgoing adapter** — e.g. `InMemory{Name}Repository` in `adapter/outgoing/`. The implementation may use framework/persistence types; the interface must not. Every adapter hands out copies through `reconstitute`, never the stored instance ([Layer rules](/guide/readme/rules.md)).
 5. **Wire by inversion** — use cases depend on the interface (constructor injection); the adapter is the only thing that knows the store. Controllers and resources must never touch a repository directly — they go through the input port.
 6. **Use explicit `save()`** — persistence-oriented style, not a live collection illusion ([Layer rules](/guide/readme/rules.md)). The use case calls `save` after mutating, then `publishAndClearEvents` — one call, not a loop over `publish(event)` ([Publishing events one by one](/pitfall/publish-instead-of-publish-and-clear.md)).
-7. **Verify** — `./gradlew test-architecture`.
+7. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

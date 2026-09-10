@@ -1,5 +1,30 @@
 # template
 
+- [aggregate-root/](aggregate-root/index.md) (1)
+- [bounded-context-package-info/](bounded-context-package-info/index.md) (1)
+- [domain-event/](domain-event/index.md) (1)
+- [domain-exception/](domain-exception/index.md) (1)
+- [domain-gateway/](domain-gateway/index.md) (1)
+- [domain-service/](domain-service/index.md) (1)
+- [enriched-domain-model/](enriched-domain-model/index.md) (1)
+- [entity/](entity/index.md) (1)
+- [event-consumer/](event-consumer/index.md) (1)
+- [factory/](factory/index.md) (1)
+- [integration-event/](integration-event/index.md) (1)
+- [jdbc-repository-adapter/](jdbc-repository-adapter/index.md) (1)
+- [jpa-repository-adapter/](jpa-repository-adapter/index.md) (1)
+- [mcp-tool-provider/](mcp-tool-provider/index.md) (1)
+- [open-host-service/](open-host-service/index.md) (1)
+- [page-controller/](page-controller/index.md) (1)
+- [repository-with-in-memory-adapter/](repository-with-in-memory-adapter/index.md) (1)
+- [rest-resource/](rest-resource/index.md) (1)
+- [specification/](specification/index.md) (1)
+- [store-with-in-memory-adapter/](store-with-in-memory-adapter/index.md) (1)
+- [use-case/](use-case/index.md) (1)
+- [use-case-test/](use-case-test/index.md) (1)
+- [value-object/](value-object/index.md) (1)
+- [view-model/](view-model/index.md) (1)
+
 - [Aggregate root skeleton (BaseAggregateRoot + Id + domain event)](aggregate-root.md) — Domain-free skeleton for an aggregate root: the consistency boundary that enforces invariants and registers domain ev...
 - [Bounded context declaration (package-info.java)](bounded-context-package-info.md) — Domain-free skeleton for the one file that turns a package into a **bounded context**: `package-info.java` at the con...
 - [Domain event skeleton (record implementing DomainEvent)](domain-event.md) — Domain-free skeleton for a domain event: an immutable fact about something that happened, internal to one bounded con...

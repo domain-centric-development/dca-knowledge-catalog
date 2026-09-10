@@ -16,7 +16,7 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 3. **Enforce invariants in a factory** — `static {Name} create(...)` validates and registers the creation event. No public setters; mutate via intention-revealing methods that re-check invariants.
 4. **Register domain events** on every meaningful state change; the use case publishes + clears them after save.
 5. **Add the repository** — interface `{Name}Repository extends Repository<{Name}, {Name}Id>` in `application/shared/` (output port), implementation in `adapter/outgoing/` ([Deviations from the literature](/guide/readme/deviations-from-the-literature.md)). One repository per aggregate root only.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

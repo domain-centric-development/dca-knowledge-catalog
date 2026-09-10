@@ -23,7 +23,7 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 3. **Translate in an ACL adapter, inside the transaction** — a synchronous listener on the domain event maps it to the integration event and writes the transactional-outbox row in the publishing transaction. Never translate after commit.
 4. **Relay out of band** — a poller (plus an after-commit fast path) claims rows, sends to the broker, marks processed; retry with backoff. The outbox stores *your* integration event; the foreign wire payload is built at delivery by the outbound adapter (the ACL to the foreign contract).
 5. **Consume** on the other side in `adapter/incoming/messaging/`, translate back through that context's ACL, invoke its use case.
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 

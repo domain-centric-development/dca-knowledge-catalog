@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "99b9a27d9dfdf6385430b73d451b3bc1381fd3bba6a5d97fd6af5c9af4955cb9",
+  "bundle_sha256": "dabe7093d4823fac275054b147e5fd7579206af92336af172d6d9e70bac5f7bc",
   "counts": {
     "Decision": 22,
     "Guide": 11,
@@ -11,7 +11,7 @@
     "Reference": 106,
     "Rule": 119,
     "Section": 119,
-    "Template": 25
+    "Template": 49
   },
   "digest_algorithm": "sha256:sorted-path-NUL-resource-normalized-content-NUL",
   "format": "dca-bundle-manifest-v1",
@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "6ea4b569f891d00fc699455a668e5d95b63f0d13acf055f2a92ed030f5c3b77b"
+      "source_sha256": "e66ce016fdfc81e22f157e6fe7d5e7a94c0a1b5734281f51e2948768fe9477ff"
     }
   }
 }

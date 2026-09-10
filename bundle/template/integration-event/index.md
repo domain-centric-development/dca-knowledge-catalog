@@ -1,0 +1,3 @@
+# integration-event
+
+- [Integration event skeleton (record implementing IntegrationEvent + outgoing publisher) — Java](java.md) — The Java code of Integration event skeleton (record implementing IntegrationEvent + outgoing publisher). The prose, t...

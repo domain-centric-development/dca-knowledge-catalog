@@ -1,0 +1,3 @@
+# enriched-domain-model
+
+- [Enriched domain model skeleton (read model combining aggregate + cross-context data) — Java](java.md) — The Java code of Enriched domain model skeleton (read model combining aggregate + cross-context data). The prose, the...

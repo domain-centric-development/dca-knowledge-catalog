@@ -16,7 +16,7 @@ Expose a use case to the outside world through a primary (driving) adapter. A `*
 3. **Depend on the input port only** — inject the `{Name}InputPort`, build the `{Name}Command`/`{Name}Query` from the request, call `execute`. Never inject a repository or another adapter. Generate from the [REST resource template](/template/rest-resource.md).
 4. **Map at the edge** — translate the use case `{Name}Result` into a `*Response` DTO (or a view model for web) in the adapter; DTOs and view models live here, never in domain or application. Handle an empty `Optional` result as the not-found case.
 5. **Stay in your context** — an incoming adapter accesses only its own bounded context (event consumers and Open Host Services are the sanctioned exceptions).
-6. **Verify** — `./gradlew test-architecture`.
+6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Server-rendered page instead of REST
 
