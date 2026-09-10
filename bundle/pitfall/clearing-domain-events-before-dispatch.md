@@ -29,5 +29,5 @@ Order inside the use case: `save`, then `publishAndClearEvents`, inside the same
 ## Anchors
 
 - Markers: [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- Rules: [Use cases that save an aggregate must publish its domain events](/rule/usecase/dca-use-009.md) · [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
+- Rules: [Use cases that save an aggregate must publish its domain events](/rule/usecase/dca-use-009.md) · [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
 - Guide: [Layer rules](/guide/readme/rules.md)

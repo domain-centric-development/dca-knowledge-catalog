@@ -18,7 +18,7 @@ An integration-event publisher that registers the outbox publication in an *afte
 ## What forbids it
 
 - [Layer rules](/guide/readme/rules.md) — event publishing rules: the publication is written *inside* the aggregate's transaction, released to the dispatcher after commit, discarded on rollback.
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — the publishing use case has a transaction for the outbox row to join.
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — the publishing use case has a transaction for the outbox row to join.
 
 ## Do instead
 
@@ -41,6 +41,6 @@ Spring Modulith's event publication registry does exactly this; the guide's Modu
 ## Anchors
 
 - Markers: [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- Rules: [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
+- Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
 - Guide: [Layer rules](/guide/readme/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
 - Related pitfall: [Storing raw domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

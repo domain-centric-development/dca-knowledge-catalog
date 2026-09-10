@@ -17,7 +17,7 @@ A use case that saves and publishes but carries neither `@Transactional` nor an 
 
 ## What forbids it
 
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — a use case that publishes domain events must have a transaction boundary, declarative or explicit.
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — a use case that publishes domain events must have a transaction boundary, declarative or explicit.
 
 ## Do instead
 
@@ -32,6 +32,6 @@ Static boundary evidence does not prove containment: a publish after an empty bo
 
 ## Anchors
 
-- Rules: [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md)
+- Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md)
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - Guide: [Layer rules](/guide/readme/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

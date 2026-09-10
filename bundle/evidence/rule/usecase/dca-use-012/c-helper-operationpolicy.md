@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Use cases that publish domain events must have a transaction boundary — C# helper OperationPolicy"
+title: "Use cases that save an aggregate or publish domain events must have a transaction boundary — C# helper OperationPolicy"
 tags: [reference]
 evidence_for: "/rule/usecase/dca-use-012.md#c-helper-operationpolicy"
 ---

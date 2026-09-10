@@ -23,7 +23,7 @@ Does the use case call an output port that **may leave the process** — another
 
 ## What the rules enforce
 
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — a publishing use case has a boundary of either kind.
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — a publishing use case has a boundary of either kind.
 - [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) — a declaratively transactional use case calls no remote-capable port; only `Repository`, `Store`, `DomainEventPublisher`, `IntegrationEventPublisher` inside.
 - [Application layer must not use persistence or transaction frameworks](/rule/dotnet/dca-net-006.md) — the application layer never touches the persistence or transaction framework; the only place that knows how a transaction opens is the boundary's infrastructure implementation.
 
@@ -38,7 +38,7 @@ Moving the transactional part into a dedicated handler behind a decorator, so th
 ## Anchors
 
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
-- Rules: [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) · [Application layer must not use persistence or transaction frameworks](/rule/dotnet/dca-net-006.md)
+- Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) · [Application layer must not use persistence or transaction frameworks](/rule/dotnet/dca-net-006.md)
 - Guide: [Layer rules](/guide/readme/rules.md)
 - Recipe: [Add a bulk operation](/recipe/add-a-bulk-operation.md)
 - Pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Publishing domain events without a transaction](/pitfall/publishing-domain-events-without-a-transaction.md)

@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Use cases that publish domain events must have a transaction boundary — `callsBoundary`"
+title: "Use cases that save an aggregate or publish domain events must have a transaction boundary — `callsBoundary`"
 tags: [reference]
 evidence_for: "/rule/usecase/dca-use-012.md#callsboundary"
 ---

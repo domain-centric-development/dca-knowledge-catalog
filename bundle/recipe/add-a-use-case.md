@@ -30,7 +30,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 - [Commands/Queries/Results should be immutable (records)](/rule/usecase/dca-use-007.md)
 - [Results must not expose aggregate roots or entities](/rule/usecase/dca-use-015.md)
 - [DTOs must not be used in the application layer](/rule/usecase/dca-use-011.md)
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
 - [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md)
 - [Use case packages within a module must use one consistent depth — flat or grouped by feature](/rule/usecase/dca-use-014.md)
 - [Feature and use case packages within a module's application layer must not have cyclic dependencies](/rule/cycles/dca-cyc-005.md)

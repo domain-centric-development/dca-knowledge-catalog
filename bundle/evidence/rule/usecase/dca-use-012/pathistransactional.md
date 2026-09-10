@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Use cases that publish domain events must have a transaction boundary — `pathIsTransactional`"
+title: "Use cases that save an aggregate or publish domain events must have a transaction boundary — `pathIsTransactional`"
 tags: [reference]
 evidence_for: "/rule/usecase/dca-use-012.md#pathistransactional"
 ---

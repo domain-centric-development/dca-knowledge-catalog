@@ -26,7 +26,7 @@ Perform one operation over many aggregates at once — delete all, archive every
 ## Rules to satisfy (build-time checklist)
 
 - [Use cases that save an aggregate must publish its domain events](/rule/usecase/dca-use-009.md) — selects the use case but has nothing to check: no `save` is called, so it passes without a `publishAndClearEvents`.
-- [Use cases that publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — no domain events are published; the declarative boundary is there for atomicity of the port call, not for the rule.
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — no domain events are published; the declarative boundary is there for atomicity of the port call, not for the rule.
 - [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) — inside `@Transactional` only `Repository`, `Store`, `IntegrationEventPublisher`; a remote-capable port would force the explicit form.
 - [Repository interfaces must reside in the application layer's shared output-port package](/rule/tactical/dca-tac-014.md) — the extended port stays in `application/shared/`.
 - [Commands must end with `Command` and reside in the application package](/rule/usecase/dca-use-002.md)
