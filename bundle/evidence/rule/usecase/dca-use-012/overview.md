@@ -60,8 +60,7 @@ DcaRule.of(
                 .and()
                 .areNotInterfaces()
                 .should(
-                    beTransactionalWhenMutating(
-                        layout.frameworkAnnotations().transactional()))
+                    beTransactionalWhenMutating(layout.frameworkAnnotations().transactional()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix.")

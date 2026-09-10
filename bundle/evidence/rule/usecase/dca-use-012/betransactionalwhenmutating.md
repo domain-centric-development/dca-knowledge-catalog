@@ -10,9 +10,9 @@ evidence_for: "/rule/usecase/dca-use-012.md#betransactionalwhenmutating"
 ### `beTransactionalWhenMutating`
 
 ```java
-private static ArchCondition<JavaClass> beTransactionalWhenMutating(
-    List<String> transactional) {
-  return new ArchCondition<>("be transactional when saving an aggregate or publishing domain events") {
+private static ArchCondition<JavaClass> beTransactionalWhenMutating(List<String> transactional) {
+  return new ArchCondition<>(
+      "be transactional when saving an aggregate or publishing domain events") {
     @Override
     public void check(JavaClass item, ConditionEvents events) {
       IntraClassCalls calls = new IntraClassCalls(item);

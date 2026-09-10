@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "cf8a8ec8096fb806a76eac21f14ddefab92c9a36becc9da439a598e5d1b2f41d",
+  "bundle_sha256": "99b9a27d9dfdf6385430b73d451b3bc1381fd3bba6a5d97fd6af5c9af4955cb9",
   "counts": {
     "Decision": 22,
     "Guide": 11,
@@ -19,7 +19,7 @@
     "dotnet": {
       "DomainCentric.ArchRules": "0.4.0",
       "DomainCentric.ArchRules.Xunit": "0.4.0",
-      "DomainCentric.BuildingBlocks": "0.1.0"
+      "DomainCentric.BuildingBlocks": "0.1.1"
     },
     "java": {
       "archunitSpringModulithVersion": "0.2.0-SNAPSHOT",
@@ -30,16 +30,16 @@
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "17481ef1831cb8a0addba0706f3c22c84f1b685a",
-      "source_sha256": "e1c37a515c564d512601a21223e46374d0bf2f409f9473493a23e3c04e930acb"
+      "revision": "baf8ad897a2f76d01ebeb3fbdd6387ed216409a7",
+      "source_sha256": "3117d1bc609473597c8c770d963117d6c576ff4bc84286c75a8f82d64b64c216"
     },
     "dca-guide": {
       "revision": "259d4c6732dad1fd69fb5383dd2177ff3e8de1ec",
       "source_sha256": "41b43bcf03e510343fd9fa0be00daf30673701c839f0a68bddcabc83ff29f073"
     },
     "dca-java": {
-      "revision": "c0ba5e0b9e5c6cd3ce892b85d0ff2268dd97bf43",
-      "source_sha256": "0e6cc0852bd0fe285259a0e9f983b29f266c593e600e50b64478bf1fd16901fb"
+      "revision": "ab4dddd001219f79b4115415fb8e6c6915fff7c8",
+      "source_sha256": "742cc70e5d9470ec1e63bf5a8780b097796d55b1a21d3eafc75b8300722f28e6"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
