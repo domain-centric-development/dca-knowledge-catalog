@@ -18,6 +18,7 @@ Practical guide for browser-based end-to-end testing using Playwright with data-
 - [Page Object Pattern](/guide/e2e-testing/page-object-pattern.md)
 - [Test Organization](/guide/e2e-testing/test-organization.md)
 - [Writing E2E Tests](/guide/e2e-testing/writing-e2e-tests.md)
+- [One test per acceptance criterion](/guide/e2e-testing/one-test-per-acceptance-criterion.md)
 - [Best Practices](/guide/e2e-testing/best-practices.md)
 - [Anti-Patterns](/guide/e2e-testing/anti-patterns.md)
 - [CI/CD Integration](/guide/e2e-testing/ci-cd-integration.md)

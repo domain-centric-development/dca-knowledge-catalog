@@ -12,6 +12,7 @@ tags: [guide, section]
 - [Page Object Pattern](#page-object-pattern)
 - [Test Organization](#test-organization)
 - [Writing E2E Tests](#writing-e2e-tests)
+- [One test per acceptance criterion](#one-test-per-acceptance-criterion)
 - [Best Practices](#best-practices)
 - [Anti-Patterns](#anti-patterns)
 - [CI/CD Integration](#cicd-integration)

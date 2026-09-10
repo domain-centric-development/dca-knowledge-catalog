@@ -6,7 +6,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 
 - [decision/](decision/index.md) (22) — Decision guides for design forks (which pattern, when).
 - [evidence/](evidence/index.md) (103)
-- [guide/](guide/index.md) (130) — The compact implementation guide — patterns, governance, supplementary guides (full text).
+- [guide/](guide/index.md) (140) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (29) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (1) — Compounded query answers — synthesis made permanent.
 - [pitfall/](pitfall/index.md) (28) — Anti-patterns and the rules that forbid them.

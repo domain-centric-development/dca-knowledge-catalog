@@ -1,0 +1,58 @@
+---
+type: Section
+title: The stages and their hand-over files
+chapter: "Delivering a story: backlog, stages, gates"
+source: guide
+resource: dca-guide/factory.md
+tags: [guide, section]
+---
+
+One story runs through six stages. Every stage is a **closed assignment**: it reads the story and
+its predecessor's file, and it writes exactly one file of its own. No stage relies on a
+conversation, so a stage can run in a fresh context, in a separate process, or on another day
+without changing the result.
+
+| Stage | Reads | Writes |
+|---|---|---|
+| plan | the story, the glossary and context map if present | `tasks/<story>/plan.md` |
+| test | the story, `plan.md` | `tasks/<story>/tests.md` — with the criterion-to-test table |
+| build | the story, `plan.md`, `tests.md` | `tasks/<story>/build.md` |
+| tidy | the story, `plan.md`, `build.md`, the green code | `tasks/<story>/tidy.md` |
+| judge | the story, all predecessors, the diff | `tasks/<story>/judge.md` — with a verdict |
+| document | the story, all predecessors, the project's documents | `tasks/<story>/document.md` |
+
+The **plan** names the elements that change — aggregates, value objects, use cases with their ports,
+adapters — in the project's own vocabulary, and picks the shape of the end-user test per criterion
+from what the project can run *today*. It backs every statement about the code with a file and a
+line. It writes no code.
+
+The **test** stage writes one end-user test per acceptance criterion, plus unit tests for the
+invariants the story introduces, and records the mapping:
+
+```markdown
+| criterion | test |
+| --- | --- |
+| shows-empty-state | com.example.reporting.MonthlyReportPageTest#showsEmptyState |
+```
+
+It adds only the stubs the test sources need to compile, and a stub **refuses to answer** — it
+throws rather than returning a value, even an empty one. A stub that returns the answer a criterion
+expects makes the test green before any code exists, and a green test at this point proves nothing.
+
+The **build** stage makes those tests pass with the smallest change that works, following the plan's
+change list. An element the plan did not name is a sign the plan was wrong: it is noted, not quietly
+added. It never changes a test to make it pass.
+
+The **tidy** stage is the refactor half of red–green–refactor, which the build stage deliberately
+leaves undone. It works only inside the story's footprint, changes no test and changes no behaviour.
+A tidy stage that changes nothing and says why is finished, not skipped.
+
+The **judge** stage reviews the change from three perspectives that always run — the model, the
+boundaries, the craft — with a file and a line behind every finding, and returns one of three
+verdicts (below). A project may add further perspectives; it cannot switch the three off, because a
+review without the boundaries is not a review of a domain-centric architecture.
+
+The **document** stage brings the glossary, the context map and the project's reader documentation
+in line with what the story changed, and it carries the same duty of proof as the code: every path,
+file, class and command it names must exist, checked rather than remembered, and written as it
+resolves from the project root.

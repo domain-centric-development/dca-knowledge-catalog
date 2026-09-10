@@ -5,7 +5,8 @@
 - [clean-architecture-comparison/](clean-architecture-comparison/index.md) (11)
 - [deployment-patterns/](deployment-patterns/index.md) (6)
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (8)
-- [e2e-testing/](e2e-testing/index.md) (10)
+- [e2e-testing/](e2e-testing/index.md) (11)
+- [factory/](factory/index.md) (8)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (17)
 - [language-mappings/](language-mappings/index.md) (11)
 - [readme/](readme/index.md) (14)
@@ -18,6 +19,7 @@
 - [Deployment Patterns](deployment-patterns.md) — Deployment Patterns
 - [Domain Services with Data Dependencies](domain-services-with-data-dependencies.md) — Domain Services with Data Dependencies
 - [E2E Testing for Domain-Centric Architecture](e2e-testing.md) — Practical guide for browser-based end-to-end testing using Playwright with data-test attributes and the Page Object P...
+- [Delivering a story: backlog, stages, gates](factory.md) — Domain-Centric Architecture says how an application is shaped. This document says how one piece of
 - [JWT Implementation Guide](jwt-implementation-guide.md) — Reference guide for JWT-based authentication in a multiservice e-commerce platform. Covers token design, login state ...
 - [Language Mappings: Java/Spring ↔ C#/.NET](language-mappings.md) — Language Mappings: Java/Spring ↔ C#/.NET
 - [Domain-Centric Architecture](readme.md) — Domain-Centric Architecture

@@ -5,6 +5,7 @@
 - [CI/CD Integration](ci-cd-integration.md) — // build.gradle
 - [Data-Test Attributes](data-test-attributes.md) — Brittle selectors couple tests to UI implementation details:
 - [Introduction](introduction.md) — E2E tests verify the complete user journey through your application. In domain-centric architecture, E2E tests sit at...
+- [One test per acceptance criterion](one-test-per-acceptance-criterion.md) — An end-user test earns its cost when it is the evidence for a stated criterion, and it is easiest to
 - [Page Object Pattern](page-object-pattern.md) — Page Objects encapsulate page-specific selectors and interactions, providing:
 - [Related Documentation](related-documentation.md) — Related Documentation
 - [Table of Contents](table-of-contents.md) — Table of Contents
