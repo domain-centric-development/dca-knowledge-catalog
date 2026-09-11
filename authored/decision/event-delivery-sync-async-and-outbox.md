@@ -42,4 +42,4 @@ review remote-capable calls and transaction scope explicitly.
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
 - Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Layer rules](/guide/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/integration-patterns.md)
-- Related: [Note: domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)
+- Related: [Note: domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md) · [Pitfall: an event listener performs the external effect itself](/pitfall/event-listener-performs-the-external-effect.md)
