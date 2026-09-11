@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "76d5cabcb0465b67e92bf60f8e7943b25ca757b2c333c72f9bb7127537492ec6",
+  "bundle_sha256": "b832ca4088392f9ac4b9238781733fe1c8fe5082dd89abba8a2e4440101c1372",
   "counts": {
     "Decision": 22,
     "Guide": 20,
@@ -34,8 +34,8 @@
       "source_sha256": "3117d1bc609473597c8c770d963117d6c576ff4bc84286c75a8f82d64b64c216"
     },
     "dca-guide": {
-      "revision": "329b0c79790c8048596cd727c0e27235d03fb60e",
-      "source_sha256": "386d3dd42668e1238f5d6e246f8f34bb88e86dc600cdf0ef2a4bf9b97b3ac0de"
+      "revision": "5978c25a66e645d3790fe2c0bdc7efcc91f55963",
+      "source_sha256": "981152458f3064dc7f1935ce61fee92c53cbf3b853c8fe2203384cbdf0815f88"
     },
     "dca-java": {
       "revision": "ab4dddd001219f79b4115415fb8e6c6915fff7c8",
