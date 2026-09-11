@@ -21,7 +21,7 @@ tags: [guide, section]
 - Ensures deployment self-service
 
 **Example:**
-```
+```text
 Order Team Deployment:
 ├── CI/CD Pipeline: TeamCity (provided by Platform)
 ├── Deployment: Kubernetes (provided by Platform)
@@ -46,7 +46,7 @@ Order Team Deployment:
 - Self-service dashboards
 
 **Example:**
-```
+```text
 Order Team Monitoring:
 ├── Infrastructure: Prometheus + Grafana (Platform Team)
 ├── Dashboards: Custom Order metrics (Order Team)

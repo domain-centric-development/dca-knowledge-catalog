@@ -10,7 +10,7 @@ tags: [guide, section]
 ### With Modular Monolith (Spring Modulith)
 
 **Team Structure:**
-```
+```text
 Single Deployment, Multiple Teams
 ┌─────────────────────────────────────────┐
 │  E-Commerce Application                 │
@@ -43,7 +43,7 @@ Single Deployment, Multiple Teams
 ### With Microservices
 
 **Team Structure:**
-```
+```text
 ┌────────┐     ┌──────────────────────┐     ┌────────┐
 │ Order  │     │ Spring Boot App      │     │Inventory│
 │Service │     │ ┌────────┐          │     │Service │

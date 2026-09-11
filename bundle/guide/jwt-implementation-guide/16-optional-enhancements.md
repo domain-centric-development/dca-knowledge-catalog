@@ -7,7 +7,7 @@ resource: dca-guide/topics/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 
-```
+```text
 [ ] Multi-level authentication (soft login / full login) with loginTyp claim
 [ ] Multi-country / multi-tenant support with tenant claim and per-tenant validation
 [ ] Field-level AES encryption of sensitive claims (alternative to full JWE — see below)
@@ -29,7 +29,7 @@ tags: [guide, section]
 
 A lightweight revocation alternative for topologies that deliberately run **without refresh tokens** (longer-lived access token, e.g. 30 minutes, as the only credential): store one **"valid-after" timestamp per user**, updated on logout, password change, or suspension. On verification, reject any token issued before the watermark:
 
-```
+```text
 tokenValid = token.iat >= user.tokenValidAfter
 ```
 
@@ -43,7 +43,7 @@ One indexed timestamp per user buys forced revocation without a token blacklist 
 
 A practical middle ground between an unprotected payload (standard JWS) and full payload encryption (JWE): encrypt only the sensitive claim value before embedding it in the JWT.
 
-```
+```text
 1. AES-encrypt rawUserId  →  encryptedValue
 2. Embed encryptedValue as the claim (e.g. "uniqueUserId": "<AES_ENCRYPTED>")
 3. Sign the JWT normally (JWS)
@@ -61,7 +61,7 @@ The token is human-readable except for the encrypted field. This protects the se
 
 **Key versioning for rotation:** prefix the encrypted value with the key ID (as above) so the decryption side can select the correct key from a key map and fall back to older keys for in-flight tokens:
 
-```
+```text
 V2:<base64(AES_V2_encrypt(rawUserId))>
 ```
 

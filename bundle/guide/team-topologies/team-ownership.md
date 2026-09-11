@@ -18,7 +18,7 @@ tags: [guide, section]
 - Responsibility for published interfaces/APIs
 
 **Example:**
-```
+```text
 Order Team owns Order Bounded Context
 ├── domain/ (Order, OrderLine, Money)
 ├── application/ (CreateOrderUseCase, CancelOrderUseCase)
@@ -60,7 +60,7 @@ Order Team owns Order Bounded Context
 - Anti-Corruption Layer for consuming external APIs
 
 **Example:**
-```
+```text
 Order Team's APIs:
 ├── REST API: POST /orders, GET /orders/{id}
 ├── Integration Events: OrderCreatedEvent, OrderCancelledEvent

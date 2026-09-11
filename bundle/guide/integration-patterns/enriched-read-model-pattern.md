@@ -9,15 +9,20 @@ tags: [guide, section]
 
 When you need to **combine persisted data with fresh external data** for rich domain logic (e.g., comparing original price to current price), create an **Enriched Read Model**.
 
+```mermaid
+flowchart LR
+    A["<b>CheckoutLineItem</b><br><i>persisted</i><br>unitPrice · quantity · productName"]
+    B["<b>CheckoutArticle</b><br><i>fresh, from the provider</i><br>currentPrice · isAvailable · availableStock"]
+    C["<b>EnrichedCheckoutLineItem</b><br><i>read model</i><br>hasPriceChanged() · priceDifference()<br>isValidForCheckout()"]
+    A --> C
+    B --> C
 ```
-Persisted Data                Fresh External Data        Enriched Read Model
-┌─────────────────┐          ┌─────────────────┐        ┌─────────────────────────┐
-│ CheckoutLineItem│    +     │ CheckoutArticle │   =    │ EnrichedCheckoutLineItem│
-│ - unitPrice     │          │ - currentPrice  │        │ - hasPriceChanged()     │
-│ - quantity      │          │ - isAvailable   │        │ - priceDifference()     │
-│ - productName   │          │ - availableStock│        │ - isValidForCheckout()  │
-└─────────────────┘          └─────────────────┘        └─────────────────────────┘
-```
+
+The read model answers questions neither side can answer alone. It is a value object in
+`{context}/domain/model/`, assembled by a static factory from the aggregate plus a plain carrier of
+the external data — fetched through this context's own output port, never by importing the other
+context. No identity, no lifecycle, no events: it owns the read rules that span both sides, and
+nothing else.
 
 **Example:**
 ```java

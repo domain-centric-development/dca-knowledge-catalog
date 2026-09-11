@@ -37,7 +37,7 @@ tags: [guide, section]
 - Transfers knowledge to reduce future cognitive load
 
 **Example - Reducing Load:**
-```
+```text
 Before:
 Order Team manages:
 ├── Order domain (intrinsic load)

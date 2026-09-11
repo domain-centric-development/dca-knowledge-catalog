@@ -9,26 +9,13 @@ tags: [guide, section]
 
 ### Recommended Evolution
 
-```
-Phase 1: Modular Monolith
-└─ Start here for new projects
-   └─ Clear module boundaries
-      └─ Domain events between modules
-
-Phase 2: Extract First SCS
-└─ When one module has very different needs
-   └─ Extract highest-value module first
-      └─ Keep rest as monolith
-
-Phase 3: Multiple SCS
-└─ Extract additional SCS as needed
-   └─ Based on team structure
-      └─ Based on scaling needs
-
-Phase 4: Multi-Service BC (rarely needed)
-└─ Only when BC is very large
-   └─ And subdomain boundaries are clear
-      └─ And team is very mature
+```mermaid
+flowchart TD
+    P1["<b>Phase 1 — modular monolith</b><br>where new projects start<br>clear module boundaries, events between them"]
+    P2["<b>Phase 2 — extract the first SCS</b><br>when one module's needs diverge<br>highest value first, the rest stays"]
+    P3["<b>Phase 3 — several SCS</b><br>driven by team structure<br>and by what actually has to scale"]
+    P4["<b>Phase 4 — several services in one context</b><br>rarely needed: only for a very large context<br>with clear subdomain boundaries and a ready team"]
+    P1 --> P2 --> P3 --> P4
 ```
 
 **Anti-Pattern:** Starting with microservices before understanding domain boundaries.

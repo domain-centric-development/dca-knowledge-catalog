@@ -10,7 +10,7 @@ tags: [guide, section]
 The backlog is markdown with front matter, one file per item, readable and reviewable without any
 tooling — no database, and no JSON as the source of truth.
 
-```
+```text
 backlog/
   <epic>/
     epic.md          the epic

@@ -7,7 +7,7 @@ resource: dca-guide/architecture/quick-reference.md
 tags: [guide, section]
 ---
 
-```
+```text
 Layer          | Framework annotations | Example
 ---------------+-----------------------+------------------------------------
 Domain         | never                 | pure Java / C# only

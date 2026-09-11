@@ -45,7 +45,7 @@ For core event patterns, see [Domain-Centric Architecture - Event Rules](/guide/
 - **Example:** `OrderLineAddedInternalEvent` between Order Management Service and Order Pricing Service (both in Order BC)
 
 **Key Distinction:**
-```
+```text
 Order BC (Single Bounded Context)
 ├── Order Management Service
 │   └── publishes: OrderLineAddedInternalEvent
@@ -62,28 +62,17 @@ They only see public Integration Events like OrderCreatedEvent.
 
 ### Decision Tree: When to Decompose?
 
-```
-START: One Bounded Context
-
-↓
-
-Question 1: Is there a clear subdomain boundary within the BC?
-├─ NO → Keep as single service (modular monolith)
-└─ YES → Continue ↓
-
-Question 2: Do different parts have different scalability needs?
-├─ NO → Consider keeping as single service
-└─ YES → Continue ↓
-
-Question 3: Can you clearly define service boundaries and contracts?
-├─ NO → Keep as single service until boundaries are clear
-└─ YES → Continue ↓
-
-Question 4: Is your team mature enough to handle distributed complexity?
-├─ NO → Start with modular monolith, extract services later
-└─ YES → Consider multi-service decomposition ↓
-
-DECISION: Split into multiple services within same Bounded Context
+```mermaid
+flowchart TD
+    START(["One bounded context"]) --> Q1{"A clear subdomain boundary<br>inside the context?"}
+    Q1 -- no --> KEEP1["Keep one service —<br>a modular monolith"]
+    Q1 -- yes --> Q2{"Do the parts have different<br>scalability needs?"}
+    Q2 -- no --> KEEP2["Probably keep one service"]
+    Q2 -- yes --> Q3{"Can you state the service<br>boundaries and contracts?"}
+    Q3 -- no --> KEEP3["Keep one service until<br>the boundaries are clear"]
+    Q3 -- yes --> Q4{"Is the team ready for<br>distributed operation?"}
+    Q4 -- no --> KEEP4["Start as a modular monolith,<br>extract services later"]
+    Q4 -- yes --> SPLIT["Several services inside<br>the same bounded context"]
 ```
 
 **Default Recommendation:** Start with **one service per bounded context** (modular monolith or single SCS). Extract services later when needed.
@@ -94,7 +83,7 @@ DECISION: Split into multiple services within same Bounded Context
 
 **Scenario:** Order Bounded Context split into 3 services
 
-```
+```text
 order-bounded-context/ (Git Repository)
 │
 ├── order-management-service/
@@ -183,7 +172,7 @@ order-bounded-context/ (Git Repository)
 
 ### Internal Event Communication Pattern
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                 ORDER BOUNDED CONTEXT                           │
 │                                                                 │
@@ -220,26 +209,21 @@ order-bounded-context/ (Git Repository)
 ```
 
 **Contrast with Integration Events:**
+```mermaid
+flowchart TD
+    subgraph ORDER["ORDER CONTEXT — its own service"]
+        UC["CreateOrderUseCase"] --> IE["OrderCreatedEvent<br><i>integration contract</i>"]
+    end
+    IE --> BROKER{{"Message broker<br><i>a Kafka topic, for example</i>"}}
+    subgraph INV["INVENTORY CONTEXT — its own service"]
+        CONS["Event consumer"] --> ACL["Anti-corruption layer<br>OrderCreatedEvent → ReserveStockCommand"]
+        ACL --> UC2["ReserveStockUseCase"]
+    end
+    BROKER --> CONS
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  ORDER BC → INVENTORY BC (Different Bounded Contexts)           │
-│                                                                 │
-│  Order Management Service (Order BC)                            │
-│      │                                                          │
-│      ↓ publishes: OrderCreatedEvent (Integration Event)         │
-│      │                                                          │
-│      ↓ via External Message Broker (Kafka topic)                │
-│      │                                                          │
-│      ↓                                                          │
-│  Inventory Service (Inventory BC)                               │
-│      │                                                          │
-│      ↓ ACL converts: OrderCreatedEvent → ReserveStockCommand    │
-│      │                                                          │
-│      ↓ ReserveStockUseCase                                      │
-│                                                                 │
-│  ACL needed - different ubiquitous languages across BCs         │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+The anti-corruption layer is not optional here: the two contexts speak different ubiquitous
+languages, and the contract is written in the producer's.
 
 ## Related mentions (heuristic)
 

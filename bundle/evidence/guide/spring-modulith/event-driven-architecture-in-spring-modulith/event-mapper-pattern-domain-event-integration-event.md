@@ -12,7 +12,7 @@ evidence_for: "/guide/spring-modulith/event-driven-architecture-in-spring-moduli
 The **Event Mapper** is the outbound equivalent of ACL - it translates internal domain events into external integration events.
 
 **Structure:**
-```
+```text
 Producing Module (Order):
 │
 ├── domain/event/

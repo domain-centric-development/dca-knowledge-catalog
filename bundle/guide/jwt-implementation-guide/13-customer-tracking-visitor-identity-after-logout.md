@@ -57,7 +57,7 @@ So "rotating on logout is safer but worse for tracking" is true only while one i
 jobs. Separated, rotation costs exactly one thing: linking this browser's *future* anonymous sessions
 to its past ones — which is what someone who deliberately logs out is asking you not to do.
 
-```
+```text
 shop-session   session         short    expiry is harmless
 shop-refresh   renewal         long     path-scoped, rotating
 shop-identity  cart identity   long     rotates only on explicit logout

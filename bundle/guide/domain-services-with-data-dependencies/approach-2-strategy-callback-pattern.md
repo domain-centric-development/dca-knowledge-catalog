@@ -123,7 +123,7 @@ The call in the Use Case stays identical — Java's lambda compatibility ensures
 
 ### Data Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ Application Layer                                                           │
 │                                                                             │

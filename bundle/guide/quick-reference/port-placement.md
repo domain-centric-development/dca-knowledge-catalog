@@ -7,7 +7,7 @@ resource: dca-guide/architecture/quick-reference.md
 tags: [guide, section]
 ---
 
-```
+```text
 Port type | Interface declared in | Implemented in    | Called by
 ----------+-----------------------+-------------------+------------------
 Input     | application           | application       | adapter/incoming

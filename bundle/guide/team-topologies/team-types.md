@@ -25,7 +25,7 @@ tags: [guide, section]
 - Continuous delivery
 
 **Example:**
-```
+```text
 Order Team (Stream-Aligned)
 ├── Owns: Order Bounded Context
 ├── Full stack: Backend + Frontend + Database
@@ -52,7 +52,7 @@ Order Team (Stream-Aligned)
 - Developer tools
 
 **Example:**
-```
+```text
 Platform Team
 ├── Provides: Postgres Database as a Service
 ├── API: Self-service provisioning
@@ -81,7 +81,7 @@ Platform Team
 - Testing strategies
 
 **Example:**
-```
+```text
 Enabling Team
 ├── Expertise: DDD, Event Sourcing, CQRS
 ├── Engagement: 2-week pairing with Inventory Team
@@ -108,7 +108,7 @@ Enabling Team
 - Geospatial calculations
 
 **Example:**
-```
+```text
 Pricing Engine Team (Complicated-Subsystem)
 ├── Owns: Complex ML-based pricing algorithm
 ├── Provides: Pricing API

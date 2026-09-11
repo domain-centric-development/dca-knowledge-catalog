@@ -31,14 +31,14 @@ dependencies {
 </dependency>
 ```
 
-```
+```text
 dotnet add package DomainCentric.BuildingBlocks            # .NET twin: I-prefixed interfaces, attributes, async ports
 dotnet add package DomainCentric.ArchRules.Xunit           # same rule ids, xUnit base class
 ```
 
 What the library defines, by package (Java) and namespace (.NET):
 
-```
+```text
 dev.domaincentric.dca.buildingblocks            DomainCentric.BuildingBlocks
 ├── ddd.tactical                                ├── Ddd.Tactical
 │   Id, Entity, Value, AggregateRoot,           │   IId, IEntity, IValue, IAggregateRoot,
@@ -66,7 +66,7 @@ The rest of this guide names the Java types; the .NET names follow the host lang
 (`I` prefix, attributes, `Async` suffix) — see [Language Mappings](/guide/language-mappings.md).
 
 **Structure of the application's shared kernel:**
-```
+```text
 sharedkernel/                      # @SharedKernel on package-info.java
 ├── application/
 │   └── shared/                    # Application-specific ports shared by several contexts
@@ -112,16 +112,29 @@ implementation("dev.domaincentric:dca-spring:0.1.0")
 > code, not a library class) and `spring-modulith-events-api` for the listener annotation itself.
 
 **Port Interface Hierarchy** (defined by the library):
+```mermaid
+classDiagram
+    direction LR
+    class InputPort { <<marker>> }
+    class UseCase~INPUT, OUTPUT~ { execute(INPUT) OUTPUT }
+    class OrderInputPort["*InputPort"] { <<your context>> }
+    InputPort <|-- UseCase~INPUT, OUTPUT~
+    UseCase~INPUT, OUTPUT~ <|-- OrderInputPort
+
+    class OutputPort { <<marker>> }
+    class Repository~T, ID~ { findById(ID) T~Optional~ }
+    class Store { <<marker>> }
+    class DomainEventPublisher { <<marker>> }
+    class IntegrationEventPublisher { <<marker>> }
+    OutputPort <|-- Repository~T, ID~
+    OutputPort <|-- Store
+    OutputPort <|-- DomainEventPublisher
+    OutputPort <|-- IntegrationEventPublisher
 ```
-Input Ports (hexagonal.port.in)      Output Ports (hexagonal.port.out)
-┌────────────────────────────┐       ┌─────────────────────────────────┐
-│ InputPort (marker)         │       │ OutputPort (marker)             │
-│   └── UseCase<INPUT,OUTPUT>│       │   ├── Repository<T, ID>         │
-│         └── *InputPort     │       │   ├── Store                     │
-└────────────────────────────┘       │   ├── DomainEventPublisher      │
-                                     │   └── IntegrationEventPublisher │
-                                     └─────────────────────────────────┘
-```
+
+`InputPort` and `UseCase` live in `hexagonal.port.in`, the output side in
+`hexagonal.port.out`. Only the last box on the input side is yours: a context declares
+`*InputPort extends UseCase<Command, Result>` and implements it with its use case.
 
 Only *generic* contracts are building blocks: interfaces that assign an architectural role and
 carry no business methods. A port with domain-specific methods — even one that several bounded

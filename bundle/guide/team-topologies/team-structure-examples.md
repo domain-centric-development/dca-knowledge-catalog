@@ -9,7 +9,7 @@ tags: [guide, section]
 
 ### E-Commerce Organization
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │  Platform Team                              │
 │  - Database as a Service                    │

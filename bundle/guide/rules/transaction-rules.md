@@ -47,13 +47,17 @@ public class CreateOrderUseCase implements CreateOrderInputPort {
 ```
 
 ### Eventual Consistency Example
+```mermaid
+flowchart LR
+    O["<b>Order</b><br>aggregate modified<br>OrderCreated published"]
+    I["<b>Inventory</b><br>aggregate modified<br>StockReserved published"]
+    C["<b>Customer</b><br>loyalty points updated"]
+    O -- "async, own transaction" --> I
+    I -- "async, own transaction" --> C
 ```
-Order Aggregate modified → OrderCreated event published
-    ↓ (async, separate transaction)
-Inventory Aggregate modified → StockReserved event published
-    ↓ (async, separate transaction)
-Customer Aggregate notified → Loyalty points updated
-```
+
+One aggregate per transaction. Each consumer commits its own, and the chain is consistent only
+once the last one has.
 
 ### Remote Port Example — Boundary Drawn by Hand
 ```java

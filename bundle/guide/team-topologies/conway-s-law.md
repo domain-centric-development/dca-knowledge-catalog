@@ -29,7 +29,7 @@ tags: [guide, section]
 4. Use appropriate interaction modes
 
 **Example:**
-```
+```text
 Desired Architecture:
 ├── Order BC (independent)
 ├── Customer BC (independent)

@@ -7,7 +7,7 @@ resource: dca-guide/architecture/quick-reference.md
 tags: [guide, section]
 ---
 
-```
+```text
 Layer          | May depend on
 ---------------+-----------------------------------------------------------
 Domain         | nothing, or shared-kernel domain concepts

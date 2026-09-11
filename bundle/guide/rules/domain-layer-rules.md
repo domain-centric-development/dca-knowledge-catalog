@@ -84,29 +84,34 @@ tags: [guide, section]
 Invariant in all styles: flat, serializable, versioned — never aggregate references.
 
 **Decision Tree: Domain Event or Integration Event?**
+```mermaid
+flowchart TD
+    START(["Something happened in the domain"]) --> DE["Register a <b>domain event</b> on the aggregate<br>— always, and always first"]
+    DE --> Q{"Does the fact have to leave<br>the bounded context?"}
+    Q -- no --> DONE["Done. The event stays internal."]
+    Q -- yes --> IE["Add an <b>integration event</b>:<br>the contract other contexts consume"]
+    IE --> TR["An outgoing adapter translates<br>domain event → contract"]
+    TR --> DELIVER{"One deployable,<br>or several?"}
+    DELIVER -- one --> INPROC["In-process registry<br><i>Spring Modulith, an own publisher</i>"]
+    DELIVER -- several --> BROKER["Message broker<br><i>Kafka, RabbitMQ, …</i>"]
 ```
-START: Something happened in the domain
-   │
-   ├─ Does it need to cross bounded context boundaries?
-   │     NO → Domain Event only
-   │     │     - Define in: {context}/domain/event/
-   │     │     - Name: past tense (e.g., OrderCreated)
-   │     │     - Contains: domain objects OK
-   │     │
-   │     YES ↓
-   │
-   ├─ Create Domain Event FIRST (always)
-   │     - Define in: {context}/domain/event/
-   │     - Published via DomainEventPublisher
-   │     ↓
-   │
-   └─ Create Integration Event (for external consumers)
-         - Define in: {context}/events/
-         - Name: past tense + "Event" suffix (e.g., OrderCreatedEvent)
-         - Contains: only primitives and serializable types
-         - Created by: Event Mapper in adapter layer
-         - Published to: message broker (Kafka, RabbitMQ)
-```
+
+**Domain event** — `{context}/domain/event/`, named in the past tense (`OrderCreated`), may carry
+domain objects, carries a timestamp (`DCA-ADV-008`) and no schema version (`DCA-ADV-007`).
+
+**Integration event** — the published contract. It lives in the context's `events/` segment
+(`DCA-STR-007`), carries the `Event` suffix and `@IntegrationEventType(name, version)`
+(`DCA-ADV-005`), holds only primitives and serializable types, and is immutable (`DCA-STR-008`).
+The schema version belongs to that type metadata, never to the payload (`DCA-ADV-006`).
+
+**The translator** is an outgoing adapter in `adapter/outgoing/event/`: it listens for the domain
+event and publishes the contract. Transport and storage are separate adapters again.
+
+**Delivery follows the deployment, not the boundary.** Inside one deployable, an in-process registry
+carries the contract across a context boundary — that is what the reference implementation does, and
+the boundary is no less real for it. Once the contexts are deployed separately, the same contract
+goes over a broker: Kafka, RabbitMQ, whatever the operation runs. The contract does not change, the
+adapter behind it does. Nothing above this line depends on the answer.
 
 ### Event Publishing Rules
 - Use cases call DomainEventPublisher (Output Port) to publish events

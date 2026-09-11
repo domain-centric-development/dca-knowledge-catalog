@@ -9,7 +9,7 @@ tags: [guide, section]
 
 New ports and use cases consistent with existing patterns:
 
-```
+```text
 account/application/shared/
 ├── LoginAttemptRepository.java      -- NEW output port; extends OutputPort
 └── RefreshTokenRepository.java      -- NEW output port; extends OutputPort

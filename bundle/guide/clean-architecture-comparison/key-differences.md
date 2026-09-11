@@ -140,7 +140,7 @@ public class CreateOrderUseCase {
 ### 5. Package Structure
 
 **Clean Architecture (typical):**
-```
+```text
 com.company.project
 ├── entities/
 │   ├── Order.java
@@ -157,7 +157,7 @@ com.company.project
 ```
 
 **Domain-Centric Architecture:**
-```
+```text
 com.company.project
 ├── order/ (bounded context)
 │   ├── domain/

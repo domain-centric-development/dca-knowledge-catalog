@@ -9,23 +9,27 @@ tags: [guide, section]
 
 When a context needs data from **multiple** Open Host Services, use a **Composite Adapter** to aggregate the data in one place.
 
+```mermaid
+flowchart LR
+    subgraph CONSUMER["CONSUMER CONTEXT"]
+        direction TB
+        PORT["application/shared/<br><b>ArticleDataPort</b><br><i>one output port</i>"]
+        ADP["adapter/outgoing/product/<br><b>CompositeArticleDataAdapter</b>"]
+        ADP -. implements .-> PORT
+    end
+    subgraph PROVIDERS["PROVIDER CONTEXTS"]
+        direction TB
+        P1["ProductCatalog<br><i>OHS — names</i>"]
+        P2["Pricing<br><i>OHS — prices</i>"]
+        P3["Inventory<br><i>OHS — stock</i>"]
+    end
+    ADP --> P1
+    ADP --> P2
+    ADP --> P3
 ```
-Context A (Consumer)                    Provider Contexts
-┌─────────────────────────────────┐    ┌───────────────────┐
-│ application/shared/             │    │ ProductCatalog    │
-│   ArticleDataPort               │    │ (OHS - names)     │
-│   (output port)                 │    └───────────────────┘
-└────────────────┬────────────────┘    ┌───────────────────┐
-                 │ implements          │ Pricing           │
-                 ▼                     │ (OHS - prices)    │
-┌─────────────────────────────────┐    └───────────────────┘
-│ adapter/outgoing/product/       │    ┌───────────────────┐
-│   CompositeArticleDataAdapter   │───▶│ Inventory         │
-│   - ProductCatalogService       │    │ (OHS - stock)     │
-│   - PricingService              │    └───────────────────┘
-│   - InventoryService            │
-└─────────────────────────────────┘
-```
+
+The consumer's application layer sees one port and one shape of data. That three contexts were
+asked, and in which order, is the adapter's business alone.
 
 **Example:**
 ```java

@@ -24,7 +24,7 @@ package com.company.ecommerce.shared;
 
 ### Structure
 
-```
+```text
 com.company.ecommerce.shared/
 ├── package-info.java (@ApplicationModule with Type.OPEN)
 ├── domain/model/        ← Universal value objects

@@ -10,7 +10,7 @@ tags: [guide, section]
 The same shape in C#: **one project per bounded context**, folders for the layers, PascalCase
 segments. A context is declared by a marker class in its root namespace (C# has no `package-info`).
 
-```
+```text
 src/
 ├── Company.Project.{Context}/        one assembly per bounded context (namespace Company.Project.{Context})
 │   ├── {Context}Context.cs           [BoundedContext], [Upstream], [Partnership] — the context declaration

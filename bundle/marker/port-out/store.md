@@ -43,3 +43,4 @@ Repository
 - [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
 - [Rules of thumb](/guide/repository-vs-store/rules-of-thumb.md)
 - [Store](/guide/repository-vs-store/store.md)
+- [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

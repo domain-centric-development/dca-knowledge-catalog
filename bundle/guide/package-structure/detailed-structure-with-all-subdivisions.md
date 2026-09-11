@@ -7,7 +7,7 @@ resource: dca-guide/architecture/package-structure.md
 tags: [guide, section]
 ---
 
-```
+```text
 com.company.project
 │
 ├── order (bounded context)

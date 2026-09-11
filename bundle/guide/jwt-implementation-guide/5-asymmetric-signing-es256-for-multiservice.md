@@ -45,7 +45,7 @@ Services fetch and cache the JWKS on startup; refresh on cache miss for unknown 
 
 Verifying services should resolve the public key for a token's `kid` against a local in-memory cache rather than fetching the JWKS per request:
 
-```
+```text
 getPublicKey(kid):
     if cache.has(kid): return cache[kid]          // fast path, no lock
     synchronized:

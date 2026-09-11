@@ -36,7 +36,7 @@ app:
 
 Consistent with the existing output port pattern:
 
-```
+```text
 account/application/shared/
 └── LoginAttemptRepository.java    -- extends OutputPort; called before + after credential check
 ```

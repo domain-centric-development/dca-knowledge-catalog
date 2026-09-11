@@ -11,7 +11,7 @@ tags: [guide, section]
 
 **Definition:** In Spring Modulith, **one top-level package = one module**
 
-```
+```text
 com.company.ecommerce
 ├── order/          ← Module (= Bounded Context)
 ├── customer/       ← Module (= Bounded Context)

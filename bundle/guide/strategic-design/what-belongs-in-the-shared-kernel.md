@@ -35,28 +35,19 @@ tags: [guide, section]
 - Use versioning if Shared Kernel becomes a separate module
 
 **Decision Tree: Should This Go in Shared Kernel?**
-```
-START: I have code that might be shared
-   │
-   ├─ Is it used by 2+ bounded contexts?
-   │     NO → Keep in single context
-   │     YES ↓
-   │
-   ├─ Does it have IDENTICAL meaning everywhere?
-   │     NO → Duplicate instead (different models OK)
-   │     YES ↓
-   │
-   ├─ Is it a generic marker or base port (a role, no business method)?
-   │     YES → It is a building block: use the library's type, or propose it there
-   │     NO ↓
-   │
-   ├─ Is it a universal value object (Money, Address)?
-   │     YES → Add to sharedkernel/domain/model/
-   │     NO ↓
-   │
-   └─ Is it a port with business methods that every context reads the same way?
-         YES → Add to sharedkernel/application/shared/
-         NO → Probably shouldn't be in Shared Kernel
+```mermaid
+flowchart TD
+    START(["I have code that might be shared"]) --> Q1{"Used by two or more<br>bounded contexts?"}
+    Q1 -- no --> KEEP["Keep it in the one context"]
+    Q1 -- yes --> Q2{"Identical meaning<br>in every one of them?"}
+    Q2 -- no --> DUP["Duplicate it —<br>different models are fine"]
+    Q2 -- yes --> Q3{"A generic marker or base port —<br>a role, no business method?"}
+    Q3 -- yes --> BB["It is a building block:<br>use the library's type,<br>or propose it there"]
+    Q3 -- no --> Q4{"A universal value object?<br>Money, Address"}
+    Q4 -- yes --> VO["sharedkernel/domain/model/"]
+    Q4 -- no --> Q5{"A port with business methods<br>every context reads the same way?"}
+    Q5 -- yes --> PORT["sharedkernel/application/shared/"]
+    Q5 -- no --> OUT["Probably does not belong<br>in the shared kernel"]
 ```
 
 **Example - Shared Value Object:**

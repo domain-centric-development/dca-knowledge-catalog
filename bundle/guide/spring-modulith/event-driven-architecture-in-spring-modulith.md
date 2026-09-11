@@ -234,7 +234,7 @@ When consuming integration events from other modules, use an **Anti-Corruption L
 - **Decoupling** - Module's domain remains independent
 
 **Pattern Structure:**
-```
+```text
 Consuming Module (Inventory):
 │
 ├── adapter/incoming/event/          ← consuming is an incoming adapter
@@ -459,7 +459,7 @@ public class ReserveStockUseCase implements ReserveStockInputPort {
 The **Event Mapper** is the outbound equivalent of ACL - it translates internal domain events into external integration events.
 
 **Structure:**
-```
+```text
 Producing Module (Order):
 │
 ├── domain/event/

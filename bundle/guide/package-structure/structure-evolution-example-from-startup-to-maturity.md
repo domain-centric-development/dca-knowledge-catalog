@@ -13,7 +13,7 @@ This example shows how a bounded context's structure naturally evolves as comple
 
 **Use Case Organization - Self-Contained Pattern:**
 
-```
+```text
 APPLICATION LAYER
 ├── createorder/                   (USE CASE - All related files together)
 │   ├── CreateOrderInputPort.java      ← Input Port Interface
@@ -75,7 +75,7 @@ APPLICATION LAYER
 
 **When the flat list outgrows itself — features:**
 
-```
+```text
 APPLICATION LAYER (grouped form)
 ├── ordering/                      (FEATURE - a term of the ubiquitous language)
 │   ├── createorder/                   ← use case, unchanged inside

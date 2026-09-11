@@ -10,7 +10,7 @@ tags: [guide, section]
 You can combine approaches:
 
 **Hybrid Approach:**
-```
+```text
 ✅ Use Clean Architecture layers (from Clean Architecture)
 ✅ Use DDD patterns in Domain layer (from Domain-Centric)
 ✅ Use Presenters OR DTOs (choose what fits)
@@ -19,7 +19,7 @@ You can combine approaches:
 ```
 
 **Example:**
-```
+```text
 com.company.project
 ├── order/ (Bounded Context - from DCA)
 │   ├── entities/ (Clean Architecture terminology)

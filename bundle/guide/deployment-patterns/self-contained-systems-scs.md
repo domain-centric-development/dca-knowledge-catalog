@@ -18,7 +18,7 @@ A **Self-Contained System** is an autonomous, independently deployable unit that
 
 ### SCS Characteristics
 
-```
+```text
 ┌──────────────────────────────────────┐
 │  Self-Contained System (SCS)         │
 │                                      │
@@ -60,12 +60,12 @@ A **Self-Contained System** is an autonomous, independently deployable unit that
 | **Goal** | Model clarity | Deployment autonomy |
 
 **Typical Mapping:**
-```
+```text
 Bounded Context = Self-Contained System (common)
 ```
 
 **Alternative Mapping:**
-```
+```text
 1 Bounded Context = Multiple Services (advanced)
 ```
 

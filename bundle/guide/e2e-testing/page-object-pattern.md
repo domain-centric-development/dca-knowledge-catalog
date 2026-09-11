@@ -26,7 +26,7 @@ Page Objects encapsulate page-specific selectors and interactions, providing:
 
 ### Structure
 
-```
+```text
 src/test-e2e/java/com/company/project/e2e/pages/
 ├── BasePage.java              # Common methods for all pages
 ├── ProductCatalogPage.java    # Product listing interactions

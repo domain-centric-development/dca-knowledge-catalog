@@ -17,7 +17,7 @@ Spring Modulith is a framework for building **modular monolithic applications** 
 - **Event Publication Registry** - Guaranteed event delivery
 
 **Mapping:**
-```
+```text
 Spring Modulith Module = Bounded Context (from DDD)
                        = Domain-Centric Architecture Package Structure
 ```

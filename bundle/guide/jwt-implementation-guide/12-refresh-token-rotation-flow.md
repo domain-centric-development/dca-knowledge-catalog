@@ -7,7 +7,7 @@ resource: dca-guide/topics/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 
-```
+```text
 1. POST /auth/refresh  →  Browser sends Cookie: shop-refresh=<raw>
 2. Compute SHA-256(raw) → token_hash; query refresh_tokens table
 3. Not found / revoked / expires_at < NOW() → 401; clear all cookies; force re-login

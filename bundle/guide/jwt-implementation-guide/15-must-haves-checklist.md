@@ -7,7 +7,7 @@ resource: dca-guide/topics/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 
-```
+```text
 [ ] Switch from HS256 to ES256 (asymmetric signing)
 [ ] Publish JWKS endpoint (GET /.well-known/jwks.json) for public key distribution
 [ ] Add kid claim to JWT header; support key rotation
