@@ -13,4 +13,5 @@ tags: [guide, section]
 - [Gates](#gates)
 - [What the project declares](#what-the-project-declares)
 - [Escalation: the three answers a run may not give itself](#escalation-the-three-answers-a-run-may-not-give-itself)
+- [Building one: what actually holds](#building-one-what-actually-holds)
 - [Starting where you are](#starting-where-you-are)
