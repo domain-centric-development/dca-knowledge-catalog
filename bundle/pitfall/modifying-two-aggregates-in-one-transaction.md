@@ -4,7 +4,7 @@ title: Modifying two aggregates in one transaction
 tags: [pitfall, tactical, aggregate, domain-event, events, application]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/tactical/dca-tac-003.md, /rule/tactical/dca-tac-002.md, /guide/readme/rules.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/readme/elements.md, /guide/readme/integration-patterns.md, /marker/tactical/aggregateroot.md, /marker/tactical/domainevent.md]
+evidence: [/rule/tactical/dca-tac-003.md, /rule/tactical/dca-tac-002.md, /guide/rules.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/elements.md, /guide/integration-patterns.md, /marker/tactical/aggregateroot.md, /marker/tactical/domainevent.md]
 ---
 
 A single use case that loads two aggregate roots, mutates both, and saves both inside one atomic transaction — `PlaceOrderUseCase` that calls `order.confirm()` **and** `inventory.reserve()` **and** saves each, expecting them to commit or roll back together. The aggregate boundary is also the consistency boundary; spanning two of them in one transaction erases that boundary.
@@ -20,8 +20,8 @@ A single use case that loads two aggregate roots, mutates both, and saves both i
 
 - [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/dca-tac-003.md) — the no-direct-reference rule; if roots can't hold each other, one operation shouldn't be co-mutating both either.
 - [Aggregate Roots must not hold references to repositories or other output ports](/rule/tactical/dca-tac-002.md) — an aggregate can't reach out to load and change a second root; it changes only its own state.
-- [Event publishing rules](/guide/readme/rules.md) — aggregates register events during mutation and publish after persistence, so the second aggregate reacts *after* the first commits, not within the same transaction.
-- [Aggregate rules](/guide/readme/rules.md) — roots reference each other by ID, reinforcing one root per transaction.
+- [Event publishing rules](/guide/rules.md) — aggregates register events during mutation and publish after persistence, so the second aggregate reacts *after* the first commits, not within the same transaction.
+- [Aggregate rules](/guide/rules.md) — roots reference each other by ID, reinforcing one root per transaction.
 
 ## Do instead
 
@@ -35,5 +35,5 @@ Change one aggregate per transaction. Let it raise a domain event on commit; a h
 ## Anchors
 
 - Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/dca-tac-003.md) · [Aggregate Roots must not hold references to repositories or other output ports](/rule/tactical/dca-tac-002.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Pure domain services](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Layer rules](/guide/rules.md) · [Layer elements](/guide/elements.md) · [Pure domain services](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md) · [Integration patterns](/guide/integration-patterns.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md)

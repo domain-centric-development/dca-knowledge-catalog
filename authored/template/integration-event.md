@@ -4,7 +4,7 @@ title: "Integration event skeleton (record implementing IntegrationEvent + outgo
 tags: [template, adapter, integration-event]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/integration-patterns.md, /marker/tactical/integrationevent.md, /marker/tactical/domainevent.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /rule/strategic/dca-str-007.md, /rule/strategic/dca-str-008.md, /rule/advanced/dca-adv-007.md]
+evidence: [/guide/integration-patterns.md, /marker/tactical/integrationevent.md, /marker/tactical/domainevent.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /rule/strategic/dca-str-007.md, /rule/strategic/dca-str-008.md, /rule/advanced/dca-adv-007.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Markers: [IntegrationEvent](/marker/tactical/integrationevent.md) · [DomainEvent](/marker/tactical/domainevent.md)
 - Rules: [Integration Events must be annotated with IntegrationEventType](/rule/advanced/dca-adv-005.md) · [Integration Events must not have a version field](/rule/advanced/dca-adv-006.md) · [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/dca-str-007.md) · [Integration Events should be immutable records](/rule/strategic/dca-str-008.md) · [Domain Events that are not Integration Events must not have a version field](/rule/advanced/dca-adv-007.md)
-- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md)
+- Guide: [Integration patterns](/guide/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md)
 - Decision: [Domain event vs. integration event](/decision/domain-event-vs-integration-event.md)
 - Recipe: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md) · [Add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md)

@@ -3,7 +3,7 @@ type: Section
 title: "Catalog kinds and retired identities (2026-09-09)"
 chapter: ArchUnit Governance for Domain-Centric Architecture
 source: guide
-resource: dca-guide/archunit-governance.md
+resource: dca-guide/topics/archunit-governance.md
 tags: [guide, section]
 ---
 

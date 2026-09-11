@@ -4,7 +4,7 @@ title: "Aggregate root skeleton (BaseAggregateRoot + Id + domain event)"
 tags: [template, domain, aggregate]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/deviations-from-the-literature.md, /marker/tactical/aggregateroot.md, /marker/tactical/baseaggregateroot.md, /marker/tactical/domainevent.md, /marker/port-out/repository.md, /guide/readme/elements.md, /guide/readme/rules.md]
+evidence: [/guide/readme/deviations-from-the-literature.md, /marker/tactical/aggregateroot.md, /marker/tactical/baseaggregateroot.md, /marker/tactical/domainevent.md, /marker/port-out/repository.md, /guide/elements.md, /guide/rules.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -21,6 +21,6 @@ further language is one more file rather than a second copy of this node.
 ## Realizes / governed by
 
 - Markers: [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md) · [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md) · [Repository<T, ID>](/marker/port-out/repository.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer elements](/guide/elements.md) · [Layer rules](/guide/rules.md)
 - Recipe: [Add an aggregate](/recipe/add-an-aggregate.md)
 - Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md)

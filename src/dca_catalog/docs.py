@@ -7,8 +7,8 @@ Hybrid granularity: each markdown file becomes a ``Guide`` container node plus
 one ``Section`` child node per ``##`` heading. Section bodies carry the **full
 verbatim text** so the bundle is self-contained.
 
-Verbatim text carries the *source* documents' relative links (``./README.md``,
-``./spring-modulith.md#packaging-rules``), which point at nothing once the text
+Verbatim text carries the *source* documents' relative links (``../README.md``,
+``../topics/spring-modulith.md#packaging-rules``), which point at nothing once the text
 lives in a bundle node. Extraction therefore runs in two passes: pass one parses
 every guide file into its node layout and heading anchors, pass two rewrites
 those links onto bundle nodes while emitting the nodes. Every relative link in
@@ -171,14 +171,14 @@ class _Document:
         return self.container_path
 
 
-def _rewrite_line(line: str, base_dir: Path, docs: dict[Path, _Document]) -> str:
+def _rewrite_line(line: str, base_dir: Path, docs: dict[Path, _Document], root: Path) -> str:
     def replace(match: re.Match) -> str:
         target = (base_dir / match.group(2)).resolve()
         doc = docs.get(target)
         if doc is not None:
             anchor = (match.group(3) or "").lstrip("#")
             return match.group(1) + bundle_link(doc.target_for(anchor)) + match.group(4)
-        if target.parent == base_dir and target.name in _ALIASES:
+        if root in target.parents and target.name in _ALIASES:
             return match.group(1) + bundle_link(_ALIASES[target.name]) + match.group(4)
         return match.group(0)  # not represented in the bundle — leave it alone
 
@@ -195,7 +195,7 @@ def _rewrite_line(line: str, base_dir: Path, docs: dict[Path, _Document]) -> str
     return re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], masked)
 
 
-def _rewrite_links(text: str, base_dir: Path, docs: dict[Path, _Document]) -> str:
+def _rewrite_links(text: str, base_dir: Path, docs: dict[Path, _Document], root: Path) -> str:
     """Point relative ``.md`` links at bundle nodes, leaving code blocks intact."""
     out: list[str] = []
     in_fence = False
@@ -210,7 +210,7 @@ def _rewrite_links(text: str, base_dir: Path, docs: dict[Path, _Document]) -> st
                 in_fence = False
             out.append(line)
             continue
-        out.append(line if in_fence else _rewrite_line(line, base_dir, docs))
+        out.append(line if in_fence else _rewrite_line(line, base_dir, docs, root))
     return "\n".join(out)
 
 
@@ -218,7 +218,7 @@ def _process_dir(repo_root: Path, rel_dir: str, source: str, container_type: str
     base = (repo_root / rel_dir).resolve()
     parsed = [
         _Document(path, repo_root, top)
-        for path in sorted(base.glob("*.md"))
+        for path in sorted(base.rglob("*.md"))
         if path.name not in _SKIP
     ]
     docs = {doc.path.resolve(): doc for doc in parsed}
@@ -234,14 +234,14 @@ def _process_dir(repo_root: Path, rel_dir: str, source: str, container_type: str
                 "resource": doc.resource,
                 "tags": [source, container_type.lower()],
             },
-            body=_rewrite_links(doc.preamble, base, docs) or f"{doc.title}.",
+            body=_rewrite_links(doc.preamble, doc.path.parent, docs, base) or f"{doc.title}.",
             meta={"name": doc.title, "kind": "document"},
         )
         nodes.append(container)
 
         section_links: list[tuple[str, str]] = []
         for sec_title, sec_body, spath in doc.sections:
-            body = _rewrite_links(sec_body, base, docs)
+            body = _rewrite_links(sec_body, doc.path.parent, docs, base)
             section_links.append((sec_title, bundle_link(spath)))
             nodes.append(
                 Node(

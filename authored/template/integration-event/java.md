@@ -5,7 +5,7 @@ parent: /template/integration-event.md
 tags: [template, adapter, integration-event]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/integration-patterns.md, /marker/tactical/integrationevent.md, /marker/tactical/domainevent.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /rule/strategic/dca-str-007.md, /rule/strategic/dca-str-008.md, /rule/advanced/dca-adv-007.md]
+evidence: [/guide/integration-patterns.md, /marker/tactical/integrationevent.md, /marker/tactical/domainevent.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /rule/strategic/dca-str-007.md, /rule/strategic/dca-str-008.md, /rule/advanced/dca-adv-007.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -41,7 +41,7 @@ public record {Name}{PastTense}Event(
 
 `IntegrationEvent` requires `eventId()` and `occurredOn()`. The contract identity —
 stable logical `name` + schema `version` — is declared in `@IntegrationEventType`
-([Integration patterns](/guide/readme/integration-patterns.md)): bump `version` on a
+([Integration patterns](/guide/integration-patterns.md)): bump `version` on a
 breaking change; ship it as a new class keeping the old `name`.
 
 ## `{Name}{PastTense}EventPublisher.java` — outgoing adapter
@@ -74,4 +74,4 @@ The publisher lives in the adapter layer (`adapter/outgoing/event/`) and does th
 domain→integration translation; the integration event record itself is the
 context's published language in `{context}.events`. A consumer in another context
 receives it — see the event-consumer template. For at-least-once delivery across
-a transaction boundary, see [Integration patterns](/guide/readme/integration-patterns.md).
+a transaction boundary, see [Integration patterns](/guide/integration-patterns.md).

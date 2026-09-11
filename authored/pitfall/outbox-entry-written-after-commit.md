@@ -4,7 +4,7 @@ title: Outbox entry written after the commit
 tags: [pitfall, events, integration-event, outbox, application, infrastructure]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/rules.md, /rule/usecase/dca-use-012.md, /marker/port-out/integrationeventpublisher.md, /marker/port-out/domaineventpublisher.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
+evidence: [/guide/rules.md, /rule/usecase/dca-use-012.md, /marker/port-out/integrationeventpublisher.md, /marker/port-out/domaineventpublisher.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
 ---
 
 An integration-event publisher that registers the outbox publication in an *after-commit* hook — "so a rolled-back use case publishes nothing". The intent is right, the mechanism is wrong: the publication is created in a second step after the aggregate is already durable.
@@ -17,7 +17,7 @@ An integration-event publisher that registers the outbox publication in an *afte
 
 ## What forbids it
 
-- [Layer rules](/guide/readme/rules.md) — event publishing rules: the publication is written *inside* the aggregate's transaction, released to the dispatcher after commit, discarded on rollback.
+- [Layer rules](/guide/rules.md) — event publishing rules: the publication is written *inside* the aggregate's transaction, released to the dispatcher after commit, discarded on rollback.
 - [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) — the publishing use case has a transaction for the outbox row to join.
 
 ## Do instead
@@ -42,5 +42,5 @@ Spring Modulith's event publication registry does exactly this; the guide's Modu
 
 - Markers: [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- Guide: [Layer rules](/guide/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
 - Related pitfall: [Storing raw domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

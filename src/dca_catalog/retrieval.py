@@ -84,7 +84,7 @@ def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> Non
     sources = {}
     # Only files the generator actually reads: a commit elsewhere in these repositories must not move the manifest.
     inputs = {
-        "dca-guide": ["*.md"],
+        "dca-guide": ["**/*.md"],
         "dca-java": ["dca-building-blocks/src/main/**/*.java", "dca-archunit/src/main/**/*.java", "rules.json", "gradle.properties"],
         "dca-dotnet": ["src/DomainCentric.ArchRules/**/*.cs", "src/*/*.csproj", "rules.json"],
         "dca-knowledge-catalog": ["src/**/*.py", "authored/**/*.md"],

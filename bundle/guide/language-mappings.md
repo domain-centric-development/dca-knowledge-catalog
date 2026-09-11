@@ -2,7 +2,7 @@
 type: Guide
 title: "Language Mappings: Java/Spring ↔ C#/.NET"
 source: guide
-resource: dca-guide/language-mappings.md
+resource: dca-guide/topics/language-mappings.md
 tags: [guide, guide]
 ---
 

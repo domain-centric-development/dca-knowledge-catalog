@@ -4,7 +4,7 @@ title: "ViewModel skeleton (page-specific, primitive-only presentation record)"
 tags: [template, adapter, dto]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/java-package-structure.md, /guide/readme/rules.md, /rule/naming/dca-nam-007.md]
+evidence: [/guide/package-structure.md, /guide/rules.md, /rule/naming/dca-nam-007.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -22,7 +22,7 @@ further language is one more file rather than a second copy of this node.
 
 ## Realizes / governed by
 
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Layer rules](/guide/rules.md)
 - Rule: [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
 - Related templates: [Enriched domain model](/template/enriched-domain-model.md) · [REST resource](/template/rest-resource.md)
 - Related decision: [Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md)

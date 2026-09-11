@@ -3,7 +3,7 @@ type: Section
 title: Key References
 chapter: Domain-Centric Architecture vs Clean Architecture
 source: guide
-resource: dca-guide/clean-architecture-comparison.md
+resource: dca-guide/topics/clean-architecture-comparison.md
 tags: [guide, section]
 ---
 
@@ -19,4 +19,4 @@ tags: [guide, section]
 - **[Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)** by Alistair Cockburn (2005)
 - **[Get Your Hands Dirty on Clean Architecture](https://thombergs.gumroad.com/l/gyhdoca)** by Tom Hombergs (2019)
 
-For comprehensive references, see [Domain-Centric Architecture - References & Further Reading](/guide/readme/references-further-reading.md).
+For comprehensive references, see [Domain-Centric Architecture - References & Further Reading](/guide/references.md).

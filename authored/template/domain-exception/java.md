@@ -5,7 +5,7 @@ parent: /template/domain-exception.md
 tags: [template, domain, naming]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/readme/rules.md]
+evidence: [/rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/rules.md]
 applies_to: [java]
 framework: [spring]
 ---

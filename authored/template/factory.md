@@ -4,7 +4,7 @@ title: "Factory skeleton (complex aggregate creation in the domain)"
 tags: [template, domain, factory]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/factory.md, /rule/advanced/dca-adv-013.md, /rule/advanced/dca-adv-014.md, /rule/advanced/dca-adv-015.md, /rule/advanced/dca-adv-016.md, /guide/readme/elements.md, /guide/architecture-reference-guide/framework-annotations-rules.md]
+evidence: [/marker/tactical/factory.md, /rule/advanced/dca-adv-013.md, /rule/advanced/dca-adv-014.md, /rule/advanced/dca-adv-015.md, /rule/advanced/dca-adv-016.md, /guide/elements.md, /guide/quick-reference/framework-annotations.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [Factory](/marker/tactical/factory.md)
 - Rules: [Factories should implement Factory Marker Interface](/rule/advanced/dca-adv-013.md) · [Factories must reside in domain package](/rule/advanced/dca-adv-014.md) · [Factories must not have Spring annotations](/rule/advanced/dca-adv-015.md) · [Factories should be stateless (only final fields for dependencies)](/rule/advanced/dca-adv-016.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
+- Guide: [Layer elements](/guide/elements.md) · [Framework annotation rules](/guide/quick-reference/framework-annotations.md)
 - Decisions: [Factory or constructor](/decision/factory-vs-constructor.md)
 - Related template: [Aggregate root](/template/aggregate-root.md)

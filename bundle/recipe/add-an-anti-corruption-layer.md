@@ -4,7 +4,7 @@ title: Add an anti-corruption layer
 tags: [recipe, strategic, anti-corruption-layer]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/strategic/dca-str-009.md, /rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /guide/readme/integration-patterns.md, /guide/readme/java-package-structure.md]
+evidence: [/rule/strategic/dca-str-009.md, /rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /guide/integration-patterns.md, /guide/package-structure.md]
 ---
 
 Protect your domain from a foreign model — another bounded context or an external system. An anti-corruption layer (ACL) is a translation boundary: your context speaks its own ubiquitous language, and the ACL adapter converts to and from the foreign contract so the foreign model never leaks inward.
@@ -34,5 +34,5 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 
 - Decision: [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
 - Markers: [DomainGateway](/marker/tactical/domaingateway.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Integration patterns](/guide/integration-patterns.md) · [Java package structure](/guide/package-structure.md) · [Port placement](/guide/quick-reference/port-placement.md)
 - To emit events across the boundary from the other side: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)

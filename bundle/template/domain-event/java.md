@@ -5,7 +5,7 @@ parent: /template/domain-event.md
 tags: [template, domain, domain-event]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/rules.md, /marker/tactical/domainevent.md, /marker/tactical/baseaggregateroot.md, /rule/advanced/dca-adv-001.md, /rule/advanced/dca-adv-008.md, /rule/advanced/dca-adv-004.md, /rule/advanced/dca-adv-002.md, /rule/advanced/dca-adv-007.md]
+evidence: [/guide/rules.md, /marker/tactical/domainevent.md, /marker/tactical/baseaggregateroot.md, /rule/advanced/dca-adv-001.md, /rule/advanced/dca-adv-008.md, /rule/advanced/dca-adv-004.md, /rule/advanced/dca-adv-002.md, /rule/advanced/dca-adv-007.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -53,6 +53,6 @@ public void change(/* args */) {
 
 `registerEvent(...)` (from `BaseAggregateRoot`) queues the event. The use case
 then persists the aggregate and, only after a successful save, publishes and
-clears its events — see [Event publishing rules](/guide/readme/rules.md). To
+clears its events — see [Event publishing rules](/guide/rules.md). To
 carry this fact to another context, an outgoing adapter translates it into an
 integration event (see the integration-event template).

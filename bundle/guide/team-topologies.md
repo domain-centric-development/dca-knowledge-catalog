@@ -2,7 +2,7 @@
 type: Guide
 title: Team Topologies Integration
 source: guide
-resource: dca-guide/team-topologies.md
+resource: dca-guide/topics/team-topologies.md
 tags: [guide, guide]
 ---
 

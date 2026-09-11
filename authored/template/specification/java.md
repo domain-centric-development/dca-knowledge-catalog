@@ -5,7 +5,7 @@ parent: /template/specification.md
 tags: [template, domain, specification]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/specification.md, /rule/advanced/dca-adv-017.md, /rule/advanced/dca-adv-018.md, /guide/readme/elements.md, /guide/architecture-reference-guide/framework-annotations-rules.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md]
+evidence: [/marker/tactical/specification.md, /rule/advanced/dca-adv-017.md, /rule/advanced/dca-adv-018.md, /guide/elements.md, /guide/quick-reference/framework-annotations.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

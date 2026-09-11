@@ -4,7 +4,7 @@ title: Declarative or explicit transaction boundary
 tags: [decision, application, use-case, persistence, events]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-012.md, /rule/usecase/dca-use-013.md, /rule/dotnet/dca-net-006.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /marker/port-out/integrationeventpublisher.md, /guide/readme/rules.md]
+evidence: [/rule/usecase/dca-use-012.md, /rule/usecase/dca-use-013.md, /rule/dotnet/dca-net-006.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /marker/port-out/integrationeventpublisher.md, /guide/rules.md]
 ---
 
 Every writing use case runs load → mutate → save → publish inside one short transaction. The question is only **who draws the boundary**: the framework around the whole method, or the use case by hand around part of it.
@@ -39,6 +39,6 @@ Moving the transactional part into a dedicated handler behind a decorator, so th
 
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md)
 - Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) · [Application layer must not use persistence or transaction frameworks](/rule/dotnet/dca-net-006.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)
 - Recipe: [Add a bulk operation](/recipe/add-a-bulk-operation.md)
 - Pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Publishing domain events without a transaction](/pitfall/publishing-domain-events-without-a-transaction.md)

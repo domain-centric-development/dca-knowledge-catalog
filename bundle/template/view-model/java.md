@@ -5,7 +5,7 @@ parent: /template/view-model.md
 tags: [template, adapter, dto]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/java-package-structure.md, /guide/readme/rules.md, /rule/naming/dca-nam-007.md]
+evidence: [/guide/package-structure.md, /guide/rules.md, /rule/naming/dca-nam-007.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

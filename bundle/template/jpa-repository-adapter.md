@@ -22,7 +22,7 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
 - Rules: [Repository Interfaces should extend Repository Marker Interface](/rule/tactical/dca-tac-013.md) · [Repository Interfaces must reside in application output port package](/rule/tactical/dca-tac-014.md) · [Repository Implementations must reside in adapter.outgoing package](/rule/tactical/dca-tac-015.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/dca-tac-016.md) · [Repository methods must not return non-root Entities](/rule/tactical/dca-tac-017.md) · [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-005.md)
-- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/rules.md)
 - Sibling templates: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md) · [Aggregate root skeleton](/template/aggregate-root.md) — where `reconstitute` comes from
 - Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md)
 - Recipe: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)

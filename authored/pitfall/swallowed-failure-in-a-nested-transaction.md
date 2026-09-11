@@ -4,7 +4,7 @@ title: Swallowed failure in a nested transaction block
 tags: [pitfall, application, use-case, infrastructure, persistence]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/application/transactionboundary.md, /guide/readme/rules.md]
+evidence: [/marker/application/transactionboundary.md, /guide/rules.md]
 ---
 
 An outer `inTransaction` block that calls another use case (or helper) which opens its own `inTransaction`, catches the inner exception, and carries on to commit:
@@ -40,4 +40,4 @@ If the inner work is optional, run it **after** the outer commit as a listener o
 ## Anchors
 
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)

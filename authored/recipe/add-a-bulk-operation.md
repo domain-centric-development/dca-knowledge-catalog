@@ -36,6 +36,6 @@ Perform one operation over many aggregates at once — delete all, archive every
 - Template: [Use case skeleton](/template/use-case.md)
 - Decisions: [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md) · [Domain event or integration event](/decision/domain-event-vs-integration-event.md)
 - Markers: [Repository<T, ID>](/marker/port-out/repository.md) · [IntegrationEventPublisher](/marker/port-out/integrationeventpublisher.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)
 - The ordinary writer this recipe deviates from: [Add a use case](/recipe/add-a-use-case.md) · the port it extends: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Pitfall: [Modifying two aggregates in one transaction](/pitfall/modifying-two-aggregates-in-one-transaction.md)

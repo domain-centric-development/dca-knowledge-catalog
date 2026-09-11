@@ -5,7 +5,7 @@ parent: /template/mcp-tool-provider.md
 tags: [template, adapter, spring]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/hexagonal/dca-hex-007.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-003.md, /rule/naming/dca-nam-007.md, /guide/readme/java-package-structure.md, /guide/architecture-reference-guide/layer-structure.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/hexagonal/dca-hex-007.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-003.md, /rule/naming/dca-nam-007.md, /guide/package-structure.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---

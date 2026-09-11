@@ -30,7 +30,7 @@ Publish the public, stable capabilities of a bounded context so *other* contexts
 
 - Template: [Open Host Service skeleton](/template/open-host-service.md)
 - Marker: [@OpenHostService](/marker/strategic/openhostservice.md) · consumer port: [OutputPort](/marker/port-out/outputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Guide: [Integration Patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Integration Patterns](/guide/integration-patterns.md) · [Java package structure](/guide/package-structure.md)
 - Decisions: [Cross-context communication](/decision/cross-context-communication.md)
 - Consumer-side recipes: [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md) · [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)
 - Sibling incoming adapter: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

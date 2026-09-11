@@ -72,6 +72,6 @@ return GetCartByIdResult.found(enriched, cartTotalCalculator.containedTax(enrich
 
 - Rules: [Results must not expose aggregate roots or entities](/rule/usecase/dca-use-015.md) · [Incoming adapters must not depend on domain services](/rule/hexagonal/dca-hex-012.md) · [Results must end with `Result` and reside in the application package](/rule/usecase/dca-use-006.md) · [Results should be immutable](/rule/usecase/dca-use-007.md)
 - Markers: [Value](/marker/tactical/value.md) · [AggregateRoot](/marker/tactical/aggregateroot.md) · [Entity](/marker/tactical/entity.md) · [DomainService](/marker/tactical/domainservice.md)
-- Guide: [Layer elements](/guide/readme/elements.md) — the use-case pattern and its result · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
+- Guide: [Layer elements](/guide/elements.md) — the use-case pattern and its result · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
 - Related decisions: [Enriched value model or aggregate](/decision/enriched-model-vs-aggregate.md) · [Read model or domain query](/decision/read-model-vs-domain-query.md) · [Where does the logic live](/decision/where-does-the-logic-live.md)
 - Recipes and templates: [Add a use case](/recipe/add-a-use-case.md) · [Use case skeleton](/template/use-case.md) · [Enriched domain model](/template/enriched-domain-model.md)

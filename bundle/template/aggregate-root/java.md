@@ -5,7 +5,7 @@ parent: /template/aggregate-root.md
 tags: [template, domain, aggregate]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/deviations-from-the-literature.md, /marker/tactical/aggregateroot.md, /marker/tactical/baseaggregateroot.md, /marker/tactical/domainevent.md, /marker/port-out/repository.md, /guide/readme/elements.md, /guide/readme/rules.md]
+evidence: [/guide/readme/deviations-from-the-literature.md, /marker/tactical/aggregateroot.md, /marker/tactical/baseaggregateroot.md, /marker/tactical/domainevent.md, /marker/port-out/repository.md, /guide/elements.md, /guide/rules.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

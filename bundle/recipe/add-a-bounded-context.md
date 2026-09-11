@@ -36,5 +36,5 @@ Classify the subdomain: **core** (full tactical set — rich model, ports & adap
 - Decision: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
 - Template: [Bounded context declaration (package-info.java)](/template/bounded-context-package-info.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Then bootstrap the shared kernel and rule suite first if this is a greenfield app: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md)

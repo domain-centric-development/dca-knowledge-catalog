@@ -1,6 +1,6 @@
 ---
 type: Section
-title: GENERAL PRINCIPLES
+title: General principles
 chapter: Domain-Centric Architecture
 source: guide
 resource: dca-guide/README.md

@@ -53,8 +53,3 @@ evaluates the specification for one candidate.
 - Eric Evans' Domain-Driven Design (2003), Chapter 9: "Specification"
 - Martin Fowler's Specifications
 Pattern
-
-## Related mentions in guides (heuristic)
-
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
-- [ELEMENTS](/guide/readme/elements.md)

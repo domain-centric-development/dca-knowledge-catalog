@@ -4,7 +4,7 @@ title: "Use case skeleton (InputPort + UseCase + Command/Query + Result)"
 tags: [template, application, use-case]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /guide/readme/rules.md, /guide/readme/elements.md]
+evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /guide/rules.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -21,6 +21,6 @@ further language is one more file rather than a second copy of this node.
 ## Realizes / governed by
 
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer rules](/guide/rules.md) · [Layer elements](/guide/elements.md)
 - Rules: [Use cases that save an aggregate must publish its domain events](/rule/usecase/dca-use-009.md)
 - Recipe: [Add a use case](/recipe/add-a-use-case.md) · [Add a bulk operation](/recipe/add-a-bulk-operation.md) · [Add a read model](/recipe/add-a-read-model.md)

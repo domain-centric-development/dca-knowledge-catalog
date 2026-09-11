@@ -4,7 +4,7 @@ title: "Pattern style per subdomain: full tactical DDD, transaction script, or b
 tags: [decision, strategic, subdomain]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/archunit-governance/context-specific-rule-sets.md, /guide/readme/java-package-structure.md]
+evidence: [/guide/archunit-governance/context-specific-rule-sets.md, /guide/package-structure.md]
 ---
 
 Not every bounded context deserves the full tactical DDD toolkit. The effort you invest should track the **subdomain type** — how much competitive value the context carries. Applying rich aggregates everywhere wastes effort on commodity logic; applying transaction scripts to the core erodes the model that justifies building in-house at all.
@@ -35,6 +35,6 @@ Classify the subdomain first, then the pattern style follows:
 
 ## Anchors
 
-- Guide: [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Java package structure](/guide/package-structure.md)
 - Related recipe: [Add a bounded context](/recipe/add-a-bounded-context.md)
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

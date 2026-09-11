@@ -4,7 +4,7 @@ title: "Entity or Value Object: modelling a domain concept"
 tags: [decision, tactical, entity, value-object]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/entity.md, /marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-004.md, /rule/tactical/dca-tac-005.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/entity.md, /marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-004.md, /rule/tactical/dca-tac-005.md, /guide/elements.md]
 ---
 
 When you introduce a new domain concept, the first modelling fork is whether it is an **Entity** (has identity and a lifecycle) or a **Value Object** (defined entirely by its attributes). Getting this wrong is expensive: it decides equality, mutability, and whether the concept ever gets its own repository.
@@ -41,5 +41,5 @@ Value Objects are the **default** — reach for a Value Object unless identity o
 
 - Markers: [Entity&lt;T, ID&gt;](/marker/tactical/entity.md) · [Value](/marker/tactical/value.md)
 - Rules: [Value Object classes should be final](/rule/tactical/dca-tac-009.md) · [Value Object fields must be final](/rule/tactical/dca-tac-010.md) · [Value Objects must not have setter methods](/rule/tactical/dca-tac-011.md) · [Entities must have an ID field](/rule/tactical/dca-tac-004.md) · [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/dca-tac-005.md)
-- Guide: [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer elements](/guide/elements.md)
 - Related pitfall: [Anemic domain model](/pitfall/anemic-domain-model.md)

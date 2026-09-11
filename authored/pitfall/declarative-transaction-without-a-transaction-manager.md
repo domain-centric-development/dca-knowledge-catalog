@@ -4,7 +4,7 @@ title: Declarative transaction without a transaction manager
 tags: [pitfall, application, use-case, events, spring, modulith]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-012.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /guide/readme/elements.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
+evidence: [/rule/usecase/dca-use-012.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /guide/elements.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
 ---
 
 A Spring application in its in-memory phase — `spring-boot-starter`, `spring-modulith-starter-core`, repositories over `ConcurrentHashMap`, no data starter — with `@Transactional` on its use cases. Everything compiles, the context starts, the architecture rules are green, and no after-commit listener ever runs.
@@ -39,5 +39,5 @@ Then the `TransactionBoundary` and `DomainEventPublisher` implementations from t
 
 - Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- Guide: [Shared kernel and the building-block dependency](/guide/readme/elements.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- Guide: [Shared kernel and the building-block dependency](/guide/elements.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
 - Recipe: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md)

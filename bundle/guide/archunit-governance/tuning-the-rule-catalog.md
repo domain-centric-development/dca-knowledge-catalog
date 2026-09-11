@@ -3,7 +3,7 @@ type: Section
 title: Tuning the Rule Catalog
 chapter: ArchUnit Governance for Domain-Centric Architecture
 source: guide
-resource: dca-guide/archunit-governance.md
+resource: dca-guide/topics/archunit-governance.md
 tags: [guide, section]
 ---
 

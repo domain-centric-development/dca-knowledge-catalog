@@ -3,7 +3,7 @@ type: Section
 title: Service Decomposition
 chapter: Deployment Patterns
 source: guide
-resource: dca-guide/deployment-patterns.md
+resource: dca-guide/topics/deployment-patterns.md
 tags: [guide, section]
 ---
 
@@ -32,7 +32,7 @@ When you split a Bounded Context into multiple services, you need **two types of
   - Represent public contracts
 - **Example:** `OrderCreatedEvent` published by Order BC, consumed by Inventory BC
 
-For core event patterns, see [Domain-Centric Architecture - Event Rules](/guide/readme/rules.md).
+For core event patterns, see [Domain-Centric Architecture - Event Rules](/guide/rules/domain-layer-rules.md).
 
 #### Internal Events (Within Bounded Context, Across Services)
 - **Purpose:** Communication between services within same bounded context

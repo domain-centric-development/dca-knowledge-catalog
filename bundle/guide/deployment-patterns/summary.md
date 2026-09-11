@@ -3,7 +3,7 @@ type: Section
 title: Summary
 chapter: Deployment Patterns
 source: guide
-resource: dca-guide/deployment-patterns.md
+resource: dca-guide/topics/deployment-patterns.md
 tags: [guide, section]
 ---
 

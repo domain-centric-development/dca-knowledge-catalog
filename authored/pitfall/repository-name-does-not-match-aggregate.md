@@ -4,7 +4,7 @@ title: Repository name does not match the aggregate
 tags: [pitfall, tactical, repository, aggregate, naming, port-out]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/tactical/dca-tac-016.md, /rule/naming/dca-nam-004.md, /marker/port-out/repository.md, /marker/tactical/aggregateroot.md, /guide/readme/rules.md, /guide/readme/java-package-structure.md]
+evidence: [/rule/tactical/dca-tac-016.md, /rule/naming/dca-nam-004.md, /marker/port-out/repository.md, /marker/tactical/aggregateroot.md, /guide/rules.md, /guide/package-structure.md]
 ---
 
 The aggregate is called `Task`; the repository is called `TodoRepository`. Both words are fine ubiquitous language — the team says "todo" in conversation and "task" in the model — and the interface extends `Repository<Task, TaskId>` correctly. The architecture test fails anyway: `TodoRepository refers to 'Todo' which cannot be resolved in its bounded context`.
@@ -30,5 +30,5 @@ Pick one name per concept and use it for the aggregate, its id, its repository a
 
 - Markers: [Repository<T, ID>](/marker/port-out/repository.md) · [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - Rules: [Repositories must only exist for Aggregate Roots](/rule/tactical/dca-tac-016.md) · [Repository Interfaces must end with 'Repository'](/rule/naming/dca-nam-004.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Layer rules](/guide/rules.md) · [Java package structure](/guide/package-structure.md)
 - Recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)

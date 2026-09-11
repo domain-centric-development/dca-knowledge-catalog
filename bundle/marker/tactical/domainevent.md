@@ -64,10 +64,7 @@ public record ProductCreated(
 
 ## Related mentions in guides (heuristic)
 
-- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [RULES](/guide/readme/rules.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

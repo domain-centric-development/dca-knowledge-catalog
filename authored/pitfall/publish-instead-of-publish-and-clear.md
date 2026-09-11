@@ -4,7 +4,7 @@ title: Publishing events one by one instead of publishAndClearEvents
 tags: [pitfall, application, use-case, domain-event, events, port-out]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-009.md, /marker/port-out/domaineventpublisher.md, /marker/tactical/baseaggregateroot.md, /rule/usecase/dca-use-012.md, /guide/readme/rules.md]
+evidence: [/rule/usecase/dca-use-009.md, /marker/port-out/domaineventpublisher.md, /marker/tactical/baseaggregateroot.md, /rule/usecase/dca-use-012.md, /guide/rules.md]
 ---
 
 A use case that saves the aggregate and then dispatches its events by hand:
@@ -48,5 +48,5 @@ The publisher iterates, dispatches and clears; a throwing listener propagates, t
 
 - Markers: [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [BaseAggregateRoot](/marker/tactical/baseaggregateroot.md)
 - Rules: [Use cases that save an aggregate must publish its domain events](/rule/usecase/dca-use-009.md) · [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)
 - Template: [Use case skeleton](/template/use-case.md)

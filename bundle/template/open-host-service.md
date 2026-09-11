@@ -4,7 +4,7 @@ title: "Open Host Service skeleton (provider-side cross-context API)"
 tags: [template, strategic, bounded-context]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/strategic/openhostservice.md, /rule/strategic/dca-str-005.md, /rule/strategic/dca-str-006.md, /guide/readme/integration-patterns.md, /guide/readme/java-package-structure.md]
+evidence: [/marker/strategic/openhostservice.md, /rule/strategic/dca-str-005.md, /rule/strategic/dca-str-006.md, /guide/integration-patterns.md, /guide/package-structure.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [@OpenHostService](/marker/strategic/openhostservice.md)
 - Rules: [Open Host Services must be published: in the api package or as an incoming adapter](/rule/strategic/dca-str-005.md) · [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/dca-str-006.md)
-- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Integration patterns](/guide/integration-patterns.md) · [Java package structure](/guide/package-structure.md)
 - Decisions: [Cross-context communication: synchronous call or integration event](/decision/cross-context-communication.md)
 - Recipe: [Expose an Open Host Service](/recipe/expose-an-open-host-service.md) · [Add an anti-corruption layer](/recipe/add-an-anti-corruption-layer.md)

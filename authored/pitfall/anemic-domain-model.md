@@ -4,7 +4,7 @@ title: Anemic domain model
 tags: [pitfall, tactical, aggregate, domain]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/tactical/dca-tac-006.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-002.md, /guide/readme/elements.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md]
+evidence: [/rule/tactical/dca-tac-006.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-002.md, /guide/elements.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md]
 ---
 
 Aggregates and entities reduced to bags of getters and setters, with all the business rules living in application-layer services that reach in, read fields, compute, and write them back. The domain classes hold data; the "logic" lives outside them. This is the most common way a rich domain model quietly decays into a database-row-with-accessors.
@@ -32,6 +32,6 @@ Put the behaviour where the data is. Expose intention-revealing methods that mut
 
 ## Anchors
 
-- Guide: [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer elements](/guide/elements.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

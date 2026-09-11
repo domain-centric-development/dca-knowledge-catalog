@@ -3,13 +3,13 @@ type: Section
 title: Shared Kernel in Spring Modulith
 chapter: Spring Modulith Implementation
 source: guide
-resource: dca-guide/spring-modulith.md
+resource: dca-guide/topics/spring-modulith.md
 tags: [guide, section]
 ---
 
 The Shared Kernel is a **small, carefully controlled** `shared/` module containing code used across multiple modules.
 
-> **Important:** For general Shared Kernel concepts and when to use it, see [Domain-Centric Architecture](/guide/readme/rules.md).
+> **Important:** For general Shared Kernel concepts and when to use it, see [Domain-Centric Architecture](/guide/rules/packaging-rules.md).
 
 ### Spring Modulith Configuration
 

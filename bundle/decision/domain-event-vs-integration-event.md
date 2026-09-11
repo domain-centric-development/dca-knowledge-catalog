@@ -4,7 +4,7 @@ title: "Domain event or integration event: which one to raise"
 tags: [decision, events, integration-event]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /rule/advanced/dca-adv-007.md, /rule/advanced/dca-adv-005.md, /rule/strategic/dca-str-007.md, /guide/readme/rules.md, /guide/readme/integration-patterns.md]
+evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /rule/advanced/dca-adv-007.md, /rule/advanced/dca-adv-005.md, /rule/strategic/dca-str-007.md, /guide/rules.md, /guide/integration-patterns.md]
 ---
 
 An event is either an **internal domain fact** or a **published cross-context contract** — and the two are different types in different layers, not one type reused. Confusing them leaks your model across a boundary or, conversely, over-engineers a purely in-context notification.
@@ -38,5 +38,5 @@ Delivery (sync vs async, and whether you need an outbox) is a **separate** quest
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
 - Rules: [Domain Events that are not Integration Events must not have a version field](/rule/advanced/dca-adv-007.md) · [Integration Events must be annotated with IntegrationEventType](/rule/advanced/dca-adv-005.md) · [Integration Events must be in events or adapter outgoing event packages](/rule/strategic/dca-str-007.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Layer rules](/guide/rules.md) · [Integration patterns](/guide/integration-patterns.md)
 - Related: [Event delivery: sync, async, and outbox](/decision/event-delivery-sync-async-and-outbox.md) · [Pitfall: storing raw domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

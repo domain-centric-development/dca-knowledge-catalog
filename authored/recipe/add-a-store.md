@@ -30,6 +30,6 @@ Give a context a persistence port for operational data that has **no aggregate o
 - Template: [Store + in-memory adapter skeleton](/template/store-with-in-memory-adapter.md)
 - Markers: [Store](/marker/port-out/store.md) · [OutputPort](/marker/port-out/outputport.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Decision: [Repository or Store: which output port persists this](/decision/repository-vs-store.md)
-- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/rules.md) · [Layer elements](/guide/elements.md) · [Port placement](/guide/quick-reference/port-placement.md)
 - Sibling recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Pitfall: [A Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md)

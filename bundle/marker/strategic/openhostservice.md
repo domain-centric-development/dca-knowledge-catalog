@@ -43,4 +43,4 @@ public class ProductCatalogService {
 
 ## Related mentions in guides (heuristic)
 
-- [INTEGRATION PATTERNS](/guide/readme/integration-patterns.md)
+- [Open Host Service Pattern](/guide/integration-patterns/open-host-service-pattern.md)

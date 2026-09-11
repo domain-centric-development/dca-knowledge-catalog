@@ -5,7 +5,7 @@ parent: /template/open-host-service.md
 tags: [template, strategic, bounded-context]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/strategic/openhostservice.md, /rule/strategic/dca-str-005.md, /rule/strategic/dca-str-006.md, /guide/readme/integration-patterns.md, /guide/readme/java-package-structure.md]
+evidence: [/marker/strategic/openhostservice.md, /rule/strategic/dca-str-005.md, /rule/strategic/dca-str-006.md, /guide/integration-patterns.md, /guide/package-structure.md]
 applies_to: [java]
 framework: [spring]
 ---

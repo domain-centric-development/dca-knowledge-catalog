@@ -4,7 +4,7 @@ title: "Specification skeleton (business rule as a first-class object)"
 tags: [template, domain, specification]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/specification.md, /rule/advanced/dca-adv-017.md, /rule/advanced/dca-adv-018.md, /guide/readme/elements.md, /guide/architecture-reference-guide/framework-annotations-rules.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md]
+evidence: [/marker/tactical/specification.md, /rule/advanced/dca-adv-017.md, /rule/advanced/dca-adv-018.md, /guide/elements.md, /guide/quick-reference/framework-annotations.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -22,5 +22,5 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [Specification<T>](/marker/tactical/specification.md)
 - Rules: [Specifications must end with 'Specification'](/rule/advanced/dca-adv-017.md) · [Specifications must not have Spring annotations](/rule/advanced/dca-adv-018.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
+- Guide: [Layer elements](/guide/elements.md) · [Framework annotation rules](/guide/quick-reference/framework-annotations.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Decisions: [Specification or query method](/decision/specification-vs-query-method.md)

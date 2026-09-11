@@ -4,7 +4,7 @@ title: Domain vs integration events in an outbox / event store
 tags: [note, events, outbox]
 review: reviewed
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md, /guide/readme/integration-patterns.md, /guide/spring-modulith/module-communication.md, /guide/readme/rules.md]
+evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md, /guide/integration-patterns.md, /guide/spring-modulith/module-communication.md, /guide/rules.md]
 ---
 
 ## Classification and process scope
@@ -41,6 +41,6 @@ review remote-capable calls and transaction scope explicitly.
 ## Anchors
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Integration patterns](/guide/readme/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Integration patterns](/guide/integration-patterns.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Layer rules](/guide/rules.md)
 - Decision: [Event delivery: sync, async, and when you need an outbox](/decision/event-delivery-sync-async-and-outbox.md)
 - Pitfall: [Storing domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)

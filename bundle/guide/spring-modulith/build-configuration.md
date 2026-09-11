@@ -3,7 +3,7 @@ type: Section
 title: Build Configuration
 chapter: Spring Modulith Implementation
 source: guide
-resource: dca-guide/spring-modulith.md
+resource: dca-guide/topics/spring-modulith.md
 tags: [guide, section]
 ---
 

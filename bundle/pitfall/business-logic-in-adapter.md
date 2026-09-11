@@ -4,7 +4,7 @@ title: Business logic in an adapter
 tags: [pitfall, hexagonal, layered, adapter, application, domain]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-001.md, /rule/layered/dca-lay-004.md, /rule/layered/dca-lay-002.md, /marker/port-in/inputport.md, /marker/port-in/usecase.md, /guide/architecture-reference-guide/ports-and-adapters.md]
+evidence: [/rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-001.md, /rule/layered/dca-lay-004.md, /rule/layered/dca-lay-002.md, /marker/port-in/inputport.md, /marker/port-in/usecase.md, /guide/quick-reference/port-placement.md]
 ---
 
 A controller (or a repository implementation) that does more than translate and delegate — it validates a business rule, computes a price, decides a state transition, or orchestrates several steps. The classic shape: `OrderResource.placeOrder(...)` reads the request, checks stock, applies a discount, sets the order status, and only then calls a repository. The rule lives in the adapter; the use case and aggregate are hollow.
@@ -36,5 +36,5 @@ Keep the adapter thin: map the request to a `Command`/`Query`, call the input po
 
 - Rules: [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [Classes from the domain should not access port adapters](/rule/hexagonal/dca-hex-001.md) · [Transaction boundaries belong to the application layer](/rule/layered/dca-lay-004.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Port placement](/guide/quick-reference/port-placement.md)
 - Sibling pitfall: [Anemic domain model](/pitfall/anemic-domain-model.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md)

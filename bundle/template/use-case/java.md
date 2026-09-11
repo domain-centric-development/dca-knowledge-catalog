@@ -5,7 +5,7 @@ parent: /template/use-case.md
 tags: [template, application, use-case]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /guide/readme/rules.md, /guide/readme/elements.md]
+evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /guide/rules.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---

@@ -5,7 +5,7 @@ parent: /template/domain-service.md
 tags: [template, domain, domain-service]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainservice.md, /rule/advanced/dca-adv-009.md, /rule/advanced/dca-adv-010.md, /rule/advanced/dca-adv-011.md, /rule/advanced/dca-adv-012.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/architecture-reference-guide/framework-annotations-rules.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/domainservice.md, /rule/advanced/dca-adv-009.md, /rule/advanced/dca-adv-010.md, /rule/advanced/dca-adv-011.md, /rule/advanced/dca-adv-012.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/quick-reference/framework-annotations.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---

@@ -40,6 +40,6 @@ Ask, in order:
 
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md) · [Id](/marker/tactical/id.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Rules: [Aggregate Roots must not have fields with other Aggregate Root types](/rule/tactical/dca-tac-003.md) · [Entities must not have fields with Aggregate Root types](/rule/tactical/dca-tac-007.md) · [Repositories must only exist for Aggregate Roots](/rule/tactical/dca-tac-016.md) · [Repository methods must not return non-root Entities](/rule/tactical/dca-tac-017.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer elements](/guide/elements.md) · [Layer rules](/guide/rules.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

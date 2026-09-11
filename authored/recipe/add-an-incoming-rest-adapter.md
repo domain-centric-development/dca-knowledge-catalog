@@ -4,14 +4,14 @@ title: Add an incoming REST adapter
 tags: [recipe, adapter, rest]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/java-package-structure.md, /rule/naming/dca-nam-006.md, /rule/naming/dca-nam-005.md, /rule/usecase/dca-use-008.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/naming/dca-nam-007.md]
+evidence: [/guide/package-structure.md, /rule/naming/dca-nam-006.md, /rule/naming/dca-nam-005.md, /rule/usecase/dca-use-008.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/naming/dca-nam-007.md]
 ---
 
 Expose a use case to the outside world through a primary (driving) adapter. A `*Resource` for a REST API, a `*PageController` for server-rendered web. The adapter is a thin edge: it calls an input port and maps the `Result` to a transport DTO — no business logic, no repository access.
 
 ## Steps
 
-1. **Place it in `adapter/incoming/`** — REST resources under the api package, web controllers under the web package (they are separated on purpose — [Java package structure](/guide/readme/java-package-structure.md)).
+1. **Place it in `adapter/incoming/`** — REST resources under the api package, web controllers under the web package (they are separated on purpose — [Java package structure](/guide/package-structure.md)).
 2. **Name by role** — a REST endpoint class ends with `Resource`; an MVC class ends with `Controller` (a `*PageController`).
 3. **Depend on the input port only** — inject the `{Name}InputPort`, build the `{Name}Command`/`{Name}Query` from the request, call `execute`. Never inject a repository or another adapter. Generate from the [REST resource template](/template/rest-resource.md).
 4. **Map at the edge** — translate the use case `{Name}Result` into a `*Response` DTO (or a view model for web) in the adapter; DTOs and view models live here, never in domain or application. Handle an empty `Optional` result as the not-found case.
@@ -43,6 +43,6 @@ The same recipe with a different edge. A `{Name}PageController` in `adapter/inco
 - Pitfalls: [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) · [CSRF-exempt API that accepts cookies](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
 - Template: [REST resource skeleton](/template/rest-resource.md) · web sibling: [Page controller](/template/page-controller.md) with [ViewModel](/template/view-model.md) · AI-facing sibling: [MCP tool provider skeleton](/template/mcp-tool-provider.md)
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Layer rules](/guide/readme/rules.md) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Layer rules](/guide/rules.md) · [Port placement](/guide/quick-reference/port-placement.md)
 - The use case this adapter drives: [Add a use case](/recipe/add-a-use-case.md)
 - Pitfalls: [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Exposing domain objects over REST](/pitfall/exposing-domain-objects-over-rest.md)

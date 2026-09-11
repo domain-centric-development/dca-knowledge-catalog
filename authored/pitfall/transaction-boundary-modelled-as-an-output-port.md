@@ -4,7 +4,7 @@ title: Transaction boundary modelled as an output port
 tags: [pitfall, application, hexagonal, port-out, port]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-013.md, /marker/application/transactionboundary.md, /marker/port-out/outputport.md, /guide/readme/rules.md]
+evidence: [/rule/usecase/dca-use-013.md, /marker/application/transactionboundary.md, /marker/port-out/outputport.md, /guide/rules.md]
 ---
 
 Declaring the transaction abstraction as an output port — `interface UnitOfWork extends OutputPort` — and placing its implementation under `adapter/outgoing/`. It looks consistent ("the use case depends on it, adapters implement it"), and that is precisely the mistake: not everything a use case calls is a port.
@@ -30,4 +30,4 @@ Keep `TransactionBoundary` in the building blocks' `application` namespace (`App
 
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [OutputPort](/marker/port-out/outputport.md)
 - Rules: [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)

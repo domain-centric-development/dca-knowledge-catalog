@@ -4,7 +4,7 @@ title: Publish a cross-context event
 tags: [recipe, events, integration-event, outbox]
 review: reviewed
 owner: DCA catalog maintainers
-evidence: [/guide/readme/integration-patterns.md, /rule/strategic/dca-str-007.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/readme/rules.md]
+evidence: [/guide/integration-patterns.md, /rule/strategic/dca-str-007.md, /rule/advanced/dca-adv-005.md, /rule/advanced/dca-adv-006.md, /marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/rules.md]
 ---
 
 Make one bounded context react to something that happened in another, or notify an external system. The event **crosses a boundary**, so it must become an `IntegrationEvent` — never a raw domain event. First decide the delivery mode; the wrong choice is the most common event mistake.
@@ -19,7 +19,7 @@ Read [Event delivery: sync, async, and when you need an outbox](/decision/event-
 ## Steps (cross-context)
 
 1. **Raise the domain event** in the aggregate as usual ([Add an aggregate](/recipe/add-an-aggregate.md)).
-2. **Define the integration event** in the configured `{context}/events/` segment — a serializable record of primitives only, implementing `IntegrationEvent` and annotated with `@IntegrationEventType(name, version)` — the contract identity as a class property ([Integration patterns](/guide/readme/integration-patterns.md)).
+2. **Define the integration event** in the configured `{context}/events/` segment — a serializable record of primitives only, implementing `IntegrationEvent` and annotated with `@IntegrationEventType(name, version)` — the contract identity as a class property ([Integration patterns](/guide/integration-patterns.md)).
 3. **Translate in an ACL adapter, inside the transaction** — a synchronous listener on the domain event maps it to the integration event and writes the transactional-outbox row in the publishing transaction. Never translate after commit.
 4. **Relay out of band** — a poller (plus an after-commit fast path) claims rows, sends to the broker, marks processed; retry with backoff. The outbox stores *your* integration event; the foreign wire payload is built at delivery by the outbound adapter (the ACL to the foreign contract).
 5. **Consume** on the other side in `adapter/incoming/messaging/`, translate back through that context's ACL, invoke its use case.
@@ -70,4 +70,4 @@ review remote-capable calls and transaction scope explicitly.
 - Note: [Domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)
 - Pitfall: [Storing domain events in an external outbox](/pitfall/storing-domain-events-in-an-external-outbox.md)
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- Guide: [Integration patterns](/guide/readme/integration-patterns.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Integration patterns](/guide/integration-patterns.md) · [Layer rules](/guide/rules.md)

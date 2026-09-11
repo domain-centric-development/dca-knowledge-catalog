@@ -4,7 +4,7 @@ title: "God port: one fat input port for many use cases"
 tags: [pitfall, hexagonal, use-case, port]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/usecase.md, /rule/naming/dca-nam-003.md, /rule/naming/dca-nam-001.md, /marker/port-in/inputport.md, /guide/architecture-reference-guide/ports-and-adapters.md, /guide/readme/rules.md, /guide/readme/elements.md]
+evidence: [/marker/port-in/usecase.md, /rule/naming/dca-nam-003.md, /rule/naming/dca-nam-001.md, /marker/port-in/inputport.md, /guide/quick-reference/port-placement.md, /guide/rules.md, /guide/elements.md]
 ---
 
 A single wide input-port interface — `OrderService` with `placeOrder`, `cancelOrder`, `addItem`, `applyDiscount`, `reorder`, … — that every controller depends on. The interface grows with every feature, and every consumer is coupled to methods it never calls. This is the Interface Segregation Principle violated at the application boundary.
@@ -34,4 +34,4 @@ One input port per use case, each extending `UseCase<Command|Query, Result>` wit
 ## Anchors
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md) · [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Port placement](/guide/quick-reference/port-placement.md) · [Layer rules](/guide/rules.md) · [Layer elements](/guide/elements.md)

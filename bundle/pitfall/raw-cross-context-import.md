@@ -4,7 +4,7 @@ title: Raw cross-context import
 tags: [pitfall, strategic, bounded-context]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/strategic/dca-str-003.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-002.md, /marker/tactical/integrationevent.md, /guide/readme/java-package-structure.md, /guide/readme/integration-patterns.md, /marker/strategic/boundedcontext.md, /marker/strategic/openhostservice.md]
+evidence: [/rule/strategic/dca-str-003.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-002.md, /marker/tactical/integrationevent.md, /guide/package-structure.md, /guide/integration-patterns.md, /marker/strategic/boundedcontext.md, /marker/strategic/openhostservice.md]
 ---
 
 One bounded context reaching directly into another's internals — `import com.shop.ordering.domain.Order;` from inside the Shipping context, or a Shipping use case calling `OrderRepository` from Ordering. It compiles, it's the shortest path, and it silently fuses two contexts that were supposed to evolve independently.
@@ -33,7 +33,7 @@ Either way the foreign model stops at the boundary; only a translated, owned rep
 
 ## Anchors
 
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Integration patterns](/guide/integration-patterns.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [IntegrationEvent](/marker/tactical/integrationevent.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
 - Related pitfall: [Cyclic module dependency](/pitfall/cyclic-module-dependency.md) — the structural failure when this raw import goes both ways between two contexts
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

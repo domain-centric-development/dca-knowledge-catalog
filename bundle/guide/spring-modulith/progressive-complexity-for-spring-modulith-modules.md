@@ -3,7 +3,7 @@ type: Section
 title: Progressive Complexity for Spring Modulith Modules
 chapter: Spring Modulith Implementation
 source: guide
-resource: dca-guide/spring-modulith.md
+resource: dca-guide/topics/spring-modulith.md
 tags: [guide, section]
 ---
 
@@ -11,7 +11,7 @@ When creating a Spring Modulith module (bounded context), **start with minimal s
 
 > **Core Principle:** The full package structure shown in this document is for **mature modules**. Don't start there!
 
-For general progressive complexity guidelines, see [Domain-Centric Architecture](/guide/readme/java-package-structure.md).
+For general progressive complexity guidelines, see [Domain-Centric Architecture](/guide/package-structure/progressive-complexity-principle.md).
 
 ### Phase 1: Minimal Module Structure (Starting Out)
 

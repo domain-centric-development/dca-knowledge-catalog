@@ -35,7 +35,7 @@ See [Recipe: publish a cross-context event](/recipe/publish-a-cross-context-even
 
 ## Anchors
 
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Module communication](/guide/spring-modulith/module-communication.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Module communication](/guide/spring-modulith/module-communication.md)
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [IntegrationEvent](/marker/tactical/integrationevent.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
 - Related pitfall: [Raw cross-context import](/pitfall/raw-cross-context-import.md) — the single-direction import this cycle is built from
 - Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)

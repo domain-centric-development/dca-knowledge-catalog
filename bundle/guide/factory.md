@@ -2,7 +2,7 @@
 type: Guide
 title: "Delivering a story: backlog, stages, gates"
 source: guide
-resource: dca-guide/factory.md
+resource: dca-guide/process/factory.md
 tags: [guide, guide]
 ---
 

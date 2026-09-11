@@ -5,7 +5,7 @@ parent: /template/value-object.md
 tags: [template, domain, value-object]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-008.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-008.md, /guide/elements.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

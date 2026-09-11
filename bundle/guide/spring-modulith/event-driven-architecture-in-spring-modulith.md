@@ -3,13 +3,13 @@ type: Section
 title: Event-Driven Architecture in Spring Modulith
 chapter: Spring Modulith Implementation
 source: guide
-resource: dca-guide/spring-modulith.md
+resource: dca-guide/topics/spring-modulith.md
 tags: [guide, section]
 ---
 
 ### Domain Events vs Integration Events
 
-Spring Modulith supports two types of events that align with [Domain-Driven Design principles](/guide/readme/rules.md):
+Spring Modulith supports two types of events that align with [Domain-Driven Design principles](/guide/rules/domain-layer-rules.md):
 
 #### Domain Events (Internal to Module)
 

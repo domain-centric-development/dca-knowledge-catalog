@@ -5,7 +5,7 @@ parent: /template/repository-with-in-memory-adapter.md
 tags: [template, application, repository]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/readme/rules.md, /marker/port-out/repository.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-013.md, /rule/tactical/dca-tac-014.md, /rule/tactical/dca-tac-015.md, /rule/tactical/dca-tac-016.md, /rule/naming/dca-nam-004.md]
+evidence: [/guide/rules.md, /marker/port-out/repository.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-013.md, /rule/tactical/dca-tac-014.md, /rule/tactical/dca-tac-015.md, /rule/tactical/dca-tac-016.md, /rule/naming/dca-nam-004.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -117,5 +117,5 @@ port interface, never on this class or on the store directly.
 `findById` hands out a **copy**, rebuilt through `{Name}.reconstitute(...)` — the same factory a JDBC or
 JPA adapter must use because a row leaves it no choice. Returning `store.get(id)` directly would hand out
 the stored instance, so a use case that mutates it without calling `save()` would silently pass its tests
-and fail against a database ([A repository hands out copies](/guide/readme/rules.md)). Reconstitution
+and fail against a database ([A repository hands out copies](/guide/rules.md)). Reconstitution
 registers no domain event; unpublished events on the saved instance are not carried into the store.

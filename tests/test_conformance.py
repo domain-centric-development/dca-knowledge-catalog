@@ -125,18 +125,46 @@ def test_relative_links_are_rewritten_onto_bundle_nodes(bundle: Path):
 
 def test_adr_template_links_land_on_the_process_node(bundle: Path):
     # the template is _SKIPped as a Guide, but the bundle has it as a Process node
-    text = (bundle / "guide" / "readme" / "quick-navigation.md").read_text(encoding="utf-8")
+    text = (bundle / "guide" / "readme" / "the-guide.md").read_text(encoding="utf-8")
     assert f"](/{process.NODE_PATH})" in text
 
 
 def test_anchored_links_resolve_to_the_section_node(bundle: Path):
     # H2 anchor -> that section's node; sub-heading anchor -> its enclosing section
     text = (bundle / "guide" / "spring-modulith" / "core-concepts.md").read_text(encoding="utf-8")
-    assert "](/guide/readme/java-package-structure.md)" in text
+    assert "](/guide/dependency-structure/layer-dependency-flow.md)" in text
 
-    # dialect divergence: GitHub keeps the '&' spacing as '--', slugify collapses it
-    refs = (bundle / "guide" / "clean-architecture-comparison" / "key-references.md")
-    assert "](/guide/readme/references-further-reading.md)" in refs.read_text(encoding="utf-8")
+    nested = (bundle / "guide" / "spring-modulith"
+              / "progressive-complexity-for-spring-modulith-modules.md")
+    assert "](/guide/package-structure/progressive-complexity-principle.md)" in nested.read_text(encoding="utf-8")
+
+
+def test_anchor_dialects_agree_on_ampersand_headings(tmp_path):
+    # GitHub keeps the '&' spacing as '--', slugify collapses it to one dash
+    guide = tmp_path / docs.GUIDE_REL
+    (guide / "architecture").mkdir(parents=True)
+    (guide / "architecture" / "references.md").write_text(
+        "# References\n\n## References & Further Reading\n\nbooks.\n", encoding="utf-8")
+    (guide / "README.md").write_text(
+        "# Main\n\n## Links\n\n"
+        "See [refs](./architecture/references.md#references--further-reading).\n", encoding="utf-8")
+
+    nodes = {n.path: n for n in docs.extract(tmp_path)}
+    assert "](/guide/references/references-further-reading.md)" in nodes["guide/readme/links.md"].body
+
+
+def test_a_document_in_a_subdirectory_becomes_a_guide_node(tmp_path):
+    guide = tmp_path / docs.GUIDE_REL
+    (guide / "topics").mkdir(parents=True)
+    (guide / "README.md").write_text(
+        "# Main\n\n## Links\n\nSee [modulith](./topics/spring-modulith.md#core-concepts).\n",
+        encoding="utf-8")
+    (guide / "topics" / "spring-modulith.md").write_text(
+        "# Spring Modulith\n\n## Core Concepts\n\nmodules.\n", encoding="utf-8")
+
+    nodes = {n.path: n for n in docs.extract(tmp_path)}
+    assert nodes["guide/spring-modulith.md"].frontmatter["resource"] == "dca-guide/topics/spring-modulith.md"
+    assert "](/guide/spring-modulith/core-concepts.md)" in nodes["guide/readme/links.md"].body
 
 
 def test_rewrite_leaves_code_alone_and_handles_backticked_link_text(tmp_path):

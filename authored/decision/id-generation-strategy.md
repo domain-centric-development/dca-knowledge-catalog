@@ -4,7 +4,7 @@ title: Where an identifier comes from
 tags: [decision, tactical, value-object, aggregate, entity, factory, port-out]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/factory.md, /guide/readme/elements.md, /marker/port-out/outputport.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md]
+evidence: [/marker/tactical/factory.md, /guide/elements.md, /marker/port-out/outputport.md, /guide/spring-modulith/shared-kernel-in-spring-modulith.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md]
 ---
 
 When you create something that has identity, its `Id` has to come from somewhere. The fork is the **source** of that identifier: the **domain generates** it, a **factory assigns** it during complex creation, it is an **externally-owned identity** you receive (the current user, a foreign system's key), or — the anti-pattern — you let the **database** hand back a generated number after the insert. The default in DCA is that identity is a first-class domain concern, minted before persistence, and modelled as a typed Value Object rather than a raw `Long` or `String`.
@@ -25,7 +25,7 @@ Ask, in order:
 A typed ID Value Object with a `generate()` factory: `record ProductId(UUID value) implements Value { static ProductId generate() { return new ProductId(UUID.randomUUID()); } }`. The aggregate is fully valid the moment it is constructed, before it ever touches a repository. Type safety prevents mixing one context's ids with another's.
 
 - **When:** the common case — your context creates the aggregate and nothing external owns its identity.
-- Ground: [Layer elements](/guide/readme/elements.md)
+- Ground: [Layer elements](/guide/elements.md)
 
 ### Factory-assigned id
 
@@ -46,6 +46,6 @@ The identifier belongs to someone else. For the acting user, read it from an ide
 ## Anchors
 
 - Markers: [OutputPort](/marker/port-out/outputport.md) · [Factory](/marker/tactical/factory.md) · [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
+- Guide: [Layer elements](/guide/elements.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md)
 - Related decisions: [Entity or Value Object](/decision/entity-vs-value-object.md) · [Factory vs. constructor](/decision/factory-vs-constructor.md)

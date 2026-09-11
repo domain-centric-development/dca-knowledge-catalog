@@ -3,7 +3,7 @@ type: Section
 title: "Building one: what actually holds"
 chapter: "Delivering a story: backlog, stages, gates"
 source: guide
-resource: dca-guide/factory.md
+resource: dca-guide/process/factory.md
 tags: [guide, section]
 ---
 

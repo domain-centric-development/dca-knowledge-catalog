@@ -4,7 +4,7 @@ title: Framework leak in the domain layer
 tags: [pitfall, onion, domain, spring]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/onion/dca-oni-002.md, /rule/onion/dca-oni-003.md, /rule/layered/dca-lay-002.md, /guide/architecture-reference-guide/framework-annotations-rules.md, /guide/readme/elements.md, /marker/tactical/aggregateroot.md, /marker/tactical/domainservice.md, /marker/tactical/value.md]
+evidence: [/rule/onion/dca-oni-002.md, /rule/onion/dca-oni-003.md, /rule/layered/dca-lay-002.md, /guide/quick-reference/framework-annotations.md, /guide/elements.md, /marker/tactical/aggregateroot.md, /marker/tactical/domainservice.md, /marker/tactical/value.md]
 ---
 
 Domain classes that import Spring or JPA — `@Entity`, `@Component`, `@Service`, `@Autowired`, `@Table`, `jakarta.persistence.*`, `org.springframework.*` — right on the aggregates, value objects, and domain services. It feels convenient ("the aggregate *is* the table row"), but it welds the innermost, most valuable layer to infrastructure it should never know about.
@@ -30,6 +30,6 @@ Domain: `public final class Money { … }` with no annotations. Persistence: a s
 
 ## Anchors
 
-- Guide: [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Framework annotation rules](/guide/quick-reference/framework-annotations.md) · [Layer elements](/guide/elements.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [DomainService](/marker/tactical/domainservice.md) · [Value](/marker/tactical/value.md)
 - Related pitfall: [DTO in the application layer](/pitfall/dto-in-application-layer.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md)

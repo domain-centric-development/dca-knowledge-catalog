@@ -2,7 +2,7 @@
 type: Guide
 title: JWT Implementation Guide
 source: guide
-resource: dca-guide/jwt-implementation-guide.md
+resource: dca-guide/topics/jwt-implementation-guide.md
 tags: [guide, guide]
 ---
 

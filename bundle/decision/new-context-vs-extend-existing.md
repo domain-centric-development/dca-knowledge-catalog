@@ -4,7 +4,7 @@ title: New bounded context or extend an existing one
 tags: [decision, strategic, bounded-context, subdomain, package-structure]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/strategic/boundedcontext.md, /marker/strategic/sharedkernel.md, /rule/strategic/dca-str-003.md, /guide/readme/java-package-structure.md, /guide/archunit-governance/context-specific-rule-sets.md]
+evidence: [/marker/strategic/boundedcontext.md, /marker/strategic/sharedkernel.md, /rule/strategic/dca-str-003.md, /guide/package-structure.md, /guide/archunit-governance/context-specific-rule-sets.md]
 ---
 
 A new feature has landed. The fork is whether it belongs **inside an existing bounded context** or deserves a **new context** of its own. Splitting too early scatters a single cohesive model across boundaries you then fight to cross; splitting too late lets one word mean three things and one team block another. The boundary is linguistic and organizational before it is technical.
@@ -44,7 +44,7 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 
 - Markers: [@BoundedContext](/marker/strategic/boundedcontext.md) · [@SharedKernel](/marker/strategic/sharedkernel.md)
 - Rules: [Modules must not access each other in the application layer](/rule/strategic/dca-str-003.md)
-- Guide: [Java package structure](/guide/readme/java-package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
+- Guide: [Java package structure](/guide/package-structure.md) · [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md)
 - Recipes: [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Related decisions: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) · [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
 - Related pitfall: [Operational module marked as a bounded context](/pitfall/operational-module-marked-as-a-bounded-context.md)

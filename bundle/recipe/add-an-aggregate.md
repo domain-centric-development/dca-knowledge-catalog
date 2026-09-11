@@ -32,6 +32,6 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 
 - Template: [Aggregate root skeleton](/template/aggregate-root.md)
 - Markers: [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md) · [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md) · [Repository<T, ID>](/marker/port-out/repository.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer elements](/guide/elements.md) · [Layer rules](/guide/rules.md)
 - Then expose behavior via [Add a use case](/recipe/add-a-use-case.md)
 - Pitfall: [Modifying two aggregates in one transaction](/pitfall/modifying-two-aggregates-in-one-transaction.md) — size the boundary first ([Aggregate boundary and size](/decision/aggregate-boundary-size.md))

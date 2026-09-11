@@ -41,13 +41,12 @@ import dev.domaincentric.dca.buildingblocks.ddd.strategic.relationships.SharedKe
 
 ## Related mentions in guides (heuristic)
 
-- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [Approach 2: Strategy/Callback Pattern](/guide/domain-services-with-data-dependencies/approach-2-strategy-callback-pattern.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
-- [RULES](/guide/readme/rules.md)
+- [Dependency matrix](/guide/quick-reference/dependency-matrix.md)
+- [Rules of thumb](/guide/repository-vs-store/rules-of-thumb.md)
 - [Shared Kernel in Spring Modulith](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
+- [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
+- [What belongs in the shared kernel](/guide/strategic-design/what-belongs-in-the-shared-kernel.md)

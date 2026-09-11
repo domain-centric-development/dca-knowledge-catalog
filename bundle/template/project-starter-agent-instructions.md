@@ -4,7 +4,7 @@ title: "Project starter: agent instructions for a catalog-driven DCA project"
 tags: [template, bootstrap, governance]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/archunit-governance/core-rule-categories.md, /guide/readme/java-package-structure.md]
+evidence: [/guide/archunit-governance/core-rule-categories.md, /guide/package-structure.md]
 applies_to: [language-neutral]
 framework: [framework-neutral]
 ---
@@ -47,5 +47,5 @@ only the path reference).
 
 - Recipe: [Bootstrap a new application](/recipe/bootstrap-a-new-application.md) · [Build a DCA application](/recipe/build-a-dca-application.md) (task router)
 - Governance: [Core rule categories](/guide/archunit-governance/core-rule-categories.md)
-- Structure the agent will build: [Java package structure](/guide/readme/java-package-structure.md)
+- Structure the agent will build: [Java package structure](/guide/package-structure.md)
 - Recording decisions along the way: [Creating an ADR](/process/creating-an-adr.md)

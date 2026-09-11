@@ -1,7 +1,7 @@
 ---
 type: Process
 title: How to write an ADR
-resource: dca-guide/adr-template.md
+resource: dca-guide/process/adr-template.md
 tags: [adr, process, governance]
 ---
 

@@ -52,8 +52,6 @@ clearing to the caller and is not the sanctioned form.
 
 ## Related mentions in guides (heuristic)
 
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [RULES](/guide/readme/rules.md)
+- [Building blocks, as the library defines them](/guide/elements/building-blocks-as-the-library-defines-them.md)

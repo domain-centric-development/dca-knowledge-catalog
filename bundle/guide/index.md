@@ -1,27 +1,43 @@
 # guide
 
-- [architecture-reference-guide/](architecture-reference-guide/index.md) (7)
 - [archunit-governance/](archunit-governance/index.md) (13)
 - [clean-architecture-comparison/](clean-architecture-comparison/index.md) (11)
+- [dependency-structure/](dependency-structure/index.md) (9)
 - [deployment-patterns/](deployment-patterns/index.md) (6)
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (8)
 - [e2e-testing/](e2e-testing/index.md) (11)
+- [elements/](elements/index.md) (5)
 - [factory/](factory/index.md) (9)
+- [integration-patterns/](integration-patterns/index.md) (10)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (17)
 - [language-mappings/](language-mappings/index.md) (11)
-- [readme/](readme/index.md) (14)
+- [package-structure/](package-structure/index.md) (7)
+- [quick-reference/](quick-reference/index.md) (5)
+- [readme/](readme/index.md) (5)
+- [references/](references/index.md) (13)
+- [repository-vs-store/](repository-vs-store/index.md) (6)
+- [rules/](rules/index.md) (13)
 - [spring-modulith/](spring-modulith/index.md) (11)
+- [strategic-design/](strategic-design/index.md) (2)
 - [team-topologies/](team-topologies/index.md) (11)
 
-- [Architecture Reference Guide](architecture-reference-guide.md) — Architecture Reference Guide
 - [ArchUnit Governance for Domain-Centric Architecture](archunit-governance.md) — ArchUnit Governance for Domain-Centric Architecture
 - [Domain-Centric Architecture vs Clean Architecture](clean-architecture-comparison.md) — Domain-Centric Architecture vs Clean Architecture
+- [Dependency Structure](dependency-structure.md) — Dependency Structure.
 - [Deployment Patterns](deployment-patterns.md) — Deployment Patterns
 - [Domain Services with Data Dependencies](domain-services-with-data-dependencies.md) — Domain Services with Data Dependencies
 - [E2E Testing for Domain-Centric Architecture](e2e-testing.md) — Practical guide for browser-based end-to-end testing using Playwright with data-test attributes and the Page Object P...
+- [Elements](elements.md) — Elements.
 - [Delivering a story: backlog, stages, gates](factory.md) — Domain-Centric Architecture says how an application is shaped. This document says how one piece of
+- [Integration Patterns](integration-patterns.md) — Integration Patterns.
 - [JWT Implementation Guide](jwt-implementation-guide.md) — Reference guide for JWT-based authentication in a multiservice e-commerce platform. Covers token design, login state ...
 - [Language Mappings: Java/Spring ↔ C#/.NET](language-mappings.md) — Language Mappings: Java/Spring ↔ C#/.NET
-- [Domain-Centric Architecture](readme.md) — Domain-Centric Architecture
+- [Java Package Structure](package-structure.md) — Java Package Structure.
+- [Quick Reference](quick-reference.md) — A lookup table for readers who know the style and need the placement, not the reasoning. Every
+- [Domain-Centric Architecture](readme.md) — Written by **Christoph Bloemer** — @chbloemer.
+- [References & Further Reading](references.md) — Domain-Centric Architecture synthesizes ideas from multiple foundational works and thought leaders. Below are the key...
+- [Repository vs. Store](repository-vs-store.md) — DCA distinguishes two kinds of persistence-shaped output ports. Both `extend OutputPort`, but their **business semant...
+- [Rules](rules.md) — Rules.
 - [Spring Modulith Implementation](spring-modulith.md) — Spring Modulith Implementation
+- [Strategic Architecture](strategic-design.md) — Strategic Architecture
 - [Team Topologies Integration](team-topologies.md) — Team Topologies Integration

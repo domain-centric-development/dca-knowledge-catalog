@@ -4,7 +4,7 @@ title: Exposing domain objects over REST
 tags: [pitfall, adapter, rest, dto, domain, hexagonal]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-008.md, /rule/naming/dca-nam-007.md, /rule/usecase/dca-use-011.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md, /guide/architecture-reference-guide/ports-and-adapters.md]
+evidence: [/rule/usecase/dca-use-008.md, /rule/naming/dca-nam-007.md, /rule/usecase/dca-use-011.md, /marker/tactical/aggregateroot.md, /marker/tactical/entity.md, /guide/quick-reference/port-placement.md]
 ---
 
 A REST controller that returns an aggregate or entity directly — `return orderRepository.findById(id)` serialized straight to JSON — or accepts one as a `@RequestBody`. The domain model becomes the wire contract. The tempting shortcut is that the `Order` already has all the fields the client wants, so why map it?
@@ -34,5 +34,5 @@ Map at the edge. The use case returns a `Result` (application type, no domain ob
 
 - Rules: [HTTP response models must end with 'Response'](/rule/usecase/dca-use-008.md) · [DTOs must reside in the adapter layer](/rule/naming/dca-nam-007.md) · [DTOs must not be used in the application layer](/rule/usecase/dca-use-011.md)
 - Markers: [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Entity&lt;T, ID&gt;](/marker/tactical/entity.md)
-- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Port placement](/guide/quick-reference/port-placement.md)
 - Sibling pitfall: [DTO in the application layer](/pitfall/dto-in-application-layer.md)

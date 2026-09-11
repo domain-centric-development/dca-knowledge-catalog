@@ -1,6 +1,6 @@
 ---
 type: Section
-title: DEVIATIONS FROM THE LITERATURE
+title: Deviations from the literature
 chapter: Domain-Centric Architecture
 source: guide
 resource: dca-guide/README.md
@@ -17,7 +17,7 @@ The rejected alternative is worth naming: keeping the interface in the domain la
 
 ### Repository vs. Store
 
-The literature knows only the Repository (one per aggregate root). DCA refines this with a second output-port type, the **Store**, for operational data without aggregate lifecycle (value objects, technical state) — see [Repository vs. Store](#repository-vs-store).
+The literature knows only the Repository (one per aggregate root). DCA refines this with a second output-port type, the **Store**, for operational data without aggregate lifecycle (value objects, technical state) — see [Repository vs. Store](/guide/repository-vs-store.md).
 
 ### Results Instead of Output Ports, Assembled on the Application Side
 

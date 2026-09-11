@@ -3,11 +3,11 @@ type: Section
 title: Progressive Structure Evolution
 chapter: Team Topologies Integration
 source: guide
-resource: dca-guide/team-topologies.md
+resource: dca-guide/topics/team-topologies.md
 tags: [guide, section]
 ---
 
-Teams and architecture should evolve together. For detailed package structure evolution, see [Domain-Centric Architecture - Progressive Complexity](/guide/readme/java-package-structure.md).
+Teams and architecture should evolve together. For detailed package structure evolution, see [Domain-Centric Architecture - Progressive Complexity](/guide/package-structure/progressive-complexity-principle.md).
 
 ### Phase 1: New Stream-Aligned Team (Week 1-2)
 

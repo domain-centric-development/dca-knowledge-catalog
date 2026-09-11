@@ -4,7 +4,7 @@ title: "REST resource skeleton (incoming adapter injecting input ports)"
 tags: [template, adapter, rest]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/architecture-reference-guide/ports-and-adapters.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/quick-reference/port-placement.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,5 +22,5 @@ further language is one more file rather than a second copy of this node.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - Rules: [REST controllers must end with 'Resource'](/rule/naming/dca-nam-006.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-004.md) · [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
-- Guide: [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Port placement](/guide/quick-reference/port-placement.md)
 - Recipe: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

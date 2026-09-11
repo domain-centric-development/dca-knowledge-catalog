@@ -61,5 +61,5 @@ it is not.
 
 ## Related mentions in guides (heuristic)
 
-- [ELEMENTS](/guide/readme/elements.md)
-- [RULES](/guide/readme/rules.md)
+- [TRANSACTION RULES](/guide/rules/transaction-rules.md)
+- [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

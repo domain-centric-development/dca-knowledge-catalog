@@ -4,7 +4,7 @@ title: Add a domain event and consumer
 tags: [recipe, domain, events]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/spring-modulith/module-communication.md, /rule/advanced/dca-adv-001.md, /rule/advanced/dca-adv-008.md, /rule/advanced/dca-adv-002.md, /rule/advanced/dca-adv-004.md, /rule/advanced/dca-adv-007.md, /marker/tactical/domainevent.md, /guide/readme/rules.md]
+evidence: [/guide/spring-modulith/module-communication.md, /rule/advanced/dca-adv-001.md, /rule/advanced/dca-adv-008.md, /rule/advanced/dca-adv-002.md, /rule/advanced/dca-adv-004.md, /rule/advanced/dca-adv-007.md, /marker/tactical/domainevent.md, /guide/rules.md]
 ---
 
 Record that something meaningful happened in the domain, and let another part of the *same* context react to it. A past-tense record implementing `DomainEvent`, registered on the aggregate, published by the use case after save, consumed in-process. If the reaction crosses a context boundary, this is the wrong recipe.
@@ -35,5 +35,5 @@ Does the consumer live in another bounded context or an external system? Then yo
 - Templates: [Domain event skeleton](/template/domain-event.md) · [Event consumer skeleton](/template/event-consumer.md)
 - Decision: [Domain event vs. integration event](/decision/domain-event-vs-integration-event.md)
 - Marker: [DomainEvent](/marker/tactical/domainevent.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Layer rules](/guide/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/integration-patterns.md)
 - Events are raised inside an [aggregate](/recipe/add-an-aggregate.md); to cross a boundary use [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)

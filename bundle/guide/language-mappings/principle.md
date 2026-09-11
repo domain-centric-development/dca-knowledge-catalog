@@ -3,7 +3,7 @@ type: Section
 title: Principle
 chapter: "Language Mappings: Java/Spring ↔ C#/.NET"
 source: guide
-resource: dca-guide/language-mappings.md
+resource: dca-guide/topics/language-mappings.md
 tags: [guide, section]
 ---
 

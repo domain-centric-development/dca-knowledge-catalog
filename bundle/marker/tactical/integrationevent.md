@@ -87,6 +87,5 @@ public class CartCheckedOutEventPublisher {
 ## Related mentions in guides (heuristic)
 
 - [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
-- [References & Further Reading](/guide/readme/references-further-reading.md)
-- [RULES](/guide/readme/rules.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

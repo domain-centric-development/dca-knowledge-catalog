@@ -4,7 +4,7 @@ title: Remote call inside a transaction
 tags: [pitfall, application, use-case, port-out, persistence, performance]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-013.md, /rule/usecase/dca-use-012.md, /marker/application/transactionboundary.md, /marker/port-out/outputport.md, /guide/readme/rules.md]
+evidence: [/rule/usecase/dca-use-013.md, /rule/usecase/dca-use-012.md, /marker/application/transactionboundary.md, /marker/port-out/outputport.md, /guide/rules.md]
 ---
 
 A `@Transactional` use case (or the body of an explicit transaction block) that calls an output port which may leave the process — another bounded context's API, a payment provider, a mail gateway, a remote catalog. In the monolith the call is in-process and nothing hurts; in the distributed deployment the same code holds a database connection for a network round trip.
@@ -41,4 +41,4 @@ return transactionBoundary.inTransaction(() -> {               // short transact
 
 - Rules: [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md) · [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md)
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [OutputPort](/marker/port-out/outputport.md)
-- Guide: [Layer rules](/guide/readme/rules.md)
+- Guide: [Layer rules](/guide/rules.md)

@@ -3,7 +3,7 @@ type: Section
 title: "Adoption Path (Tiers)"
 chapter: ArchUnit Governance for Domain-Centric Architecture
 source: guide
-resource: dca-guide/archunit-governance.md
+resource: dca-guide/topics/archunit-governance.md
 tags: [guide, section]
 ---
 

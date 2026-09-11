@@ -39,7 +39,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 
 - Template: [Use case skeleton](/template/use-case.md)
 - Markers: [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [InputPort](/marker/port-in/inputport.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer rules](/guide/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/elements.md)
 - If the use case must notify another context: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)
 - Shaping the answer: [Result shape and assembly](/decision/result-shape-and-assembly.md)
 - If the flat list has grown long: [Group use cases into features or split the bounded context](/decision/group-use-cases-vs-split-context.md) — migrate the whole context in one move, never one use case at a time

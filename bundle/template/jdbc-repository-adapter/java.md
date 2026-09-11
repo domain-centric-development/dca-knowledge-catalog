@@ -5,7 +5,7 @@ parent: /template/jdbc-repository-adapter.md
 tags: [template, adapter, persistence, repository, spring]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-out/repository.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-015.md, /rule/hexagonal/dca-hex-008.md, /rule/usecase/dca-use-009.md, /rule/tactical/dca-tac-013.md, /guide/readme/rules.md, /guide/readme/deviations-from-the-literature.md]
+evidence: [/marker/port-out/repository.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-015.md, /rule/hexagonal/dca-hex-008.md, /rule/usecase/dca-use-009.md, /rule/tactical/dca-tac-013.md, /guide/rules.md, /guide/readme/deviations-from-the-literature.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

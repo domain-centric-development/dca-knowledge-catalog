@@ -5,7 +5,7 @@ parent: /template/entity.md
 tags: [template, domain, entity]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/entity.md, /marker/tactical/id.md, /rule/tactical/dca-tac-004.md, /rule/tactical/dca-tac-005.md, /rule/tactical/dca-tac-007.md, /rule/tactical/dca-tac-006.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/entity.md, /marker/tactical/id.md, /rule/tactical/dca-tac-004.md, /rule/tactical/dca-tac-005.md, /rule/tactical/dca-tac-007.md, /rule/tactical/dca-tac-006.md, /guide/elements.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

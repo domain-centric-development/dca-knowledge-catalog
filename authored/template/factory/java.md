@@ -5,7 +5,7 @@ parent: /template/factory.md
 tags: [template, domain, factory]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/factory.md, /rule/advanced/dca-adv-013.md, /rule/advanced/dca-adv-014.md, /rule/advanced/dca-adv-015.md, /rule/advanced/dca-adv-016.md, /guide/readme/elements.md, /guide/architecture-reference-guide/framework-annotations-rules.md]
+evidence: [/marker/tactical/factory.md, /rule/advanced/dca-adv-013.md, /rule/advanced/dca-adv-014.md, /rule/advanced/dca-adv-015.md, /rule/advanced/dca-adv-016.md, /guide/elements.md, /guide/quick-reference/framework-annotations.md]
 applies_to: [java]
 framework: [spring]
 ---

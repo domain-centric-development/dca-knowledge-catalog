@@ -39,10 +39,10 @@ The bundle is a **derived artifact** generated from the other sub-projects:
 
 | Bundle content | Generated from |
 |----------------|----------------|
-| `bundle/guide/**` | `dca-guide/*.md` (full text, container + section nodes) |
+| `bundle/guide/**` | `dca-guide/**/*.md` (full text, container + section nodes) |
 | `bundle/marker/**` | `dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/**/*.java` |
 | `bundle/rule/**` | `dca-java/rules.json` (ids, titles, rationale — regenerate with `./gradlew :dca-archunit:rulesCatalog`) + `dca-java/dca-archunit/src/main/java/.../rules/*Rules.java` (verbatim expression per rule); `dca-dotnet/rules.json` (`dotnet run --project tools/RulesCatalog -- .`) for `implementations`, `not_applicable_dotnet` and the .NET-only `DCA-NET` rules |
-| `bundle/process/creating-an-adr.md` | `dca-guide/adr-template.md` |
+| `bundle/process/creating-an-adr.md` | `dca-guide/process/adr-template.md` |
 | `bundle/reference/layout.md`, `bundle/reference/architecture.md` | `dca-java/dca-archunit/src/main/java/.../DcaLayout.java`, `FrameworkAnnotations.java`, `DcaArchitecture.java` + `dca-dotnet/src/DomainCentric.ArchRules/DcaLayout.cs`, `FrameworkTypes.cs`, `DcaArchitecture.cs` (javadoc/XML doc, defaults, constants, public API — rendered, never typed) |
 
 The guide is the **main body** (full text copied verbatim); marker and rule nodes
@@ -116,7 +116,7 @@ document acquired an outward reference: fix it there.
 - `okf.py` — `Node` model + deterministic markdown/frontmatter writer.
 - `docs.py` — parses the guide `.md` into Guide containers + Section
   children (fence-aware `##` splitter; full verbatim text in section bodies).
-  Relative links in that text (`./spring-modulith.md#packaging-rules`) are
+  Relative links in that text (`../topics/spring-modulith.md#packaging-rules`) are
   rewritten onto bundle nodes — an `#anchor` resolves to the section node that
   carries the heading, an unknown one to the container; `adr-template.md` lands
   on the Process node (`_ALIASES`). A link left un-rewritten fails the tests: it

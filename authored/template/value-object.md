@@ -4,7 +4,7 @@ title: "Value object skeleton (Java record implementing Value)"
 tags: [template, domain, value-object]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-008.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/value.md, /rule/tactical/dca-tac-009.md, /rule/tactical/dca-tac-010.md, /rule/tactical/dca-tac-011.md, /rule/tactical/dca-tac-008.md, /guide/elements.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [Value](/marker/tactical/value.md)
 - Rules: [Value Object classes should be final (immutability)](/rule/tactical/dca-tac-009.md) · [Value Object fields must be final (deep immutability)](/rule/tactical/dca-tac-010.md) · [Value Objects must not have setter methods](/rule/tactical/dca-tac-011.md) · [Value Objects must not contain Aggregate Roots or Entities](/rule/tactical/dca-tac-008.md)
-- Guide: [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer elements](/guide/elements.md)
 - Decision: [Entity vs. Value Object](/decision/entity-vs-value-object.md)
 - Recipe: [Add a value object](/recipe/add-a-value-object.md)

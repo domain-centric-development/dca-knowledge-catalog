@@ -3,7 +3,7 @@ type: Section
 title: Starting where you are
 chapter: "Delivering a story: backlog, stages, gates"
 source: guide
-resource: dca-guide/factory.md
+resource: dca-guide/process/factory.md
 tags: [guide, section]
 ---
 

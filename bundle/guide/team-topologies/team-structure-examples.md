@@ -3,7 +3,7 @@ type: Section
 title: Team Structure Examples
 chapter: Team Topologies Integration
 source: guide
-resource: dca-guide/team-topologies.md
+resource: dca-guide/topics/team-topologies.md
 tags: [guide, section]
 ---
 
@@ -64,4 +64,4 @@ tags: [guide, section]
 - Well-defined API
 - Complicated subsystem hides complexity
 
-> **For technical integration patterns:** See [Domain-Centric Architecture - Integration Patterns](/guide/readme/integration-patterns.md)
+> **For technical integration patterns:** See [Domain-Centric Architecture - Integration Patterns](/guide/integration-patterns.md)

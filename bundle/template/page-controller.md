@@ -24,6 +24,6 @@ further language is one more file rather than a second copy of this node.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - Rules: [Controller classes must end with 'Controller'](/rule/naming/dca-nam-005.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [Incoming Adapters must depend on input port interfaces, not on use case classes](/rule/hexagonal/dca-hex-011.md) · [Incoming Adapters must not depend on domain services](/rule/hexagonal/dca-hex-012.md) · [ViewModels must reside in adapter.incoming.web packages](/rule/naming/dca-nam-011.md) · [HTTP Response Models must end with 'Response' and reside in adapter incoming package](/rule/usecase/dca-use-008.md) · [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
-- Guide: [Layer rules](/guide/readme/rules.md) (input adapter rules, exception flow) · [Ports and adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
+- Guide: [Layer rules](/guide/rules.md) (input adapter rules, exception flow) · [Port placement](/guide/quick-reference/port-placement.md)
 - Pitfalls: [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) · [Business logic in adapter](/pitfall/business-logic-in-adapter.md)
 - Related templates: [ViewModel](/template/view-model.md) · [Domain exception](/template/domain-exception.md) · [REST resource](/template/rest-resource.md)

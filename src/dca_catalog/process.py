@@ -1,6 +1,6 @@
 """Extract the "creating-an-adr" Process node.
 
-Source: ``dca-guide/adr-template.md``
+Source: ``dca-guide/process/adr-template.md``
 
 The catalog records how to *write* an architectural decision, not the decisions
 of any one project: a record like "ADR-030" is a fact about the reference
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .okf import Node
 
-TEMPLATE_REL = "dca-guide/adr-template.md"
+TEMPLATE_REL = "dca-guide/process/adr-template.md"
 # The template is not a Guide node, so guide links to it are rewritten here
 # instead (see ``docs._ALIASES``).
 NODE_PATH = "process/creating-an-adr.md"

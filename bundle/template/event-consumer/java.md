@@ -5,7 +5,7 @@ parent: /template/event-consumer.md
 tags: [template, adapter, events]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/spring-modulith/module-communication.md, /marker/port-in/inputport.md, /marker/tactical/integrationevent.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-010.md, /guide/readme/integration-patterns.md]
+evidence: [/guide/spring-modulith/module-communication.md, /marker/port-in/inputport.md, /marker/tactical/integrationevent.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-010.md, /guide/integration-patterns.md]
 applies_to: [java]
 framework: [spring]
 ---

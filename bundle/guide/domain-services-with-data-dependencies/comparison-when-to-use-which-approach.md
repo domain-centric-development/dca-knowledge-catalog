@@ -3,7 +3,7 @@ type: Section
 title: "Comparison: When to Use Which Approach"
 chapter: Domain Services with Data Dependencies
 source: guide
-resource: dca-guide/domain-services-with-data-dependencies.md
+resource: dca-guide/topics/domain-services-with-data-dependencies.md
 tags: [guide, section]
 ---
 

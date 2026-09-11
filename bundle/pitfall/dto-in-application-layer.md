@@ -4,7 +4,7 @@ title: Adapter DTO in the application layer
 tags: [pitfall, use-case, application, dto]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-011.md, /rule/naming/dca-nam-007.md, /guide/readme/rules.md, /guide/readme/elements.md, /marker/port-in/usecase.md]
+evidence: [/rule/usecase/dca-use-011.md, /rule/naming/dca-nam-007.md, /guide/rules.md, /guide/elements.md, /marker/port-in/usecase.md]
 ---
 
 Passing a presentation or transport DTO — a REST request body, a JSON-bound `*Dto`, a form-backing object — straight into a use case as its input, or returning one as its output. The adapter's serialization type becomes the application's contract, so the boundary between "how data arrives" and "what the use case needs" collapses.
@@ -31,6 +31,6 @@ Define the use case's input and output as its **own** models — immutable `Comm
 
 ## Anchors
 
-- Guide: [Layer rules](/guide/readme/rules.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer rules](/guide/rules.md) · [Layer elements](/guide/elements.md)
 - Markers: [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Related pitfall: [Framework leak in the domain layer](/pitfall/framework-leak-in-domain.md)

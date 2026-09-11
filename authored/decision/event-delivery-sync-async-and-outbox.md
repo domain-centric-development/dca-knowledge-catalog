@@ -4,7 +4,7 @@ title: "Event delivery: synchronous, asynchronous, and when you need an outbox"
 tags: [decision, events, outbox]
 review: reviewed
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md, /guide/readme/rules.md, /guide/spring-modulith/module-communication.md, /guide/readme/integration-patterns.md]
+evidence: [/marker/tactical/domainevent.md, /marker/tactical/integrationevent.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md, /guide/rules.md, /guide/spring-modulith/module-communication.md, /guide/integration-patterns.md]
 ---
 
 ## Choose boundary and delivery independently
@@ -41,5 +41,5 @@ review remote-capable calls and transaction scope explicitly.
 ## Anchors
 
 - Markers: [DomainEvent](/marker/tactical/domainevent.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
-- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Layer rules](/guide/readme/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md) · [Layer rules](/guide/rules.md) · [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/integration-patterns.md)
 - Related: [Note: domain vs integration events in an outbox](/note/outbox-domain-vs-integration-events.md)

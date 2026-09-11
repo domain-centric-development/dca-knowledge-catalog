@@ -4,7 +4,7 @@ title: "Store skeleton (output port + in-memory outgoing adapter)"
 tags: [template, application, port-out, persistence]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-out/store.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-018.md, /rule/tactical/dca-tac-019.md, /rule/tactical/dca-tac-020.md, /rule/tactical/dca-tac-021.md, /guide/readme/elements.md]
+evidence: [/marker/port-out/store.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-018.md, /rule/tactical/dca-tac-019.md, /rule/tactical/dca-tac-020.md, /rule/tactical/dca-tac-021.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -24,6 +24,6 @@ further language is one more file rather than a second copy of this node.
 - Decisions: [Repository or Store: which output port persists this](/decision/repository-vs-store.md)
 - Rules: [extends the Store marker](/rule/tactical/dca-tac-018.md) · [interface in application.shared](/rule/tactical/dca-tac-019.md) · [implementation in adapter.outgoing](/rule/tactical/dca-tac-020.md) · [no findById/save](/rule/tactical/dca-tac-021.md)
 - Pitfall: [Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — the mistake this template avoids
-- Guide: [Layer elements](/guide/readme/elements.md)
+- Guide: [Layer elements](/guide/elements.md)
 - Sibling template: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
 - Recipe: [Add a store](/recipe/add-a-store.md)

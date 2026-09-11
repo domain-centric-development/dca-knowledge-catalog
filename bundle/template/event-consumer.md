@@ -4,7 +4,7 @@ title: "Event consumer skeleton (incoming adapter with @ApplicationModuleListene
 tags: [template, adapter, events]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/spring-modulith/module-communication.md, /marker/port-in/inputport.md, /marker/tactical/integrationevent.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-010.md, /guide/readme/integration-patterns.md]
+evidence: [/guide/spring-modulith/module-communication.md, /marker/port-in/inputport.md, /marker/tactical/integrationevent.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-007.md, /rule/strategic/dca-str-010.md, /guide/integration-patterns.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,5 +22,5 @@ further language is one more file rather than a second copy of this node.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)
 - Rules: [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-004.md) · [Incoming adapters must only access their own bounded context (except event consumers and open host services)](/rule/hexagonal/dca-hex-007.md) · [Event listeners consuming integration events should use an Anti-Corruption Layer](/rule/strategic/dca-str-010.md)
-- Guide: [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/readme/integration-patterns.md)
+- Guide: [Module communication](/guide/spring-modulith/module-communication.md) · [Integration patterns](/guide/integration-patterns.md)
 - Recipe: [Add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md)

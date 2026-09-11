@@ -4,7 +4,7 @@ title: CSRF-exempt API that accepts cookie authentication
 tags: [pitfall, adapter, rest, security, infrastructure]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/jwt-implementation-guide/8-csrf-protection.md, /guide/readme/rules.md]
+evidence: [/guide/jwt-implementation-guide/8-csrf-protection.md, /guide/rules.md]
 ---
 
 The security configuration ignores CSRF for `/api/**` ("APIs are token-based") while the authentication filter still reads the session cookie for every path — first the cookie, then the `Authorization` header as fallback. Often accompanied by `/api/auth/login` *setting* that cookie.
@@ -18,7 +18,7 @@ The security configuration ignores CSRF for `/api/**` ("APIs are token-based") w
 ## What forbids it
 
 - [CSRF protection](/guide/jwt-implementation-guide/8-csrf-protection.md) — an API may be exempt only if it neither reads nor issues cookies; browser sessions are established through CSRF-protected web forms.
-- [Layer rules](/guide/readme/rules.md) — input adapter rules: every state-changing browser form carries a CSRF token.
+- [Layer rules](/guide/rules.md) — input adapter rules: every state-changing browser form carries a CSRF token.
 
 ## Do instead
 
@@ -28,4 +28,4 @@ Make the token-only paths truly token-only in the authentication filter: on `/ap
 
 ## Anchors
 
-- Guide: [CSRF protection](/guide/jwt-implementation-guide/8-csrf-protection.md) · [Layer rules](/guide/readme/rules.md)
+- Guide: [CSRF protection](/guide/jwt-implementation-guide/8-csrf-protection.md) · [Layer rules](/guide/rules.md)

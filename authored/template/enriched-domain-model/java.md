@@ -5,7 +5,7 @@ parent: /template/enriched-domain-model.md
 tags: [template, domain, value-object, bounded-context]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/value.md, /guide/readme/integration-patterns.md, /guide/readme/elements.md, /guide/readme/java-package-structure.md]
+evidence: [/marker/tactical/value.md, /guide/integration-patterns.md, /guide/elements.md, /guide/package-structure.md]
 applies_to: [java]
 framework: [spring]
 ---

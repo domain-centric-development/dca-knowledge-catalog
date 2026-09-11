@@ -47,12 +47,7 @@ public class LineItem implements Entity<LineItem, LineItemId> {
 
 ## Related mentions in guides (heuristic)
 
-- [Custom Annotations Placement](/guide/architecture-reference-guide/custom-annotations-placement.md)
-- [Framework Annotations Rules](/guide/architecture-reference-guide/framework-annotations-rules.md)
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
 - [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [References & Further Reading](/guide/readme/references-further-reading.md)
-- [RULES](/guide/readme/rules.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)

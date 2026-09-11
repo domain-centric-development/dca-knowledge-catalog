@@ -2,7 +2,7 @@
 type: Guide
 title: Domain-Centric Architecture vs Clean Architecture
 source: guide
-resource: dca-guide/clean-architecture-comparison.md
+resource: dca-guide/topics/clean-architecture-comparison.md
 tags: [guide, guide]
 ---
 

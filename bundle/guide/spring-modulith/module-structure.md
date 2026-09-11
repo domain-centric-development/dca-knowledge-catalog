@@ -3,7 +3,7 @@ type: Section
 title: Module Structure
 chapter: Spring Modulith Implementation
 source: guide
-resource: dca-guide/spring-modulith.md
+resource: dca-guide/topics/spring-modulith.md
 tags: [guide, section]
 ---
 
@@ -55,7 +55,7 @@ com.company.ecommerce
 │           └── OrderModuleConfiguration.java
 ```
 
-> **Note:** The `internal/` structure follows [Domain-Centric Architecture layers](/guide/readme/java-package-structure.md). See main document for layer rules and responsibilities.
+> **Note:** The `internal/` structure follows [Domain-Centric Architecture layers](/guide/package-structure.md). See main document for layer rules and responsibilities.
 
 ### Module Configuration
 

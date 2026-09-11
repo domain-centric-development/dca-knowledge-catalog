@@ -4,7 +4,7 @@ title: "Domain Service skeleton (stateless multi-aggregate domain logic)"
 tags: [template, domain, domain-service]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainservice.md, /rule/advanced/dca-adv-009.md, /rule/advanced/dca-adv-010.md, /rule/advanced/dca-adv-011.md, /rule/advanced/dca-adv-012.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/architecture-reference-guide/framework-annotations-rules.md, /guide/readme/elements.md]
+evidence: [/marker/tactical/domainservice.md, /rule/advanced/dca-adv-009.md, /rule/advanced/dca-adv-010.md, /rule/advanced/dca-adv-011.md, /rule/advanced/dca-adv-012.md, /guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md, /guide/quick-reference/framework-annotations.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Marker: [DomainService](/marker/tactical/domainservice.md)
 - Rules: [Domain Services must implement DomainService Marker Interface and reside in domain.service](/rule/advanced/dca-adv-009.md) · [Domain Services must reside in domain package](/rule/advanced/dca-adv-010.md) · [Domain Services must not have Spring annotations](/rule/advanced/dca-adv-011.md) · [Domain Services should be stateless (only final fields for dependencies)](/rule/advanced/dca-adv-012.md)
-- Guide: [Pure domain services](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Layer elements](/guide/readme/elements.md)
+- Guide: [Pure domain services](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md) · [Framework annotation rules](/guide/quick-reference/framework-annotations.md) · [Layer elements](/guide/elements.md)
 - Decisions: [Where does the logic live](/decision/where-does-the-logic-live.md)
 - Related template: [Domain Gateway](/template/domain-gateway.md) — when the service needs external facts

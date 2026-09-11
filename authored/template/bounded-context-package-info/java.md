@@ -5,7 +5,7 @@ parent: /template/bounded-context-package-info.md
 tags: [template, strategic, bounded-context, context-map, modulith]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/strategic/boundedcontext.md, /marker/strategic/upstream.md, /marker/strategic/partnership.md, /rule/strategic/dca-str-001.md, /rule/contextmap/dca-map-001.md, /rule/contextmap/dca-map-006.md, /reference/architecture.md, /guide/readme/java-package-structure.md]
+evidence: [/marker/strategic/boundedcontext.md, /marker/strategic/upstream.md, /marker/strategic/partnership.md, /rule/strategic/dca-str-001.md, /rule/contextmap/dca-map-001.md, /rule/contextmap/dca-map-006.md, /reference/architecture.md, /guide/package-structure.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---

@@ -5,7 +5,7 @@ parent: /template/store-with-in-memory-adapter.md
 tags: [template, application, port-out, persistence]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-out/store.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-018.md, /rule/tactical/dca-tac-019.md, /rule/tactical/dca-tac-020.md, /rule/tactical/dca-tac-021.md, /guide/readme/elements.md]
+evidence: [/marker/port-out/store.md, /marker/port-out/outputport.md, /rule/tactical/dca-tac-018.md, /rule/tactical/dca-tac-019.md, /rule/tactical/dca-tac-020.md, /rule/tactical/dca-tac-021.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---

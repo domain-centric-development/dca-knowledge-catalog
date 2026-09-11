@@ -4,7 +4,7 @@ title: "MCP tool provider skeleton (incoming adapter exposing use cases as MCP t
 tags: [template, adapter, spring]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/hexagonal/dca-hex-007.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-003.md, /rule/naming/dca-nam-007.md, /guide/readme/java-package-structure.md, /guide/architecture-reference-guide/layer-structure.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/hexagonal/dca-hex-007.md, /rule/hexagonal/dca-hex-004.md, /rule/hexagonal/dca-hex-003.md, /rule/naming/dca-nam-007.md, /guide/package-structure.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -22,6 +22,6 @@ further language is one more file rather than a second copy of this node.
 
 - Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
 - Rules: [Incoming adapters must only access their own bounded context](/rule/hexagonal/dca-hex-007.md) · [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-004.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
-- Guide: [Java Package Structure](/guide/readme/java-package-structure.md) · [Layer structure](/guide/architecture-reference-guide/layer-structure.md)
+- Guide: [Java Package Structure](/guide/package-structure.md) · [Layer elements](/guide/elements.md)
 - Sibling template: [REST resource](/template/rest-resource.md)
 - Recipe: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)

@@ -54,9 +54,5 @@ after commit, at least once; their consumers are idempotent.
 
 ## Related mentions in guides (heuristic)
 
-- [Interface vs Implementation Placement](/guide/architecture-reference-guide/interface-vs-implementation-placement.md)
-- [Layer Structure](/guide/architecture-reference-guide/layer-structure.md)
-- [Ports and Adapters](/guide/architecture-reference-guide/ports-and-adapters.md)
-- [ELEMENTS](/guide/readme/elements.md)
-- [JAVA PACKAGE STRUCTURE](/guide/readme/java-package-structure.md)
-- [RULES](/guide/readme/rules.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
+- [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

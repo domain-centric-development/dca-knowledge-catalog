@@ -4,7 +4,7 @@ title: Domain exception skeleton
 tags: [template, domain, naming]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/readme/rules.md]
+evidence: [/rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/rules.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -21,6 +21,6 @@ further language is one more file rather than a second copy of this node.
 ## Realizes / governed by
 
 - Rules: [Domain classes must not use technical suffixes](/rule/naming/dca-nam-010.md) · [The Domain Model should be framework independent](/rule/onion/dca-oni-002.md)
-- Guide: [Layer rules](/guide/readme/rules.md) (exception layer placement, exception flow pattern)
+- Guide: [Layer rules](/guide/rules.md) (exception layer placement, exception flow pattern)
 - Pitfall: [Framework leak in domain](/pitfall/framework-leak-in-domain.md)
 - Related templates: [Aggregate root](/template/aggregate-root.md) · [Page controller](/template/page-controller.md) · [REST resource](/template/rest-resource.md)

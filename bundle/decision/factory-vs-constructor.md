@@ -41,7 +41,7 @@ A quick tell: if you are copy-pasting the same multi-step assembly into several 
 
 - Markers: [Factory](/marker/tactical/factory.md) · [AggregateRoot&lt;T, ID&gt;](/marker/tactical/aggregateroot.md) · [Id](/marker/tactical/id.md)
 - Rules: [Factories should implement Factory Marker Interface](/rule/advanced/dca-adv-013.md) · [Factories must reside in domain package](/rule/advanced/dca-adv-014.md) · [Factories should be stateless (only final fields for dependencies)](/rule/advanced/dca-adv-016.md) · [Factories must not have Spring annotations](/rule/advanced/dca-adv-015.md) · [Entities must not be instantiated directly from outside the aggregate](/rule/tactical/dca-tac-005.md)
-- Guide: [Layer elements](/guide/readme/elements.md) · [Framework annotation rules](/guide/architecture-reference-guide/framework-annotations-rules.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Layer elements](/guide/elements.md) · [Framework annotation rules](/guide/quick-reference/framework-annotations.md) · [Java package structure](/guide/package-structure.md)
 - Recipes: [Add an aggregate](/recipe/add-an-aggregate.md)
 - Template: [Factory skeleton](/template/factory.md)
 - Related decision: [Entity vs Value Object](/decision/entity-vs-value-object.md)

@@ -4,7 +4,7 @@ title: Publishing domain events without a transaction
 tags: [pitfall, events, domain-event, application, use-case, spring, modulith]
 review: reviewed
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-012.md, /rule/usecase/dca-use-013.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /guide/readme/rules.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
+evidence: [/rule/usecase/dca-use-012.md, /rule/usecase/dca-use-013.md, /marker/application/transactionboundary.md, /marker/port-out/domaineventpublisher.md, /guide/rules.md, /guide/spring-modulith/event-driven-architecture-in-spring-modulith.md]
 ---
 
 A use case that saves and publishes but carries neither `@Transactional` nor an explicit `TransactionBoundary` block. Nothing fails — that is the problem.
@@ -34,4 +34,4 @@ Static boundary evidence does not prove containment: a publish after an empty bo
 
 - Rules: [Use cases that save an aggregate or publish domain events must have a transaction boundary](/rule/usecase/dca-use-012.md) · [Declaratively transactional use cases must not call remote-capable output ports](/rule/usecase/dca-use-013.md)
 - Markers: [TransactionBoundary](/marker/application/transactionboundary.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
-- Guide: [Layer rules](/guide/readme/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
+- Guide: [Layer rules](/guide/rules.md) · [Event-driven architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

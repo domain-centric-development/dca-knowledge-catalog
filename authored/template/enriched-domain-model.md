@@ -4,7 +4,7 @@ title: "Enriched domain model skeleton (read model combining aggregate + cross-c
 tags: [template, domain, value-object, bounded-context]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/value.md, /guide/readme/integration-patterns.md, /guide/readme/elements.md, /guide/readme/java-package-structure.md]
+evidence: [/marker/tactical/value.md, /guide/integration-patterns.md, /guide/elements.md, /guide/package-structure.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -21,6 +21,6 @@ further language is one more file rather than a second copy of this node.
 ## Realizes / governed by
 
 - Marker: [Value](/marker/tactical/value.md)
-- Guide: [Enriched Read Model Pattern](/guide/readme/integration-patterns.md) · [Layer elements](/guide/readme/elements.md) · [Java package structure](/guide/readme/java-package-structure.md)
+- Guide: [Enriched Read Model Pattern](/guide/integration-patterns.md) · [Layer elements](/guide/elements.md) · [Java package structure](/guide/package-structure.md)
 - Related template: [ViewModel](/template/view-model.md)
 - Related decision: [Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md)
