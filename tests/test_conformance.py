@@ -153,6 +153,23 @@ def test_anchor_dialects_agree_on_ampersand_headings(tmp_path):
     assert "](/guide/references/references-further-reading.md)" in nodes["guide/readme/links.md"].body
 
 
+def test_a_dependency_tree_in_the_guide_is_not_knowledge(tmp_path):
+    # The guide installs a toolchain for its diagram parser. node_modules holds
+    # thousands of README.md; not one of them is doctrine.
+    guide = tmp_path / docs.GUIDE_REL
+    (guide / "node_modules" / "d3-shape").mkdir(parents=True)
+    (guide / "topics").mkdir()
+    (guide / "README.md").write_text("# Main\n\n## Links\n\ntext.\n", encoding="utf-8")
+    (guide / "topics" / "spring-modulith.md").write_text(
+        "# Spring Modulith\n\n## Core Concepts\n\nmodules.\n", encoding="utf-8")
+    (guide / "node_modules" / "d3-shape" / "README.md").write_text(
+        "# d3-shape\n\n## API Reference\n\narcs.\n", encoding="utf-8")
+
+    paths = {n.path for n in docs.extract(tmp_path)}
+    assert "guide/spring-modulith.md" in paths
+    assert not [p for p in paths if "d3-shape" in p or "api-reference" in p]
+
+
 def test_a_document_in_a_subdirectory_becomes_a_guide_node(tmp_path):
     guide = tmp_path / docs.GUIDE_REL
     (guide / "topics").mkdir(parents=True)

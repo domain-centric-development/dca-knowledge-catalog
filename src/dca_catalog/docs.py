@@ -33,6 +33,17 @@ GUIDE_REL = "dca-guide"
 # files that are meta/tooling, not knowledge content
 _SKIP = {"CLAUDE.md", "AGENTS.md", "adr-template.md", "RESTRUCTURING-PLAN.md"}
 
+# directories that are not prose: a dependency tree, an editor's or agent's state.
+# The guide carries a toolchain of its own since its diagrams need a parser, and an
+# installed node_modules holds thousands of README.md — every one of them a Guide
+# node, with slugs that collide, if this walk does not stop at the door.
+_SKIP_DIRS = {"node_modules", "scripts", "bundle", "bundle-obsidian", "target", "build", "out", "dist"}
+
+
+def _is_content(path: Path, base: Path) -> bool:
+    parts = path.relative_to(base).parts[:-1]
+    return not any(part in _SKIP_DIRS or part.startswith(".") for part in parts)
+
 # Guide files that carry no Guide node of their own but *are* represented in the
 # bundle by another node type. Links to them are rewritten onto that node.
 _ALIASES = {Path(_ADR_TEMPLATE_REL).name: _ADR_PROCESS_NODE}
@@ -219,7 +230,7 @@ def _process_dir(repo_root: Path, rel_dir: str, source: str, container_type: str
     parsed = [
         _Document(path, repo_root, top)
         for path in sorted(base.rglob("*.md"))
-        if path.name not in _SKIP
+        if path.name not in _SKIP and _is_content(path, base)
     ]
     docs = {doc.path.resolve(): doc for doc in parsed}
 

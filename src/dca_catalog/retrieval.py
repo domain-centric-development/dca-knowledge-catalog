@@ -80,7 +80,7 @@ def _revision(path: Path, files: list[Path]) -> str | None:
 
 
 def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> None:
-    from .docs import _SKIP
+    from .docs import _SKIP, _is_content
     sources = {}
     # Only files the generator actually reads: a commit elsewhere in these repositories must not move the manifest.
     inputs = {
@@ -95,7 +95,7 @@ def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> Non
             continue
         files = sorted({p for pattern in patterns for p in repo.glob(pattern)
                         if p.is_file() and not {"bin", "obj", "__pycache__"}.intersection(p.parts)
-                        and not (name == "dca-guide" and p.name in _SKIP)})
+                        and not (name == "dca-guide" and (p.name in _SKIP or not _is_content(p, repo)))})
         digest = hashlib.sha256()
         for path in files:
             digest.update(path.relative_to(repo).as_posix().encode() + b"\0" + path.read_bytes() + b"\0")

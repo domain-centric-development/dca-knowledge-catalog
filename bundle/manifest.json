@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "fb25525880cd55d02b98e3e530ea934a109a2d359c035955e18975cd03756a75"
+      "source_sha256": "59352093520024ee2c0ec3b1887bde34b299b02336265376c22b9a444feac5aa"
     }
   }
 }
