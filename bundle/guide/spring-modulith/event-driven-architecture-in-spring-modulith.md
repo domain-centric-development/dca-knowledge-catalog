@@ -237,16 +237,16 @@ When consuming integration events from other modules, use an **Anti-Corruption L
 ```text
 Consuming Module (Inventory):
 │
-├── adapter/incoming/event/          ← consuming is an incoming adapter
+├── adapter/incoming/event/          # consuming is an incoming adapter
 │   ├── OrderEventConsumer.java         Event listener
 │   └── acl/
-│       └── OrderEventToInventoryMapper.java   ← ACL translator, beside the listener
+│       └── OrderEventToInventoryMapper.java   # ACL translator, beside the listener
 │
 └── application/
     └── reservestock/
         ├── ReserveStockInputPort.java
         ├── ReserveStockUseCase.java
-        └── ReserveStockCommand.java     ← Internal command (domain language)
+        └── ReserveStockCommand.java     # Internal command (domain language)
 ```
 
 > **`events/` is not this package.** A module's `events/` segment holds the integration-event
@@ -263,7 +263,7 @@ Consuming Module (Inventory):
 // ========== PRODUCING MODULE (Order) ==========
 
 // Order module publishes integration event
-package com.company.ecommerce.order.events;
+package com.company.project.order.events;
 
 public record OrderCreatedEvent(
     String eventId,
@@ -287,7 +287,7 @@ public record OrderItemDto(
 // ========== CONSUMING MODULE (Inventory) ==========
 
 // 1. EVENT LISTENER (Adapter) - Receives external event
-package com.company.ecommerce.inventory.adapter.incoming.event;
+package com.company.project.inventory.adapter.incoming.event;
 
 @Component
 @RequiredArgsConstructor
@@ -311,7 +311,7 @@ public class OrderEventConsumer {
 }
 
 // 2. ANTI-CORRUPTION LAYER (ACL) - Translator
-package com.company.ecommerce.inventory.acl;
+package com.company.project.inventory.acl;
 
 @Component
 public class OrderEventToInventoryMapper {
@@ -353,7 +353,7 @@ public class OrderEventToInventoryMapper {
 }
 
 // 3. INTERNAL COMMAND (Application Layer) - Inventory's language
-package com.company.ecommerce.inventory.application.reservestock;
+package com.company.project.inventory.application.reservestock;
 
 public record ReserveStockCommand(
     OrderReference orderReference,      // Inventory's value object
@@ -393,7 +393,7 @@ public enum ReservationReason {
 }
 
 // 4. USE CASE (Application Layer) - Uses Inventory's domain
-package com.company.ecommerce.inventory.application.reservestock;
+package com.company.project.inventory.application.reservestock;
 
 @Service
 @RequiredArgsConstructor
@@ -463,14 +463,14 @@ The **Event Mapper** is the outbound equivalent of ACL - it translates internal 
 Producing Module (Order):
 │
 ├── domain/event/
-│   └── OrderCreated.java             ← Internal domain event
+│   └── OrderCreated.java             # Internal domain event
 │
-├── adapter/outgoing/messaging/       ← the channel this adapter speaks to
+├── adapter/outgoing/messaging/       # the channel this adapter speaks to
 │   ├── OrderEventMapper.java            translates domain event → contract
 │   └── OutboxRelay.java                 transport, when there is one
 │
 └── events/ (published)
-    └── OrderCreatedEvent.java        ← External integration event
+    └── OrderCreatedEvent.java        # External integration event
 ```
 
 > **The sub-package is named after the counterpart, like every other outgoing adapter** —
@@ -494,7 +494,7 @@ Producing Module (Order):
 
 ```java
 // Internal Domain Event (Order's domain language)
-package com.company.ecommerce.order.domain.event;
+package com.company.project.order.domain.event;
 
 public record OrderCreated(
     OrderId orderId,                   // Domain value object
@@ -505,7 +505,7 @@ public record OrderCreated(
 ) implements DomainEvent {}
 
 // Event Mapper (Adapter)
-package com.company.ecommerce.order.adapter.outgoing.messaging;
+package com.company.project.order.adapter.outgoing.messaging;
 
 @Component
 @RequiredArgsConstructor
@@ -548,7 +548,7 @@ public class OrderEventMapper {
 }
 
 // External Integration Event (Published DTO)
-package com.company.ecommerce.order.events;
+package com.company.project.order.events;
 
 public record OrderCreatedEvent(
     String eventId,

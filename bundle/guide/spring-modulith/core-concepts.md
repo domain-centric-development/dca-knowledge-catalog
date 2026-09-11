@@ -12,10 +12,10 @@ tags: [guide, section]
 **Definition:** In Spring Modulith, **one top-level package = one module**
 
 ```text
-com.company.ecommerce
-├── order/          ← Module (= Bounded Context)
-├── customer/       ← Module (= Bounded Context)
-└── inventory/      ← Module (= Bounded Context)
+com.company.project
+├── order/          # Module (= Bounded Context)
+├── customer/       # Module (= Bounded Context)
+└── inventory/      # Module (= Bounded Context)
 ```
 
 **Alignment:**
@@ -28,7 +28,7 @@ com.company.ecommerce
 **Application Module** (default, recommended):
 ```java
 @org.springframework.modulith.ApplicationModule
-package com.company.ecommerce.order;
+package com.company.project.order;
 ```
 - Main business module
 - Implements a bounded context
@@ -39,7 +39,7 @@ package com.company.ecommerce.order;
 @org.springframework.modulith.ApplicationModule(
     type = Type.OPEN
 )
-package com.company.ecommerce.shared;
+package com.company.project.shared;
 ```
 - All packages are public
 - Use only for shared kernel
@@ -53,7 +53,7 @@ Modules expose clear API surfaces through specific packages:
 ```java
 // order/api/package-info.java
 @org.springframework.modulith.NamedInterface("api")
-package com.company.ecommerce.order.api;
+package com.company.project.order.api;
 ```
 - Public API of module
 - Synchronous integration point
@@ -63,7 +63,7 @@ package com.company.ecommerce.order.api;
 ```java
 // order/events/package-info.java
 @org.springframework.modulith.NamedInterface("events")
-package com.company.ecommerce.order.events;
+package com.company.project.order.events;
 ```
 - Events published by module
 - Asynchronous integration point

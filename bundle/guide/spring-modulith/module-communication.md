@@ -80,5 +80,5 @@ class CustomerService {
 @ApplicationModule(
     allowedDependencies = {"order::api"}  // Can only use order.api
 )
-package com.company.ecommerce.customer;
+package com.company.project.customer;
 ```

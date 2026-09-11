@@ -19,21 +19,21 @@ The Shared Kernel is a **small, carefully controlled** `shared/` module containi
     displayName = "Shared Kernel",
     type = org.springframework.modulith.ApplicationModule.Type.OPEN
 )
-package com.company.ecommerce.shared;
+package com.company.project.shared;
 ```
 
 ### Structure
 
 ```text
-com.company.ecommerce.shared/
+com.company.project.shared/
 ├── package-info.java (@ApplicationModule with Type.OPEN)
-├── domain/model/        ← Universal value objects
+├── domain/model/        # Universal value objects
 │   ├── Money.java
 │   ├── Address.java
 │   └── EmailAddress.java
-├── application/shared/  ← Application ports every context reads the same way
+├── application/shared/  # Application ports every context reads the same way
 │   └── IdentityProvider.java
-└── exception/           ← Base exceptions
+└── exception/           # Base exceptions
     ├── DomainException.java
     └── NotFoundException.java
 ```
@@ -55,7 +55,7 @@ com.company.ecommerce.shared/
         "inventory::api"
     }
 )
-package com.company.ecommerce.order;
+package com.company.project.order;
 ```
 
 **All modules can depend on `shared`:**

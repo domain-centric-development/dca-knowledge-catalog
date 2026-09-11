@@ -10,21 +10,21 @@ tags: [guide, section]
 ```text
 com.company.project
 │
-├── order (bounded context)
-│   ├── domain
-│   │   ├── model
+├── order/ (bounded context)
+│   ├── domain/
+│   │   ├── model/
 │   │   │   ├── Order.java (Aggregate Root)
 │   │   │   ├── OrderId.java (Value Object)
 │   │   │   ├── OrderLine.java (Entity)
 │   │   │   └── OrderStatus.java (Value Object/Enum)
-│   │   ├── service
+│   │   ├── service/
 │   │   │   └── PricingService.java (Domain Service)
-│   │   └── event
+│   │   └── event/
 │   │       ├── OrderCreated.java (Domain Event)
 │   │       └── OrderCancelled.java (Domain Event)
 │   │
-│   ├── application (use-case focused - each use case self-contained)
-│   │   ├── createorder (use case folder - lowercase, contains ALL related files)
+│   ├── application/ (use-case focused - each use case self-contained)
+│   │   ├── createorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── CreateOrderInputPort.java
 │   │   │   │   interface CreateOrderInputPort extends UseCase<CreateOrderCommand, CreateOrderResult> {}
 │   │   │   ├── CreateOrderUseCase.java
@@ -32,7 +32,7 @@ com.company.project
 │   │   │   ├── CreateOrderCommand.java
 │   │   │   └── CreateOrderResult.java
 │   │   │
-│   │   ├── findorder (use case folder - lowercase, contains ALL related files)
+│   │   ├── findorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── FindOrderInputPort.java
 │   │   │   │   interface FindOrderInputPort extends UseCase<OrderQuery, OrderResult> {}
 │   │   │   ├── FindOrderUseCase.java
@@ -40,7 +40,7 @@ com.company.project
 │   │   │   ├── OrderQuery.java
 │   │   │   └── OrderResult.java
 │   │   │
-│   │   ├── cancelorder (use case folder - lowercase, contains ALL related files)
+│   │   ├── cancelorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── CancelOrderInputPort.java
 │   │   │   │   interface CancelOrderInputPort extends UseCase<CancelOrderCommand, CancelOrderResult> {}
 │   │   │   ├── CancelOrderUseCase.java
@@ -48,7 +48,7 @@ com.company.project
 │   │   │   ├── CancelOrderCommand.java
 │   │   │   └── CancelOrderResult.java
 │   │   │
-│   │   ├── updateorder (use case folder - lowercase, contains ALL related files)
+│   │   ├── updateorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── UpdateOrderInputPort.java
 │   │   │   │   interface UpdateOrderInputPort extends UseCase<UpdateOrderCommand, UpdateOrderResult> {}
 │   │   │   ├── UpdateOrderUseCase.java
@@ -56,134 +56,134 @@ com.company.project
 │   │   │   ├── UpdateOrderCommand.java
 │   │   │   └── UpdateOrderResult.java
 │   │   │
-│   │   └── shared (SHARED OUTPUT PORTS - infrastructure dependencies)
+│   │   └── shared/ (SHARED OUTPUT PORTS - infrastructure dependencies)
 │   │       ├── OrderRepository.java (Output Port)
 │   │       ├── PaymentGateway.java (Output Port)
 │   │       ├── InventoryService.java (Output Port)
 │   │       └── DomainEventPublisher.java (Output Port)
 │   │
-│   └── adapter
-│       ├── incoming (INCOMING ADAPTERS - call input ports)
-│       │   ├── web
+│   └── adapter/
+│       ├── incoming/ (INCOMING ADAPTERS - call input ports)
+│       │   ├── web/
 │       │   │   ├── OrderPageController.java
-│       │   │   ├── dto
+│       │   │   ├── dto/
 │       │   │   │   ├── CreateOrderWebRequest.java
 │       │   │   │   └── OrderWebResponse.java
-│       │   │   └── mapper
+│       │   │   └── mapper/
 │       │   │       └── OrderWebMapper.java
-│       │   ├── api
+│       │   ├── api/
 │       │   │   └── OrderRestController.java
-│       │   ├── event
+│       │   ├── event/
 │       │   │   ├── OrderEventConsumer.java
-│       │   │   ├── dto
+│       │   │   ├── dto/
 │       │   │   │   └── ExternalOrderEvent.java
-│       │   │   └── acl
+│       │   │   └── acl/
 │       │   │       └── ExternalEventToCommandMapper.java
-│       │   └── mcp
+│       │   └── mcp/
 │       │       └── OrderMcpToolProvider.java (Model Context Protocol)
 │       │
-│       └── outgoing (OUTGOING ADAPTERS - implement output ports)
-│           ├── persistence
+│       └── outgoing/ (OUTGOING ADAPTERS - implement output ports)
+│           ├── persistence/
 │           │   ├── InMemoryOrderRepository.java (implements OrderRepository)
 │           │   └── SampleDataInitializer.java (Optional: for demo data)
 │           │   # Note: For production, add JPA/JDBC adapters as needed
-│           ├── payment
+│           ├── payment/
 │           │   ├── PaymentGatewayAdapter.java (implements PaymentGateway)
-│           │   └── dto
+│           │   └── dto/
 │           │       └── PaymentRequest.java
-│           ├── inventory
+│           ├── inventory/
 │           │   └── InventoryServiceAdapter.java (implements InventoryService)
-│           └── messaging
+│           └── messaging/
 │               ├── DomainEventPublisherAdapter.java (implements DomainEventPublisher)
-│               ├── event
+│               ├── event/
 │               │   ├── OrderCreatedEvent.java (Integration Event DTO)
 │               │   └── OrderCancelledEvent.java (Integration Event DTO)
-│               └── mapper
+│               └── mapper/
 │                   └── OrderEventMapper.java
 │
-├── customer (bounded context)
-│   ├── domain
-│   ├── application
-│   │   ├── registercustomer
+├── customer/ (bounded context)
+│   ├── domain/
+│   ├── application/
+│   │   ├── registercustomer/
 │   │   │   ├── RegisterCustomerInputPort.java
 │   │   │   ├── RegisterCustomerUseCase.java
 │   │   │   ├── RegisterCustomerCommand.java
 │   │   │   └── RegisterCustomerResult.java
-│   │   ├── updatecustomer
+│   │   ├── updatecustomer/
 │   │   │   ├── UpdateCustomerInputPort.java
 │   │   │   ├── UpdateCustomerUseCase.java
 │   │   │   ├── UpdateCustomerCommand.java
 │   │   │   └── UpdateCustomerResult.java
-│   │   ├── findcustomer
+│   │   ├── findcustomer/
 │   │   │   ├── FindCustomerInputPort.java
 │   │   │   ├── FindCustomerUseCase.java
 │   │   │   ├── CustomerQuery.java
 │   │   │   └── CustomerResult.java
-│   │   └── shared
+│   │   └── shared/
 │   │       ├── CustomerRepository.java
 │   │       └── EmailService.java
-│   └── adapter
-│       ├── incoming
-│       └── outgoing
+│   └── adapter/
+│       ├── incoming/
+│       └── outgoing/
 │
-├── inventory (bounded context)
-│   ├── domain
-│   ├── application
-│   │   ├── reservestock
+├── inventory/ (bounded context)
+│   ├── domain/
+│   ├── application/
+│   │   ├── reservestock/
 │   │   │   ├── ReserveStockInputPort.java
 │   │   │   ├── ReserveStockUseCase.java
 │   │   │   ├── ReserveStockCommand.java
 │   │   │   └── ReserveStockResult.java
-│   │   ├── releasestock
+│   │   ├── releasestock/
 │   │   │   ├── ReleaseStockInputPort.java
 │   │   │   ├── ReleaseStockUseCase.java
 │   │   │   ├── ReleaseStockCommand.java
 │   │   │   └── ReleaseStockResult.java
-│   │   ├── checkavailability
+│   │   ├── checkavailability/
 │   │   │   ├── CheckAvailabilityInputPort.java
 │   │   │   ├── CheckAvailabilityUseCase.java
 │   │   │   ├── AvailabilityQuery.java
 │   │   │   └── AvailabilityResult.java
-│   │   └── shared
+│   │   └── shared/
 │   │       └── StockRepository.java
-│   └── adapter
-│       ├── incoming
-│       └── outgoing
+│   └── adapter/
+│       ├── incoming/
+│       └── outgoing/
 │
-├── sharedkernel (Shared across ALL bounded contexts - keep minimal)
-│   │   // Markers, port interfaces and TransactionBoundary are NOT here — they come from the
-│   │   // dca-building-blocks dependency (dev.domaincentric.dca.buildingblocks.ddd.tactical,
-│   │   // .ddd.strategic, .hexagonal.port.in/.out, .application). Only application-specific code:
-│   ├── application
-│   │   └── shared
-│   │       └── IdentityProvider.java   // project-specific shared port: extends OutputPort
-│   │   // DomainEventPublisher / TransactionBoundary implementations: dca-spring (auto-configured);
-│   │   // a non-Spring application writes them under adapter/outgoing/event and infrastructure/transaction
-│   └── domain
-│       ├── model (Universal value objects)
+├── sharedkernel/ (Shared across ALL bounded contexts - keep minimal)
+│   │   #  Markers, port interfaces and TransactionBoundary are NOT here — they come from the
+│   │   #  dca-building-blocks dependency (dev.domaincentric.dca.buildingblocks.ddd.tactical,
+│   │   #  .ddd.strategic, .hexagonal.port.in/.out, .application). Only application-specific code:
+│   ├── application/
+│   │   └── shared/
+│   │       └── IdentityProvider.java   #  project-specific shared port: extends OutputPort
+│   │   #  DomainEventPublisher / TransactionBoundary implementations: dca-spring (auto-configured);
+│   │   #  a non-Spring application writes them under adapter/outgoing/event and infrastructure/transaction
+│   └── domain/
+│       ├── model/ (Universal value objects)
 │       │   ├── Money.java
 │       │   ├── Price.java
-│       │   ├── ProductId.java  // Shared product identifier
-│       │   └── UserId.java     // Shared user identifier
-│       └── specification (Specification pattern implementations)
+│       │   ├── ProductId.java  #  Shared product identifier
+│       │   └── UserId.java     #  Shared user identifier
+│       └── specification/ (Specification pattern implementations)
 │           ├── CompositeSpecification.java
 │           ├── AndSpecification.java
 │           ├── OrSpecification.java
 │           ├── NotSpecification.java
 │           └── SpecificationVisitor.java
 │
-└── infrastructure (cross-cutting concerns)
-    ├── configuration
+└── infrastructure/ (cross-cutting concerns)
+    ├── configuration/
     │   ├── SpringBootApplication.java
     │   ├── DependencyInjectionConfig.java
     │   ├── WebConfig.java
     │   ├── SecurityConfig.java
     │   └── JpaConfig.java
-    ├── persistence
+    ├── persistence/
     │   └── DatabaseMigration.java
-    ├── messaging
+    ├── messaging/
     │   └── KafkaConfig.java
-    └── monitoring
+    └── monitoring/
         ├── LoggingConfig.java
         └── MetricsConfig.java
 ```

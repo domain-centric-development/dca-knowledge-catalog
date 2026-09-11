@@ -10,48 +10,48 @@ tags: [guide, section]
 ### Recommended Structure: Module per Bounded Context
 
 ```text
-com.company.ecommerce
-├── order (module = bounded context)
-│   ├── api (published - public interface)
+com.company.project
+├── order/ (module = bounded context)
+│   ├── api/ (published - public interface)
 │   │   ├── OrderApi.java
 │   │   ├── CreateOrderRequest.java
 │   │   └── OrderResponse.java
-│   ├── events (published - integration events)
+│   ├── events/ (published - integration events)
 │   │   ├── OrderCreatedEvent.java
 │   │   └── OrderCancelledEvent.java
-│   └── internal (hidden)
-│       ├── domain
-│       │   ├── model
+│   └── internal/ (hidden)
+│       ├── domain/
+│       │   ├── model/
 │       │   │   ├── Order.java (Aggregate Root)
 │       │   │   ├── OrderLine.java (Entity)
 │       │   │   └── Money.java (Value Object)
-│       │   ├── service
+│       │   ├── service/
 │       │   │   └── PricingService.java
-│       │   └── event
+│       │   └── event/
 │       │       └── OrderCreated.java (Domain Event)
-│       ├── application
-│       │   ├── createorder
+│       ├── application/
+│       │   ├── createorder/
 │       │   │   ├── CreateOrderInputPort.java
 │       │   │   ├── CreateOrderUseCase.java
 │       │   │   ├── CreateOrderCommand.java
 │       │   │   └── CreateOrderResult.java
-│       │   ├── findorder
-│       │   ├── cancelorder
-│       │   └── shared
+│       │   ├── findorder/
+│       │   ├── cancelorder/
+│       │   └── shared/
 │       │       ├── OrderRepository.java
 │       │       └── DomainEventPublisher.java
-│       ├── adapter
-│       │   ├── incoming
-│       │   │   ├── web
+│       ├── adapter/
+│       │   ├── incoming/
+│       │   │   ├── web/
 │       │   │   │   └── OrderController.java
-│       │   │   └── event
+│       │   │   └── event/
 │       │   │       └── OrderEventConsumer.java
-│       │   └── outgoing
-│       │       ├── persistence
+│       │   └── outgoing/
+│       │       ├── persistence/
 │       │       │   └── OrderRepositoryAdapter.java
-│       │       └── payment
+│       │       └── payment/
 │       │           └── PaymentGatewayAdapter.java
-│       └── config
+│       └── config/
 │           └── OrderModuleConfiguration.java
 ```
 
@@ -66,21 +66,21 @@ com.company.ecommerce
     displayName = "Order Management",
     allowedDependencies = {"customer::api", "inventory::api", "shared"}
 )
-package com.company.ecommerce.order;
+package com.company.project.order;
 ```
 
 **API Package:**
 ```java
 // order/api/package-info.java
 @org.springframework.modulith.NamedInterface("api")
-package com.company.ecommerce.order.api;
+package com.company.project.order.api;
 ```
 
 **Events Package:**
 ```java
 // order/events/package-info.java
 @org.springframework.modulith.NamedInterface("events")
-package com.company.ecommerce.order.events;
+package com.company.project.order.events;
 ```
 
 ## Related mentions (heuristic)

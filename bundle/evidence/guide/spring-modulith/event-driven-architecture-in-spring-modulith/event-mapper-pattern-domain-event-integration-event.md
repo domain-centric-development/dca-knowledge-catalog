@@ -16,14 +16,14 @@ The **Event Mapper** is the outbound equivalent of ACL - it translates internal 
 Producing Module (Order):
 │
 ├── domain/event/
-│   └── OrderCreated.java             ← Internal domain event
+│   └── OrderCreated.java             # Internal domain event
 │
-├── adapter/outgoing/messaging/       ← the channel this adapter speaks to
+├── adapter/outgoing/messaging/       # the channel this adapter speaks to
 │   ├── OrderEventMapper.java            translates domain event → contract
 │   └── OutboxRelay.java                 transport, when there is one
 │
 └── events/ (published)
-    └── OrderCreatedEvent.java        ← External integration event
+    └── OrderCreatedEvent.java        # External integration event
 ```
 
 > **The sub-package is named after the counterpart, like every other outgoing adapter** —
@@ -47,7 +47,7 @@ Producing Module (Order):
 
 ```java
 // Internal Domain Event (Order's domain language)
-package com.company.ecommerce.order.domain.event;
+package com.company.project.order.domain.event;
 
 public record OrderCreated(
     OrderId orderId,                   // Domain value object
@@ -58,7 +58,7 @@ public record OrderCreated(
 ) implements DomainEvent {}
 
 // Event Mapper (Adapter)
-package com.company.ecommerce.order.adapter.outgoing.messaging;
+package com.company.project.order.adapter.outgoing.messaging;
 
 @Component
 @RequiredArgsConstructor
@@ -101,7 +101,7 @@ public class OrderEventMapper {
 }
 
 // External Integration Event (Published DTO)
-package com.company.ecommerce.order.events;
+package com.company.project.order.events;
 
 public record OrderCreatedEvent(
     String eventId,

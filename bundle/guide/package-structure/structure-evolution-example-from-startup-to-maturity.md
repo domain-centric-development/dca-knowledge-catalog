@@ -16,30 +16,30 @@ This example shows how a bounded context's structure naturally evolves as comple
 ```text
 APPLICATION LAYER
 ├── createorder/                   (USE CASE - All related files together)
-│   ├── CreateOrderInputPort.java      ← Input Port Interface
+│   ├── CreateOrderInputPort.java      # Input Port Interface
 │   │   interface CreateOrderInputPort extends UseCase<CreateOrderCommand, CreateOrderResult>
-│   ├── CreateOrderUseCase.java        ← Use Case Implementation
+│   ├── CreateOrderUseCase.java        # Use Case Implementation
 │   │   @Service class CreateOrderUseCase implements CreateOrderInputPort
-│   ├── CreateOrderCommand.java        ← Input Model (Command for writes)
-│   └── CreateOrderResult.java       ← Output Model
+│   ├── CreateOrderCommand.java        # Input Model (Command for writes)
+│   └── CreateOrderResult.java       # Output Model
 │
 ├── findorder/                     (USE CASE - All related files together)
-│   ├── FindOrderInputPort.java        ← Input Port Interface
-│   ├── FindOrderUseCase.java          ← Use Case Implementation
-│   ├── OrderQuery.java                ← Input Model (Query for reads)
-│   └── OrderResult.java             ← Output Model
+│   ├── FindOrderInputPort.java        # Input Port Interface
+│   ├── FindOrderUseCase.java          # Use Case Implementation
+│   ├── OrderQuery.java                # Input Model (Query for reads)
+│   └── OrderResult.java             # Output Model
 │
 ├── cancelorder/                   (USE CASE - All related files together)
-│   ├── CancelOrderInputPort.java      ← Input Port Interface
-│   ├── CancelOrderUseCase.java        ← Use Case Implementation
-│   ├── CancelOrderCommand.java        ← Input Model
-│   └── CancelOrderResult.java       ← Output Model
+│   ├── CancelOrderInputPort.java      # Input Port Interface
+│   ├── CancelOrderUseCase.java        # Use Case Implementation
+│   ├── CancelOrderCommand.java        # Input Model
+│   └── CancelOrderResult.java       # Output Model
 │
 └── shared/                        (SHARED OUTPUT PORTS)
-    ├── OrderRepository.java           ← Output Port (used by multiple use cases)
-    ├── PaymentGateway.java            ← Output Port
-    ├── InventoryService.java          ← Output Port
-    └── DomainEventPublisher.java      ← Output Port
+    ├── OrderRepository.java           # Output Port (used by multiple use cases)
+    ├── PaymentGateway.java            # Output Port
+    ├── InventoryService.java          # Output Port
+    └── DomainEventPublisher.java      # Output Port
 ```
 
 **Key Principles:**
@@ -78,7 +78,7 @@ APPLICATION LAYER
 ```text
 APPLICATION LAYER (grouped form)
 ├── ordering/                      (FEATURE - a term of the ubiquitous language)
-│   ├── createorder/                   ← use case, unchanged inside
+│   ├── createorder/                   # use case, unchanged inside
 │   ├── updateorder/
 │   └── cancelorder/
 ├── fulfilment/                    (FEATURE)
