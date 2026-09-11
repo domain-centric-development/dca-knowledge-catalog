@@ -21,11 +21,10 @@ When consuming integration events from other modules, use an **Anti-Corruption L
 ```
 Consuming Module (Inventory):
 │
-├── events/ (listening to external events)
-│   └── OrderEventConsumer.java        ← Event listener (adapter)
-│
-├── acl/ (anti-corruption layer)
-│   └── OrderEventToInventoryMapper.java  ← ACL Translator
+├── adapter/incoming/event/          ← consuming is an incoming adapter
+│   ├── OrderEventConsumer.java         Event listener
+│   └── acl/
+│       └── OrderEventToInventoryMapper.java   ← ACL translator, beside the listener
 │
 └── application/
     └── reservestock/
@@ -33,6 +32,14 @@ Consuming Module (Inventory):
         ├── ReserveStockUseCase.java
         └── ReserveStockCommand.java     ← Internal command (domain language)
 ```
+
+> **`events/` is not this package.** A module's `events/` segment holds the integration-event
+> *contracts it publishes* — `DCA-STR-007` checks exactly that. Consuming somebody else's contract
+> happens in an incoming adapter, because that is what it is: traffic arriving from outside.
+>
+> **The two sides are not symmetric.** The incoming side is thin — a client: it receives, translates
+> through the ACL, and calls an input port. Nothing is stored, nothing is retried by it. The weight
+> sits on the outgoing side, which is why that package earns a broader name than `event/`.
 
 **Complete ACL Example:**
 

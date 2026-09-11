@@ -18,12 +18,30 @@ Producing Module (Order):
 ├── domain/event/
 │   └── OrderCreated.java             ← Internal domain event
 │
-├── adapter/outgoing/messaging/
-│   └── OrderEventMapper.java         ← Event Mapper
+├── adapter/outgoing/messaging/       ← the channel this adapter speaks to
+│   ├── OrderEventMapper.java            translates domain event → contract
+│   └── OutboxRelay.java                 transport, when there is one
 │
 └── events/ (published)
     └── OrderCreatedEvent.java        ← External integration event
 ```
+
+> **The sub-package is named after the counterpart, like every other outgoing adapter** —
+> `persistence/`, `payment/`, `product/`, `messaging/`. No rule constrains this name: the rules fix
+> the *contract's* segment (`events/`, configurable) and the adapter layer, not what you call the
+> channel inside it.
+>
+> **This is the side that carries the machinery.** Translation is the smallest part of it: the relay
+> that drains the outbox, the retry with its backoff, the terminal failures kept for inspection, the
+> transport client — all of it lives here, against one published contract. `event/` is accurate only
+> while the package holds nothing but a translator and delivery is in-process; `messaging/` says what
+> the package becomes as soon as there is something to deliver over, and it survives the day the
+> broker is swapped. The reference implementation still uses `event/` because it has no broker — and
+> that is the exception, not the pattern.
+>
+> One part does *not* live here: writing the publication is not the adapter's job. The row is
+> captured inside the aggregate's transaction — Spring Modulith's publication registry, an outbox
+> table, an in-process stand-in — and the adapter is what drains it after the commit.
 
 **Example:**
 

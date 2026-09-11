@@ -237,11 +237,10 @@ When consuming integration events from other modules, use an **Anti-Corruption L
 ```
 Consuming Module (Inventory):
 │
-├── events/ (listening to external events)
-│   └── OrderEventConsumer.java        ← Event listener (adapter)
-│
-├── acl/ (anti-corruption layer)
-│   └── OrderEventToInventoryMapper.java  ← ACL Translator
+├── adapter/incoming/event/          ← consuming is an incoming adapter
+│   ├── OrderEventConsumer.java         Event listener
+│   └── acl/
+│       └── OrderEventToInventoryMapper.java   ← ACL translator, beside the listener
 │
 └── application/
     └── reservestock/
@@ -249,6 +248,14 @@ Consuming Module (Inventory):
         ├── ReserveStockUseCase.java
         └── ReserveStockCommand.java     ← Internal command (domain language)
 ```
+
+> **`events/` is not this package.** A module's `events/` segment holds the integration-event
+> *contracts it publishes* — `DCA-STR-007` checks exactly that. Consuming somebody else's contract
+> happens in an incoming adapter, because that is what it is: traffic arriving from outside.
+>
+> **The two sides are not symmetric.** The incoming side is thin — a client: it receives, translates
+> through the ACL, and calls an input port. Nothing is stored, nothing is retried by it. The weight
+> sits on the outgoing side, which is why that package earns a broader name than `event/`.
 
 **Complete ACL Example:**
 
@@ -458,12 +465,30 @@ Producing Module (Order):
 ├── domain/event/
 │   └── OrderCreated.java             ← Internal domain event
 │
-├── adapter/outgoing/messaging/
-│   └── OrderEventMapper.java         ← Event Mapper
+├── adapter/outgoing/messaging/       ← the channel this adapter speaks to
+│   ├── OrderEventMapper.java            translates domain event → contract
+│   └── OutboxRelay.java                 transport, when there is one
 │
 └── events/ (published)
     └── OrderCreatedEvent.java        ← External integration event
 ```
+
+> **The sub-package is named after the counterpart, like every other outgoing adapter** —
+> `persistence/`, `payment/`, `product/`, `messaging/`. No rule constrains this name: the rules fix
+> the *contract's* segment (`events/`, configurable) and the adapter layer, not what you call the
+> channel inside it.
+>
+> **This is the side that carries the machinery.** Translation is the smallest part of it: the relay
+> that drains the outbox, the retry with its backoff, the terminal failures kept for inspection, the
+> transport client — all of it lives here, against one published contract. `event/` is accurate only
+> while the package holds nothing but a translator and delivery is in-process; `messaging/` says what
+> the package becomes as soon as there is something to deliver over, and it survives the day the
+> broker is swapped. The reference implementation still uses `event/` because it has no broker — and
+> that is the exception, not the pattern.
+>
+> One part does *not* live here: writing the publication is not the adapter's job. The row is
+> captured inside the aggregate's transaction — Spring Modulith's publication registry, an outbox
+> table, an in-process stand-in — and the adapter is what drains it after the commit.
 
 **Example:**
 

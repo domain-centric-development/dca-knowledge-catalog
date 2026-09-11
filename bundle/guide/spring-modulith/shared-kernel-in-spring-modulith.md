@@ -27,21 +27,22 @@ package com.company.ecommerce.shared;
 ```
 com.company.ecommerce.shared/
 ├── package-info.java (@ApplicationModule with Type.OPEN)
-├── marker/              ← Marker interfaces for DDD patterns
-│   ├── AggregateRoot.java
-│   ├── Entity.java
-│   ├── ValueObject.java
-│   ├── DomainEvent.java
-│   ├── InputPort.java
-│   └── OutputPort.java
-├── types/               ← Common value objects
+├── domain/model/        ← Universal value objects
 │   ├── Money.java
 │   ├── Address.java
 │   └── EmailAddress.java
+├── application/shared/  ← Application ports every context reads the same way
+│   └── IdentityProvider.java
 └── exception/           ← Base exceptions
     ├── DomainException.java
     └── NotFoundException.java
 ```
+
+> **The architectural markers are not in here.** `AggregateRoot`, `Entity`, `Value`, `DomainEvent`,
+> `InputPort`, `OutputPort` come from the `dca-building-blocks` dependency — writing them into a
+> shared module duplicates a library the project already has on its class path, under names the rule
+> suite does not recognise. The shared module holds what is *yours* and universal: value objects,
+> shared application ports, base exceptions.
 
 ### Module Dependencies on Shared
 
