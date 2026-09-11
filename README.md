@@ -190,6 +190,10 @@ dca-knowledge-catalog/
 └── bundle-obsidian/         # gitignored Obsidian view (make obsidian / obsidian-import)
 ```
 
+## Author
+
+**Christoph Bloemer** — [@chbloemer](https://github.com/chbloemer)
+
 *Written with AI assistance — drafted mainly by Claude, reviewed and directed by the author
 since 2025.*
 
