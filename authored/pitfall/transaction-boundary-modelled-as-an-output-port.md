@@ -25,6 +25,7 @@ Declaring the transaction abstraction as an output port — `interface UnitOfWor
 Keep `TransactionBoundary` in the building blocks' `application` namespace (`Application.Transactions` in .NET), not extending `OutputPort`; put the implementation under **infrastructure** (`sharedkernel/infrastructure/transaction`), where the transaction manager is configured — it is framework plumbing, not an adapter to anything. The test for the general case: *does this interface stand for something outside the process?* If not, it is not a port.
 
 - Decision: [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md)
+- Decision: [Output port or not: what a use case may call without a port](/decision/output-port-or-not.md)
 
 ## Anchors
 

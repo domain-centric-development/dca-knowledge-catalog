@@ -20,8 +20,9 @@ adapter layer part company:
 
 - An **incoming adapter** reaches no infrastructure at all — neither the global
   `{base}.infrastructure` nor its own module's `{module}.infrastructure` (`DCA-HEX-004`). A
-  controller that needs a technical capability declares an output port for it; something has to
-  implement that port, and a controller is not that something.
+  controller that needs a technical capability has two honest options: the use case needs it too and
+  declares an output port, or it is adapter mechanics and stays a plain class in the adapter package.
+  A port only the controller calls is not a port.
 - An **outgoing adapter** may use the global infrastructure and its own module's infrastructure —
   that is where a persistence adapter meets the `EntityManager` your configuration produced. What it
   may not touch is *another* module's infrastructure (`DCA-HEX-005`), which would tie two contexts

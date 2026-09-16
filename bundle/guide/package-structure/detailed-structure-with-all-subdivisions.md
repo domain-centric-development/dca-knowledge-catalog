@@ -159,18 +159,20 @@ com.company.project
 │   │       └── IdentityProvider.java   #  project-specific shared port: extends OutputPort
 │   │   #  DomainEventPublisher / TransactionBoundary implementations: dca-spring (auto-configured);
 │   │   #  a non-Spring application writes them under adapter/outgoing/event and infrastructure/transaction
-│   └── domain/
-│       ├── model/ (Universal value objects)
-│       │   ├── Money.java
-│       │   ├── Price.java
-│       │   ├── ProductId.java  #  Shared product identifier
-│       │   └── UserId.java     #  Shared user identifier
-│       └── specification/ (Specification pattern implementations)
-│           ├── CompositeSpecification.java
-│           ├── AndSpecification.java
-│           ├── OrSpecification.java
-│           ├── NotSpecification.java
-│           └── SpecificationVisitor.java
+│   ├── domain/
+│   │   ├── model/ (Universal value objects)
+│   │   │   ├── Money.java
+│   │   │   ├── Price.java
+│   │   │   ├── ProductId.java  #  Shared product identifier
+│   │   │   └── UserId.java     #  Shared user identifier
+│   │   └── specification/ (Specification pattern implementations)
+│   │       ├── CompositeSpecification.java
+│   │       ├── AndSpecification.java
+│   │       ├── OrSpecification.java
+│   │       ├── NotSpecification.java
+│   │       └── SpecificationVisitor.java
+│   └── common/
+│       └── annotation/ (Custom framework-free annotations read across contexts, e.g. AsyncInitialize.java)
 │
 └── infrastructure/ (cross-cutting concerns)
     ├── configuration/

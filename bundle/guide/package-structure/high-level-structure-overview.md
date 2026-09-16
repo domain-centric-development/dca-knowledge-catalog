@@ -25,13 +25,16 @@ com.company.project/
 │   │   ├── incoming/        Controllers, Event Consumers, CLI (call Input Ports)
 │   │   └── outgoing/        Repository Impl, API Clients, Publishers (implement Output Ports)
 │   │
-│   └── infrastructure/      [FRAMEWORKS & DRIVERS LAYER]
-│                            Framework-specific configuration and cross-cutting concerns
-│                            Spring, JPA, Kafka config, Logging, Security
+│   ├── infrastructure/      [FRAMEWORKS & DRIVERS LAYER]
+│   │                        Framework-specific configuration and cross-cutting concerns
+│   │                        Spring, JPA, Kafka config, Logging, Security
+│   │
+│   └── common/annotation/   Custom annotations only this context reads (optional)
 │
 ├── sharedkernel/            [SHARED ACROSS ALL CONTEXTS - Keep Minimal]
 │   ├── application/shared/  Application-specific ports shared by several contexts (IdentityProvider)
 │   ├── domain/model/        Universal value objects (Money, Address, etc.)
+│   ├── common/annotation/   Custom framework-free annotations read across contexts (see Where a custom annotation lives)
 │   └── adapter/outgoing/    Shared adapters only where no library ships them (Spring: dca-spring does)
 │
 └── infrastructure/          [GLOBAL INFRASTRUCTURE]
