@@ -29,7 +29,7 @@ Every dependency targets a class in one of those same packages or in an allowed 
 
 **Selection.** Types below the root namespace whose namespace lies under <Module>.Domain of every module root; the building-blocks types themselves are not selected.
 
-**Check.** Every dependency whose target has a namespace points into one of those same domain namespaces or below an allowed prefix: the layout's third-party allow-list (by default System and Microsoft.Extensions.Logging.Abstractions, plus whatever the layout adds) and, of the building blocks, only Ddd.Tactical and Hexagonal.Ports.Out - a building-blocks entry in the allow-list is ignored here, so the strategic annotations and the input ports are not allowed in the domain. A dependency on any other namespace is reported, each distinct pair once.
+**Check.** Every dependency whose target has a namespace points into one of those same domain namespaces or below an allowed prefix: the layout's third-party allow-list (by default System and Microsoft.Extensions.Logging.Abstractions, plus whatever the layout adds) and, of the building blocks, only Ddd.Tactical and Hexagonal.Ports.Out - a building-blocks entry in the allow-list is ignored here, so the strategic annotations and the input ports are not allowed in the domain. The shared kernel is not on the list either, unless it is a module root with a Domain layer of its own. A dependency on any other namespace is reported, each distinct pair once.
 
 ## Implementation
 
@@ -40,9 +40,10 @@ DcaRule.of(
             + " when possible",
         "Domain should be framework-independent (Dependency Inversion Principle)",
         arch -> {
-          // Every discovered context's domain plus the shared kernel's own domain package — the
-          // inclusion is explicit here, where the former base.*.domain.. wildcard covered the
-          // shared kernel only as a side effect of matching one segment.
+          // The domain packages of every module root - the shared kernel among them when it
+          // owns a domain package - plus the two building-blocks packages a domain may use:
+          // the tactical markers and the output ports. Strategic annotations and input ports
+          // are deliberately not on the list.
           List<String> domainPackageList = new ArrayList<>(List.of(arch.allDomainPatterns()));
           domainPackageList.add(DcaLayout.BUILDING_BLOCKS_TACTICAL_PACKAGE);
           domainPackageList.add(DcaLayout.BUILDING_BLOCKS_PORT_OUT_PACKAGE);
@@ -113,7 +114,9 @@ DcaRule.Check(
         + "plus whatever the layout adds) and, of the building blocks, only Ddd.Tactical "
         + "and Hexagonal.Ports.Out - a building-blocks entry in the allow-list is ignored "
         + "here, so the strategic annotations and the input ports are not allowed in the "
-        + "domain. A dependency on any other namespace is reported, each distinct pair once.")
+        + "domain. The shared kernel is not on the list either, unless it is a module root "
+        + "with a Domain layer of its own. A dependency on any other namespace is reported, "
+        + "each distinct pair once.")
 ```
 
 ## Configured by
