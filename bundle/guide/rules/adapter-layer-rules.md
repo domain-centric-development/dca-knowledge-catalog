@@ -9,7 +9,7 @@ tags: [guide, section]
 
 ### Input Adapter Rules
 - Input Adapter calls Input Port
-- Input Adapter uses no infrastructure (`DCA-HEX-004`) — a capability the use case needs is declared as an Output Port there; adapter mechanics stay inside the adapter
+- Input Adapter uses no infrastructure (`DCA-HEX-004`) — a capability the use case needs is declared as an Output Port there; the adapter may use the identity port to resolve the caller; its own mechanics stay inside the adapter
 - Controller extracts data from HTTP request
 - Controller creates Input Data/DTO
 - Controller delegates to use case
