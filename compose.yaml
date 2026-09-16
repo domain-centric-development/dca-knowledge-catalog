@@ -1,22 +1,93 @@
-# Meta-repository entry point: both reference shops with one command.
-#   docker compose up --build        → Java shop on http://localhost:8080, .NET shop on http://localhost:5080
-#   docker compose up shop-java      → one of them
-# Every buildable sub-project also has its own compose.yaml (tests, libraries, catalog, slides) — run it from
-# the sub-project directory. The two services below repeat the sub-projects' build settings rather than
-# `include:`-ing them, because the sub-projects' tool services share names (`test`) that include would merge.
+# docker compose run --rm generate   → regenerates bundle/ in this checkout (and the dca-core plugin mirror)
+# docker compose run --rm test       → the conformance tests
+# docker compose run --rm check      → the gate: generate (no mirror), lint, tests, freshness diff
+# docker compose run --rm python -m dca_catalog.lint   → any generator module
+# docker compose --profile ci build  → CI-style image: it builds only when generate, lint and tests pass
+#
+# The generator reads the sibling checkouts dca-guide/, dca-java/ and dca-dotnet/, so every tool service
+# mounts the PARENT directory and the ci image takes it as build context. Run from this directory, inside
+# the monorepo. All tool services sit in the `tools` profile: `docker compose up` / `docker compose build`
+# start and build nothing here. Each is spelled out in full — podman-compose 1.6 cannot resolve `extends`.
 services:
-  shop-java:
-    build: dca-ecommerce-sample-java
-    image: dca-shop-java
-    ports:
-      - "8080:8080"
-
-  shop-dotnet:
+  python:
     build:
-      context: .
-      dockerfile: dca-ecommerce-sample-dotnet/Dockerfile
-    image: dca-shop-dotnet
-    ports:
-      - "5080:8080"
+      context: ..
+      dockerfile: dca-knowledge-catalog/Dockerfile
+      target: tools
+    image: dca-knowledge-catalog-tools
+    profiles: [tools]
+    working_dir: /repo/dca-knowledge-catalog
+    volumes:
+      - ..:/repo
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: "1"
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: "*"
+    entrypoint: ["python3"]
+    command: ["-m", "dca_catalog.generate"]
+
+  generate:
+    build:
+      context: ..
+      dockerfile: dca-knowledge-catalog/Dockerfile
+      target: tools
+    image: dca-knowledge-catalog-tools
+    profiles: [tools]
+    working_dir: /repo/dca-knowledge-catalog
+    volumes:
+      - ..:/repo
+    environment:
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: "1"
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: "*"
+    entrypoint: ["python3"]
+    command: ["-m", "dca_catalog.generate"]
+
+  test:
+    build:
+      context: ..
+      dockerfile: dca-knowledge-catalog/Dockerfile
+      target: tools
+    image: dca-knowledge-catalog-tools
+    profiles: [tools]
+    working_dir: /repo/dca-knowledge-catalog
+    volumes:
+      - ..:/repo
+    environment:
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: "1"
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: "*"
+    entrypoint: ["python3"]
+    command: ["-m", "pytest", "tests/", "-q"]
+
+  check:
+    build:
+      context: ..
+      dockerfile: dca-knowledge-catalog/Dockerfile
+      target: tools
+    image: dca-knowledge-catalog-tools
+    profiles: [tools]
+    working_dir: /repo/dca-knowledge-catalog
+    volumes:
+      - ..:/repo
+    environment:
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: "1"
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: "*"
+    entrypoint: ["./scripts/check.sh"]
+    command: []
+
+  ci:
+    build:
+      context: ..
+      dockerfile: dca-knowledge-catalog/Dockerfile
+    image: dca-knowledge-catalog
+    profiles: [ci]

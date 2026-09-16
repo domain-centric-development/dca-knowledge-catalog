@@ -150,10 +150,14 @@ directories — the layout the generator expects (`--repo-root` defaults to the 
 checkout) — and runs `scripts/check.sh`. Targets: `make generate | lint | test | check | hooks`.
 
 The same without a local Python: `docker compose run --rm generate` regenerates `bundle/` in this
-checkout, `docker compose run --rm check` runs the gate, and
-`docker build -f dca-knowledge-catalog/Dockerfile ..` from the monorepo root is the CI-style image —
-it builds only when generate, lint and tests pass. Both mount or copy the sibling source dirs, so
-they run from within the monorepo, not from this repository alone.
+checkout, `docker compose run --rm test` runs the conformance tests, `docker compose run --rm check`
+runs the gate, and `docker build -f dca-knowledge-catalog/Dockerfile ..` from the monorepo root (or
+`docker compose --profile ci build`) is the CI-style image — it builds only when generate, lint and
+tests pass. Both mount or copy the sibling source dirs, so they run from within the monorepo, not
+from this repository alone. The tool services live in the `tools` profile, so `docker compose up`
+starts nothing here; podman-compose does not activate a profile on `run`, so there it is
+`podman-compose --profile tools run --rm check`. `scripts/compose-smoke.sh` checks that the service
+layout still holds (verified verbs: `generate`, `test`, `check`, `python`; profile `ci`: the image).
 
 ## Browse & author in Obsidian
 
