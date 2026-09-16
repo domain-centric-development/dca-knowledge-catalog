@@ -5,7 +5,7 @@ title: Upstream declarations and the module declaration's allowed dependencies m
 rule: Neither the context map nor the module boundary may know more than the other — an edge that exists only on one side is stale.
 constraint: Upstream declarations and the module declaration's allowed dependencies must agree.
 selects: "Every package carrying @BoundedContext, provided the layout configures at least one module declaration annotation (a module system's per-package declaration, for example Spring Modulith's) that is on the class path; reads its @Upstream declarations (context(), via(); PLANNED included) and, reflectively, the allowedDependencies attribute of every configured and loadable module declaration the package carries. Without a configured and loadable module declaration the rule selects nothing and passes."
-checks: "The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored; a context whose package-info carries no module annotation contributes an empty set, so its @Upstream declarations are reported as unmatched."
+checks: "The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored. A context that declares @Upstream edges but whose package-info carries none of the configured module declaration annotations is reported once, as a missing module declaration with unknown allowed dependencies - its edges are not compared; a context without @Upstream declarations and without a module declaration has nothing to compare and passes."
 enforced_by: "ContextMapRules#DCA-MAP-006"
 status: enforced
 rule_set: contextmap
@@ -23,7 +23,7 @@ Every package carrying @BoundedContext, provided the layout configures at least 
 
 ## Check
 
-The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored; a context whose package-info carries no module annotation contributes an empty set, so its @Upstream declarations are reported as unmatched.
+The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored. A context that declares @Upstream edges but whose package-info carries none of the configured module declaration annotations is reported once, as a missing module declaration with unknown allowed dependencies - its edges are not compared; a context without @Upstream declarations and without a module declaration has nothing to compare and passes.
 
 ## Implementation
 
@@ -43,6 +43,20 @@ DcaRule.check(
           for (String pkg : arch.boundedContextPackages()) {
             String source = arch.contextName(pkg);
             Set<String> declared = declaredEdges(arch, pkg);
+            if (!declared.isEmpty()
+                && !carriesModuleDeclaration(arch, pkg, moduleAnnotations)) {
+              violations.add(
+                  "Context '"
+                      + source
+                      + "': module declaration missing on '"
+                      + source
+                      + "', allowed dependencies unknown - it declares @Upstream edges "
+                      + new TreeSet<>(declared)
+                      + " but its package-info carries none of the configured module"
+                      + " declaration annotations; declare the module there so both sides can"
+                      + " be compared");
+              continue;
+            }
             Set<String> allowed = new LinkedHashSet<>();
             for (String entry : allowedDependencies(arch, pkg, moduleAnnotations)) {
               String normalized = entry.replaceAll("\\s*::\\s*", " :: ").trim();
@@ -75,9 +89,12 @@ DcaRule.check(
         "The set of declared edges 'context :: channel' equals the set of"
             + " allowedDependencies entries of the form 'module :: named-interface' whose"
             + " module is a bounded context, whitespace around '::' normalized. Entries"
-            + " without '::' and entries naming a non-context module are ignored; a context"
-            + " whose package-info carries no module annotation contributes an empty set,"
-            + " so its @Upstream declarations are reported as unmatched.")
+            + " without '::' and entries naming a non-context module are ignored. A context"
+            + " that declares @Upstream edges but whose package-info carries none of the"
+            + " configured module declaration annotations is reported once, as a missing"
+            + " module declaration with unknown allowed dependencies - its edges are not"
+            + " compared; a context without @Upstream declarations and without a module"
+            + " declaration has nothing to compare and passes.")
 ```
 
 ## Helpers
@@ -123,6 +140,17 @@ private static Set<String> moduleNames(DcaArchitecture arch) {
       }
     }
     return edges;
+  }
+```
+
+### `carriesModuleDeclaration`
+
+```java
+/** Whether the package carries at least one of the configured module declarations. */
+  private static boolean carriesModuleDeclaration(
+      DcaArchitecture arch, String pkg, List<Class<? extends Annotation>> moduleAnnotations) {
+    return moduleAnnotations.stream()
+        .anyMatch(annotation -> arch.packageAnnotation(pkg, annotation).isPresent());
   }
 ```
 

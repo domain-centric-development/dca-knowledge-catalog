@@ -4,7 +4,7 @@ id: DCA-NAM-002
 title: "Diagnostic: use cases without injectable stereotypes"
 rule: Use cases may be registered by configuration or annotated; static references cannot prove wiring.
 constraint: "Diagnostic: use cases without injectable stereotypes."
-selects: Concrete non-nested application operations selected by InputPort marker or use-case suffix when the injectable role is configured.
+selects: "Concrete non-nested, non-record application classes selected by InputPort marker or use-case suffix when the injectable role is configured - records are excluded, as in DCA-NAM-001."
 checks: "Informational diagnostic only: lists operations without a direct or composed injectable stereotype and never fails. Configuration registration is equally valid; this does not prove wiring."
 enforced_by: "NamingRules#DCA-NAM-002"
 status: informational
@@ -19,7 +19,7 @@ not_applicable_dotnet: ".NET has no injectable stereotype attribute — use case
 
 ## Selection
 
-Concrete non-nested application operations selected by InputPort marker or use-case suffix when the injectable role is configured.
+Concrete non-nested, non-record application classes selected by InputPort marker or use-case suffix when the injectable role is configured - records are excluded, as in DCA-NAM-001.
 
 ## Check
 
@@ -37,6 +37,7 @@ DcaRule.informational(
           if (injectable.isEmpty()) return;
           for (var type : arch.classes()) {
             if (!type.isInterface()
+                && !type.isRecord()
                 && !type.isNestedClass()
                 && com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
                         arch.allApplicationPatterns())
@@ -53,7 +54,7 @@ DcaRule.informational(
           }
         })
     .selecting(
-        "Concrete non-nested application operations selected by InputPort marker or use-case suffix when the injectable role is configured.")
+        "Concrete non-nested, non-record application classes selected by InputPort marker or use-case suffix when the injectable role is configured - records are excluded, as in DCA-NAM-001.")
     .checking(
         "Informational diagnostic only: lists operations without a direct or composed injectable stereotype and never fails. Configuration registration is equally valid; this does not prove wiring.")
 ```

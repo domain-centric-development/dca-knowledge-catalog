@@ -46,9 +46,11 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `basePackage` | the argument of `forBasePackage(...)` | constructor only | Root package of the application; everything the rules govern lies below it. |
 | `sharedKernelSubpackage` | `sharedkernel` | `withSharedKernelSubpackage(...)` |  |
 | `domainSubpackage` | `domain` | `withDomainSubpackage(...)` |  |
+| `modelSubpackage` | `model` | `withModelSubpackage(...)` | Sub-package of the domain layer that holds the domain model — aggregates, entities, value objects — e.g. `"model"` (default) or `"entities"`. The domain-model rules and the domain cycle rule select `.domain...`. |
 | `applicationSubpackage` | `application` | `withApplicationSubpackage(...)` |  |
 | `adapterSubpackage` | `adapter` | `withAdapterSubpackage(...)` |  |
 | `incomingSubpackage` | `incoming` | `withIncomingSubpackage(...)` | Name of the incoming (driving/primary) adapter sub-package — `"in"` in some projects. |
+| `incomingEventSubpackage` | `event` | `withIncomingEventSubpackage(...)` | Sub-package of the incoming adapters that holds the event consumers — the adapters that react to other modules' integration events — e.g. `"event"` (default) or `"listener"`. Classes below `.adapter.incoming...` are the one kind of incoming adapter the adapter-isolation rules exempt. |
 | `outgoingSubpackage` | `outgoing` | `withOutgoingSubpackage(...)` | Name of the outgoing (driven/secondary) adapter sub-package — `"out"` in some projects. |
 | `infrastructureSubpackage` | `infrastructure` | `withInfrastructureSubpackage(...)` |  |
 | `apiSubpackage` | `api` | `withApiSubpackage(...)` | Sub-package of a module's *synchronous* published contract, e.g. `"api"` (default) or `"contract"`. Together with `withEventsSubpackage(String)` it is the only part of a module another module's adapters may depend on; the context-map rules and renderer use the same name for the channel. |
@@ -104,10 +106,12 @@ ArchUnit pattern syntax: `..` any number of sub-packages, `*` exactly one segmen
 | `String outgoingAdapterPattern()` | `base.*.adapter.outgoing..` |
 | `String domainPattern(String contextPackage)` | `<contextPackage>.domain..` - the same pattern below the given context or module package. |
 | `String domainModelPattern(String contextPackage)` | `<contextPackage>.domain.model..` - the same pattern below the given context or module package. |
+| `String domainModelPackage(String contextPackage)` | `base.cart.domain.model` — a module's domain-model package (no pattern suffix). |
 | `String applicationPattern(String contextPackage)` | `<contextPackage>.application..` - the same pattern below the given context or module package. |
 | `String sharedOutputPortPattern(String contextPackage)` | `<contextPackage>.application.shared..` - the same pattern below the given context or module package. |
 | `String adapterPattern(String contextPackage)` | `<contextPackage>.adapter..` - the same pattern below the given context or module package. |
 | `String incomingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.incoming..` - the same pattern below the given context or module package. |
+| `String incomingEventAdapterPattern()` | `..adapter.incoming.event..` — the event consumers of any module, at any depth; the segment names come from this layout. |
 | `String outgoingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.outgoing..` - the same pattern below the given context or module package. |
 
 ## Framework annotations the rules look for (Java, `FrameworkAnnotations`)

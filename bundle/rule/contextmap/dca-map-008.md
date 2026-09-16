@@ -4,7 +4,7 @@ id: DCA-MAP-008
 title: "Anti-Corruption Layer: upstream contract types must stay inside the matching adapter"
 rule: "The ACL sits where the dependency crosses the boundary — outgoing adapters for synchronous API calls, incoming adapters for consumed events — and translates the upstream contract into the context's own model there."
 constraint: "Anti-Corruption Layer: upstream contract types must stay inside the matching adapter."
-selects: "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted, so PLANNED declarations are checked too; declarations towards an unknown context are skipped."
+selects: "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007."
 checks: "No class below the declaring context's package outside the matching adapter depends on a class in the target context's channel sub-package or below: the outgoing adapter (<context>.adapter.outgoing..) for the API channel, the incoming adapter (<context>.adapter.incoming..) for the EVENTS channel. Each declared interaction also needs a class in that adapter depending on both that upstream channel and its own domain/application. Multiple upstream translators may share the package. Structure establishes a translation site, not translation quality."
 enforced_by: "ContextMapRules#DCA-MAP-008"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
 
 ## Selection
 
-Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted, so PLANNED declarations are checked too; declarations towards an unknown context are skipped.
+Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
 
 ## Check
 
@@ -27,7 +27,7 @@ No class below the declaring context's package outside the matching adapter depe
 
 ## .NET reading
 
-**Selection.** Every [Upstream] declaration with Translation AntiCorruptionLayer on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Status is not consulted, so Planned declarations are checked too; declarations towards an unknown context are skipped.
+**Selection.** Every [Upstream] declaration with Translation AntiCorruptionLayer and Status Implemented on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Planned declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
 
 **Check.** No type below the declaring context's namespace outside the matching adapter depends on a type in the target context's channel namespace or below: the outgoing adapter (<context>.Adapter.Outgoing) for the Api channel, the incoming adapter (<context>.Adapter.Incoming) for the Events channel. Each declared interaction needs its own adapter class depending on that upstream channel and its own domain/application. Multiple upstream translators may share a package. Structure establishes a translation site, not translation quality.
 
@@ -48,6 +48,7 @@ DcaRule.check(
             for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
               String targetPkg = packagesByName.get(u.context());
               if (u.translation() != Upstream.Translation.ANTI_CORRUPTION_LAYER
+                  || u.status() != Upstream.Status.IMPLEMENTED
                   || targetPkg == null) {
                 continue;
               }
@@ -117,11 +118,11 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER on the"
-            + " package-info of every package carrying @BoundedContext whose context()"
-            + " names an existing bounded context, reading via(). status() is not"
-            + " consulted, so PLANNED declarations are checked too; declarations towards an"
-            + " unknown context are skipped.")
+        "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER and status()"
+            + " IMPLEMENTED on the package-info of every package carrying @BoundedContext whose"
+            + " context() names an existing bounded context, reading via(). PLANNED"
+            + " declarations and declarations towards an unknown context are skipped, as in"
+            + " DCA-MAP-007.")
     .checking(
         "No class below the declaring context's package outside the matching adapter"
             + " depends on a class in the target context's channel sub-package or below:"
@@ -252,7 +253,8 @@ DcaRule.Check(
                 var source = ShortName(arch, ns);
                 foreach (var u in arch.NamespaceAttributes<UpstreamAttribute>(ns))
                 {
-                    if (u.Translation != Translation.AntiCorruptionLayer || !namespacesByName.TryGetValue(u.Context, out var targetNs))
+                    if (u.Translation != Translation.AntiCorruptionLayer || u.Status != UpstreamStatus.Implemented
+                        || !namespacesByName.TryGetValue(u.Context, out var targetNs))
                     {
                         continue;
                     }
@@ -280,11 +282,10 @@ DcaRule.Check(
             DcaRule.Fail("Anti-Corruption Layer: upstream contract types must stay inside the matching adapter", violations);
         })
     .Selecting(
-        "Every [Upstream] declaration with Translation AntiCorruptionLayer on the"
-            + " marker class of every namespace carrying [BoundedContext] whose Context"
-            + " names an existing bounded context, reading Via. Status is not"
-            + " consulted, so Planned declarations are checked too; declarations towards an"
-            + " unknown context are skipped.")
+        "Every [Upstream] declaration with Translation AntiCorruptionLayer and Status Implemented"
+            + " on the marker class of every namespace carrying [BoundedContext] whose Context"
+            + " names an existing bounded context, reading Via. Planned declarations and"
+            + " declarations towards an unknown context are skipped, as in DCA-MAP-007.")
     .Checking(
         "No type below the declaring context's namespace outside the matching adapter"
             + " depends on a type in the target context's channel namespace or below:"

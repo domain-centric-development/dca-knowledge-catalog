@@ -4,7 +4,7 @@ id: DCA-MAP-009
 title: "Conformist: upstream contract types must never reach the domain layer"
 rule: Conformism does not suspend domain purity — the domain layer stays free of foreign contract types.
 constraint: "Conformist: upstream contract types must never reach the domain layer."
-selects: "Every @Upstream declaration with translation() CONFORMIST on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted, so PLANNED declarations are checked too; declarations towards an unknown context are skipped."
+selects: "Every @Upstream declaration with translation() CONFORMIST and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007."
 checks: "No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types."
 enforced_by: "ContextMapRules#DCA-MAP-009"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
 
 ## Selection
 
-Every @Upstream declaration with translation() CONFORMIST on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted, so PLANNED declarations are checked too; declarations towards an unknown context are skipped.
+Every @Upstream declaration with translation() CONFORMIST and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
 
 ## Check
 
@@ -27,7 +27,7 @@ No class in the declaring context's domain layer (<context>.domain..) depends on
 
 ## .NET reading
 
-**Selection.** Every [Upstream] declaration with Translation Conformist on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Status is not consulted, so Planned declarations are checked too; declarations towards an unknown context are skipped.
+**Selection.** Every [Upstream] declaration with Translation Conformist and Status Implemented on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Planned declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
 
 **Check.** No type in the declaring context's domain layer (<context>.Domain and below) depends on a type in the target context's channel namespace (Api or Events per the layout) or below. Application and adapter types may use the upstream's contract types.
 
@@ -46,7 +46,9 @@ DcaRule.check(
             String source = arch.contextName(pkg);
             for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
               String targetPkg = packagesByName.get(u.context());
-              if (u.translation() != Upstream.Translation.CONFORMIST || targetPkg == null) {
+              if (u.translation() != Upstream.Translation.CONFORMIST
+                  || u.status() != Upstream.Status.IMPLEMENTED
+                  || targetPkg == null) {
                 continue;
               }
               for (Upstream.Consumes channel : u.via()) {
@@ -73,11 +75,10 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Every @Upstream declaration with translation() CONFORMIST on the"
-            + " package-info of every package carrying @BoundedContext whose context()"
-            + " names an existing bounded context, reading via(). status() is not"
-            + " consulted, so PLANNED declarations are checked too; declarations towards an"
-            + " unknown context are skipped.")
+        "Every @Upstream declaration with translation() CONFORMIST and status() IMPLEMENTED"
+            + " on the package-info of every package carrying @BoundedContext whose context()"
+            + " names an existing bounded context, reading via(). PLANNED declarations and"
+            + " declarations towards an unknown context are skipped, as in DCA-MAP-007.")
     .checking(
         "No class in the declaring context's domain layer (<context>.domain..)"
             + " depends on a class in the target context's channel sub-package (api or"
@@ -194,7 +195,8 @@ DcaRule.Check(
                 var source = ShortName(arch, ns);
                 foreach (var u in arch.NamespaceAttributes<UpstreamAttribute>(ns))
                 {
-                    if (u.Translation != Translation.Conformist || !namespacesByName.TryGetValue(u.Context, out var targetNs))
+                    if (u.Translation != Translation.Conformist || u.Status != UpstreamStatus.Implemented
+                        || !namespacesByName.TryGetValue(u.Context, out var targetNs))
                     {
                         continue;
                     }
@@ -216,11 +218,10 @@ DcaRule.Check(
             DcaRule.Fail("Conformist: upstream contract types must never reach the domain layer", violations);
         })
     .Selecting(
-        "Every [Upstream] declaration with Translation Conformist on the"
+        "Every [Upstream] declaration with Translation Conformist and Status Implemented on the"
             + " marker class of every namespace carrying [BoundedContext] whose Context"
-            + " names an existing bounded context, reading Via. Status is not"
-            + " consulted, so Planned declarations are checked too; declarations towards an"
-            + " unknown context are skipped.")
+            + " names an existing bounded context, reading Via. Planned declarations and"
+            + " declarations towards an unknown context are skipped, as in DCA-MAP-007.")
     .Checking(
         "No type in the declaring context's domain layer (<context>.Domain and below)"
             + " depends on a type in the target context's channel namespace (Api or"

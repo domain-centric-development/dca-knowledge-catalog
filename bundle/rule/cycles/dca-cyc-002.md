@@ -5,7 +5,7 @@ title: "Application Layer must not have cyclic dependencies (package-based slice
 rule: Application services should have clear boundaries and no cycles.
 constraint: "Application Layer must not have cyclic dependencies (package-based slice discovery)."
 selects: "One slice per module root, holding the classes in <module>.application.. of that module (application.shared included); classes outside every module or outside the application layer are ignored."
-checks: "The slices form no dependency cycle between modules' application layers. Cycles between use cases or features inside one module do not count here (see DCA-CYC-005), nor do dependencies into domain or adapter classes."
+checks: "The slices form no dependency cycle between modules' application layers. Slices are per module root, so a cycle between use cases or features inside one module is not detected here - DCA-CYC-005 covers the application layer per operation - and dependencies into domain or adapter classes do not count."
 enforced_by: "CycleRules#DCA-CYC-002"
 status: enforced
 rule_set: cycles
@@ -23,13 +23,13 @@ One slice per module root, holding the classes in <module>.application.. of that
 
 ## Check
 
-The slices form no dependency cycle between modules' application layers. Cycles between use cases or features inside one module do not count here (see DCA-CYC-005), nor do dependencies into domain or adapter classes.
+The slices form no dependency cycle between modules' application layers. Slices are per module root, so a cycle between use cases or features inside one module is not detected here - DCA-CYC-005 covers the application layer per operation - and dependencies into domain or adapter classes do not count.
 
 ## .NET reading
 
 **Selection.** One slice per module root, holding the types in <module>.Application of that module and below (Application.Shared included); types outside every module or outside the application layer are ignored.
 
-**Check.** The slices form no dependency cycle between modules' application layers. Cycles between use cases or features inside one module do not count here (see DCA-CYC-005), nor do dependencies into domain or adapter types.
+**Check.** The slices form no dependency cycle between modules' application layers. Slices are per module root, so a cycle between use cases or features inside one module is not detected here - DCA-CYC-005 covers the application layer per operation - and dependencies into domain or adapter types do not count.
 
 ## Implementation
 
@@ -51,9 +51,10 @@ DcaRule.of(
             + " module (application.shared included); classes outside every module or outside"
             + " the application layer are ignored.")
     .checking(
-        "The slices form no dependency cycle between modules' application layers. Cycles"
-            + " between use cases or features inside one module do not count here (see"
-            + " DCA-CYC-005), nor do dependencies into domain or adapter classes.")
+        "The slices form no dependency cycle between modules' application layers. Slices are"
+            + " per module root, so a cycle between use cases or features inside one module is"
+            + " not detected here - DCA-CYC-005 covers the application layer per operation -"
+            + " and dependencies into domain or adapter classes do not count.")
 ```
 
 ## Helpers
@@ -111,9 +112,10 @@ DcaRule.Check(
         + "below (Application.Shared included); types outside every module or outside the "
         + "application layer are ignored.")
     .Checking(
-        "The slices form no dependency cycle between modules' application layers. Cycles between "
-        + "use cases or features inside one module do not count here (see DCA-CYC-005), nor do "
-        + "dependencies into domain or adapter types.")
+        "The slices form no dependency cycle between modules' application layers. Slices are per "
+        + "module root, so a cycle between use cases or features inside one module is not detected "
+        + "here - DCA-CYC-005 covers the application layer per operation - and dependencies into "
+        + "domain or adapter types do not count.")
 ```
 
 ## Configured by

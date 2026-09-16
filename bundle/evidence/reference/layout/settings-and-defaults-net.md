@@ -25,3 +25,4 @@ Create the default layout with `DcaLayout.ForRootNamespace(string)`.
 | `UseCaseSuffix` | `UseCase` | `WithUseCaseSuffix(...)` |
 | `ControllerSuffix` | `Controller` | `WithControllerSuffix(...)` |
 | `RestControllerSuffix` | `Controller` | `WithRestControllerSuffix(...)` |
+| `ModelSegment` | `FrameworkTypes.AspNetCore()` | `WithModelSegment(...)` |

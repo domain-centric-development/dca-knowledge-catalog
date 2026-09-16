@@ -26,6 +26,7 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 | `string OutgoingAdapterPattern` | Pattern for `Root.*.Adapter.Outgoing` and below. |
 | `string DomainPatternOf(string contextNamespace)` |  |
 | `string DomainModelPatternOf(string contextNamespace)` |  |
+| `string IncomingEventAdapterPattern` | ArchUnit's `..Adapter.Incoming.Event..`: the event consumers of any module, at any depth; every segment from this layout. |
 | `string ApplicationPatternOf(string contextNamespace)` |  |
 | `string SharedOutputPortPatternOf(string contextNamespace)` |  |
 | `string AdapterPatternOf(string contextNamespace)` |  |

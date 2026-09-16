@@ -5,7 +5,7 @@ title: Incoming Adapter Packages must not have cyclic dependencies
 rule: Incoming adapters should have clear boundaries and no cycles.
 constraint: Incoming Adapter Packages must not have cyclic dependencies.
 selects: "One slice per module root, holding the classes in <module>.adapter.incoming.. of that module; everything else is ignored."
-checks: The slices form no dependency cycle between modules' incoming adapters. Cycles inside one module's incoming adapters and dependencies into other layers do not count.
+checks: "The slices form no dependency cycle between modules' incoming adapters. Slices are per module root, so a cycle inside one module's incoming adapters is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the adapters within a module."
 enforced_by: "CycleRules#DCA-CYC-004"
 status: enforced
 rule_set: cycles
@@ -23,13 +23,13 @@ One slice per module root, holding the classes in <module>.adapter.incoming.. of
 
 ## Check
 
-The slices form no dependency cycle between modules' incoming adapters. Cycles inside one module's incoming adapters and dependencies into other layers do not count.
+The slices form no dependency cycle between modules' incoming adapters. Slices are per module root, so a cycle inside one module's incoming adapters is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the adapters within a module.
 
 ## .NET reading
 
 **Selection.** One slice per module root, holding the types in <module>.Adapter.Incoming of that module and below; everything else is ignored.
 
-**Check.** The slices form no dependency cycle between modules' incoming adapters. Cycles inside one module's incoming adapters and dependencies into other layers do not count.
+**Check.** The slices form no dependency cycle between modules' incoming adapters. Slices are per module root, so a cycle inside one module's incoming adapters is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the adapters within a module.
 
 ## Implementation
 
@@ -56,10 +56,11 @@ DcaRule.of(
         "One slice per module root, holding the classes in <module>.adapter.incoming.. of"
             + " that module; everything else is ignored.")
     .checking(
-        "The slices form no dependency cycle between modules' incoming adapters. Cycles"
-            + " inside"
-            + " one module's incoming adapters and dependencies into other layers do not"
-            + " count.")
+        "The slices form no dependency cycle between modules' incoming adapters. Slices are"
+            + " per module root, so a cycle inside one module's incoming adapters is not"
+            + " detected here, and dependencies into other layers do not count. DCA-CYC-005"
+            + " covers the application layer per operation; no rule slices the adapters within"
+            + " a module.")
 ```
 
 ## Helpers
@@ -116,8 +117,10 @@ DcaRule.Check(
         "One slice per module root, holding the types in <module>.Adapter.Incoming of that module "
         + "and below; everything else is ignored.")
     .Checking(
-        "The slices form no dependency cycle between modules' incoming adapters. Cycles inside "
-        + "one module's incoming adapters and dependencies into other layers do not count.")
+        "The slices form no dependency cycle between modules' incoming adapters. Slices are per "
+        + "module root, so a cycle inside one module's incoming adapters is not detected here, and "
+        + "dependencies into other layers do not count. DCA-CYC-005 covers the application layer "
+        + "per operation; no rule slices the adapters within a module.")
 ```
 
 ## Configured by

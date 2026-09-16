@@ -4,7 +4,7 @@ id: DCA-MAP-010
 title: External system contract types must respect the declared translation and interaction
 rule: "An external system's contract types are confined to the adapter where the exchange crosses the boundary (ACL) or at least kept out of the domain (Conformist)."
 constraint: External system contract types must respect the declared translation and interaction.
-selects: "Every @ExternalUpstream declaration on the package-info of every package carrying @BoundedContext whose contractPackages() is not empty, reading translation() and interaction(). status() is not consulted. A declaration without contractPackages() (wire-level contract, no vendor SDK) is skipped - it only documents the relationship."
+selects: "Every @ExternalUpstream declaration with status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose contractPackages() is not empty, reading translation() and interaction(). PLANNED declarations are skipped, as in DCA-MAP-007. A declaration without contractPackages() (wire-level contract, no vendor SDK) is skipped too - it only documents the relationship."
 checks: "With ANTI_CORRUPTION_LAYER, no class below the declaring context's package outside the matching adapter - <context>.adapter.outgoing.. for OUTBOUND, <context>.adapter.incoming.. for INBOUND - depends on a class in any of the contract packages. With any other translation (CONFORMIST), no class in <context>.domain.. does. That the adapter actually translates the contract is not established."
 enforced_by: "ContextMapRules#DCA-MAP-010"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
 
 ## Selection
 
-Every @ExternalUpstream declaration on the package-info of every package carrying @BoundedContext whose contractPackages() is not empty, reading translation() and interaction(). status() is not consulted. A declaration without contractPackages() (wire-level contract, no vendor SDK) is skipped - it only documents the relationship.
+Every @ExternalUpstream declaration with status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose contractPackages() is not empty, reading translation() and interaction(). PLANNED declarations are skipped, as in DCA-MAP-007. A declaration without contractPackages() (wire-level contract, no vendor SDK) is skipped too - it only documents the relationship.
 
 ## Check
 
@@ -27,7 +27,7 @@ With ANTI_CORRUPTION_LAYER, no class below the declaring context's package outsi
 
 ## .NET reading
 
-**Selection.** Every [ExternalUpstream] declaration on the marker class of every namespace carrying [BoundedContext] whose ContractNamespaces is not empty, reading Translation and Interaction. Status is not consulted. A declaration without ContractNamespaces (wire-level contract, no vendor SDK) is skipped - it only documents the relationship.
+**Selection.** Every [ExternalUpstream] declaration with Status Implemented on the marker class of every namespace carrying [BoundedContext] whose ContractNamespaces is not empty, reading Translation and Interaction. Planned declarations are skipped, as in DCA-MAP-007. A declaration without ContractNamespaces (wire-level contract, no vendor SDK) is skipped too - it only documents the relationship.
 
 **Check.** With AntiCorruptionLayer, no type below the declaring context's namespace outside the matching adapter - <context>.Adapter.Outgoing for Outbound, <context>.Adapter.Incoming for Inbound - depends on a type in any of the contract namespaces or below. With any other translation (Conformist), no type in <context>.Domain does. That the adapter actually translates the contract is not established.
 
@@ -46,7 +46,8 @@ DcaRule.check(
           for (String pkg : arch.boundedContextPackages()) {
             String source = arch.contextName(pkg);
             for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
-              if (e.contractPackages().length == 0) {
+              if (e.contractPackages().length == 0
+                  || e.status() != Upstream.Status.IMPLEMENTED) {
                 continue;
               }
               if (e.translation() == Upstream.Translation.ANTI_CORRUPTION_LAYER) {
@@ -97,11 +98,12 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Every @ExternalUpstream declaration on the package-info of every package"
-            + " carrying @BoundedContext whose contractPackages() is not empty, reading"
-            + " translation() and interaction(). status() is not consulted. A declaration"
-            + " without contractPackages() (wire-level contract, no vendor SDK) is skipped"
-            + " - it only documents the relationship.")
+        "Every @ExternalUpstream declaration with status() IMPLEMENTED on the package-info"
+            + " of every package carrying @BoundedContext whose contractPackages() is not"
+            + " empty, reading translation() and interaction(). PLANNED declarations are"
+            + " skipped, as in DCA-MAP-007. A declaration without contractPackages()"
+            + " (wire-level contract, no vendor SDK) is skipped too - it only documents the"
+            + " relationship.")
     .checking(
         "With ANTI_CORRUPTION_LAYER, no class below the declaring context's package"
             + " outside the matching adapter - <context>.adapter.outgoing.. for OUTBOUND,"
@@ -204,7 +206,7 @@ DcaRule.Check(
                 var source = ShortName(arch, ns);
                 foreach (var e in arch.NamespaceAttributes<ExternalUpstreamAttribute>(ns))
                 {
-                    if (e.ContractNamespaces.Length == 0)
+                    if (e.ContractNamespaces.Length == 0 || e.Status != UpstreamStatus.Implemented)
                     {
                         continue;
                     }
@@ -240,11 +242,11 @@ DcaRule.Check(
             DcaRule.Fail("External system contract types must respect the declared translation and interaction", violations);
         })
     .Selecting(
-        "Every [ExternalUpstream] declaration on the marker class of every namespace"
-            + " carrying [BoundedContext] whose ContractNamespaces is not empty, reading"
-            + " Translation and Interaction. Status is not consulted. A declaration"
-            + " without ContractNamespaces (wire-level contract, no vendor SDK) is skipped"
-            + " - it only documents the relationship.")
+        "Every [ExternalUpstream] declaration with Status Implemented on the marker class of"
+            + " every namespace carrying [BoundedContext] whose ContractNamespaces is not empty,"
+            + " reading Translation and Interaction. Planned declarations are skipped, as in"
+            + " DCA-MAP-007. A declaration without ContractNamespaces (wire-level contract, no"
+            + " vendor SDK) is skipped too - it only documents the relationship.")
     .Checking(
         "With AntiCorruptionLayer, no type below the declaring context's namespace"
             + " outside the matching adapter - <context>.Adapter.Outgoing for Outbound,"

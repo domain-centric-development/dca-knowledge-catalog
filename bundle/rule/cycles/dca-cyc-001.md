@@ -4,8 +4,8 @@ id: DCA-CYC-001
 title: "Domain Packages must not have cyclic dependencies (package-based slice discovery)"
 rule: "Domain model packages should have clear boundaries and no cycles (Acyclic Dependencies Principle)."
 constraint: "Domain Packages must not have cyclic dependencies (package-based slice discovery)."
-selects: "One slice per module root, holding the classes in <module>.domain.model.. of that module. A module root is the shortest package prefix whose next segment is a layer segment, so modules are found at any depth; classes outside every module or outside domain.model are ignored."
-checks: "The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Cycles between classes inside one module's domain model do not count, and dependencies into other layers do not count. Fewer than two slices pass."
+selects: "One slice per module root, holding the classes in <module>.domain.model.. of that module (segment names from the layout). A module root is the shortest package prefix whose next segment is a layer segment, so modules are found at any depth; classes outside every module or outside the domain-model package are ignored."
+checks: "The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Slices are per module root, so a cycle between classes inside one module's domain model is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the domain model within a module. Fewer than two slices pass."
 enforced_by: "CycleRules#DCA-CYC-001"
 status: enforced
 rule_set: cycles
@@ -19,17 +19,17 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/CycleRules.cs
 
 ## Selection
 
-One slice per module root, holding the classes in <module>.domain.model.. of that module. A module root is the shortest package prefix whose next segment is a layer segment, so modules are found at any depth; classes outside every module or outside domain.model are ignored.
+One slice per module root, holding the classes in <module>.domain.model.. of that module (segment names from the layout). A module root is the shortest package prefix whose next segment is a layer segment, so modules are found at any depth; classes outside every module or outside the domain-model package are ignored.
 
 ## Check
 
-The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Cycles between classes inside one module's domain model do not count, and dependencies into other layers do not count. Fewer than two slices pass.
+The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Slices are per module root, so a cycle between classes inside one module's domain model is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the domain model within a module. Fewer than two slices pass.
 
 ## .NET reading
 
-**Selection.** One slice per module root, holding the types in <module>.Domain.Model of that module and below. A module root is the shortest namespace prefix whose next segment is a layer segment, so modules are found at any depth; types outside every module or outside Domain.Model are ignored.
+**Selection.** One slice per module root, holding the types in <module>.Domain.Model of that module and below (segment names from the layout). A module root is the shortest namespace prefix whose next segment is a layer segment, so modules are found at any depth; types outside every module or outside the domain-model namespace are ignored.
 
-**Check.** The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Cycles between types inside one module's domain model do not count, and dependencies into other layers do not count. Fewer than two slices pass.
+**Check.** The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Slices are per module root, so a cycle between types inside one module's domain model is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the domain model within a module. Fewer than two slices pass.
 
 ## Implementation
 
@@ -41,22 +41,22 @@ DcaRule.of(
             + " Principle)",
         arch ->
             slices()
-                .assignedFrom(
-                    moduleLayerSlices(
-                        arch, root -> root + "." + layout.domainSubpackage() + ".model"))
+                .assignedFrom(moduleLayerSlices(arch, layout::domainModelPackage))
                 .should()
                 .beFreeOfCycles()
                 .allowEmptyShould(true))
     .selecting(
         "One slice per module root, holding the classes in <module>.domain.model.. of that"
-            + " module. A module root is the shortest package prefix whose next segment is a"
-            + " layer segment, so modules are found at any depth; classes outside every module"
-            + " or outside domain.model are ignored.")
+            + " module (segment names from the layout). A module root is the shortest package"
+            + " prefix whose next segment is a layer segment, so modules are found at any depth;"
+            + " classes outside every module or outside the domain-model package are ignored.")
     .checking(
         "The slices form no dependency cycle - no two modules' domain models depend on each"
-            + " other, directly or via further modules' domain models. Cycles between classes"
-            + " inside one module's domain model do not count, and dependencies into other"
-            + " layers do not count. Fewer than two slices pass.")
+            + " other, directly or via further modules' domain models. Slices are per module"
+            + " root, so a cycle between classes inside one module's domain model is not"
+            + " detected here, and dependencies into other layers do not count. DCA-CYC-005"
+            + " covers the application layer per operation; no rule slices the domain model"
+            + " within a module. Fewer than two slices pass.")
 ```
 
 ## Helpers
@@ -108,17 +108,18 @@ DcaRule.Check(
     "DCA-CYC-001",
     "Domain Namespaces must not have cyclic dependencies (package-based slice discovery)",
     "Domain model namespaces should have clear boundaries and no cycles (Acyclic Dependencies Principle)",
-    arch => CheckSlices(arch, layout, $"{layout.DomainSegment}.Model", "Domain Namespaces must not have cyclic dependencies"))
+    arch => CheckSlices(arch, layout, $"{layout.DomainSegment}.{layout.ModelSegment}", "Domain Namespaces must not have cyclic dependencies"))
     .Selecting(
         "One slice per module root, holding the types in <module>.Domain.Model of that module and "
-        + "below. A module root is the shortest namespace prefix whose next segment is a layer "
-        + "segment, so modules are found at any depth; types outside every module or outside "
-        + "Domain.Model are ignored.")
+        + "below (segment names from the layout). A module root is the shortest namespace prefix "
+        + "whose next segment is a layer segment, so modules are found at any depth; types outside "
+        + "every module or outside the domain-model namespace are ignored.")
     .Checking(
         "The slices form no dependency cycle - no two modules' domain models depend on each "
-        + "other, directly or via further modules' domain models. Cycles between types inside one "
-        + "module's domain model do not count, and dependencies into other layers do not count. "
-        + "Fewer than two slices pass.")
+        + "other, directly or via further modules' domain models. Slices are per module root, so a "
+        + "cycle between types inside one module's domain model is not detected here, and "
+        + "dependencies into other layers do not count. DCA-CYC-005 covers the application layer "
+        + "per operation; no rule slices the domain model within a module. Fewer than two slices pass.")
 ```
 
 ## Configured by

@@ -5,7 +5,7 @@ title: Aggregate Roots must not have fields with other Aggregate Root types
 rule: "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep aggregate boundaries and transactional consistency intact."
 constraint: Aggregate Roots must not have fields with other Aggregate Root types.
 selects: "Non-interface classes anywhere under scan assignable to AggregateRoot, abstract ones included."
-checks: "No instance state, including inherited state, arrays and nested generic arguments, involves AggregateRoot. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid."
+checks: "No instance field - inherited ones included, static ones excluded - involves AggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid."
 enforced_by: "TacticalPatternRules#DCA-TAC-003"
 status: enforced
 rule_set: tactical
@@ -23,13 +23,13 @@ Non-interface classes anywhere under scan assignable to AggregateRoot, abstract 
 
 ## Check
 
-No instance state, including inherited state, arrays and nested generic arguments, involves AggregateRoot. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
+No instance field - inherited ones included, static ones excluded - involves AggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
 
 ## .NET reading
 
 **Selection.** Non-interface types below the root namespace assignable to IAggregateRoot, abstract ones included.
 
-**Check.** No instance state, including inherited state, arrays and nested generic arguments, involves IAggregateRoot. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
+**Check.** No instance field or property - inherited ones included, static ones excluded - involves IAggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
 
 ## Implementation
 
@@ -60,7 +60,7 @@ DcaRule.check(
         "Non-interface classes anywhere under scan assignable to AggregateRoot, "
             + "abstract ones included.")
     .checking(
-        "No instance state, including inherited state, arrays and nested generic arguments, involves AggregateRoot. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.")
+        "No instance field - inherited ones included, static ones excluded - involves AggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.")
 ```
 
 ## Helpers
@@ -251,7 +251,7 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var aggregate in ConcreteTypesAssignableTo(arch, typeof(IAggregateRoot)))
         {
-            foreach (var member in DataMembers(arch, aggregate))
+            foreach (var member in InstanceDataMembers(arch, aggregate))
             {
                 if (IsConcreteAggregateRoot(arch, member.Type))
                 {
@@ -274,7 +274,7 @@ DcaRule.Check(
         "Non-interface types below the root namespace assignable to IAggregateRoot, "
         + "abstract ones included.")
     .Checking(
-    "No instance state, including inherited state, arrays and nested generic arguments, involves IAggregateRoot. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid." )
+    "No instance field or property - inherited ones included, static ones excluded - involves IAggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.")
 ```
 
 ## Applies to markers

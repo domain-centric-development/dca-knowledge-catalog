@@ -5,7 +5,7 @@ title: Aggregate Roots must not hold references to Repositories or other Output 
 rule: "Aggregates are persistence-ignorant: use cases retrieve facts; external calculations belong in domain services over supplied snapshots. Review callback parameters manually; this field check cannot prove semantic responsibility."
 constraint: Aggregate Roots must not hold references to Repositories or other Output Ports.
 selects: "Non-interface classes anywhere under scan assignable to AggregateRoot, abstract ones included."
-checks: No field of the class - inherited and static ones included - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes.
+checks: "No instance field of the class - inherited ones included, static ones excluded - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-002"
 status: enforced
 rule_set: tactical
@@ -23,13 +23,13 @@ Non-interface classes anywhere under scan assignable to AggregateRoot, abstract 
 
 ## Check
 
-No field of the class - inherited and static ones included - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes.
+No instance field of the class - inherited ones included, static ones excluded - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes.
 
 ## .NET reading
 
 **Selection.** Non-interface types below the root namespace assignable to IAggregateRoot, abstract ones included.
 
-**Check.** No field or property of the type - inherited and static ones included, record plumbing skipped - has a type assignable to IRepository or to any other IOutputPort. Only the member's own type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a member and passes.
+**Check.** No instance field or property of the type - inherited ones included, static ones excluded, record plumbing skipped - has a type assignable to IRepository or to any other IOutputPort. Only the member's own type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a member and passes.
 
 ## Implementation
 
@@ -42,7 +42,7 @@ DcaRule.check(
         arch -> {
           List<String> violations = new ArrayList<>();
           for (JavaClass aggregate : concreteClassesAssignableTo(arch, AggregateRoot.class)) {
-            for (JavaField field : aggregate.getAllFields()) {
+            for (JavaField field : TypeInspection.instanceFields(aggregate)) {
               JavaClass fieldType = field.getRawType();
               if (fieldType.isAssignableTo(Repository.class)
                   || fieldType.isAssignableTo(OutputPort.class)) {
@@ -64,8 +64,8 @@ DcaRule.check(
         "Non-interface classes anywhere under scan assignable to AggregateRoot, "
             + "abstract ones included.")
     .checking(
-        "No field of the class - inherited and static ones included - has a raw type "
-            + "assignable to Repository or to any other OutputPort. Only the raw type is "
+        "No instance field of the class - inherited ones included, static ones excluded - "
+            + "has a raw type assignable to Repository or to any other OutputPort. Only the raw type is "
             + "inspected; a port hidden in a generic type argument is not seen. A port passed "
             + "as a method parameter is not a field and passes.")
 ```
@@ -89,6 +89,21 @@ private static void fail(String message, List<String> violations) {
     throw new DcaRuleViolation(message, violations);
   }
 }
+```
+
+### `TypeInspection.instanceFields`
+
+```java
+/**
+   * The instance fields of a class, inherited ones included, sorted by name so that reports are
+   * stable across runs. Static fields — constants, counters — are not part of an object's state.
+   */
+  static List<JavaField> instanceFields(JavaClass type) {
+    return type.getAllFields().stream()
+        .filter(field -> !field.getModifiers().contains(JavaModifier.STATIC))
+        .sorted(Comparator.comparing(JavaField::getName))
+        .toList();
+  }
 ```
 
 ### `classesMatching`
@@ -116,7 +131,7 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var aggregate in ConcreteTypesAssignableTo(arch, typeof(IAggregateRoot)))
         {
-            foreach (var member in DataMembers(arch, aggregate))
+            foreach (var member in InstanceDataMembers(arch, aggregate))
             {
                 var fieldType = member.Type;
                 if (IsAssignableTo(arch, fieldType, typeof(IRepository)) || IsAssignableTo(arch, fieldType, typeof(IOutputPort)))
@@ -134,8 +149,8 @@ DcaRule.Check(
         "Non-interface types below the root namespace assignable to IAggregateRoot, "
         + "abstract ones included.")
     .Checking(
-        "No field or property of the type - inherited and static ones included, "
-        + "record plumbing skipped - has a type assignable to IRepository or to any "
+        "No instance field or property of the type - inherited ones included, static ones "
+        + "excluded, record plumbing skipped - has a type assignable to IRepository or to any "
         + "other IOutputPort. Only the member's own type is inspected; a port hidden in "
         + "a generic type argument is not seen. A port passed as a method parameter is "
         + "not a member and passes.")

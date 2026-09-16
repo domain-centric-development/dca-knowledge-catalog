@@ -4,7 +4,7 @@ id: DCA-HEX-006
 title: Incoming port adapters must not depend directly on outgoing port adapters within the same context
 rule: "Port adapters should communicate through application services, not directly (event consumers are the exception)."
 constraint: Incoming port adapters must not depend directly on outgoing port adapters within the same context.
-selects: "Classes in <module>.adapter.incoming.. of every module root, excluding those below an adapter.incoming.event package (event consumers)."
+selects: "Classes in <module>.adapter.incoming.. of every module root, excluding those below the configured event-consumer sub-package (adapter.incoming.event by default)."
 checks: "No dependency on a class in <module>.adapter.outgoing.. of any module root. The reverse direction (an outgoing adapter using an incoming one) and dependencies between two incoming or two outgoing adapters are not checked. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-006"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
 
 ## Selection
 
-Classes in <module>.adapter.incoming.. of every module root, excluding those below an adapter.incoming.event package (event consumers).
+Classes in <module>.adapter.incoming.. of every module root, excluding those below the configured event-consumer sub-package (adapter.incoming.event by default).
 
 ## Check
 
@@ -27,7 +27,7 @@ No dependency on a class in <module>.adapter.outgoing.. of any module root. The 
 
 ## .NET reading
 
-**Selection.** Types in <module>.Adapter.Incoming of every module root, excluding those below an Adapter.Incoming.Event namespace (event consumers).
+**Selection.** Types in <module>.Adapter.Incoming of every module root, excluding those below the configured event-consumer segment (Adapter.Incoming.Event by default).
 
 **Check.** No dependency on a type in <module>.Adapter.Outgoing of any module root. The reverse direction (an outgoing adapter using an incoming one) and dependencies between two incoming or two outgoing adapters are not checked. An empty selection passes.
 
@@ -52,7 +52,8 @@ DcaRule.of(
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root, excluding those"
-            + " below an adapter.incoming.event package (event consumers).")
+            + " below the configured event-consumer sub-package (adapter.incoming.event by"
+            + " default).")
     .checking(
         "No dependency on a class in <module>.adapter.outgoing.. of any module root. The"
             + " reverse direction (an outgoing adapter using an incoming one) and dependencies"
@@ -65,9 +66,12 @@ DcaRule.of(
 ### `eventConsumerPattern`
 
 ```java
-/** Pattern of event consumers, which may depend on other contexts' integration events. */
+/**
+   * Pattern of event consumers - the incoming adapters that react to other modules' integration
+   * events; every segment comes from the layout.
+   */
   private String eventConsumerPattern() {
-    return ".." + layout.adapterSubpackage() + "." + layout.incomingSubpackage() + ".event..";
+    return layout.incomingEventAdapterPattern();
   }
 ```
 
@@ -88,7 +92,7 @@ DcaRule.Of(
             .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns())))
     .Selecting(
         "Types in <module>.Adapter.Incoming of every module root, excluding those"
-            + " below an Adapter.Incoming.Event namespace (event consumers).")
+            + " below the configured event-consumer segment (Adapter.Incoming.Event by default).")
     .Checking(
         "No dependency on a type in <module>.Adapter.Outgoing of any module root. The"
             + " reverse direction (an outgoing adapter using an incoming one) and dependencies"
