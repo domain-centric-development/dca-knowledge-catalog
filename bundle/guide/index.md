@@ -9,7 +9,7 @@
 - [elements/](elements/index.md) (5)
 - [factory/](factory/index.md) (9)
 - [integration-patterns/](integration-patterns/index.md) (10)
-- [jwt-implementation-guide/](jwt-implementation-guide/index.md) (17)
+- [jwt-implementation-guide/](jwt-implementation-guide/index.md) (18)
 - [language-mappings/](language-mappings/index.md) (11)
 - [package-structure/](package-structure/index.md) (7)
 - [quick-reference/](quick-reference/index.md) (5)

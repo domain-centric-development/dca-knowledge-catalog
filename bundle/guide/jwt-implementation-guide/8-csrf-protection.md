@@ -33,10 +33,12 @@ The Double Submit Cookie pattern provides CSRF protection without server-side to
 A cross-site attacker cannot read the cookie (same-origin policy on JS), so cannot forge the matching header.
 
 ```java
-// Setting the CSRF cookie (not HttpOnly — must be readable by JavaScript)
+// Setting the CSRF cookie (not HttpOnly — must be readable by JavaScript).
+// sameSite and secure come from the same configuration as the identity cookie: a token that cannot
+// follow the identity it protects is worse than no token, because the request fails as incomplete.
 ResponseCookie.from("csrf-token", UUID.randomUUID().toString())
-    .sameSite("Lax")
-    .secure(secure)
+    .sameSite(cookiePolicy.sameSite())
+    .secure(cookiePolicy.secure())
     .path("/")
     .build();
 
@@ -80,6 +82,7 @@ CSRF is the worst of both worlds.
 | `shop-session` (access token) | `Strict` | No — `SameSite=Strict` is sufficient |
 | `shop-refresh` (refresh token) | `Strict` | No — `SameSite=Strict` is sufficient |
 | `shop-identity` (visitor token) | `Lax` | Yes if used for state changes — use Double Submit Cookie |
+| CSRF token | follows the cookie it protects | n/a — it *is* the mitigation, and it only works if it travels with that cookie |
 
 `SameSite` is defence in depth. A server-rendered shop whose forms change state on a cookie session carries the token
 in every form regardless of the `SameSite` value; the table above only tells you which cookie makes the token

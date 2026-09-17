@@ -18,6 +18,8 @@ tags: [guide, section]
 [ ] Reduce access token lifetime to 15 minutes
 [ ] Set Secure=true on all cookies in production (env-driven, not hardcoded false)
 [ ] SameSite=Strict for access + refresh cookies; SameSite=Lax for visitor cookie
+[ ] CSRF cookie takes its SameSite and Secure from the same configuration as the cookie it protects
+[ ] Framing decided on its own switch, not derived from the cookie policy (see §7a)
 [ ] Path=/auth/refresh on the refresh token cookie
 [ ] login_attempts table with per-email + per-IP rate limiting
 [ ] Configurable lockout thresholds via application.yml

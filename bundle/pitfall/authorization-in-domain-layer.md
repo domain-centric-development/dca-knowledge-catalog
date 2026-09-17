@@ -41,4 +41,4 @@ For the full layer split of validation vs. authorization vs. invariants, see [Wh
 - Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
 - Recipe: [Add an identity port](/recipe/add-an-identity-port.md)
-- Related pitfalls: [Framework leak in the domain](/pitfall/framework-leak-in-domain.md) · [Anemic domain model](/pitfall/anemic-domain-model.md)
+- Related pitfalls: [Framework leak in the domain](/pitfall/framework-leak-in-domain.md) · [Anemic domain model](/pitfall/anemic-domain-model.md) · [Cookies that do not travel together](/pitfall/cookies-that-do-not-travel-together.md)

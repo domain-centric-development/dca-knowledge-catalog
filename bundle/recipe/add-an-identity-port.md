@@ -38,5 +38,5 @@ No rule counts a `User` parameter on an aggregate or a missing `customerId` on a
 - Markers: [OutputPort](/marker/port-out/outputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
 - Guide: [Elements — Shared Kernel](/guide/elements.md) · [Java package structure](/guide/package-structure.md) · [Rules — Authorization Rules](/guide/rules.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
-- Pitfalls: [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [Authenticated is not authorized](/pitfall/authenticated-is-not-authorized.md) · [Resource id without an owner](/pitfall/resource-id-without-an-owner.md)
+- Pitfalls: [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [Authenticated is not authorized](/pitfall/authenticated-is-not-authorized.md) · [Resource id without an owner](/pitfall/resource-id-without-an-owner.md) · [Cookies that do not travel together](/pitfall/cookies-that-do-not-travel-together.md)
 - Related recipes: [Add a use case](/recipe/add-a-use-case.md) · [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)

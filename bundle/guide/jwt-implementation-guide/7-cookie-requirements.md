@@ -7,13 +7,25 @@ resource: dca-guide/topics/jwt-implementation-guide.md
 tags: [guide, section]
 ---
 
-| Attribute | Access Token (`shop-session`) | Refresh Token (`shop-refresh`) | Visitor Token (`shop-identity`) |
-|-----------|------------------------------|-------------------------------|--------------------------------|
-| `HttpOnly` | `true` | `true` | `true` |
-| `Secure` | `true` (env-driven) | `true` (env-driven) | `true` (env-driven) |
-| `SameSite` | `Strict` | `Strict` | `Lax` |
-| `Path` | `/` | `/auth/refresh` | `/` |
-| `MaxAge` | 900 s | 2 592 000 s (30 days) | 2 592 000 s (30 days) |
+| Attribute | Access Token (`shop-session`) | Refresh Token (`shop-refresh`) | Visitor Token (`shop-identity`) | CSRF Token |
+|-----------|------------------------------|-------------------------------|--------------------------------|------------|
+| `HttpOnly` | `true` | `true` | `true` | `false` — the form script reads it |
+| `Secure` | `true` (env-driven) | `true` (env-driven) | `true` (env-driven) | `true` (env-driven) |
+| `SameSite` | `Strict` | `Strict` | `Lax` | follows the cookie it protects |
+| `Path` | `/` | `/auth/refresh` | `/` | `/` |
+| `MaxAge` | 900 s | 2 592 000 s (30 days) | 2 592 000 s (30 days) | session |
+
+**The CSRF token cookie belongs in this table.** It is easy to leave out, because no framework asks
+you to configure it: Spring Security and ASP.NET Core both write it themselves, with a default that
+is *not* the one you chose for your own cookies — no `SameSite` attribute at all in one case,
+`Strict` in the other. That difference only surfaces where the policies diverge, and then it looks
+like a broken form rather than a cookie problem: the identity cookie arrives, the token cookie does
+not, and every state-changing request fails as a *missing* token rather than a refused one.
+
+> **Rule:** cookies that have to survive the same journey carry the same policy. A request that
+> needs both an identity and a form token is refused unless both cookies reach the server. Set the
+> CSRF cookie's `SameSite` and `Secure` from the same configuration as the identity cookie instead
+> of accepting the framework's default.
 
 **Three-cookie design:**
 - `shop-identity` — visitor JWT (existing; survives session expiry, rotated on explicit logout — see §13)
@@ -43,7 +55,7 @@ ResponseCookie.from("shop-session", token)
 | Session expiry keeps the visitor identity | ✅ done |
 | Logout rotates the identity, clears the session | ✅ done |
 | `Secure` from configuration instead of hardcoded `false` | ✅ done (`app.security.jwt.secure-cookies`) |
-| `SameSite` on every cookie the subsystem writes | ✅ done (`Lax`) |
+| `SameSite` on every cookie the subsystem writes, the CSRF cookie included | ✅ done (`Lax`; the token cookie follows the identity cookie) |
 | Path-scoped `shop-refresh` and the renewal flow | ❌ **deferred** — no refresh token exists |
 
 The deferral is deliberate, and it has a price worth naming: without a refresh token there is no

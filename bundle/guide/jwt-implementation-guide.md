@@ -17,6 +17,7 @@ Reference guide for JWT-based authentication in a multiservice e-commerce platfo
 - [5. Asymmetric Signing (ES256) for Multiservice](/guide/jwt-implementation-guide/5-asymmetric-signing-es256-for-multiservice.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [7. Cookie Requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
+- [7a. Framing: a Second Question, Not a Consequence of the First](/guide/jwt-implementation-guide/7a-framing-a-second-question-not-a-consequence-of-the-first.md)
 - [8. CSRF Protection](/guide/jwt-implementation-guide/8-csrf-protection.md)
 - [9. PostgreSQL Schema](/guide/jwt-implementation-guide/9-postgresql-schema.md)
 - [10. Brute-Force Protection and Login Attempt Tracking](/guide/jwt-implementation-guide/10-brute-force-protection-and-login-attempt-tracking.md)
