@@ -4,8 +4,8 @@ id: DCA-LAY-004
 title: Transaction boundaries belong to the application layer
 rule: Transactions are an application-layer concern - domain and incoming adapters must not manage them.
 constraint: Transaction boundaries belong to the application layer.
-selects: "Two mechanisms. Declarative: methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count). Programmatic: classes under scan that depend on one of the configured transaction-API types (role transactionApi - a transaction template, manager or user transaction) or on TransactionBoundary, at any depth of the dependency (field, parameter, call); implementations of TransactionBoundary itself and classes in the global infrastructure package (<base>.infrastructure.., the composition root that wires the transaction manager) or in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., its plumbing) are not selected. With both roles empty only TransactionBoundary dependencies are selected."
-checks: "Each annotated method is declared in, and each annotated class and each dependent class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere. An annotation in a domain, incoming-adapter or infrastructure package is reported; a transaction-API or TransactionBoundary dependency in a domain, incoming-adapter or module-infrastructure package is reported; all findings are collected into one violation. Which transaction a boundary opens is not checked."
+selects: "Three selections. Declarative: methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count). Transaction use: classes under scan that depend on one of the configured transaction-API types (role transactionApi - a transaction template or user transaction, the types code runs a transaction with). Wiring: classes under scan that depend on one of the configured transaction-manager types (role transactionManager) or on TransactionBoundary. A dependency counts at any depth (field, parameter, call); implementations of TransactionBoundary itself are never selected. With the roles empty only TransactionBoundary dependencies are selected."
+checks: "Annotations and transaction use: the method is declared in, or the class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere - a domain, incoming-adapter or infrastructure package is reported, the global infrastructure package included. Wiring: additionally allowed in the global infrastructure package (<base>.infrastructure.., the composition root that declares the manager) and in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure package is reported. All findings are collected into one violation. Which transaction a boundary opens is not checked."
 enforced_by: "LayeredRules#DCA-LAY-004"
 status: enforced
 rule_set: layered
@@ -19,17 +19,17 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/LayeredRules.cs
 
 ## Selection
 
-Two mechanisms. Declarative: methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count). Programmatic: classes under scan that depend on one of the configured transaction-API types (role transactionApi - a transaction template, manager or user transaction) or on TransactionBoundary, at any depth of the dependency (field, parameter, call); implementations of TransactionBoundary itself and classes in the global infrastructure package (<base>.infrastructure.., the composition root that wires the transaction manager) or in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., its plumbing) are not selected. With both roles empty only TransactionBoundary dependencies are selected.
+Three selections. Declarative: methods and classes under scan that carry one of the configured transactional annotations directly (meta-annotations do not count). Transaction use: classes under scan that depend on one of the configured transaction-API types (role transactionApi - a transaction template or user transaction, the types code runs a transaction with). Wiring: classes under scan that depend on one of the configured transaction-manager types (role transactionManager) or on TransactionBoundary. A dependency counts at any depth (field, parameter, call); implementations of TransactionBoundary itself are never selected. With the roles empty only TransactionBoundary dependencies are selected.
 
 ## Check
 
-Each annotated method is declared in, and each annotated class and each dependent class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere. An annotation in a domain, incoming-adapter or infrastructure package is reported; a transaction-API or TransactionBoundary dependency in a domain, incoming-adapter or module-infrastructure package is reported; all findings are collected into one violation. Which transaction a boundary opens is not checked.
+Annotations and transaction use: the method is declared in, or the class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere - a domain, incoming-adapter or infrastructure package is reported, the global infrastructure package included. Wiring: additionally allowed in the global infrastructure package (<base>.infrastructure.., the composition root that declares the manager) and in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure package is reported. All findings are collected into one violation. Which transaction a boundary opens is not checked.
 
 ## .NET reading
 
-**Selection.** Types under scan that have any dependency on a configured transaction type - TransactionScope (by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's IDbContextTransaction) - or on ITransactionBoundary; a field, a local, a method call or a using block all count. Implementations of ITransactionBoundary itself and types in the global infrastructure namespace (<Root>.Infrastructure, the composition root that wires the transaction handle) or in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, its plumbing) are not selected. With no transaction type configured only ITransactionBoundary dependencies are selected.
+**Selection.** Two selections. Transaction use: types under scan that depend on a configured transaction-API type - TransactionScope (by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: types under scan that depend on one of the TransactionManagerTypes (empty by default) or on ITransactionBoundary. A field, a local, a method call or a using block all count; implementations of ITransactionBoundary itself are never selected. With no transaction type configured only ITransactionBoundary dependencies are selected.
 
-**Check.** Each resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below). A use in a domain, incoming-adapter or module-infrastructure namespace is reported, one finding per type and transaction type; all findings are collected into one violation. The check is per type, not per method; which transaction a boundary opens is not checked.
+**Check.** Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method; which transaction a boundary opens is not checked.
 
 ## Implementation
 
@@ -41,6 +41,7 @@ DcaRule.check(
         arch -> {
           List<String> transactional = layout.frameworkAnnotations().transactional();
           List<String> transactionApi = layout.frameworkAnnotations().transactionApi();
+          List<String> transactionManager = layout.frameworkAnnotations().transactionManager();
           List<String> allowedPatterns =
               new ArrayList<>(List.of(arch.allApplicationPatterns()));
           allowedPatterns.add(
@@ -64,20 +65,35 @@ DcaRule.check(
                   .allowEmptyShould(true),
               arch.classes(),
               rationale);
-          // Programmatic boundaries: the configured transaction APIs and DCA's own
-          // TransactionBoundary port. The boundary's implementations are the one legitimate
-          // site that depends on both, wherever they live; the composition root (the global
-          // infrastructure package) and the shared kernel's infrastructure wire the transaction
-          // manager and its plumbing and draw no boundary.
+          // Programmatic boundaries, two kinds. Using a transaction API (template, user
+          // transaction) draws a boundary and is allowed exactly where the annotation is.
+          // Depending on a transaction manager or on DCA's TransactionBoundary port is wiring
+          // and plumbing as well: the composition root (the global infrastructure package) and
+          // the shared kernel's infrastructure may do that too. The boundary's implementations
+          // are exempt wherever they live.
+          DescribedPredicate<JavaClass> usesTransactionApi =
+              DescribedPredicate.describe(
+                  "a configured transaction API", c -> transactionApi.contains(c.getName()));
+          violations.addAll(
+              noClasses()
+                  .that()
+                  .resideOutsideOfPackages(allowed)
+                  .and()
+                  .areNotAssignableTo(TransactionBoundary.class)
+                  .should()
+                  .dependOnClassesThat(usesTransactionApi)
+                  .allowEmptyShould(true),
+              arch.classes(),
+              rationale);
           List<String> wiringAllowed = new ArrayList<>(allowedPatterns);
           wiringAllowed.add(layout.infrastructurePattern());
           wiringAllowed.add(
               layout.sharedKernelPackage() + "." + layout.infrastructureSubpackage() + "..");
-          DescribedPredicate<JavaClass> programmaticBoundary =
+          DescribedPredicate<JavaClass> managerOrBoundary =
               DescribedPredicate.describe(
-                  "a configured transaction API or TransactionBoundary",
+                  "a configured transaction manager or TransactionBoundary",
                   c ->
-                      transactionApi.contains(c.getName())
+                      transactionManager.contains(c.getName())
                           || c.isAssignableTo(TransactionBoundary.class));
           violations.addAll(
               noClasses()
@@ -86,33 +102,35 @@ DcaRule.check(
                   .and()
                   .areNotAssignableTo(TransactionBoundary.class)
                   .should()
-                  .dependOnClassesThat(programmaticBoundary)
+                  .dependOnClassesThat(managerOrBoundary)
                   .allowEmptyShould(true),
               arch.classes(),
               rationale);
           violations.throwIfAny();
         })
     .selecting(
-        "Two mechanisms. Declarative: methods and classes under scan that carry one of the"
+        "Three selections. Declarative: methods and classes under scan that carry one of the"
             + " configured transactional annotations directly (meta-annotations do not count)."
-            + " Programmatic: classes under scan that depend on one of the configured"
-            + " transaction-API types (role transactionApi - a transaction template, manager or"
-            + " user transaction) or on TransactionBoundary, at any depth of the dependency"
-            + " (field, parameter, call); implementations of TransactionBoundary itself and"
-            + " classes in the global infrastructure package (<base>.infrastructure.., the"
-            + " composition root that wires the transaction manager) or in the shared kernel's"
-            + " infrastructure package (<base>.sharedkernel.infrastructure.., its plumbing) are"
-            + " not selected. With both roles empty only TransactionBoundary dependencies are"
+            + " Transaction use: classes under scan that depend on one of the configured"
+            + " transaction-API types (role transactionApi - a transaction template or user"
+            + " transaction, the types code runs a transaction with). Wiring: classes under scan"
+            + " that depend on one of the configured transaction-manager types (role"
+            + " transactionManager) or on TransactionBoundary. A dependency counts at any depth"
+            + " (field, parameter, call); implementations of TransactionBoundary itself are never"
+            + " selected. With the roles empty only TransactionBoundary dependencies are"
             + " selected.")
     .checking(
-        "Each annotated method is declared in, and each annotated class and each dependent"
-            + " class resides in, an application package of some module root"
-            + " (<module>.application..) or an outgoing adapter package (..adapter.outgoing..)"
-            + " anywhere. An annotation in a domain, incoming-adapter or infrastructure package"
-            + " is reported; a transaction-API or TransactionBoundary dependency in a domain,"
-            + " incoming-adapter or module-infrastructure package is reported; all findings are"
-            + " collected into one violation. Which transaction a boundary opens is not"
-            + " checked.")
+        "Annotations and transaction use: the method is declared in, or the class resides in,"
+            + " an application package of some module root (<module>.application..) or an"
+            + " outgoing adapter package (..adapter.outgoing..) anywhere - a domain,"
+            + " incoming-adapter or infrastructure package is reported, the global"
+            + " infrastructure package included. Wiring: additionally allowed in the global"
+            + " infrastructure package (<base>.infrastructure.., the composition root that"
+            + " declares the manager) and in the shared kernel's infrastructure package"
+            + " (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary);"
+            + " a domain, incoming-adapter or module-infrastructure package is reported. All"
+            + " findings are collected into one violation. Which transaction a boundary opens is"
+            + " not checked.")
 ```
 
 ## Helpers
@@ -233,11 +251,13 @@ DcaRule.Check(
     {
         // Structural, over every module root: the application layer and the outgoing adapters
         // (which implement the transaction boundary) of any module, at any depth.
-        // The configured transaction APIs (TransactionScope plus TransactionApiTypes) and DCA's own
-        // ITransactionBoundary port. The boundary's implementations are the one legitimate site that
-        // depends on both, wherever they live; the composition root (the global infrastructure
-        // namespace) and the shared kernel's infrastructure wire the transaction handle and its plumbing
-        // and draw no boundary.
+        // Programmatic boundaries, two kinds. Using a transaction API (TransactionScope plus
+        // TransactionApiTypes) draws a boundary and is allowed exactly in the application layer and the
+        // outgoing adapters. Depending on a transaction manager (TransactionManagerTypes) or on DCA's
+        // ITransactionBoundary port is wiring and plumbing as well: the composition root (the global
+        // infrastructure namespace) and the shared kernel's infrastructure may do that too. The boundary's
+        // implementations are exempt wherever they live.
+        var allowed = new Regex(DcaLayout.AnyOf(arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())));
         var wiringAllowed = new Regex(DcaLayout.AnyOf(
             arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())
                 .Append(Layout.InfrastructurePattern)
@@ -245,33 +265,38 @@ DcaRule.Check(
         var types = Layout.FrameworkTypes;
         var transactionApis = new HashSet<string>(types.TransactionApiTypes, StringComparer.Ordinal);
         if (FrameworkTypes.IsSet(types.TransactionScope)) transactionApis.Add(types.TransactionScope);
+        var transactionManagers = new HashSet<string>(types.TransactionManagerTypes, StringComparer.Ordinal);
         bool IsBoundary(IType t) => t.FullName == BoundaryPort || t.ImplementsInterface(BoundaryPort);
-        bool Programmatic(IType target) => transactionApis.Contains(target.FullName) || IsBoundary(target);
-        var violations = arch.Types
-            .Where(t => t.Namespace is null || !wiringAllowed.IsMatch(t.Namespace.FullName))
+        bool UsesApi(IType target) => transactionApis.Contains(target.FullName);
+        bool ManagerOrBoundary(IType target) => transactionManagers.Contains(target.FullName) || IsBoundary(target);
+        IEnumerable<string> Findings(Regex allowedHere, Func<IType, bool> programmatic) => arch.Types
+            .Where(t => t.Namespace is null || !allowedHere.IsMatch(t.Namespace.FullName))
             .Where(t => !IsBoundary(t))
-            .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(Programmatic).Select(target => target.FullName).Distinct()
-                .Select(target => $"{t.FullName} uses {target} outside the application layer"))
-            .ToList();
+            .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(programmatic).Select(target => target.FullName).Distinct()
+                .Select(target => $"{t.FullName} uses {target} outside the application layer"));
+        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary)).ToList();
         DcaRule.Fail($"Transaction boundaries belong to the application layer\nbecause {rationale}", violations);
     })
     .Selecting(
-        "Types under scan that have any dependency on a configured transaction type - TransactionScope "
-        + "(by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default "
-        + "CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's "
-        + "IDbContextTransaction) - or on ITransactionBoundary; a field, a local, a method call or a using "
-        + "block all count. Implementations of ITransactionBoundary itself and types in the global "
-        + "infrastructure namespace (<Root>.Infrastructure, the composition root that wires the "
-        + "transaction handle) or in the shared kernel's infrastructure namespace "
-        + "(<Root>.SharedKernel.Infrastructure, its plumbing) are not selected. With no transaction "
-        + "type configured only ITransactionBoundary dependencies are selected.")
+        "Two selections. Transaction use: types under scan that depend on a configured transaction-API "
+        + "type - TransactionScope (by default System.Transactions.TransactionScope) or one of the "
+        + "TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the "
+        + "persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: "
+        + "types under scan that depend on one of the TransactionManagerTypes (empty by default) or on "
+        + "ITransactionBoundary. A field, a local, a method call or a using block all count; "
+        + "implementations of ITransactionBoundary itself are never selected. With no transaction type "
+        + "configured only ITransactionBoundary dependencies are selected.")
     .Checking(
-        "Each resides in an application namespace of some module root (<module>.Application or "
-        + "below) or in an outgoing adapter namespace of some module root "
-        + "(<module>.Adapter.Outgoing or below). A use in a domain, incoming-adapter or "
-        + "module-infrastructure namespace is reported, one finding per type and transaction type; all "
-        + "findings are collected into one violation. The check is per type, not per method; which "
-        + "transaction a boundary opens is not checked.")
+        "Transaction use: the type resides in an application namespace of some module root "
+        + "(<module>.Application or below) or in an outgoing adapter namespace of some module root "
+        + "(<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace "
+        + "is reported, the global one included. Wiring: additionally allowed in the global "
+        + "infrastructure namespace (<Root>.Infrastructure, the composition root that declares the "
+        + "manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, "
+        + "plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure "
+        + "namespace is reported. One finding per type and transaction type, all collected into one "
+        + "violation. The check is per type, not per method; which transaction a boundary opens is not "
+        + "checked.")
 ```
 
 ## Related mentions (heuristic)

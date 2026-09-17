@@ -18,11 +18,13 @@ DcaRule.Check(
     {
         // Structural, over every module root: the application layer and the outgoing adapters
         // (which implement the transaction boundary) of any module, at any depth.
-        // The configured transaction APIs (TransactionScope plus TransactionApiTypes) and DCA's own
-        // ITransactionBoundary port. The boundary's implementations are the one legitimate site that
-        // depends on both, wherever they live; the composition root (the global infrastructure
-        // namespace) and the shared kernel's infrastructure wire the transaction handle and its plumbing
-        // and draw no boundary.
+        // Programmatic boundaries, two kinds. Using a transaction API (TransactionScope plus
+        // TransactionApiTypes) draws a boundary and is allowed exactly in the application layer and the
+        // outgoing adapters. Depending on a transaction manager (TransactionManagerTypes) or on DCA's
+        // ITransactionBoundary port is wiring and plumbing as well: the composition root (the global
+        // infrastructure namespace) and the shared kernel's infrastructure may do that too. The boundary's
+        // implementations are exempt wherever they live.
+        var allowed = new Regex(DcaLayout.AnyOf(arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())));
         var wiringAllowed = new Regex(DcaLayout.AnyOf(
             arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())
                 .Append(Layout.InfrastructurePattern)
@@ -30,31 +32,36 @@ DcaRule.Check(
         var types = Layout.FrameworkTypes;
         var transactionApis = new HashSet<string>(types.TransactionApiTypes, StringComparer.Ordinal);
         if (FrameworkTypes.IsSet(types.TransactionScope)) transactionApis.Add(types.TransactionScope);
+        var transactionManagers = new HashSet<string>(types.TransactionManagerTypes, StringComparer.Ordinal);
         bool IsBoundary(IType t) => t.FullName == BoundaryPort || t.ImplementsInterface(BoundaryPort);
-        bool Programmatic(IType target) => transactionApis.Contains(target.FullName) || IsBoundary(target);
-        var violations = arch.Types
-            .Where(t => t.Namespace is null || !wiringAllowed.IsMatch(t.Namespace.FullName))
+        bool UsesApi(IType target) => transactionApis.Contains(target.FullName);
+        bool ManagerOrBoundary(IType target) => transactionManagers.Contains(target.FullName) || IsBoundary(target);
+        IEnumerable<string> Findings(Regex allowedHere, Func<IType, bool> programmatic) => arch.Types
+            .Where(t => t.Namespace is null || !allowedHere.IsMatch(t.Namespace.FullName))
             .Where(t => !IsBoundary(t))
-            .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(Programmatic).Select(target => target.FullName).Distinct()
-                .Select(target => $"{t.FullName} uses {target} outside the application layer"))
-            .ToList();
+            .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(programmatic).Select(target => target.FullName).Distinct()
+                .Select(target => $"{t.FullName} uses {target} outside the application layer"));
+        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary)).ToList();
         DcaRule.Fail($"Transaction boundaries belong to the application layer\nbecause {rationale}", violations);
     })
     .Selecting(
-        "Types under scan that have any dependency on a configured transaction type - TransactionScope "
-        + "(by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default "
-        + "CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's "
-        + "IDbContextTransaction) - or on ITransactionBoundary; a field, a local, a method call or a using "
-        + "block all count. Implementations of ITransactionBoundary itself and types in the global "
-        + "infrastructure namespace (<Root>.Infrastructure, the composition root that wires the "
-        + "transaction handle) or in the shared kernel's infrastructure namespace "
-        + "(<Root>.SharedKernel.Infrastructure, its plumbing) are not selected. With no transaction "
-        + "type configured only ITransactionBoundary dependencies are selected.")
+        "Two selections. Transaction use: types under scan that depend on a configured transaction-API "
+        + "type - TransactionScope (by default System.Transactions.TransactionScope) or one of the "
+        + "TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the "
+        + "persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: "
+        + "types under scan that depend on one of the TransactionManagerTypes (empty by default) or on "
+        + "ITransactionBoundary. A field, a local, a method call or a using block all count; "
+        + "implementations of ITransactionBoundary itself are never selected. With no transaction type "
+        + "configured only ITransactionBoundary dependencies are selected.")
     .Checking(
-        "Each resides in an application namespace of some module root (<module>.Application or "
-        + "below) or in an outgoing adapter namespace of some module root "
-        + "(<module>.Adapter.Outgoing or below). A use in a domain, incoming-adapter or "
-        + "module-infrastructure namespace is reported, one finding per type and transaction type; all "
-        + "findings are collected into one violation. The check is per type, not per method; which "
-        + "transaction a boundary opens is not checked.")
+        "Transaction use: the type resides in an application namespace of some module root "
+        + "(<module>.Application or below) or in an outgoing adapter namespace of some module root "
+        + "(<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace "
+        + "is reported, the global one included. Wiring: additionally allowed in the global "
+        + "infrastructure namespace (<Root>.Infrastructure, the composition root that declares the "
+        + "manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, "
+        + "plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure "
+        + "namespace is reported. One finding per type and transaction type, all collected into one "
+        + "violation. The check is per type, not per method; which transaction a boundary opens is not "
+        + "checked.")
 ```
