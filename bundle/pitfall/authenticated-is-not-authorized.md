@@ -24,6 +24,10 @@ An authentication filter or middleware that resolves an identity for *every* req
 
 Say what the filter does in its own documentation: *it enriches, it does not gate.* Then place each guard where its inputs are — ownership checks in the use case, with the caller as part of the command; a claims-only role gate at the incoming adapter if the operation is legitimately reachable without an end user. Keep the blanket rule if it still earns its place, but stop reading it as authorization.
 
+Mark the visitor's principal as anonymous while you are there. A filter that hands every request an *authenticated* principal also destroys the difference between the two refusals: a caller who never authenticated gets `403` ("you are known, this is not yours") instead of `401` with the scheme they should use. The identity still travels to the use cases — it carries the visitor's cart — but the security context stops claiming they logged in, and the framework can tell a stranger from a customer.
+
+For the same reason, say a claims-only gate declaratively — the framework's annotation on the route — rather than as a role branch inside the handler. A branch renders one status code, and the one that gets written is `403`.
+
 Test the refusals, not only the successes: for every guarded operation, one case per role that must be turned away. A test that only exercises the happy path passes just as happily against an open endpoint.
 
 - Related pitfalls: [Resource id without an owner](/pitfall/resource-id-without-an-owner.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [CSRF-exempt API that accepts cookie authentication](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
