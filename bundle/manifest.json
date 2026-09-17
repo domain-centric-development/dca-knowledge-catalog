@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "1d39f8a96e7f4065f45f6442ba805ec54c5f6b7d5fdd5f32445167237fb47217",
+  "bundle_sha256": "89f8a4a91c2165ab1aae352854ed935e2d313c2ec7fcda4eddc78934502a37f3",
   "counts": {
     "Decision": 23,
     "Guide": 20,
@@ -30,16 +30,16 @@
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "976a7a05fd5d7ec6dd95b4228c0446951000a76d",
-      "source_sha256": "f9dbccd308892290fe6e12a68f2a419ae81c5d89456c4438c48b08dc62e859f4"
+      "revision": "662b0f2b0d717e24b7a381b84e7da3f764cd0a92",
+      "source_sha256": "d36e4312b0d9580118cf176b7768530582146bd67a4635e7857a5985374bb335"
     },
     "dca-guide": {
       "revision": "ac466f2457ea137ef1db316be5b5adad45fcf4e7",
       "source_sha256": "b238c7ad756f7220ff324feb9f5ee611d53cbbc41696508bc1fc04de04b78922"
     },
     "dca-java": {
-      "revision": "ccc1e3bca6675e6ac0d34b4ffe1debacbe3805e8",
-      "source_sha256": "da814099ce74121bff0684246cd1ec1c22fafa37a8ee8db1d956600927197e72"
+      "revision": "ac134812efa3962a2a0ceab57febfc75ed54a5a3",
+      "source_sha256": "3e1e1713f69651fd2291817cae21d69bb2e7ea8443b0f7d95843716edd28360a"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
