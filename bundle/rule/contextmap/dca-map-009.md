@@ -4,8 +4,8 @@ id: DCA-MAP-009
 title: "Conformist: upstream contract types must never reach the domain layer"
 rule: Conformism does not suspend domain purity — the domain layer stays free of foreign contract types.
 constraint: "Conformist: upstream contract types must never reach the domain layer."
-selects: "Every @Upstream declaration with translation() CONFORMIST and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007."
-checks: "No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types."
+selects: "Every @Upstream declaration with translation() CONFORMIST on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted: this is a placement check on code that exists, so a PLANNED declaration is checked too - one without any dependent code passes; declarations towards an unknown context are skipped."
+checks: "No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types. Whether an implementation exists is DCA-MAP-007's question, not this rule's."
 enforced_by: "ContextMapRules#DCA-MAP-009"
 status: enforced
 rule_set: contextmap
@@ -19,17 +19,17 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
 
 ## Selection
 
-Every @Upstream declaration with translation() CONFORMIST and status() IMPLEMENTED on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). PLANNED declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
+Every @Upstream declaration with translation() CONFORMIST on the package-info of every package carrying @BoundedContext whose context() names an existing bounded context, reading via(). status() is not consulted: this is a placement check on code that exists, so a PLANNED declaration is checked too - one without any dependent code passes; declarations towards an unknown context are skipped.
 
 ## Check
 
-No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types.
+No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types. Whether an implementation exists is DCA-MAP-007's question, not this rule's.
 
 ## .NET reading
 
-**Selection.** Every [Upstream] declaration with Translation Conformist and Status Implemented on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Planned declarations and declarations towards an unknown context are skipped, as in DCA-MAP-007.
+**Selection.** Every [Upstream] declaration with Translation Conformist on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Status is not consulted: this is a placement check on code that exists, so a Planned declaration is checked too - one without any dependent code passes; declarations towards an unknown context are skipped.
 
-**Check.** No type in the declaring context's domain layer (<context>.Domain and below) depends on a type in the target context's channel namespace (Api or Events per the layout) or below. Application and adapter types may use the upstream's contract types.
+**Check.** No type in the declaring context's domain layer (<context>.Domain and below) depends on a type in the target context's channel namespace (Api or Events per the layout) or below. Whether an implementation exists is DCA-MAP-007's question, not this rule's. Application and adapter types may use the upstream's contract types.
 
 ## Implementation
 

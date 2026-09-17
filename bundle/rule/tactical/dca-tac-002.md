@@ -5,7 +5,7 @@ title: Aggregate Roots must not hold references to Repositories or other Output 
 rule: "Aggregates are persistence-ignorant: use cases retrieve facts; external calculations belong in domain services over supplied snapshots. Review callback parameters manually; this field check cannot prove semantic responsibility."
 constraint: Aggregate Roots must not hold references to Repositories or other Output Ports.
 selects: "Non-interface classes anywhere under scan assignable to AggregateRoot, abstract ones included."
-checks: "No instance field of the class - inherited ones included, static ones excluded - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes."
+checks: "No field of the class - inherited and static ones included, a static port breaks persistence ignorance just the same - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-002"
 status: enforced
 rule_set: tactical
@@ -23,13 +23,13 @@ Non-interface classes anywhere under scan assignable to AggregateRoot, abstract 
 
 ## Check
 
-No instance field of the class - inherited ones included, static ones excluded - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes.
+No field of the class - inherited and static ones included, a static port breaks persistence ignorance just the same - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes.
 
 ## .NET reading
 
 **Selection.** Non-interface types below the root namespace assignable to IAggregateRoot, abstract ones included.
 
-**Check.** No instance field or property of the type - inherited ones included, static ones excluded, record plumbing skipped - has a type assignable to IRepository or to any other IOutputPort. Only the member's own type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a member and passes.
+**Check.** No field or property of the type - inherited and static ones included, a static port breaks persistence ignorance just the same; record plumbing skipped - has a type assignable to IRepository or to any other IOutputPort. Only the member's own type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a member and passes.
 
 ## Implementation
 
