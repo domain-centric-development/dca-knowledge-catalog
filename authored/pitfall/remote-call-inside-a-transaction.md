@@ -35,6 +35,7 @@ return transactionBoundary.inTransaction(() -> {               // short transact
 });
 ```
 
+- Related pitfall: [Remote effect before local preconditions](/pitfall/remote-effect-before-local-preconditions.md) — once the call is outside the transaction, the order of the remaining steps is the next question.
 - Decision: [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md)
 
 ## Anchors
