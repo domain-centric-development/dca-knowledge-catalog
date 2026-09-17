@@ -241,10 +241,18 @@ def _cs_default_third_party(source: str) -> list[str]:
 
 def _cs_defaults(source: str) -> list[tuple[str, str]]:
     ctor = re.search(r"private DcaLayout\((.*?)\)\s*\{", source, re.S)
-    names = re.findall(r"\w+ (\w+),?", ctor.group(1)) if ctor else []
+    params = re.findall(r"[\w<>?\[\]]+\s+(\w+)(?:\s*=\s*([^,)]+))?\s*(?:,|$)", ctor.group(1)) if ctor else []
     factory = re.search(r"ForRootNamespace\(string rootNamespace\) =>\s*new\((.*?)\);", source, re.S)
     args = [a.strip() for a in factory.group(1).split(",")] if factory else []
-    return [(n, a.strip('"')) for n, a in zip(names, args) if n != "rootNamespace"]
+    rows = []
+    for i, (name, default) in enumerate(params):
+        # A parameter the factory passes positionally takes the factory's value; one it leaves out
+        # keeps the constructor default.
+        value = args[i] if i < len(args) else default.strip()
+        if name == "rootNamespace" or value in ("", "null"):
+            continue
+        rows.append((name, value.strip('"')))
+    return rows
 
 
 def _cs_setters(source: str) -> list[str]:

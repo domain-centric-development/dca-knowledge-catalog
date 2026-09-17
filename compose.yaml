@@ -8,6 +8,7 @@
 # mounts the PARENT directory and the ci image takes it as build context. Run from this directory, inside
 # the monorepo. All tool services sit in the `tools` profile: `docker compose up` / `docker compose build`
 # start and build nothing here. Each is spelled out in full — podman-compose 1.6 cannot resolve `extends`.
+# podman-compose does not activate a service's profile on `run`: `podman-compose --profile tools run --rm <tool>`.
 services:
   python:
     build:
