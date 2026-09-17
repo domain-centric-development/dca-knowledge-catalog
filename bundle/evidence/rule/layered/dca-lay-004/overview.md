@@ -15,13 +15,13 @@ Three selections. Declarative: methods and classes under scan that carry one of 
 
 ## Check
 
-Annotations and transaction use: the method is declared in, or the class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere - a domain, incoming-adapter or infrastructure package is reported, the global infrastructure package included. Wiring: additionally allowed in the global infrastructure package (<base>.infrastructure.., the composition root that declares the manager) and in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure package is reported. All findings are collected into one violation. Which transaction a boundary opens is not checked.
+Annotations and transaction use: the method is declared in, or the class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere - a domain, incoming-adapter or infrastructure package is reported, the global infrastructure package included. Wiring: additionally allowed in the global infrastructure package (<base>.infrastructure.., the composition root that declares the manager) and in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure package is reported. All findings are collected into one violation. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a class in the global or shared-kernel infrastructure package that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked.
 
 ## .NET reading
 
 **Selection.** Two selections. Transaction use: types under scan that depend on a configured transaction-API type - TransactionScope (by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: types under scan that depend on one of the TransactionManagerTypes (empty by default) or on ITransactionBoundary. A field, a local, a method call or a using block all count; implementations of ITransactionBoundary itself are never selected. With no transaction type configured only ITransactionBoundary dependencies are selected.
 
-**Check.** Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method; which transaction a boundary opens is not checked.
+**Check.** Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a type in the global or shared-kernel infrastructure namespace that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked.
 
 ## Implementation
 
@@ -121,8 +121,11 @@ DcaRule.check(
             + " declares the manager) and in the shared kernel's infrastructure package"
             + " (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary);"
             + " a domain, incoming-adapter or module-infrastructure package is reported. All"
-            + " findings are collected into one violation. Which transaction a boundary opens is"
-            + " not checked.")
+            + " findings are collected into one violation. Where manager and boundary"
+            + " dependencies are allowed the rule cannot tell wiring from a call: a class in the"
+            + " global or shared-kernel infrastructure package that obtains the manager and"
+            + " begins a transaction itself passes. Which transaction a boundary opens is not"
+            + " checked.")
 ```
 
 ## Helpers

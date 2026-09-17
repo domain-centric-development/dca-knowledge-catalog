@@ -62,6 +62,8 @@ DcaRule.Check(
         + "manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, "
         + "plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure "
         + "namespace is reported. One finding per type and transaction type, all collected into one "
-        + "violation. The check is per type, not per method; which transaction a boundary opens is not "
-        + "checked.")
+        + "violation. The check is per type, not per method. Where manager and boundary dependencies "
+        + "are allowed the rule cannot tell wiring from a call: a type in the global or shared-kernel "
+        + "infrastructure namespace that obtains the manager and begins a transaction itself passes. "
+        + "Which transaction a boundary opens is not checked.")
 ```
