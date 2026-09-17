@@ -48,10 +48,13 @@ DcaRule.check(
             for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
               String targetPkg = packagesByName.get(u.context());
               if (u.translation() != Upstream.Translation.ANTI_CORRUPTION_LAYER
-                  || u.status() != Upstream.Status.IMPLEMENTED
                   || targetPkg == null) {
                 continue;
               }
+              // Two questions: only an IMPLEMENTED declaration demands that a translation site
+              // exists; whatever code depends on the upstream is placed correctly whatever the
+              // status, PLANNED included.
+              boolean demandsTranslationSite = u.status() == Upstream.Status.IMPLEMENTED;
               for (Upstream.Consumes channel : u.via()) {
                 String allowedAdapter =
                     channel == Upstream.Consumes.API
@@ -83,7 +86,7 @@ DcaRule.check(
                                                         layout.applicationPattern(pkg))
                                                     .test(d.getTargetClass())));
                 violations.require(
-                    translationSite,
+                    translationSite || !demandsTranslationSite,
                     "Context '"
                         + source
                         + "' needs translation evidence towards '"
@@ -118,17 +121,21 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER and status()"
-            + " IMPLEMENTED on the package-info of every package carrying @BoundedContext whose"
-            + " context() names an existing bounded context, reading via(). PLANNED"
-            + " declarations and declarations towards an unknown context are skipped, as in"
-            + " DCA-MAP-007.")
+        "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER on the"
+            + " package-info of every package carrying @BoundedContext whose context()"
+            + " names an existing bounded context, reading via() and status(). Declarations"
+            + " towards an unknown context are skipped.")
     .checking(
-        "No class below the declaring context's package outside the matching adapter"
-            + " depends on a class in the target context's channel sub-package or below:"
-            + " the outgoing adapter (<context>.adapter.outgoing..) for the API channel,"
-            + " the incoming adapter (<context>.adapter.incoming..) for the EVENTS channel."
-            + " Each declared interaction also needs a class in that adapter depending on both that upstream channel and its own domain/application. Multiple upstream translators may share the package. Structure establishes a translation site, not translation quality.")
+        "Placement, whatever the status: no class below the declaring context's package"
+            + " outside the matching adapter depends on a class in the target context's"
+            + " channel sub-package or below - the outgoing adapter"
+            + " (<context>.adapter.outgoing..) for the API channel, the incoming adapter"
+            + " (<context>.adapter.incoming..) for the EVENTS channel. Presence, only for"
+            + " status() IMPLEMENTED (as in DCA-MAP-007): each declared interaction needs a"
+            + " class in that adapter depending on both that upstream channel and its own"
+            + " domain/application; a PLANNED declaration without any such code passes."
+            + " Multiple upstream translators may share the package. Structure establishes a"
+            + " translation site, not translation quality.")
 ```
 
 ## Helpers
@@ -253,11 +260,13 @@ DcaRule.Check(
                 var source = ShortName(arch, ns);
                 foreach (var u in arch.NamespaceAttributes<UpstreamAttribute>(ns))
                 {
-                    if (u.Translation != Translation.AntiCorruptionLayer || u.Status != UpstreamStatus.Implemented
-                        || !namespacesByName.TryGetValue(u.Context, out var targetNs))
+                    if (u.Translation != Translation.AntiCorruptionLayer || !namespacesByName.TryGetValue(u.Context, out var targetNs))
                     {
                         continue;
                     }
+                    // Two questions: only an Implemented declaration demands that a translation site exists; whatever
+                    // code depends on the upstream is placed correctly whatever the status, Planned included.
+                    var demandsTranslationSite = u.Status == UpstreamStatus.Implemented;
                     foreach (var channel in u.Via)
                     {
                         var allowedAdapter = channel == Consumes.Api
@@ -266,7 +275,7 @@ DcaRule.Check(
                         var channelNs = targetNs + "." + ChannelName(arch, channel);
                         var translationSite = TypesBelow(arch, allowedAdapter).Any(t => DependsOnNamespace(t, channelNs)
                             && (DependsOnNamespace(t, ns + "." + Layout.DomainSegment) || DependsOnNamespace(t, ns + "." + Layout.ApplicationSegment)));
-                        if (!translationSite) violations.Add("Context '" + source + "' needs translation evidence towards '" + u.Context + "' (" + ChannelName(arch, channel) + ") in " + allowedAdapter);
+                        if (demandsTranslationSite && !translationSite) violations.Add("Context '" + source + "' needs translation evidence towards '" + u.Context + "' (" + ChannelName(arch, channel) + ") in " + allowedAdapter);
                         foreach (var type in TypesBelow(arch, ns).Where(t => !IsBelow(t, allowedAdapter)))
                         {
                             if (DependsOnNamespace(type, channelNs))
@@ -282,16 +291,20 @@ DcaRule.Check(
             DcaRule.Fail("Anti-Corruption Layer: upstream contract types must stay inside the matching adapter", violations);
         })
     .Selecting(
-        "Every [Upstream] declaration with Translation AntiCorruptionLayer and Status Implemented"
-            + " on the marker class of every namespace carrying [BoundedContext] whose Context"
-            + " names an existing bounded context, reading Via. Planned declarations and"
-            + " declarations towards an unknown context are skipped, as in DCA-MAP-007.")
+        "Every [Upstream] declaration with Translation AntiCorruptionLayer on the"
+            + " marker class of every namespace carrying [BoundedContext] whose Context"
+            + " names an existing bounded context, reading Via and Status. Declarations"
+            + " towards an unknown context are skipped.")
     .Checking(
-        "No type below the declaring context's namespace outside the matching adapter"
-            + " depends on a type in the target context's channel namespace or below:"
-            + " the outgoing adapter (<context>.Adapter.Outgoing) for the Api channel,"
-            + " the incoming adapter (<context>.Adapter.Incoming) for the Events channel."
-            + " Each declared interaction needs its own adapter class depending on that upstream channel and its own domain/application. Multiple upstream translators may share a package. Structure establishes a translation site, not translation quality.")
+        "Placement, whatever the status: no type below the declaring context's namespace"
+            + " outside the matching adapter depends on a type in the target context's channel"
+            + " namespace or below - the outgoing adapter (<context>.Adapter.Outgoing) for the Api"
+            + " channel, the incoming adapter (<context>.Adapter.Incoming) for the Events channel."
+            + " Presence, only for Status Implemented (as in DCA-MAP-007): each declared interaction"
+            + " needs a type in that adapter depending on both that upstream channel and its own"
+            + " Domain/Application; a Planned declaration without any such code passes. Multiple"
+            + " upstream translators may share the namespace. Structure establishes a translation"
+            + " site, not translation quality.")
 ```
 
 ## Related mentions (heuristic)
@@ -303,3 +316,17 @@ DcaRule.Check(
 
 - [DcaArchitecture](/reference/architecture.md)
 - [DcaLayout](/reference/layout.md)
+
+## Evidence slices
+
+- [Overview](/evidence/rule/contextmap/dca-map-008/overview.md)
+- [`packagesByName`](/evidence/rule/contextmap/dca-map-008/packagesbyname.md)
+- [`channelName`](/evidence/rule/contextmap/dca-map-008/channelname.md)
+- [`CollectedViolations.check`](/evidence/rule/contextmap/dca-map-008/collectedviolations-check.md)
+- [`CollectedViolations.withoutHeader`](/evidence/rule/contextmap/dca-map-008/collectedviolations-withoutheader.md)
+- [`CollectedViolations.require`](/evidence/rule/contextmap/dca-map-008/collectedviolations-require.md)
+- [`CollectedViolations.addAll`](/evidence/rule/contextmap/dca-map-008/collectedviolations-addall.md)
+- [`CollectedViolations.throwIfAny`](/evidence/rule/contextmap/dca-map-008/collectedviolations-throwifany.md)
+- [`CollectedViolations.add`](/evidence/rule/contextmap/dca-map-008/collectedviolations-add.md)
+- [`CollectedViolations.isEmpty`](/evidence/rule/contextmap/dca-map-008/collectedviolations-isempty.md)
+- [C# expression](/evidence/rule/contextmap/dca-map-008/c-expression.md)

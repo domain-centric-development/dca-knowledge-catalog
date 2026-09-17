@@ -46,8 +46,7 @@ DcaRule.check(
           for (String pkg : arch.boundedContextPackages()) {
             String source = arch.contextName(pkg);
             for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
-              if (e.contractPackages().length == 0
-                  || e.status() != Upstream.Status.IMPLEMENTED) {
+              if (e.contractPackages().length == 0) {
                 continue;
               }
               if (e.translation() == Upstream.Translation.ANTI_CORRUPTION_LAYER) {
@@ -98,12 +97,13 @@ DcaRule.check(
           violations.throwIfAny();
         })
     .selecting(
-        "Every @ExternalUpstream declaration with status() IMPLEMENTED on the package-info"
-            + " of every package carrying @BoundedContext whose contractPackages() is not"
-            + " empty, reading translation() and interaction(). PLANNED declarations are"
-            + " skipped, as in DCA-MAP-007. A declaration without contractPackages()"
-            + " (wire-level contract, no vendor SDK) is skipped too - it only documents the"
-            + " relationship.")
+        "Every @ExternalUpstream declaration on the package-info of every package"
+            + " carrying @BoundedContext whose contractPackages() is not empty, reading"
+            + " translation() and interaction(). status() is not consulted: this is a"
+            + " placement check on code that exists, so a PLANNED declaration is checked too"
+            + " - one without any dependent code passes. A declaration without"
+            + " contractPackages() (wire-level contract, no vendor SDK) is skipped - it only"
+            + " documents the relationship.")
     .checking(
         "With ANTI_CORRUPTION_LAYER, no class below the declaring context's package"
             + " outside the matching adapter - <context>.adapter.outgoing.. for OUTBOUND,"
@@ -206,7 +206,7 @@ DcaRule.Check(
                 var source = ShortName(arch, ns);
                 foreach (var e in arch.NamespaceAttributes<ExternalUpstreamAttribute>(ns))
                 {
-                    if (e.ContractNamespaces.Length == 0 || e.Status != UpstreamStatus.Implemented)
+                    if (e.ContractNamespaces.Length == 0)
                     {
                         continue;
                     }
@@ -242,11 +242,13 @@ DcaRule.Check(
             DcaRule.Fail("External system contract types must respect the declared translation and interaction", violations);
         })
     .Selecting(
-        "Every [ExternalUpstream] declaration with Status Implemented on the marker class of"
-            + " every namespace carrying [BoundedContext] whose ContractNamespaces is not empty,"
-            + " reading Translation and Interaction. Planned declarations are skipped, as in"
-            + " DCA-MAP-007. A declaration without ContractNamespaces (wire-level contract, no"
-            + " vendor SDK) is skipped too - it only documents the relationship.")
+        "Every [ExternalUpstream] declaration on the marker class of every namespace"
+            + " carrying [BoundedContext] whose ContractNamespaces is not empty, reading"
+            + " Translation and Interaction. Status is not consulted: this is a placement"
+            + " check on code that exists, so a Planned declaration is checked too - one"
+            + " without any dependent code passes. A declaration without ContractNamespaces"
+            + " (wire-level contract, no vendor SDK) is skipped - it only documents the"
+            + " relationship.")
     .Checking(
         "With AntiCorruptionLayer, no type below the declaring context's namespace"
             + " outside the matching adapter - <context>.Adapter.Outgoing for Outbound,"

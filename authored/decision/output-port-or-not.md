@@ -12,16 +12,16 @@ An interface sits in the application layer, an adapter implements it, and it car
 ## The definitions
 
 - An **input port** is what the application offers to its drivers: one interface per use case, called by an incoming adapter.
-- An **output port** is a capability needed from something outside the process boundary of the use case: persistence, another bounded context, an external system, messaging, and the identity of the caller when it comes from an identity system. Use cases call output ports; an incoming adapter legitimately uses one — the identity port — to translate request context into the project's language before the caller becomes a field of the Command or Query.
+- An **output port** is a capability the application needs but does not own: persistence, another bounded context, an external system, messaging, the identity of the caller. The application declares it in its own language; an adapter fulfils it, whether it talks to a database, a broker, a sibling module or a `HashMap`. Responsibility and dependency direction make the port, not distance — an in-memory adapter in the same process fulfils an output port as well as a remote one. Use cases call output ports; an incoming adapter legitimately uses one — the identity port — to translate request context into the project's language before the caller becomes a field of the Command or Query.
 
 ## The discriminator
 
 Ask, in order:
 
-1. **Does it stand for something outside the process?** A transaction boundary defines how several port calls run together; it reaches nothing outside. That is execution semantics, not a port. The caller's identity, when an identity system issues it, does stand for something outside — the identity port is a port.
+1. **Does the application need this capability without owning it?** A transaction boundary defines how several port calls run together; it is how the application runs, not a capability it lacks. That is execution semantics, not a port. The caller's identity is a capability the application needs and does not own — the identity port is a port.
 2. **Is it protocol mechanics?** Cookies, tokens, sessions and response headers belong to the incoming adapter that owns the protocol. An interface for them may exist inside the adapter package; it is no port, whoever implements it.
 3. **Which direction does the question travel?** When a filter or adapter asks its *own* bounded context whether an account exists or an order is open, the call points inward. That is a query use case or the context's published API, not an output port.
-4. **Who depends on it?** A use case, or the incoming adapter that resolves the caller through the identity port. An `OutputPort` with neither dependent expresses no need of the application; it is an adapter collaborator wearing a marker. Move it next to its caller and drop the marker.
+4. **Does the dependency point from the adapter to the port?** The application declares, the adapter implements and depends on the declaration. The dependent inside is a use case, or the incoming adapter that resolves the caller through the identity port. An `OutputPort` with neither dependent expresses no need of the application; it is an adapter collaborator wearing a marker. Move it next to its caller and drop the marker.
 
 ## Options
 
@@ -34,7 +34,7 @@ Ask, in order:
 | "Does this account exist?" asked by a filter into its own context | not an output port — inbound question | a query use case or the published API |
 | Plugin registry with `register`/`unregister` next to `find` | mixed | `find` is the port capability; registration is composition-time wiring and belongs to infrastructure |
 
-**Default:** when in doubt, the interface is not a port. A port is a claim about the application's dependencies on the outside world; a claim nobody can verify against a dependent inside weakens every other port. The test in one sentence: *does this interface stand for something outside the process that the application needs?*
+**Default:** when in doubt, the interface is not a port. A port is a claim about a capability the application needs and does not own; a claim nobody can verify against a dependent inside weakens every other port. The test in one sentence: *does the application need this capability without owning it, and does the dependency point from the adapter to the port?*
 
 ## Consequences
 
