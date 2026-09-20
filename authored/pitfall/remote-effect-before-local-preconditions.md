@@ -38,7 +38,13 @@ return transactionBoundary.inTransaction(() -> { … });       // short transact
 - **Compensate** — on failure, call the port's release operation for the reference just created, and re-throw the original failure. A refused compensation is logged, not raised: the caller needs to know why their request was rejected, not that the clean-up failed too. This uses the port as it already stands, and it usually gives its cancel operation its first caller.
 - **Make the effect idempotent** — pass a key derived from the aggregate's identity so a retry reuses the effect instead of creating a second. Better under retries, but it is a change to the port's contract and needs the other system to honour it.
 
-Either way, say in the record what happens when the process dies between the effect and the compensation: that intent is orphaned, and only reconciliation finds it. A sample that pretends otherwise teaches a reader that compensation is a guarantee.
+**Compensation that only half works is the usual outcome.** Three details decide whether it runs at all, and each of them is easy to get wrong in a way no test notices:
+
+- **Catch every way out, not the convenient one.** A release attached to the ordinary failure type alone leaves the effect behind for everything else — an error the runtime raises rather than an exception the code expects, a failure type somebody narrowed the filter to. The release swallows its own failures anyway, so the widest catch the language offers costs nothing.
+- **Do not run the release under what killed the operation.** Where the work can be cancelled or timed out, passing that same cancellation to the release aborts it before it reaches the other system — precisely the case it exists for. Give the release its own deadline.
+- **Say what an interrupted process leaves.** If it dies between the effect and the release, the effect is orphaned and only reconciliation finds it. A record that omits this teaches the reader that compensation is a guarantee.
+
+Two implementations of the same flow will differ on exactly these three unless they are written down, because each is a local judgement inside one `catch`.
 
 - Related pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Event listener performs the external effect](/pitfall/event-listener-performs-the-external-effect.md)
 
