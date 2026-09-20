@@ -171,7 +171,7 @@ construction. **Authored nodes must pick from the controlled vocabulary** —
   `dto`, `bounded-context`, `shared-kernel`, `subdomain`, `context-map`,
   `anti-corruption-layer`, `package-structure`, `feature`, `naming`, `testing`, `archunit`,
   `spring`, `modulith`, `rest`, `persistence`, `bootstrap`, `cqrs`,
-  `event-sourcing`, `security`, `performance`, `migration`
+  `event-sourcing`, `security`, `performance`, `migration`, `error-handling`
 
 To introduce a new tag: add it to this list **and** to `_TAG_VOCABULARY` in
 `lint.py` in the same change.

@@ -4,6 +4,7 @@
 - [contextmap/](contextmap/index.md) (12)
 - [cycles/](cycles/index.md) (5)
 - [dotnet/](dotnet/index.md) (6)
+- [errors/](errors/index.md) (6)
 - [hexagonal/](hexagonal/index.md) (12)
 - [layered/](layered/index.md) (5)
 - [naming/](naming/index.md) (11)

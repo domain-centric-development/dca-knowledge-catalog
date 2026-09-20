@@ -51,6 +51,7 @@ _RULE_SET_CLASS = {
     "usecase": "UseCaseRules",
     "naming": "NamingRules",
     "cycles": "CycleRules",
+    "errors": "ErrorHandlingRules",
 }
 
 _FACTORY_RE = re.compile(r"DcaRule\.(?:of|check|informational)\s*\(", re.I)

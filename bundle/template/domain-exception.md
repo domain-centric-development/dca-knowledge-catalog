@@ -4,12 +4,14 @@ title: Domain exception skeleton
 tags: [template, domain, naming]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/rules.md]
+evidence: [/rule/errors/dca-err-001.md, /rule/errors/dca-err-002.md, /rule/errors/dca-err-003.md, /rule/errors/dca-err-005.md, /rule/naming/dca-nam-010.md, /rule/onion/dca-oni-002.md, /guide/rules.md]
 applies_to: [java]
 framework: [spring]
 ---
 
-Domain-free skeleton for a **domain exception**: a business-rule violation expressed as an unchecked, framework-free exception in the domain package, named in the ubiquitous language. Two shapes cover most cases — `{Name}NotFound`, carrying the typed id that was asked for, and `{Rule}Violated`, carrying the facts the rule compared. The aggregate (or a domain service) throws it when an invariant would break; a use case throws the not-found variant when a lookup comes back empty; only the incoming adapter catches it and maps it to the transport — a 404 view, a `ProblemDetail`, a rejected message. Replace `{Name}` / `{Rule}` / `{name}` / `{context}` / `{basePackage}`. The domain layer is framework-free — no Spring, no HTTP status, no `@ResponseStatus`.
+Domain-free skeleton for the two failures an inner layer raises, each with the base class its layer owns. `{Rule}Violated` extends `DomainException` and lives in the domain package: the aggregate (or a domain service) raises it when a behaviour method would break an invariant, and it carries the facts the rule compared. `{Name}NotFound` extends `UseCaseException` and lives beside the use case: the request addressed something that is not there, which is a statement about the request, not about the model. Only the incoming adapter catches either, and it alone decides the answer — a 404 view, a `ProblemDetail`, a rejected message. Replace `{Name}` / `{Rule}` / `{name}` / `{operation}` / `{context}` / `{basePackage}`. Neither type carries a framework annotation, a status code or a message shape.
+
+An argument guard is none of this: a null check or a range check in a constructor states a contract for the caller, and the platform's own argument exception stays correct there. The test for a domain exception is the name — if a domain expert has a word for the failure, it is one.
 
 ## Languages
 
@@ -20,7 +22,7 @@ further language is one more file rather than a second copy of this node.
 
 ## Realizes / governed by
 
-- Rules: [Domain classes must not use technical suffixes](/rule/naming/dca-nam-010.md) · [The Domain Model should be framework independent](/rule/onion/dca-oni-002.md)
+- Rules: [Exceptions declared in the domain layer must extend DomainException](/rule/errors/dca-err-001.md) · [Domain and use-case exceptions reside in the layer whose failure they name](/rule/errors/dca-err-002.md) · [Exceptions declared in the application layer must extend UseCaseException](/rule/errors/dca-err-003.md) · [Exception names must stay in the language of their layer](/rule/errors/dca-err-005.md) · [The Domain Model should be framework independent](/rule/onion/dca-oni-002.md)
 - Guide: [Layer rules](/guide/rules.md) (exception layer placement, exception flow pattern)
 - Pitfall: [Framework leak in domain](/pitfall/framework-leak-in-domain.md)
 - Related templates: [Aggregate root](/template/aggregate-root.md) · [Page controller](/template/page-controller.md) · [REST resource](/template/rest-resource.md)

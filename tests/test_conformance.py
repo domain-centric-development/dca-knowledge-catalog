@@ -48,7 +48,7 @@ def test_counts(bundle: Path):
         types[fm["type"]] = types.get(fm["type"], 0) + 1
     # skeleton from dca-java (building blocks + rule library) plus the .NET-only rules of
     # dca-dotnet (DCA-NET) — exact (regression guard)
-    assert types["Marker"] == 29
+    assert types["Marker"] == 31
     from dca_catalog.rules import _catalog
     java_rules, java_retired = _catalog(REPO_ROOT / "dca-java/rules.json")
     net_rules, _ = _catalog(REPO_ROOT / "dca-dotnet/rules.json")

@@ -46,6 +46,7 @@ _TAG_VOCABULARY = frozenset({
     "anti-corruption-layer", "package-structure", "feature", "naming", "testing",
     "archunit", "archunitnet", "reference", "spring", "modulith", "rest", "persistence", "bootstrap",
     "cqrs", "event-sourcing", "security", "performance", "migration",
+    "error-handling",
 })
 
 # (severity, kind, path, detail)
