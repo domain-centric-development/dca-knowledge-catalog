@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "42d78efbb10304a7e8f8392570fceca316cd5d6ccff12bb8106779f08f7688f5",
+  "bundle_sha256": "a4be85d87358c8dba0e84f863a426bf0cc3dfaaafa21dcc813b5d86a01443e7c",
   "counts": {
     "Decision": 23,
     "Guide": 20,
@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "a406801554e442aae447b8a296c53bacf51ebe5c1890cd73892fbd9451c0000d"
+      "source_sha256": "3bb02593522093eb40f3a58466bd3e84d54e8a173b532379478a9cf8f350cc50"
     }
   }
 }
