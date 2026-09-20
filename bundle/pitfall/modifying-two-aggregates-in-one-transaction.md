@@ -29,6 +29,7 @@ Change one aggregate per transaction. Let it raise a domain event on commit; a h
 
 `order.confirm()` → `OrderConfirmed` → handler → `inventory.reserve()` in a separate transaction.
 
+- Related pitfall: [Check-then-save uniqueness](/pitfall/check-then-save-uniqueness.md) — the other rule no single aggregate can hold, and where it belongs instead.
 - [Recipe: add a domain event and consumer](/recipe/add-a-domain-event-and-consumer.md) · [Recipe: publish a cross-context event](/recipe/publish-a-cross-context-event.md)
 - Decisions: [Aggregate boundary size](/decision/aggregate-boundary-size.md) · [Cross-context communication](/decision/cross-context-communication.md)
 
