@@ -10,3 +10,4 @@
 - [Integration Events should have immutable shape](dca-str-008.md) — Integration Events must be immutable to ensure event integrity across contexts (Event Sourcing best practice).
 - [Anti-Corruption Layer components must be in acl packages](dca-str-009.md) — Anti-Corruption Layer components must be in 'acl' packages for clear architectural intent (DDD Strategic Pattern).
 - [Event Listeners consuming integration events should use Anti-Corruption Layer](dca-str-010.md) — Consumed integration events are translated into the consuming context's own language before they reach its domain — v...
+- [At least one bounded context is declared](dca-str-011.md) — Without a declared context the context-map and isolation rules select nothing and report success over an empty model.

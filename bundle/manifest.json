@@ -1,15 +1,15 @@
 {
-  "bundle_sha256": "629d1539449a904a7dd8d9bb95ecd0c0deb1f57979461dcfeebb4ca17de1179f",
+  "bundle_sha256": "c82494ec820194284aeba7834373ad3892b929ffbfd626b1fe75c7e7992a3638",
   "counts": {
     "Decision": 23,
     "Guide": 20,
     "Marker": 29,
     "Note": 1,
-    "Pitfall": 33,
+    "Pitfall": 34,
     "Process": 1,
     "Recipe": 19,
     "Reference": 93,
-    "Rule": 119,
+    "Rule": 120,
     "Section": 185,
     "Template": 49
   },
@@ -30,21 +30,21 @@
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "9c7aa7af351fb277443e2f9c035fcdb0e9b918c5",
-      "source_sha256": "975155b72639b639a7e67e2fc4ac2a6c6804efdee506a4d5fb873b5acdd59279"
+      "revision": "4c0969e1bf31649069daca20a8d3fedf06dbbfe0",
+      "source_sha256": "4cf686b58d34f93e965a7473ddff58a2d5d984dec57b17b79d2a773084d66f6f"
     },
     "dca-guide": {
-      "revision": "e7ca5f647efeb56b686e01683a3b172cd96407f0",
-      "source_sha256": "beb50ea51c12ef6902ae256cffb98e4f66b295ecdf9807389247a961c5c1bef5"
+      "revision": "ce568a43b56b00aa3a71f488cb099f78db81c3d9",
+      "source_sha256": "84993ed5f90cbdabb802255e3ab83c01760e746b6060c3a3b525525411bf7a50"
     },
     "dca-java": {
-      "revision": "40f46fddc877a68321cb68376fad31518276f82d",
-      "source_sha256": "2c02634b97edc4df098690b062ddc03cb15a5e9ebdd23a5ed6f45f3b532ccc88"
+      "revision": "9f9b74c1619569d1eaad508c2a01c10a7963bc7b",
+      "source_sha256": "d2b8a1136d454d1e96ee53ff3b41733fe2d7a855e7d47bdecfde5ce13958133d"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "aa94affdd509c9af03573ce68a41703469ebe42cf04f319080228dc0192753c8"
+      "source_sha256": "1e82452e1bd040bc76b931411c284f4bcb2a6b25b3fde38163ac46b303f91446"
     }
   }
 }
