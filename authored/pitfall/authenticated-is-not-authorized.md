@@ -30,7 +30,7 @@ For the same reason, say a claims-only gate declaratively — the framework's an
 
 Test the refusals, not only the successes: for every guarded operation, one case per role that must be turned away. A test that only exercises the happy path passes just as happily against an open endpoint.
 
-- Related pitfalls: [Resource id without an owner](/pitfall/resource-id-without-an-owner.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [CSRF-exempt API that accepts cookie authentication](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
+- Related pitfalls: [A committed default that only a comment forbids](/pitfall/committed-default-forbidden-only-by-a-comment.md) · [Resource id without an owner](/pitfall/resource-id-without-an-owner.md) · [Authorization in the domain layer](/pitfall/authorization-in-domain-layer.md) · [CSRF-exempt API that accepts cookie authentication](/pitfall/csrf-exempt-api-that-accepts-cookies.md)
 
 ## Anchors
 

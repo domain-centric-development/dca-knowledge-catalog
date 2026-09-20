@@ -16,5 +16,6 @@
 - [6. JWT Claims Design](6-jwt-claims-design.md) — Two standards define JWT claim names:
 - [7. Cookie Requirements](7-cookie-requirements.md) — you to configure it: Spring Security and ASP.NET Core both write it themselves, with a default that
 - [7a. Framing: a Second Question, Not a Consequence of the First](7a-framing-a-second-question-not-a-consequence-of-the-first.md) — An application with cookie identity is eventually put in someone else's iframe — a slide deck, a
+- [7b. A Committed Default Must Not Start a Real Deployment](7b-a-committed-default-must-not-start-a-real-deployment.md) — Everything above is configuration, and configuration ships with a value that makes the application
 - [8. CSRF Protection](8-csrf-protection.md) — When authentication credentials are stored in cookies, browsers automatically attach them to every request — includin...
 - [9. PostgreSQL Schema](9-postgresql-schema.md) — CREATE TABLE login_attempts (

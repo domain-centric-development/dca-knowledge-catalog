@@ -56,7 +56,7 @@ Identifiers are Value Objects too, but carry their own marker: `d`.
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
 - [Enriched Read Model Pattern](/guide/integration-patterns/enriched-read-model-pattern.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
-- [8. CSRF Protection](/guide/jwt-implementation-guide/8-csrf-protection.md)
+- [7b. A Committed Default Must Not Start a Real Deployment](/guide/jwt-implementation-guide/7b-a-committed-default-must-not-start-a-real-deployment.md)
 - [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
