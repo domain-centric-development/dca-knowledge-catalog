@@ -16,7 +16,8 @@ com.company.project
 │   │   │   ├── Order.java (Aggregate Root)
 │   │   │   ├── OrderId.java (Value Object)
 │   │   │   ├── OrderLine.java (Entity)
-│   │   │   └── OrderStatus.java (Value Object/Enum)
+│   │   │   ├── OrderStatus.java (Value Object/Enum)
+│   │   │   └── OrderAlreadyShippedException.java (Domain Exception — beside the model, no exception/ package)
 │   │   ├── service/
 │   │   │   └── PricingService.java (Domain Service)
 │   │   └── event/
@@ -30,7 +31,8 @@ com.company.project
 │   │   │   ├── CreateOrderUseCase.java
 │   │   │   │   @Service class CreateOrderUseCase implements CreateOrderInputPort { }
 │   │   │   ├── CreateOrderCommand.java
-│   │   │   └── CreateOrderResult.java
+│   │   │   ├── CreateOrderResult.java
+│   │   │   └── CustomerNotActiveException.java (Use-Case Exception)
 │   │   │
 │   │   ├── findorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── FindOrderInputPort.java
@@ -57,6 +59,7 @@ com.company.project
 │   │   │   └── UpdateOrderResult.java
 │   │   │
 │   │   └── shared/ (SHARED OUTPUT PORTS - infrastructure dependencies)
+│   │       ├── DuplicateOrderNumberException.java (Use-Case Exception - declared by the repository)
 │   │       ├── OrderRepository.java (Output Port)
 │   │       ├── PaymentGateway.java (Output Port)
 │   │       ├── InventoryService.java (Output Port)

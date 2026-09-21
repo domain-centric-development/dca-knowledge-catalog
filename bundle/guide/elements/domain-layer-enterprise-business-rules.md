@@ -16,6 +16,7 @@ tags: [guide, section]
 - **Domain Event** - Immutable record of domain occurrence (internal to bounded context)
 - **Specification** - Encapsulated business rule
 - **Factory** - Complex object creation logic
+- **Domain Exception** - A broken business rule, named in the ubiquitous language
 
 ### Strategic Building Blocks
 - **Bounded Context** - Explicit boundary for unified model

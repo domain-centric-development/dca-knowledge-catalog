@@ -22,6 +22,8 @@ The tactical markers, one to one. Java package `ddd.tactical`, .NET namespace `D
 | Domain gateway | `DomainGateway` | `IDomainGateway` |
 | Factory | `Factory` | `IFactory` |
 | Specification | `Specification<T>` (`isSatisfiedBy`) | `ISpecification<T>` (`IsSatisfiedBy`) |
+| Domain failure | `DomainException` (`ddd.tactical`) | `DomainException` (`Ddd.Tactical`) |
+| Use-case failure | `UseCaseException` (`application`) | `UseCaseException` (`Application`) |
 | Timestamps, ids | `java.time.Instant`, `java.util.UUID` | `DateTimeOffset`, `Guid` |
 | Absence | `Optional<T>` | nullable reference `T?` |
 
@@ -40,9 +42,11 @@ public sealed class Order : AggregateRootBase<Order, OrderId> { … }
 
 ## Related mentions (heuristic)
 
+- [UseCaseException](/marker/application/usecaseexception.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)
 - [DomainEvent](/marker/tactical/domainevent.md)
+- [DomainException](/marker/tactical/domainexception.md)
 - [DomainGateway](/marker/tactical/domaingateway.md)
 - [DomainService](/marker/tactical/domainservice.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)

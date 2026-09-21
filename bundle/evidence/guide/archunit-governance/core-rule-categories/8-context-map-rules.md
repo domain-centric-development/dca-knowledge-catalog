@@ -75,5 +75,3 @@ static <T extends Annotation> List<T> packageAnnotations(String packageName, Cla
     }
 }
 ```
-
----

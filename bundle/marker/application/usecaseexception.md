@@ -31,3 +31,8 @@ case serve several protocols at once.
 
 **Unchecked on purpose.** A failure the caller cannot repair by retrying with the same
 request is not an alternative return value; it travels to the boundary that can answer it.
+
+## Related mentions in guides (heuristic)
+
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)

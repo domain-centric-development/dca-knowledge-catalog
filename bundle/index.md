@@ -5,7 +5,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 **Building something?** Start at [Build a DCA application](recipe/build-a-dca-application.md) — the task router mapping construction tasks to recipes.
 
 - [decision/](decision/index.md) (24) — Decision guides for design forks (which pattern, when).
-- [evidence/](evidence/index.md) (90)
+- [evidence/](evidence/index.md) (91)
 - [guide/](guide/index.md) (205) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (31) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (1) — Compounded query answers — synthesis made permanent.

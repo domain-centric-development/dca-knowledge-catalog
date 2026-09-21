@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "2ae9307b8060586d4667afb28132f295524defecd00288b076ba0f8f1c74e2f9",
+  "bundle_sha256": "39cc29484d567e37eeb202f8b0884fb0d7e5aeec20f30195ab519ae497f421b6",
   "counts": {
     "Decision": 24,
     "Guide": 20,
@@ -8,7 +8,7 @@
     "Pitfall": 35,
     "Process": 1,
     "Recipe": 19,
-    "Reference": 93,
+    "Reference": 94,
     "Rule": 126,
     "Section": 185,
     "Template": 49
@@ -34,8 +34,8 @@
       "source_sha256": "9f3d6047b32788ebf25a68f891c452eeca9f2c6212345e528da9487869291da3"
     },
     "dca-guide": {
-      "revision": "ce568a43b56b00aa3a71f488cb099f78db81c3d9",
-      "source_sha256": "84993ed5f90cbdabb802255e3ab83c01760e746b6060c3a3b525525411bf7a50"
+      "revision": "2da43e11ad8cac9a7778d1234234652cf6550c57",
+      "source_sha256": "ef8de2250095a0a0c6dca56f947443cc394d6a0a955bb72addeb7b315ed43280"
     },
     "dca-java": {
       "revision": "1182b225ae4c075d9db287f391032f103a97bb7f",

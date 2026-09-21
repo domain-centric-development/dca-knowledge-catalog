@@ -25,6 +25,17 @@ public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id>
         extends Entity<T, ID> {
     // Marker interface - identifies aggregate roots for all contexts
 }
+
+public abstract class DomainException extends RuntimeException {
+    // Base of every business-rule violation the model raises; carries no code and no status
+}
+```
+
+```java
+// dev.domaincentric.dca.buildingblocks.application — the failure channel of the layer above
+public abstract class UseCaseException extends RuntimeException {
+    // Base of every use-case failure the application layer reports to its callers
+}
 ```
 
 ```csharp
@@ -33,6 +44,10 @@ public interface IId { }
 public interface IEntity<TSelf, TId> : IEntity where TSelf : IEntity<TSelf, TId> where TId : IId { TId Id { get; } }
 public interface IAggregateRoot<TSelf, TId> : IEntity<TSelf, TId>, IAggregateRoot
     where TSelf : IAggregateRoot<TSelf, TId> where TId : IId { }
+public abstract class DomainException : Exception { }
+
+// DomainCentric.BuildingBlocks.Application
+public abstract class UseCaseException : Exception { }
 ```
 
 **The port hierarchy, as the library defines it — and how a context uses it:**
@@ -72,10 +87,12 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 
 ## Related mentions (heuristic)
 
+- [UseCaseException](/marker/application/usecaseexception.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [OutputPort](/marker/port-out/outputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
+- [DomainException](/marker/tactical/domainexception.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)
 - [Id](/marker/tactical/id.md)

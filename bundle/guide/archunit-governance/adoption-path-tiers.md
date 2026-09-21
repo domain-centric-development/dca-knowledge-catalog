@@ -22,6 +22,7 @@ Fully static, high consensus, no project-specific conventions needed:
 - No remote-capable output port called inside a `@Transactional` use case (only `Repository`, `Store`, event publishers, `TransactionBoundary`)
 - Value-object immutability
 - Controllers never reach repositories directly
+- Exceptions of the domain and application layer extend the base type of their layer and reside there
 
 ### Tier 2 — Needs Project Conventions
 
@@ -51,6 +52,8 @@ Some rules cannot be expressed as static checks at all. They belong in ADRs and 
 - One aggregate modified per transaction
 - Saga / process-manager design
 - Pattern selection per context (domain model vs transaction script) — see [Context-Specific Rule Sets](#context-specific-rule-sets)
+- Whether a refusal should have been a domain exception rather than an argument guard, and whether an incoming
+  adapter catches too widely — a `throw` and a `catch` are not in the import model
 
 ---
 

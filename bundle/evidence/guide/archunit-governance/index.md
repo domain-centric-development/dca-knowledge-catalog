@@ -1,3 +1,3 @@
 # archunit-governance
 
-- [core-rule-categories/](core-rule-categories/index.md) (9)
+- [core-rule-categories/](core-rule-categories/index.md) (10)

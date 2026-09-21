@@ -8,4 +8,5 @@
 - [Core Rule Categories — 6. Shared Kernel Rules](6-shared-kernel-rules.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Core Rule Categories — 7. Cyclic Dependency Rules](7-cyclic-dependency-rules.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Core Rule Categories — 8. Context Map Rules](8-context-map-rules.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Core Rule Categories — 9. Error Handling Rules](9-error-handling-rules.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Core Rule Categories — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

@@ -34,4 +34,5 @@ in its signature; it travels to the boundary that can answer it.
 
 ## Related mentions in guides (heuristic)
 
+- [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)

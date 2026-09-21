@@ -11,7 +11,9 @@ tags: [guide, section]
 |---|---|
 | `record` for values, commands, results, events | `record` (reference) for values and events, `readonly record struct` for ids, `sealed record` for commands/results |
 | `sealed interface` + `permits` | `abstract record` hierarchy or discriminated pattern matching; no `permits` |
-| Checked/unchecked exceptions | exceptions only; domain exceptions are unchecked either way |
+| Checked/unchecked exceptions | exceptions only; domain and use-case failures are unchecked either way |
+| Argument guard `IllegalArgumentException` | `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` |
+| `@RestControllerAdvice` + `ProblemDetail` | `IExceptionHandler` + `AddProblemDetails()` + `ProblemDetails` |
 | `Optional<T>` return | `T?` with nullable reference types enabled |
 | `final` class | `sealed` class |
 | `static` factory `Order.create(...)` | same, or `Order.Create(...)` |

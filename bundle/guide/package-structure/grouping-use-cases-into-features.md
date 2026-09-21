@@ -55,7 +55,7 @@ checkout/
 │   │   └── confirmcheckout/
 │   ├── cartsync/
 │   │   └── synccheckoutwithcart/
-│   └── shared/                          # context-wide output ports only
+│   └── shared/                          # context-wide output ports and the failures they declare
 ├── adapter/
 │   ├── incoming/
 │   │   ├── web/{session,checkoutcompletion}/   # protocol first, feature below it
@@ -78,7 +78,9 @@ checkout/
    result and any use-case-specific output port stay together in the use-case package.
 4. **`application/shared` stays context-wide.** Repository and Store interfaces continue to live there
    (`DCA-TAC-014`, `DCA-TAC-019`); there is no `application/{feature}/shared`. A port used by one use case stays
-   with that use case, a port used by several belongs in `application/shared`.
+   with that use case, a port used by several belongs in `application/shared`. The same applies to a use-case
+   exception: it stays with its use case, and moves to `application/shared` when several use cases raise it or
+   a port declares it.
 5. **The domain is organised by concept, not mirrored by feature.** Aggregates and value objects belong to the
    bounded context and may serve several features — a feature owns no aggregate.
 6. **Incoming adapters may mirror features *below* their protocol:** `adapter/incoming/web/{feature}`,

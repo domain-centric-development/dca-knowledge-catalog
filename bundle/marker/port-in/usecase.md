@@ -60,12 +60,12 @@ and needs no method of its own.
 ## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
 - [Ports and Use Cases](/guide/language-mappings/ports-and-use-cases.md)
 - [Detailed Structure with All Subdivisions](/guide/package-structure/detailed-structure-with-all-subdivisions.md)
 - [Grouping use cases into features](/guide/package-structure/grouping-use-cases-into-features.md)
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
+- [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
 - [TRANSACTION RULES](/guide/rules/transaction-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

@@ -16,6 +16,7 @@ The application layer organizes business operations using a structured **Use Cas
 - **Input Port** - Interface defining use case contract (`extends UseCase<INPUT, OUTPUT>`)
 - **Command/Query** - Input model (Command for writes, Query for reads)
 - **Result** - Output model (standardized return type)
+- **Use-Case Exception** - A request the use case cannot serve, named by what it could not get hold of
 - **Output Port** - Interface for a capability the application needs but does not own (repositories, other contexts, external systems, publishers, the caller's identity)
 
 **Organization:**
