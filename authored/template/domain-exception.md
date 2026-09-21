@@ -24,5 +24,6 @@ further language is one more file rather than a second copy of this node.
 
 - Rules: [Exceptions declared in the domain layer must extend DomainException](/rule/errors/dca-err-001.md) · [Domain and use-case exceptions reside in the layer whose failure they name](/rule/errors/dca-err-002.md) · [Exceptions declared in the application layer must extend UseCaseException](/rule/errors/dca-err-003.md) · [Exception names must stay in the language of their layer](/rule/errors/dca-err-005.md) · [The Domain Model should be framework independent](/rule/onion/dca-oni-002.md)
 - Guide: [Layer rules](/guide/rules.md) (exception layer placement, exception flow pattern)
-- Pitfall: [Framework leak in domain](/pitfall/framework-leak-in-domain.md)
+- Pitfall: [Framework leak in domain](/pitfall/framework-leak-in-domain.md) · [A business rule reported as an argument error](/pitfall/business-rule-reported-as-an-argument-error.md)
+- Decision: [Failure channel: exception or a closed set of result variants](/decision/failure-channel-exception-or-result.md)
 - Related templates: [Aggregate root](/template/aggregate-root.md) · [Page controller](/template/page-controller.md) · [REST resource](/template/rest-resource.md)

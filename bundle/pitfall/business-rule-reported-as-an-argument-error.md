@@ -33,4 +33,5 @@ Argument guards stay as they are. A null check or a range check in a constructor
 
 - Markers: [DomainException](/marker/tactical/domainexception.md) · [UseCaseException](/marker/application/usecaseexception.md)
 - Template: [Domain exception skeleton](/template/domain-exception.md)
+- Related decision: [Failure channel: exception or a closed set of result variants](/decision/failure-channel-exception-or-result.md)
 - Related pitfall: [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Anemic domain model](/pitfall/anemic-domain-model.md)
