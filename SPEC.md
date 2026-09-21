@@ -258,7 +258,7 @@ node needs no link into the generated skeleton and no inbound link — its conce
 and a bundle SHA256 digest, without timestamps. Digest input is sorted relative path + NUL + content + NUL,
 excluding manifest.json; markdown resource/resource_dotnet frontmatter is stripped for hashing. Thus canonical
 and mirror share the same verifiable digest although only the canonical copy carries local source provenance.
-Uncommitted source changes are represented by content digests; a Git revision alone is not a snapshot claim.
+Uncommitted source changes are represented by content digests; a Git revision alone is not a snapshot claim. A source whose input files are uncommitted at generation time additionally carries `"dirty": true`, so a consumer can see that checking out the named revision will not reproduce the content the bundle was built from.
 Hashed inputs are exactly the files the generator reads (guide chapters without the skipped agent files, `dca-java`
 building-block and rule sources plus `rules.json`/`gradle.properties`, `dca-dotnet` rule sources, `*.csproj` and `rules.json`,
 the catalog's own `src/` and `authored/`); a sibling revision is the last commit touching those files. The catalog's own

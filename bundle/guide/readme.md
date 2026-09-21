@@ -17,5 +17,6 @@ Written by **Christoph Bloemer** — [@chbloemer](https://github.com/chbloemer).
 - [Key points](/guide/readme/key-points.md)
 - [The guide](/guide/readme/the-guide.md)
 - [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
+- [Relationship to jMolecules](/guide/readme/relationship-to-jmolecules.md)
 - [General principles](/guide/readme/general-principles.md)
 - [About this guide](/guide/readme/about-this-guide.md)

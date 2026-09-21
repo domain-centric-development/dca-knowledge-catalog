@@ -13,6 +13,12 @@ tags: [guide, section]
   - Foundation for dependency inversion in Domain-Centric Architecture
 
 **Books:**
+- **[Hexagonal Architecture Explained](https://alistair.cockburn.us/hexagonal-architecture-explained/)** by Alistair Cockburn & Juan Manuel Garrido de Paz (2024)
+  - The authors' own current account, twenty years on: what a port is, how many an application has,
+    and why the adapter count is not the interesting number
+  - DCA's port granularity is narrower than the book's — see `architecture/elements.md`
+
+**Books:**
 - **[Get Your Hands Dirty on Clean Architecture](https://thombergs.gumroad.com/l/gyhdoca)** by Tom Hombergs (2019)
   - Practical implementation of Hexagonal Architecture
   - Detailed package structures and code examples

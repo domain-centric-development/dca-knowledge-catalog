@@ -5,11 +5,13 @@
 - [Contributing to This Documentation](contributing-to-this-documentation.md) — Contributing to This Documentation.
 - [Domain-Driven Design](domain-driven-design.md) — Domain-Driven Design
 - [Event-Driven Architecture](event-driven-architecture.md) — Event-Driven Architecture
-- [Hexagonal Architecture (Ports & Adapters)](hexagonal-architecture-ports-adapters.md) — Hexagonal Architecture (Ports & Adapters)
+- [Hexagonal Architecture (Ports & Adapters)](hexagonal-architecture-ports-adapters.md) — and why the adapter count is not the interesting number
 - [Influential Blogs & Communities](influential-blogs-communities.md) — Influential Blogs & Communities
 - [Microservices & Distributed Systems](microservices-distributed-systems.md) — Microservices & Distributed Systems
+- [Onion Architecture](onion-architecture.md) — The `onion` rule set (`DCA-ONI-*`) is named after this pattern. DCA keeps its central claim — all
 - [Related Patterns & Practices](related-patterns-practices.md) — Related Patterns & Practices
 - [Self-Contained Systems (SCS)](self-contained-systems-scs.md) — Self-Contained Systems (SCS)
 - [Software Architecture Patterns](software-architecture-patterns.md) — Software Architecture Patterns
 - [Spring Modulith](spring-modulith.md) — Spring Modulith
+- [Strategic Design and Subdomains](strategic-design-and-subdomains.md) — behind DCA's pattern selection per subdomain
 - [Team Topologies](team-topologies.md) — Team Topologies

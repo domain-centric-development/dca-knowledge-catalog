@@ -13,6 +13,8 @@ Domain-Centric Architecture synthesizes ideas from multiple foundational works a
 - [Domain-Driven Design](/guide/references/domain-driven-design.md)
 - [Hexagonal Architecture (Ports & Adapters)](/guide/references/hexagonal-architecture-ports-adapters.md)
 - [Clean Architecture](/guide/references/clean-architecture.md)
+- [Onion Architecture](/guide/references/onion-architecture.md)
+- [Strategic Design and Subdomains](/guide/references/strategic-design-and-subdomains.md)
 - [Team Topologies](/guide/references/team-topologies.md)
 - [Spring Modulith](/guide/references/spring-modulith.md)
 - [Self-Contained Systems (SCS)](/guide/references/self-contained-systems-scs.md)

@@ -79,6 +79,21 @@ def _revision(path: Path, files: list[Path]) -> str | None:
     return result.stdout.strip() or None if result.returncode == 0 else None
 
 
+def _dirty(path: Path, files: list[Path]) -> bool:
+    """Whether any file the generator read is uncommitted.
+
+    The revision alone is not a snapshot claim: a bundle generated from a dirty tree names a commit
+    that does not contain the content it was built from. The content digest is still correct, but a
+    reader who checks out the revision to see what a rule does gets different code. Recording it
+    makes that caveat machine-readable instead of a sentence in SPEC.md.
+    """
+    if not files:
+        return False
+    result = subprocess.run(["git", "-C", str(path), "status", "--porcelain", "--",
+                             *(p.relative_to(path).as_posix() for p in files)], capture_output=True, text=True)
+    return bool(result.stdout.strip()) if result.returncode == 0 else False
+
+
 def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> None:
     from .docs import _SKIP, _is_content
     sources = {}
@@ -100,6 +115,8 @@ def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> Non
         for path in files:
             digest.update(path.relative_to(repo).as_posix().encode() + b"\0" + path.read_bytes() + b"\0")
         entry = {"revision": _revision(repo, files), "source_sha256": digest.hexdigest()}
+        if _dirty(repo, files):
+            entry["dirty"] = True
         if name == "dca-knowledge-catalog":
             # The bundle is committed into this very repository: the commit that carries the manifest cannot be
             # named by the manifest, and the last input-touching commit would move as soon as sources and bundle

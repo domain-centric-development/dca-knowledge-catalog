@@ -2,7 +2,8 @@
 # Freshness + health gate for the DCA OKF catalog. Used by CI and the git
 # pre-commit hook. Stdlib-only generator; needs python3 (+ pytest for tests).
 #
-#   regenerate (no mirror) -> lint -> tests -> assert bundle is not stale
+#   regenerate (no mirror) -> lint -> tests -> rule ids exist in the released libraries
+#   -> shipped mirror equals the bundle -> assert bundle is not stale
 #
 # Exit non-zero on any failure. Run from anywhere.
 set -euo pipefail
@@ -31,6 +32,12 @@ if python3 -c "import pytest" 2>/dev/null; then
 else
   echo "    (pytest not installed — skipping; CI installs it)"
 fi
+
+echo "==> rule ids exist in the released libraries"
+python3 scripts/check-rules-released.py
+
+echo "==> shipped mirror equals the bundle"
+python3 scripts/check-mirror.py
 
 # Freshness: the bundle about to be committed (the index — under `git commit -a` the hook's
 # temporary one) must already equal a fresh generate. Only meaningful inside a git work tree
