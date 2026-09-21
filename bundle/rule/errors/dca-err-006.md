@@ -1,11 +1,11 @@
 ---
 type: Rule
 id: DCA-ERR-006
-title: "Diagnostic: incoming adapters that drive a use case without translating its failures"
-rule: An adapter that knows neither failure type either lets everything escape to a generic handler or catches a generic type and answers every outcome the same way; whether it does is not visible in the import model.
-constraint: "Diagnostic: incoming adapters that drive a use case without translating its failures."
-selects: "Non-interface classes in <module>.adapter.incoming.. of every module root that depend on a class assignable to InputPort - the adapters that drive the application."
-checks: "Informational diagnostic only: lists those that depend on no class assignable to DomainException or UseCaseException and never fails. A central handler elsewhere in the adapter layer is a valid answer, and a caught type is not visible to the import model - this does not establish that an adapter translates nothing."
+title: "Diagnostic: incoming adapter packages that drive a use case without translating its failures"
+rule: A package that drives the application and knows neither failure type either lets everything escape to a generic handler or catches a generic type and answers every outcome the same way; whether it does is not visible in the import model.
+constraint: "Diagnostic: incoming adapter packages that drive a use case without translating its failures."
+selects: "Incoming adapter packages of every module root (<module>.adapter.incoming..) that hold at least one non-interface class depending on a class assignable to InputPort - the packages that drive the application."
+checks: "Informational diagnostic only: lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing."
 enforced_by: "ErrorHandlingRules#DCA-ERR-006"
 status: informational
 rule_set: errors
@@ -15,55 +15,74 @@ tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
 ---
 
-# Diagnostic: incoming adapters that drive a use case without translating its failures
+# Diagnostic: incoming adapter packages that drive a use case without translating its failures
 
 ## Selection
 
-Non-interface classes in <module>.adapter.incoming.. of every module root that depend on a class assignable to InputPort - the adapters that drive the application.
+Incoming adapter packages of every module root (<module>.adapter.incoming..) that hold at least one non-interface class depending on a class assignable to InputPort - the packages that drive the application.
 
 ## Check
 
-Informational diagnostic only: lists those that depend on no class assignable to DomainException or UseCaseException and never fails. A central handler elsewhere in the adapter layer is a valid answer, and a caught type is not visible to the import model - this does not establish that an adapter translates nothing.
+Informational diagnostic only: lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing.
 
 ## .NET reading
 
-**Selection.** Non-interface types under <Module>.Adapter.Incoming of every module root that depend on a type assignable to IInputPort - the adapters that drive the application.
+**Selection.** Incoming adapter namespaces of every module root (<Module>.Adapter.Incoming) that hold at least one non-interface type depending on a type assignable to IInputPort - the namespaces that drive the application.
 
-**Check.** Informational diagnostic only: lists those that depend on no type assignable to DomainException or UseCaseException and never fails. A central handler elsewhere in the adapter layer is a valid answer, and a caught type is not visible to the type model - this does not establish that an adapter translates nothing.
+**Check.** Informational diagnostic only: lists a namespace when no type in it - a central exception handler beside the adapters included - depends on a type assignable to DomainException or UseCaseException, and never fails. A handler in a different namespace of the same module is not seen, and a caught type is not visible to the type model, so this does not establish that a namespace translates nothing.
 
 ## Implementation
 
 ```java
 DcaRule.informational(
         "DCA-ERR-006",
-        "Diagnostic: incoming adapters that drive a use case without translating its failures",
-        "An adapter that knows neither failure type either lets everything escape to a generic"
-            + " handler or catches a generic type and answers every outcome the same way;"
-            + " whether it does is not visible in the import model",
+        "Diagnostic: incoming adapter packages that drive a use case without translating its"
+            + " failures",
+        "A package that drives the application and knows neither failure type either lets"
+            + " everything escape to a generic handler or catches a generic type and answers"
+            + " every outcome the same way; whether it does is not visible in the import model",
         arch -> {
+          Map<String, List<JavaClass>> drivingByPackage = new TreeMap<>();
+          Set<String> packagesThatName = new HashSet<>();
           for (JavaClass type : arch.classes()) {
-            if (type.isInterface()
-                || !JavaClass.Predicates.resideInAnyPackage(arch.allIncomingAdapterPatterns())
-                    .test(type)
-                || !dependsOnAssignableTo(type, InputPort.class)
-                || dependsOnAssignableTo(type, DomainException.class)
-                || dependsOnAssignableTo(type, UseCaseException.class)) {
+            if (!JavaClass.Predicates.resideInAnyPackage(arch.allIncomingAdapterPatterns())
+                .test(type)) {
               continue;
             }
-            System.out.println(
-                "[DCA-ERR-006] "
-                    + type.getName()
-                    + ": drives an input port and names no failure type of the inner layers");
+            if (dependsOnAssignableTo(type, DomainException.class)
+                || dependsOnAssignableTo(type, UseCaseException.class)) {
+              packagesThatName.add(type.getPackageName());
+            }
+            if (!type.isInterface() && dependsOnAssignableTo(type, InputPort.class)) {
+              drivingByPackage
+                  .computeIfAbsent(type.getPackageName(), pkg -> new ArrayList<>())
+                  .add(type);
+            }
           }
+          drivingByPackage.forEach(
+              (pkg, driving) -> {
+                if (packagesThatName.contains(pkg)) {
+                  return;
+                }
+                System.out.println(
+                    "[DCA-ERR-006] "
+                        + pkg
+                        + ": drives an input port and names no failure type of the inner layers"
+                        + " ("
+                        + driving.stream().map(JavaClass::getSimpleName).sorted().toList()
+                        + ")");
+              });
         })
     .selecting(
-        "Non-interface classes in <module>.adapter.incoming.. of every module root that depend"
-            + " on a class assignable to InputPort - the adapters that drive the application.")
+        "Incoming adapter packages of every module root (<module>.adapter.incoming..) that hold"
+            + " at least one non-interface class depending on a class assignable to InputPort -"
+            + " the packages that drive the application.")
     .checking(
-        "Informational diagnostic only: lists those that depend on no class assignable to"
-            + " DomainException or UseCaseException and never fails. A central handler"
-            + " elsewhere in the adapter layer is a valid answer, and a caught type is not"
-            + " visible to the import model - this does not establish that an adapter"
+        "Informational diagnostic only: lists a package when no class in it - a central"
+            + " exception handler beside the adapters included - depends on a class assignable"
+            + " to DomainException or UseCaseException, and never fails. A handler in a"
+            + " different package of the same module is not seen, and a caught type is not"
+            + " visible to the import model, so this does not establish that a package"
             + " translates nothing.")
 ```
 
@@ -86,39 +105,63 @@ private static boolean dependsOnAssignableTo(JavaClass type, Class<?> target) {
 ```csharp
 DcaRule.Informational(
     "DCA-ERR-006",
-    "Diagnostic: incoming adapters that drive a use case without translating its failures",
-    "An adapter that knows neither failure type either lets everything escape to a generic handler"
-        + " or catches a generic type and answers every outcome the same way; whether it does is not"
-        + " visible in the type model",
+    "Diagnostic: incoming adapter namespaces that drive a use case without translating its failures",
+    "A namespace that drives the application and knows neither failure type either lets everything"
+        + " escape to a generic handler or catches a generic type and answers every outcome the same"
+        + " way; whether it does is not visible in the type model",
     arch =>
     {
         var incoming = new Regex(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()));
-        foreach (var type in arch.Types.Where(t => t is not Interface))
+        var driving = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
+        var namespacesThatName = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var type in arch.Types)
         {
-            if (!incoming.IsMatch(type.Namespace?.FullName ?? ""))
+            var ns = type.Namespace?.FullName ?? "";
+            if (!incoming.IsMatch(ns))
             {
                 continue;
             }
 
             var targets = type.Dependencies.Select(d => d.Target).ToList();
-            if (!targets.Any(t => IsAssignableTo(t, typeof(IInputPort)))
-                || targets.Any(t => IsAssignableTo(t, typeof(DomainException)) || IsAssignableTo(t, typeof(UseCaseException))))
+            if (targets.Any(t => IsAssignableTo(t, typeof(DomainException)) || IsAssignableTo(t, typeof(UseCaseException))))
+            {
+                namespacesThatName.Add(ns);
+            }
+
+            if (type is not Interface && targets.Any(t => IsAssignableTo(t, typeof(IInputPort))))
+            {
+                if (!driving.TryGetValue(ns, out var names))
+                {
+                    names = new List<string>();
+                    driving[ns] = names;
+                }
+
+                names.Add(type.Name);
+            }
+        }
+
+        foreach (var (ns, names) in driving)
+        {
+            if (namespacesThatName.Contains(ns))
             {
                 continue;
             }
 
+            names.Sort(StringComparer.Ordinal);
             Console.WriteLine(
-                $"[DCA-ERR-006] {type.FullName}: drives an input port and names no failure type of the inner layers");
+                $"[DCA-ERR-006] {ns}: drives an input port and names no failure type of the inner layers ({string.Join(", ", names)})");
         }
     })
     .Selecting(
-        "Non-interface types under <Module>.Adapter.Incoming of every module root that depend on a "
-        + "type assignable to IInputPort - the adapters that drive the application.")
+        "Incoming adapter namespaces of every module root (<Module>.Adapter.Incoming) that hold at "
+        + "least one non-interface type depending on a type assignable to IInputPort - the "
+        + "namespaces that drive the application.")
     .Checking(
-        "Informational diagnostic only: lists those that depend on no type assignable to "
-        + "DomainException or UseCaseException and never fails. A central handler elsewhere in the "
-        + "adapter layer is a valid answer, and a caught type is not visible to the type model - "
-        + "this does not establish that an adapter translates nothing.")
+        "Informational diagnostic only: lists a namespace when no type in it - a central exception "
+        + "handler beside the adapters included - depends on a type assignable to DomainException or "
+        + "UseCaseException, and never fails. A handler in a different namespace of the same module is "
+        + "not seen, and a caught type is not visible to the type model, so this does not establish "
+        + "that a namespace translates nothing.")
 ```
 
 ## Related mentions (heuristic)
