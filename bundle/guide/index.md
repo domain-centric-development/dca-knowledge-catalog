@@ -34,7 +34,7 @@
 - [Language Mappings: Java/Spring ↔ C#/.NET](language-mappings.md) — Language Mappings: Java/Spring ↔ C#/.NET
 - [Java Package Structure](package-structure.md) — Java Package Structure.
 - [Quick Reference](quick-reference.md) — A lookup table for readers who know the style and need the placement, not the reasoning. Every
-- [Domain-Centric Architecture](readme.md) — Written by **Christoph Bloemer** — @chbloemer.
+- [Domain-Centric Architecture](readme.md) — Written by **Christoph Bloemer** (@chbloemer).
 - [References & Further Reading](references.md) — Domain-Centric Architecture synthesizes ideas from multiple foundational works and thought leaders. Below are the key...
 - [Repository vs. Store](repository-vs-store.md) — DCA distinguishes two kinds of persistence-shaped output ports. Both `extend OutputPort`, but their **business semant...
 - [Rules](rules.md) — Rules.
