@@ -230,6 +230,15 @@ def _build_indexes(nodes: list[Node], extra_dirs: tuple[str, ...] = ()) -> dict[
                     "the task router mapping construction tasks to recipes."
                 )
                 lines.append("")
+            lines.append(
+                "**What `review:` means on an authored node.** `reviewed` — an owner and evidence "
+                "have been verified. `draft` — written and wired into the graph, not yet through a "
+                "review pass: usable, and it never overrides a generated node, because rules, "
+                "markers and guide text are derived from the code and win on every contradiction. "
+                "`superseded` — history; follow `superseded_by`. Most construction guidance is "
+                "currently `draft`."
+            )
+            lines.append("")
         for sub in sorted(children_dirs.get(d, [])):
             name = sub.rsplit("/", 1)[-1]
             blurb = _CATEGORY_BLURB.get(sub, "")

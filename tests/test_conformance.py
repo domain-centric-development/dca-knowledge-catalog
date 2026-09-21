@@ -913,7 +913,12 @@ def test_editorial_metadata_and_supersession(tmp_path):
     if not skill_path.exists():
         pytest.skip('dca-marketplace checkout not present beside the catalog (CI checks out sources only)')
     skill = skill_path.read_text()
-    assert 'draft' in skill and 'superseded' in skill and 'non-normative' in skill
+    # The skill must document all three editorial states and say that a generated node wins over an
+    # authored one — that is the guarantee the corpus can actually keep, with 119 of 128 drafts.
+    for state in ('reviewed', 'draft', 'superseded'):
+        assert state in skill, f'the skill does not document review: {state}'
+    assert 'superseded_by' in skill
+    assert 'never override' in skill or 'never let it override' in skill.lower()
 
 
 def test_manifest_and_compact_view_are_mirrored(bundle, tmp_path):
