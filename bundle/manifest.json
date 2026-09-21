@@ -23,8 +23,8 @@
     },
     "java": {
       "archunitSpringModulithVersion": "0.2.0-SNAPSHOT",
-      "archunitVersion": "0.5.0-SNAPSHOT",
-      "buildingBlocksVersion": "0.3.0-SNAPSHOT",
+      "archunitVersion": "0.5.0",
+      "buildingBlocksVersion": "0.3.0",
       "dcaSpringVersion": "0.2.0-SNAPSHOT"
     }
   },
@@ -38,8 +38,8 @@
       "source_sha256": "03fe09beb02edbcb03257bc4ce9157bdbfabe99813383bec640458af64932f0d"
     },
     "dca-java": {
-      "revision": "6d58d7a12b20cdd77c018e9b9a08701922f5da6d",
-      "source_sha256": "3834f8d38950bf025d164cf50fc2277dc656daeaf4a92fcdf805a05f11bfbe06"
+      "revision": "c0547ae625f981833e8b3e6de6d9611f4fbcdea4",
+      "source_sha256": "f0640472b6e5dbdfbc4250dcedf186081f8a6a8311e5a419e9aca8ddc7c68a06"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
