@@ -18,7 +18,7 @@ A REST controller that returns an aggregate or entity directly — `return order
 
 ## What forbids it
 
-- [HTTP response models must end with 'Response' and reside in adapter incoming package](/rule/usecase/dca-use-008.md) — the outbound wire type is a distinct `*Response` at the edge, not the domain object.
+- [Types named *Response reside in an adapter](/rule/usecase/dca-use-008.md) — the outbound wire type is a distinct `*Response` at the edge, not the domain object.
 - [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md) — the request/response shapes are adapter concerns; the domain never holds them, and the reverse — the domain object never reaches the wire.
 - [DTOs must not be used in the application layer](/rule/usecase/dca-use-011.md) — the use case speaks `Command`/`Query`/`Result`; the adapter maps `Result` → `Response`, so a domain type never has a legitimate path to the controller's return value.
 

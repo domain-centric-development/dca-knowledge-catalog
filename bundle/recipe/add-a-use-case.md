@@ -23,7 +23,6 @@ Add one application-layer use case (a single intention: place an order, add an i
 ## Rules to satisfy (build-time checklist)
 
 - [Input port extends UseCase and the impl is the InputPort](/marker/port-in/usecase.md)
-- [Use case classes must be annotated with @Service](/rule/naming/dca-nam-002.md)
 - [Commands must end with `Command` and reside in the application package](/rule/usecase/dca-use-002.md)
 - [Queries must end with `Query` and reside in the application package](/rule/usecase/dca-use-003.md)
 - [Result models must end with `Result` and reside in the application package](/rule/usecase/dca-use-006.md)

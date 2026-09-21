@@ -13,7 +13,7 @@ evidence_for: "/guide/spring-modulith/event-driven-architecture-in-spring-moduli
 |--------|--------------|-------------------|
 | **Scope** | Within module | Across modules |
 | **Package** | `internal/domain/event/` | `events/` (published) |
-| **Marker** | Optional `DomainEvent` | `implements Externalized` ⭐ |
+| **Marker** | Optional `DomainEvent` | `@Externalized("<target>")` ⭐ |
 | **Serialization** | Not required | Required |
 | **Versioning** | Not required | Required |
 | **Delivery** | Sync (in-tx) *or* async (registry-backed) | Async through the registry; externalized to a broker when another deployment consumes it |

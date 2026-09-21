@@ -36,5 +36,5 @@ class InventoryEventListener {
 **Key Points:**
 - `@ApplicationModuleListener` enables async processing in new transaction
 - `Propagation.REQUIRES_NEW` ensures independent transaction
-- Failures trigger automatic retry (configured via Spring Modulith)
+- A failure leaves the publication incomplete in the registry; replaying it is opt-in (see the registry section)
 - Anti-Corruption Layer protects consuming module's domain

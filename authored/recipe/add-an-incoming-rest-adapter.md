@@ -36,7 +36,7 @@ The same recipe with a different edge. A `{Name}PageController` in `adapter/inco
 - [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-004.md)
 - [Incoming adapters must only access their own bounded context](/rule/hexagonal/dca-hex-007.md)
 - [DTOs must reside in the adapter package, not in domain or application](/rule/naming/dca-nam-007.md)
-- [View models must reside in adapter.incoming.web packages](/rule/naming/dca-nam-011.md)
+- [ViewModels must reside in the configured web adapter package](/rule/naming/dca-nam-011.md)
 
 ## Anchors
 

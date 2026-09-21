@@ -14,7 +14,9 @@ Spring Modulith provides an **Event Publication Registry** that ensures reliable
 **Features:**
 - **Persistent Events**: every publication to an `@ApplicationModuleListener` is persisted to the database
 - **Guaranteed Delivery**: Events are marked complete only after successful processing
-- **Automatic Retry**: Failed event handlers are retried automatically
+- **Resubmission, not automatic retry**: an incomplete publication stays in the registry and is replayed
+  when you ask for it — on restart with `republish-outstanding-events-on-restart`, or through the 2.0
+  resubmission API. Nothing retries on its own
 - **Idempotency Support**: Handlers can be idempotent via event IDs
 - **Observability**: Track event processing status and failures
 

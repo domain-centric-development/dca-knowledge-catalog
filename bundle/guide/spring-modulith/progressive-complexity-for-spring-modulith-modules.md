@@ -33,7 +33,7 @@ com.company.project.order/ (module)
 │   └── CreateOrderRequest.java
 ├── events/ (published)
 │   ├── package-info.java (@NamedInterface("events"))
-│   └── OrderCreatedEvent.java (implements Externalized)
+│   └── OrderCreatedEvent.java (@Externalized)
 └── internal/ (hidden)
     ├── Order.java (Aggregate Root - domain)
     ├── OrderLine.java (Entity - domain)

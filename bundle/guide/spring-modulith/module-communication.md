@@ -43,7 +43,7 @@ class OrderEventListener {
 - ✅ Loose coupling
 - ✅ Async processing
 - ✅ Event persistence (with Spring Modulith JPA)
-- ✅ Automatic retry
+- ✅ Replay of incomplete publications (opt-in)
 - ✅ Transaction boundaries
 
 ### Option 2: Direct API Calls (Sync)

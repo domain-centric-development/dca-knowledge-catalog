@@ -103,6 +103,9 @@ public class OrderEventMapper {
 // External Integration Event (Published DTO)
 package com.company.project.order.events;
 
+import org.springframework.modulith.events.Externalized;
+
+@Externalized("order.created::#{#this.orderId()}")
 public record OrderCreatedEvent(
     String eventId,
     String orderId,
@@ -112,7 +115,7 @@ public record OrderCreatedEvent(
     String currency,
     Instant timestamp,
     String version
-) implements org.springframework.modulith.events.Externalized {}
+) {}
 ```
 
 **Key Principles:**

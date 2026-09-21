@@ -46,18 +46,22 @@ public record OrderCreated(
 **Location:** `{module}/events/` (published package)
 
 **Characteristics:**
-- **Marker:** `implements Externalized` (Spring Modulith interface) - **KEY DIFFERENCE**
+- **Marker:** `@Externalized("<target>")` (Spring Modulith annotation on the type) - **KEY DIFFERENCE**
 - Scope: Across modules, published to external consumers
 - Publishing: Via `ApplicationEventPublisher` + Event Publication Registry
 - Consumption: Via `@ApplicationModuleListener` in other modules
 - Persistence: Yes (Event Publication Registry ensures delivery)
-- Retry: Automatic retry on failure
+- Retry: opt-in — republish on restart
+  (`spring.modulith.events.republish-outstanding-events-on-restart`) or resubmission through the 2.0 API
 - Serialization: Must be serializable
 - Versioning: Required for cross-module contracts
 
 **Example:**
 ```java
 // order/events/OrderCreatedEvent.java
+import org.springframework.modulith.events.Externalized;
+
+@Externalized("order.created::#{#this.orderId()}")
 public record OrderCreatedEvent(
     String eventId,
     String orderId,
@@ -65,8 +69,8 @@ public record OrderCreatedEvent(
     BigDecimal totalAmount,
     Instant timestamp,
     String version
-) implements org.springframework.modulith.events.Externalized {
+) {
     // Integration event - crosses module boundaries
-    // Implements Externalized = Spring Modulith persists it
+    // @Externalized names the broker target Spring Modulith publishes it to
 }
 ```

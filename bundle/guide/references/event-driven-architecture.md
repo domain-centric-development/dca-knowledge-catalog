@@ -13,5 +13,5 @@ tags: [guide, section]
   - Free ebook from Confluent
 
 **Articles:**
-- **[Domain Events vs. Integration Events](https://www.kamilgrzybek.com/blog/posts/domain-events-vs-integration-events)** by Kamil Grzybek
-  - Clear explanation of event types
+- **[Domain events: design and implementation](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation)** — Microsoft .NET microservices guidance
+  - Where the line between a domain event and an integration event falls, and what each one may carry
