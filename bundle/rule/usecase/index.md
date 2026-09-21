@@ -1,13 +1,13 @@
 # usecase
 
 - [The base InputPort contract is not redeclared in the project](dca-use-001.md) — Base InputPort interface defines the generic contract for all use cases (Hexagonal Architecture).
-- [Use Case Commands must end with 'Command' and reside in application package](dca-use-002.md) — Use case commands should be in application layer (CQRS pattern).
-- [Use Case Queries must end with 'Query' and reside in application package](dca-use-003.md) — Use case queries should be in application layer (CQRS pattern).
+- [Types named *Command reside in the application layer](dca-use-002.md) — Use case commands should be in application layer (CQRS pattern).
+- [Types named *Query reside in the application layer](dca-use-003.md) — Use case queries should be in application layer (CQRS pattern).
 - [Use Case Commands should be immutable (final or records)](dca-use-004.md) — Use case commands should be immutable (value objects).
 - [Use Case Queries should be immutable (final or records)](dca-use-005.md) — Use case queries should be immutable (value objects).
-- [Use Case Result Models must end with 'Result' and reside in application package](dca-use-006.md) — Use case result models should be in application layer. Domain Value Objects with 'Result' in name are allowed in doma...
+- [Types named *Result reside in the application layer](dca-use-006.md) — Use case result models should be in application layer. Domain Value Objects with 'Result' in name are allowed in doma...
 - [Use Case Result Models should be immutable (final or records)](dca-use-007.md) — Use case result models should be immutable (value objects).
-- [HTTP Response Models must end with 'Response' and reside in adapter package](dca-use-008.md) — HTTP response models should be in adapter layer.
+- [Types named *Response reside in an adapter](dca-use-008.md) — HTTP response models should be in adapter layer.
 - [Use cases that save an aggregate must publish its domain events](dca-use-009.md) — A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be ...
 - [DTOs must not be used in the Domain Layer](dca-use-010.md) — Domain layer should not depend on DTOs (presentation concerns) - Dependency Inversion Principle.
 - [DTOs must not be used in the Application Layer](dca-use-011.md) — Application layer should use Command/Query/Response models, not presentation DTOs (Clean Architecture).

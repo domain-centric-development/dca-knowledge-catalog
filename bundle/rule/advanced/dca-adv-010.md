@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(DomainService.class)
+                .areAssignableTo(arch.layout().markers().domainService())
+                .and()
+                .areNotInterfaces()
                 .should()
                 .resideInAnyPackage(arch.allDomainPatterns())
                 .allowEmptyShould(true))
@@ -55,7 +57,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -65,7 +67,7 @@ DcaRule.Of(
     "Domain services are part of the domain layer, not application layer",
     arch => Types()
         .That()
-        .AreAssignableTo(typeof(IDomainService))
+        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.DomainService), "are domain services")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()

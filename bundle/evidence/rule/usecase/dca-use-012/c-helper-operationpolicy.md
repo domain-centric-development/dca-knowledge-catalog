@@ -27,7 +27,7 @@ internal static class OperationPolicy
     internal static bool Operation(IType type, DcaArchitecture arch) => type is Class { IsAbstract: false }
         && arch.RuntimeType(type) is { IsNested: false }
         && Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-        && (type.IsAssignableTo(typeof(IInputPort).FullName!) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
+        && (type.IsAssignableTo(arch.Layout.Markers.InputPort) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
 
     internal static void Invocation(DcaArchitecture arch)
     {
@@ -49,7 +49,7 @@ internal static class OperationPolicy
         foreach (var target in current.Dependencies.Select(d => d.Target).Distinct())
         {
             if (own.Contains(target.FullName)) continue;
-            if (target.IsAssignableTo(typeof(IInputPort).FullName!) || Operation(target, arch))
+            if (target.IsAssignableTo(arch.Layout.Markers.InputPort) || Operation(target, arch))
                 violations.Add($"{caller.FullName} -> {target.FullName}" + (via.Count == 0 ? "" : $" [via {string.Join(" -> ", via)}]"));
             else if (target is not Interface && Regex.IsMatch(target.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
                 && arch.ModuleRootOf(caller.Namespace.FullName) == arch.ModuleRootOf(target.Namespace?.FullName ?? ""))
@@ -63,7 +63,7 @@ internal static class OperationPolicy
         foreach (var type in arch.Types.Where(t => Operation(t, arch)))
         {
             var runtime = arch.RuntimeType(type)!;
-            var methods = runtime.GetInterfaces().Where(i => typeof(IInputPort).IsAssignableFrom(i))
+            var methods = runtime.GetInterfaces().Where(i => DcaMarkers.IsAssignableToByName(i, arch.Layout.Markers.InputPort))
                 .SelectMany(i => runtime.GetInterfaceMap(i).TargetMethods).ToHashSet();
             foreach (var method in runtime.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {

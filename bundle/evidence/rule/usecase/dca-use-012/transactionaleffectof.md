@@ -14,10 +14,10 @@ evidence_for: "/rule/usecase/dca-use-012.md#transactionaleffectof"
    * The effect of a code unit that needs a transaction, worded for the violation, or {@code null}
    * when the unit neither writes through a Repository nor publishes domain events.
    */
-  private static String transactionalEffectOf(JavaCodeUnit unit) {
-    boolean saves = calls(unit, Repository.class, "save");
-    boolean deletes = calls(unit, Repository.class, "deleteById");
-    boolean publishes = calls(unit, DomainEventPublisher.class);
+  private static String transactionalEffectOf(JavaCodeUnit unit, DcaMarkers markers) {
+    boolean saves = calls(unit, markers.repository(), "save");
+    boolean deletes = calls(unit, markers.repository(), "deleteById");
+    boolean publishes = calls(unit, markers.domainEventPublisher());
     if (!saves && !deletes && !publishes) {
       return null;
     }

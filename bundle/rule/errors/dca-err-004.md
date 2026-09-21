@@ -2,10 +2,10 @@
 type: Rule
 id: DCA-ERR-004
 title: Domain and use-case exceptions must not carry prohibited framework metadata
-rule: "An exception of an inner layer that carries container, persistence or protocol metadata has decided how the outside answers it, which is the incoming adapter's decision and only its."
+rule: "An exception of an inner layer that carries container, persistence or protocol metadata has decided how the outside answers it, which is the incoming adapter's decision and only its; an annotation that fixes the answer's status decides it for every protocol at once, including the ones the exception knows nothing about."
 constraint: Domain and use-case exceptions must not carry prohibited framework metadata.
 selects: "Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded."
-checks: "The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller or event-listener annotations, directly or as a meta-annotation. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes."
+checks: "The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller, event-listener or transport-status annotations, directly or as a meta-annotation. The transport-status role is the one that fixes the protocol answer on the exception itself; where the framework answers through a mapper class instead of an annotation the role is empty and nothing is selected for it. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-004"
 status: enforced
 rule_set: errors
@@ -23,13 +23,13 @@ Classes anywhere on the classpath under scan that are assignable to DomainExcept
 
 ## Check
 
-The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller or event-listener annotations, directly or as a meta-annotation. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes.
+The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller, event-listener or transport-status annotations, directly or as a meta-annotation. The transport-status role is the one that fixes the protocol answer on the exception itself; where the framework answers through a mapper class instead of an annotation the role is empty and nothing is selected for it. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes.
 
 ## .NET reading
 
-**Selection.** Types anywhere under the root namespace that are assignable to DomainException or to UseCaseException, the building-blocks namespace excluded.
+**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
-**Check.** The type carries no attribute the layout classifies into the container, persistence or transaction role, neither directly nor through a base attribute type. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is skipped. With those roles empty the rule selects no metadata and passes.
+**Check.** The type carries no attribute the layout classifies into the container, persistence, transaction, transport-status, web-controller, REST-controller or event-listener role, neither directly nor through a base attribute type - the same seven roles the Java twin forbids. Four of them are empty in every preset: the platform has no container stereotype, no controller attribute a failure could carry and no event-listener attribute, and it answers a failure through a mapper type rather than through an attribute on it. They exist so the id has one contract in both languages and a project whose framework does have such an attribute names it. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is not inspected; it is counted and named on standard output rather than passing silently. With the roles empty the rule selects no metadata and passes.
 
 ## Implementation
 
@@ -39,14 +39,15 @@ DcaRule.check(
         "Domain and use-case exceptions must not carry prohibited framework metadata",
         "An exception of an inner layer that carries container, persistence or protocol"
             + " metadata has decided how the outside answers it, which is the incoming"
-            + " adapter's decision and only its",
+            + " adapter's decision and only its; an annotation that fixes the answer's status"
+            + " decides it for every protocol at once, including the ones the exception knows"
+            + " nothing about",
         arch -> {
           FrameworkAnnotations roles = layout.frameworkAnnotations();
           CollectedViolations collected =
-              CollectedViolations.withHeader(
-                  "DCA-ERR-004: prohibited metadata on an inner-layer exception");
+              CollectedViolations.withHeader("Prohibited metadata on an inner-layer exception");
           for (JavaClass type : arch.classes()) {
-            if (!isProjectException(type)) {
+            if (!isProjectException(type, arch.layout().markers())) {
               continue;
             }
             for (List<String> role :
@@ -56,7 +57,8 @@ DcaRule.check(
                     roles.transactional(),
                     roles.webController(),
                     roles.restController(),
-                    roles.eventListener())) {
+                    roles.eventListener(),
+                    roles.transportStatus())) {
               for (String annotation : role) {
                 collected.require(
                     !type.isAnnotatedWith(annotation) && !type.isMetaAnnotatedWith(annotation),
@@ -71,10 +73,13 @@ DcaRule.check(
             + " to UseCaseException, the building-blocks package excluded.")
     .checking(
         "The type carries none of the configured injectable, persistence-entity, transactional,"
-            + " web-controller, REST-controller or event-listener annotations, directly or as a"
-            + " meta-annotation. Fields and methods are not inspected, and an annotation the"
-            + " layout classifies into no role is allowed. With those roles empty the rule"
-            + " selects no metadata and passes.")
+            + " web-controller, REST-controller, event-listener or transport-status"
+            + " annotations, directly or as a meta-annotation. The transport-status role is the"
+            + " one that fixes the protocol answer on the exception itself; where the framework"
+            + " answers through a mapper class instead of an annotation the role is empty and"
+            + " nothing is selected for it. Fields and methods are not inspected, and an"
+            + " annotation the layout classifies into no role is allowed. With those roles"
+            + " empty the rule selects no metadata and passes.")
 ```
 
 ## Helpers
@@ -83,10 +88,10 @@ DcaRule.check(
 
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
-  private static boolean isProjectException(JavaClass type) {
-    return (type.isAssignableTo(DomainException.class)
-            || type.isAssignableTo(UseCaseException.class))
-        && !type.getPackageName().startsWith(BUILDING_BLOCKS_PREFIX);
+  private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
+    return (type.isAssignableTo(markers.domainException())
+            || type.isAssignableTo(markers.useCaseException()))
+        && !markers.declaresTypesIn(type.getPackageName());
   }
 ```
 
@@ -182,7 +187,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -191,16 +196,20 @@ DcaRule.Check(
     "Domain and use-case exceptions must not carry prohibited framework metadata",
     "An exception of an inner layer that carries container, persistence or protocol metadata has"
         + " decided how the outside answers it, which is the incoming adapter's decision and only"
-        + " its",
+        + " its; an attribute that fixes the answer's status decides it for every protocol at once,"
+        + " including the ones the exception knows nothing about",
     arch =>
     {
         var roles = arch.Layout.FrameworkTypes;
         var violations = new List<string>();
+        var unreadable = new List<string>();
         foreach (var type in ExceptionsOfEitherLayer(arch))
         {
             var runtime = arch.RuntimeType(type);
             if (runtime is null)
             {
+                // Not a violation, but not a clean pass either: say so rather than skip silently.
+                unreadable.Add(type.FullName);
                 continue;
             }
 
@@ -209,9 +218,13 @@ DcaRule.Check(
                 for (var attributeType = attribute.AttributeType; attributeType is not null; attributeType = attributeType.BaseType)
                 {
                     var classified = roles.PersistenceAttributeTypes.Contains(attributeType.FullName ?? "")
+                        || roles.TransportStatusAttributeTypes.Contains(attributeType.FullName ?? "")
                         || roles.ContainerAttributeNamespaces
                             .Concat(roles.PersistenceAttributeNamespaces)
                             .Concat(roles.TransactionAttributeNamespaces)
+                            .Concat(roles.WebControllerAttributeNamespaces)
+                            .Concat(roles.RestControllerAttributeNamespaces)
+                            .Concat(roles.EventListenerAttributeNamespaces)
                             .Any(prefix => DcaLayout.IsBelow(attributeType.Namespace ?? "", prefix));
                     if (!classified)
                     {
@@ -224,17 +237,33 @@ DcaRule.Check(
             }
         }
 
-        DcaRule.Fail("DCA-ERR-004: prohibited metadata on an inner-layer exception", violations);
+        if (unreadable.Count > 0)
+        {
+            Console.Out.WriteLine(
+                $"[DCA-ERR-004] {unreadable.Count} exception type(s) not inspected, runtime type unavailable: "
+                + string.Join(", ", unreadable));
+        }
+
+        DcaRule.Fail("Prohibited metadata on an inner-layer exception", violations);
     })
     .Selecting(
-        "Types anywhere under the root namespace that are assignable to DomainException or to "
-        + "UseCaseException, the building-blocks namespace excluded.")
+        "Types anywhere under the root namespace that are assignable to the domain-exception or the "
+        + "use-case-exception role, the vocabulary's own code excluded: the namespaces the configured "
+        + "role types live in are not selected, so a project's own base type is not reported as "
+        + "residing outside a layer it never claimed.")
     .Checking(
-        "The type carries no attribute the layout classifies into the container, persistence or "
-        + "transaction role, neither directly nor through a base attribute type. Fields, properties "
-        + "and methods are not inspected, and an attribute the layout classifies into no role is "
-        + "allowed. A type whose runtime reflection is unavailable is skipped. With those roles "
-        + "empty the rule selects no metadata and passes.")
+        "The type carries no attribute the layout classifies into the container, persistence, "
+        + "transaction, transport-status, web-controller, REST-controller or event-listener role, "
+        + "neither directly nor through a base attribute type - the same seven roles the Java twin "
+        + "forbids. Four of them are empty in every preset: the platform has no container "
+        + "stereotype, no controller attribute a failure could carry and no event-listener "
+        + "attribute, and it answers a failure through a mapper type rather than through an "
+        + "attribute on it. They exist so the id has one contract in both languages and a project "
+        + "whose framework does have such an attribute names it. Fields, properties and methods "
+        + "are not inspected, and an attribute the layout classifies into no role is allowed. A "
+        + "type whose runtime reflection is unavailable is not inspected; it is counted and named "
+        + "on standard output rather than passing silently. With the roles empty the rule selects "
+        + "no metadata and passes.")
 ```
 
 ## Related mentions (heuristic)

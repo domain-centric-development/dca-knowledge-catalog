@@ -10,7 +10,13 @@ evidence_for: "/rule/usecase/dca-use-009.md#eventfreeaggregateplatform"
 ### `EventFreeAggregate.platform`
 
 ```java
-private static boolean platform(String name) {
-  return name.startsWith("java.") || name.startsWith("dev.domaincentric.dca.buildingblocks.");
-}
+/**
+   * A type the walk does not enter: the platform's own, or one of the vocabulary's - a marker and
+   * the base classes beside it register no event. Derived from the configured roles, so a project's
+   * own vocabulary stops the walk where the library's does.
+   */
+  private static boolean platform(String name, DcaMarkers markers) {
+    return name.startsWith("java.")
+        || markers.declaresTypesIn(name.substring(0, Math.max(name.lastIndexOf('.'), 0)));
+  }
 ```

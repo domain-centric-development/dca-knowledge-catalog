@@ -40,7 +40,8 @@ DcaRule.check(
         "Value Objects are immutable; state changes produce a new instance instead of mutating",
         arch -> {
           List<String> violations = new ArrayList<>();
-          for (JavaClass valueObject : concreteClassesAssignableTo(arch, Value.class)) {
+          for (JavaClass valueObject :
+              concreteClassesAssignableTo(arch, arch.layout().markers().value())) {
             for (JavaMethod method : valueObject.getAllMethods()) {
               if (isSetter(method)) {
                 violations.add(
@@ -67,8 +68,7 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(
-    DcaArchitecture arch, Class<?> marker) {
+private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
   return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
 }
 ```
@@ -107,7 +107,7 @@ private static List<JavaClass> classesMatching(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -118,7 +118,7 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var valueObject in ConcreteTypesAssignableTo(arch, typeof(IValue)))
+        foreach (var valueObject in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Value))
         {
             foreach (var setter in Setters(valueObject, publicOnly: false))
             {

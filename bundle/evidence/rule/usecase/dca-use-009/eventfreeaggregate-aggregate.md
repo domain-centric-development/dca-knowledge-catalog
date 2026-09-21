@@ -10,7 +10,8 @@ evidence_for: "/rule/usecase/dca-use-009.md#eventfreeaggregateaggregate"
 ### `EventFreeAggregate.aggregate`
 
 ```java
-private static Type aggregate(Type type, Map<TypeVariable<?>, Type> inherited) {
+private static Type aggregate(
+    Type type, Map<TypeVariable<?>, Type> inherited, DcaMarkers markers) {
   Class<?> raw;
   Map<TypeVariable<?>, Type> bindings = new HashMap<>(inherited);
   if (type instanceof ParameterizedType p) {
@@ -24,13 +25,13 @@ private static Type aggregate(Type type, Map<TypeVariable<?>, Type> inherited) {
     }
   } else if (type instanceof Class<?> c) raw = c;
   else return null;
-  if (raw == Repository.class) return bindings.get(raw.getTypeParameters()[0]);
+  if (raw.getName().equals(markers.repository())) return bindings.get(raw.getTypeParameters()[0]);
   for (Type parent : raw.getGenericInterfaces()) {
-    Type found = aggregate(parent, bindings);
+    Type found = aggregate(parent, bindings, markers);
     if (found != null) return found;
   }
   return raw.getGenericSuperclass() == null
       ? null
-      : aggregate(raw.getGenericSuperclass(), bindings);
+      : aggregate(raw.getGenericSuperclass(), bindings, markers);
 }
 ```

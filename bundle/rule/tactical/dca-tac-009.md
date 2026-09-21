@@ -4,8 +4,8 @@ id: DCA-TAC-009
 title: "Value Object classes should be final (immutability)"
 rule: "Value objects should be immutable (final classes) - Vernon's DDD recommendation."
 constraint: "Value Object classes should be final (immutability)."
-selects: "Non-interface, non-record classes in <module>.domain.model.. of every module root that are assignable to Value; enums included."
-checks: "The class carries the final modifier. Records and interfaces are not selected, so a record value object always passes; a value object outside <module>.domain.model.. is never reported, and an empty selection passes."
+selects: "Non-interface, non-record, non-enum classes in <module>.domain.model.. of every module root that are assignable to Value."
+checks: "The class carries the final modifier. Records, interfaces and enums are not selected, so a record value object always passes and an enum value object is never reported - an enum with constant-specific class bodies is compiled abstract and cannot be made final. A value object outside <module>.domain.model.. is never reported, and an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-009"
 status: enforced
 rule_set: tactical
@@ -19,11 +19,11 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRul
 
 ## Selection
 
-Non-interface, non-record classes in <module>.domain.model.. of every module root that are assignable to Value; enums included.
+Non-interface, non-record, non-enum classes in <module>.domain.model.. of every module root that are assignable to Value.
 
 ## Check
 
-The class carries the final modifier. Records and interfaces are not selected, so a record value object always passes; a value object outside <module>.domain.model.. is never reported, and an empty selection passes.
+The class carries the final modifier. Records, interfaces and enums are not selected, so a record value object always passes and an enum value object is never reported - an enum with constant-specific class bodies is compiled abstract and cannot be made final. A value object outside <module>.domain.model.. is never reported, and an empty selection passes.
 
 ## .NET reading
 
@@ -43,26 +43,30 @@ DcaRule.of(
                 .that()
                 .resideInAnyPackage(arch.allDomainModelPatterns())
                 .and()
-                .implement(Value.class)
+                .areAssignableTo(arch.layout().markers().value())
                 .and()
                 .areNotInterfaces()
                 .and()
                 .areNotRecords()
+                .and()
+                .areNotEnums()
                 .should()
                 .haveModifier(JavaModifier.FINAL)
                 .allowEmptyShould(true))
     .selecting(
-        "Non-interface, non-record classes in <module>.domain.model.. of every module "
-            + "root that are assignable to Value; enums included.")
+        "Non-interface, non-record, non-enum classes in <module>.domain.model.. of every "
+            + "module root that are assignable to Value.")
     .checking(
-        "The class carries the final modifier. Records and interfaces are not selected, "
-            + "so a record value object always passes; a value object outside "
+        "The class carries the final modifier. Records, interfaces and enums are not "
+            + "selected, so a record value object always passes and an enum value object is "
+            + "never reported - an enum with constant-specific class bodies is compiled "
+            + "abstract and cannot be made final. A value object outside "
             + "<module>.domain.model.. is never reported, and an empty selection passes.")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -78,7 +82,7 @@ DcaRule.Check(
         {
             if (valueObject.IsCompilerGenerated
                 || !ResidesInAny(valueObject, arch.AllDomainModelPatterns())
-                || !IsAssignableTo(arch, valueObject, typeof(IValue)))
+                || !IsAssignableTo(arch, valueObject, arch.Layout.Markers.Value))
             {
                 continue;
             }

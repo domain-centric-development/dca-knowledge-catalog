@@ -45,9 +45,9 @@ DcaRule.of(
                 .that()
                 .areInterfaces()
                 .and()
-                .areAssignableTo(Repository.class)
+                .areAssignableTo(arch.layout().markers().repository())
                 .and()
-                .doNotHaveSimpleName(REPOSITORY_SUFFIX)
+                .doNotHaveSimpleName(arch.layout().repositorySuffix())
                 .should()
                 .resideInAnyPackage(arch.allApplicationPatterns())
                 .allowEmptyShould(true))
@@ -62,7 +62,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

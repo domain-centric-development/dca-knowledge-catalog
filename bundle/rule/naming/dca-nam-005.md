@@ -55,7 +55,8 @@ DcaRule.of(
         "The simple name ends with the configured controller suffix (default Controller). A"
             + " class carrying only a REST-controller stereotype is not selected here, and a"
             + " controller outside an incoming-adapter package is not checked. An empty"
-            + " selection passes - which is always the case when the role is empty.")
+            + " selection passes - which is always the case when the role is empty.",
+        "rename the class to *" + layout.controllerSuffix())
 ```
 
 ## Helpers

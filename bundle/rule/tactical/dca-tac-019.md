@@ -43,9 +43,9 @@ DcaRule.of(
                 .that()
                 .areInterfaces()
                 .and()
-                .areAssignableTo(Store.class)
+                .areAssignableTo(arch.layout().markers().store())
                 .and()
-                .doNotHaveSimpleName(STORE_SUFFIX)
+                .doNotHaveSimpleName(arch.layout().storeSuffix())
                 .should()
                 .resideInAnyPackage(arch.allApplicationPatterns())
                 .allowEmptyShould(true))
@@ -60,7 +60,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

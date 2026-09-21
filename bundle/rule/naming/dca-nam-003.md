@@ -5,7 +5,7 @@ title: InputPort interfaces must end with 'InputPort'
 rule: "Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)."
 constraint: InputPort interfaces must end with 'InputPort'.
 selects: "Interfaces in <module>.application.. of every module root that are assignable to InputPort, except those named exactly InputPort or UseCase."
-checks: "The simple name ends with InputPort. Classes and records are not selected, and an interface extending InputPort outside an application package is not checked. An empty selection passes."
+checks: "The simple name ends with InputPort - no prefix is required, because Java interfaces carry none; the .NET twin additionally requires the platform's I prefix. Classes and records are not selected, and an interface extending InputPort outside an application package is not checked. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-003"
 status: enforced
 rule_set: naming
@@ -23,13 +23,13 @@ Interfaces in <module>.application.. of every module root that are assignable to
 
 ## Check
 
-The simple name ends with InputPort. Classes and records are not selected, and an interface extending InputPort outside an application package is not checked. An empty selection passes.
+The simple name ends with InputPort - no prefix is required, because Java interfaces carry none; the .NET twin additionally requires the platform's I prefix. Classes and records are not selected, and an interface extending InputPort outside an application package is not checked. An empty selection passes.
 
 ## .NET reading
 
 **Selection.** Interfaces in <module>.Application of every module root that are assignable to IInputPort, except those named exactly InputPort, IInputPort, UseCase or IUseCase.
 
-**Check.** The name starts with I and ends with InputPort (IPlaceOrderInputPort). Classes and records are not selected, and an interface extending IInputPort outside an application namespace is not checked. An empty selection passes.
+**Check.** The name starts with I and ends with InputPort (IPlaceOrderInputPort). The I prefix is the platform convention and is checked here only: the Java twin requires the suffix and nothing else, because Java interfaces carry no prefix. Classes and records are not selected, and an interface extending IInputPort outside an application namespace is not checked. An empty selection passes.
 
 ## Implementation
 
@@ -45,7 +45,7 @@ DcaRule.of(
                 .and()
                 .areInterfaces()
                 .and()
-                .areAssignableTo(InputPort.class)
+                .areAssignableTo(arch.layout().markers().inputPort())
                 .and()
                 .doNotHaveSimpleName("InputPort")
                 .and()
@@ -57,14 +57,17 @@ DcaRule.of(
         "Interfaces in <module>.application.. of every module root that are assignable to"
             + " InputPort, except those named exactly InputPort or UseCase.")
     .checking(
-        "The simple name ends with InputPort. Classes and records are not selected, and an"
+        "The simple name ends with InputPort - no prefix is required, because Java interfaces"
+            + " carry none; the .NET twin additionally requires the platform's I prefix."
+            + " Classes and records are not selected, and an"
             + " interface extending InputPort outside an application package is not checked. An"
-            + " empty selection passes.")
+            + " empty selection passes.",
+        "rename the interface to <UseCaseName>InputPort")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -76,7 +79,7 @@ DcaRule.Check(
         {
             var violations = arch.Interfaces
                 .Where(i => InNamespace(i, DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-                    && IsAssignableTo(arch, i, typeof(IInputPort))
+                    && IsAssignableTo(arch, i, arch.Layout.Markers.InputPort)
                     && !IsBaseInputPortName(i.Name)
                     && !(i.Name.StartsWith("I", StringComparison.Ordinal) && i.Name.EndsWith("InputPort", StringComparison.Ordinal)))
                 .Select(i => $"{i.FullName} is an input port but is not named I*InputPort")
@@ -90,9 +93,11 @@ DcaRule.Check(
         "Interfaces in <module>.Application of every module root that are assignable to"
             + " IInputPort, except those named exactly InputPort, IInputPort, UseCase or IUseCase.")
     .Checking(
-        "The name starts with I and ends with InputPort (IPlaceOrderInputPort). Classes and"
-            + " records are not selected, and an interface extending IInputPort outside an"
-            + " application namespace is not checked. An empty selection passes.")
+        "The name starts with I and ends with InputPort (IPlaceOrderInputPort). The I prefix is the"
+            + " platform convention and is checked here only: the Java twin requires the suffix and"
+            + " nothing else, because Java interfaces carry no prefix. Classes and records are not"
+            + " selected, and an interface extending IInputPort outside an application namespace is"
+            + " not checked. An empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

@@ -12,8 +12,5 @@ evidence_for: "/reference/layout.md#building-block-namespace-constants-net"
 | Constant | Namespace |
 |---|---|
 | `BuildingBlocksNamespace` | `DomainCentric.BuildingBlocks` |
-| `BuildingBlocksTacticalNamespace` | `DomainCentric.BuildingBlocks.Ddd.Tactical` |
-| `BuildingBlocksStrategicNamespace` | `DomainCentric.BuildingBlocks.Ddd.Strategic` |
-| `BuildingBlocksPortsNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports` |
 | `BuildingBlocksPortsInNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports.In` |
 | `BuildingBlocksPortsOutNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports.Out` |

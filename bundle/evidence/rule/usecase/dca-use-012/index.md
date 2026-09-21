@@ -16,3 +16,4 @@
 - [Use cases that save an aggregate or publish domain events must have a transaction boundary — `pathIsTransactional`](pathistransactional.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Use cases that save an aggregate or publish domain events must have a transaction boundary — `pathName`](pathname.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Use cases that save an aggregate or publish domain events must have a transaction boundary — `transactionalEffectOf`](transactionaleffectof.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Use cases that save an aggregate or publish domain events must have a transaction boundary — `useCases`](usecases.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

@@ -60,7 +60,8 @@ DcaRule.of(
             + " application.shared, the domain or an adapter do not count. Slices of all"
             + " modules are checked together, so a cycle through another module's use case"
             + " package is"
-            + " reported here as well.")
+            + " reported here as well.",
+        "break the cycle by moving the shared concept into one slice or behind a port")
 ```
 
 ## Helpers
@@ -93,7 +94,7 @@ DcaRule.of(
         int index = 0;
         while (index < segments.length && layout.operationContainers().contains(segments[index]))
           index++;
-        if (index == segments.length || segments[index].equals("shared"))
+        if (index == segments.length || segments[index].equals(layout.sharedSubpackage()))
           return SliceIdentifier.ignore();
         String operationRoot =
             arch.classes().stream()
@@ -142,7 +143,7 @@ static boolean operation(JavaClass type, DcaArchitecture arch) {
       && !type.isNestedClass()
       && !type.getModifiers().contains(JavaModifier.ABSTRACT)
       && JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns()).test(type)
-      && (type.isAssignableTo(InputPort.class)
+      && (type.isAssignableTo(arch.layout().markers().inputPort())
           || type.getSimpleName().endsWith(arch.layout().useCaseSuffix()));
 }
 ```
@@ -176,10 +177,6 @@ DcaRule.Check(
         + "checked together, so a cycle through another module's use-case namespace is reported "
         + "here as well.")
 ```
-
-## Related mentions (heuristic)
-
-- [InputPort](/marker/port-in/inputport.md)
 
 ## Configured by
 

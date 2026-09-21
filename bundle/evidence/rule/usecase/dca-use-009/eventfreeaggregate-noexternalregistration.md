@@ -17,15 +17,16 @@ evidence_for: "/rule/usecase/dca-use-009.md#eventfreeaggregatenoexternalregistra
    * supertypes disables the exemption.
    */
   private static boolean noExternalRegistration(
-      Set<String> hierarchy, Map<String, JavaClass> scanned) {
+      Set<String> hierarchy, Map<String, JavaClass> scanned, DcaMarkers markers) {
     for (JavaClass type : scanned.values()) {
       if (hierarchy.contains(type.getName())) continue;
       for (var unit : type.getCodeUnits())
         for (var call : unit.getCallsFromSelf()) {
           var owner = call.getTargetOwner();
           if (call.getTarget().getName().equals("registerEvent")
-              && owner.isAssignableTo(AggregateRoot.class)
-              && (hierarchy.contains(owner.getName()) || platform(owner.getName()))) return false;
+              && owner.isAssignableTo(markers.aggregateRoot())
+              && (hierarchy.contains(owner.getName()) || platform(owner.getName(), markers)))
+            return false;
         }
     }
     return true;

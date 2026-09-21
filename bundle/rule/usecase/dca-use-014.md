@@ -51,7 +51,8 @@ DcaRule.check(
     .selecting(
         "Per module root: non-interface, non-abstract, non-nested classes below <module>.application that implement InputPort or whose simple name ends with the configured use-case suffix, excluding application.shared and everything below it.")
     .checking(
-        "After removing configured operationContainers segments, all of them sit at one depth: application.<usecase> (flat) or application.<feature>.<usecase> (grouped). Reported are a use case directly in the application package, one nested deeper than a feature, and a module mixing both depths. What a feature means is not checked.")
+        "After removing configured operationContainers segments, all of them sit at one depth: application.<usecase> (flat) or application.<feature>.<usecase> (grouped). Reported are a use case directly in the application package, one nested deeper than a feature, and a module mixing both depths. What a feature means is not checked.",
+        "keep every use case of the module at application.<usecase>, one package per use case")
 ```
 
 ## Helpers
@@ -63,7 +64,7 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
   List<String> violations = new ArrayList<>();
   for (String root : arch.moduleRoots()) {
     String application = root + "." + layout.applicationSubpackage();
-    String shared = application + ".shared";
+    String shared = application + "." + layout.sharedSubpackage();
     // depth -> use case packages at that depth, both sorted for a stable message
     Map<Integer, TreeSet<String>> byDepth = new TreeMap<>();
     for (JavaClass candidate : arch.classes()) {
@@ -75,7 +76,7 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
           || candidate.getModifiers().contains(JavaModifier.ABSTRACT)
           || candidate.isNestedClass()
           || candidate.isAnonymousClass()
-          || !(candidate.isAssignableTo(InputPort.class)
+          || !(candidate.isAssignableTo(arch.layout().markers().inputPort())
               || candidate.getSimpleName().endsWith(layout.useCaseSuffix()))) {
         continue;
       }
@@ -136,7 +137,7 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `moduleRoots()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()`, `moduleRoots()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

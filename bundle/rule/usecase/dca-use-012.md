@@ -5,7 +5,7 @@ title: Use cases that save an aggregate or publish domain events must have a tra
 rule: "The use case owns the unit of work. Saving an aggregate is one business fact, yet the repository may write it as several statements - an aggregate of entities and value objects often spans several tables - and a repository adapter draws no boundary of its own; without one, a failure between the statements leaves half an aggregate behind. Publishing adds a second effect that must fall with the save: integration events are relayed after commit by the framework's after-commit listeners, and their publication is registered in the publishing transaction. Without an active transaction the after-commit listeners are skipped silently and nothing is registered: the use case succeeds, the other contexts never hear of it. The boundary is either declarative transaction metadata (the configured transactional annotation on the class or the executing method) or an explicit TransactionBoundary.inTransaction(...) around load, mutate, save and publish. Checked per entry path, following calls within the class: from every entry point - a method callable from outside the class, or one nothing in the class calls - no route down to the saving, deleting or publishing method may be free of an annotation or a boundary; a covered caller does not cover another route to the same helper, and a boundary on one route does not cover a second route. Whether the save or the publication sits inside the block handed to inTransaction(...) is not visible in ArchUnit's call model, which folds a lambda's body into the enclosing method; that placement stays a review check."
 constraint: Use cases that save an aggregate or publish domain events must have a transaction boundary.
 selects: "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix."
-checks: "For every method that calls Repository.save, Repository.deleteById or a DomainEventPublisher, every route from each entry point down to it is covered: the class carries one of the configured transactional annotations, or every uncovered unit on the route is either annotated or calls TransactionBoundary.inTransaction. A covered caller does not cover a second route to the same helper. With an empty transactional role only the explicit boundary counts. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Whether the save or publish call sits inside the inTransaction block is not checked - ArchUnit folds a lambda into its enclosing method."
+checks: "For every method that calls Repository.save, Repository.deleteById or a DomainEventPublisher, every route from each entry point down to it is covered: the class carries one of the configured transactional annotations, or every uncovered unit on the route is either annotated or calls TransactionBoundary.inTransaction. A covered caller does not cover a second route to the same helper. With an empty transactional role only the explicit boundary counts - which is the .NET default, where no preset configures a transactional attribute, while the Java presets configure the framework's own. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Whether the save or publish call sits inside the inTransaction block is not checked - ArchUnit folds a lambda into its enclosing method. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it."
 enforced_by: "UseCaseRules#DCA-USE-012"
 status: enforced
 rule_set: usecase
@@ -23,13 +23,13 @@ Non-interface classes in <module>.application.. that implement InputPort or whos
 
 ## Check
 
-For every method that calls Repository.save, Repository.deleteById or a DomainEventPublisher, every route from each entry point down to it is covered: the class carries one of the configured transactional annotations, or every uncovered unit on the route is either annotated or calls TransactionBoundary.inTransaction. A covered caller does not cover a second route to the same helper. With an empty transactional role only the explicit boundary counts. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Whether the save or publish call sits inside the inTransaction block is not checked - ArchUnit folds a lambda into its enclosing method.
+For every method that calls Repository.save, Repository.deleteById or a DomainEventPublisher, every route from each entry point down to it is covered: the class carries one of the configured transactional annotations, or every uncovered unit on the route is either annotated or calls TransactionBoundary.inTransaction. A covered caller does not cover a second route to the same helper. With an empty transactional role only the explicit boundary counts - which is the .NET default, where no preset configures a transactional attribute, while the Java presets configure the framework's own. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Whether the save or publish call sits inside the inTransaction block is not checked - ArchUnit folds a lambda into its enclosing method. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.
 
 ## .NET reading
 
 **Selection.** Concrete application operations selected by IInputPort marker or suffix with loadable runtime types, including closure and async units.
 
-**Check.** Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately.
+**Check.** Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. The declarative path is empty by default in .NET - AspNetCore() and None() both leave TransactionalAttribute unset, because ASP.NET Core has no ambient transaction attribute - so out of the box only the explicit boundary satisfies the rule, while the Java twin also accepts the framework's transactional annotation. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.
 
 ## Implementation
 
@@ -59,16 +59,10 @@ DcaRule.of(
             + " placement stays a review check",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
-                .and()
-                .haveSimpleNameEndingWith(layout.useCaseSuffix())
-                .or()
-                .areAssignableTo(InputPort.class)
-                .and()
-                .areNotInterfaces()
+                .that(useCases(arch, layout))
                 .should(
-                    beTransactionalWhenMutating(layout.frameworkAnnotations().transactional()))
+                    beTransactionalWhenMutating(
+                        layout.frameworkAnnotations().transactional(), layout.markers()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix.")
@@ -78,31 +72,64 @@ DcaRule.of(
             + " class carries one of the configured transactional annotations, or every uncovered"
             + " unit on the route is either annotated or calls TransactionBoundary.inTransaction."
             + " A covered caller does not cover a second route to the same helper. With an empty"
-            + " transactional role only the explicit boundary counts. A use case that neither"
+            + " transactional role only the explicit boundary counts - which is the .NET default,"
+            + " where no preset configures a transactional attribute, while the Java presets"
+            + " configure the framework's own. A use case that neither"
             + " saves, deletes nor publishes (a query, a Store write) is selected but has nothing"
             + " to check and passes. Whether the save or publish call sits inside the"
             + " inTransaction block is not checked - ArchUnit folds a lambda into its enclosing"
-            + " method.")
+            + " method. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
 ```
 
 ## Helpers
 
+### `useCases`
+
+```java
+/**
+   * The documented use-case selection: a non-interface class in an application package that either
+   * carries the configured use-case suffix or implements the input-port role.
+   *
+   * <p>Spelled inline, ArchUnit joins {@code and}/{@code or} left to right, so {@code
+   * resideInAnyPackage(app).and().haveSimpleNameEndingWith(suffix).or().areAssignableTo(port)
+   * .and().areNotInterfaces()} reads {@code ((inApplication ∧ suffix) ∨ isInputPort) ∧ ¬interface}
+   * and selects every input-port implementation anywhere, adapters included — which is neither what
+   * the rule texts say nor what the .NET twin does.
+   */
+  private static DescribedPredicate<JavaClass> useCases(DcaArchitecture arch, DcaLayout layout) {
+    DescribedPredicate<JavaClass> inApplication =
+        JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns());
+    DescribedPredicate<JavaClass> named =
+        JavaClass.Predicates.simpleNameEndingWith(layout.useCaseSuffix());
+    DescribedPredicate<JavaClass> port =
+        JavaClass.Predicates.assignableTo(arch.layout().markers().inputPort());
+    return inApplication
+        .and(named.or(port))
+        .and(DescribedPredicate.not(JavaClass.Predicates.INTERFACES))
+        .as(
+            "non-interface classes in an application package that implement the input port or end"
+                + " with \"%s\"",
+            layout.useCaseSuffix());
+  }
+```
+
 ### `beTransactionalWhenMutating`
 
 ```java
-private static ArchCondition<JavaClass> beTransactionalWhenMutating(List<String> transactional) {
+private static ArchCondition<JavaClass> beTransactionalWhenMutating(
+    List<String> transactional, DcaMarkers markers) {
   return new ArchCondition<>(
       "be transactional when saving an aggregate or publishing domain events") {
     @Override
     public void check(JavaClass item, ConditionEvents events) {
       IntraClassCalls calls = new IntraClassCalls(item);
       for (JavaCodeUnit unit : item.getCodeUnits()) {
-        String effect = transactionalEffectOf(unit);
+        String effect = transactionalEffectOf(unit, markers);
         if (effect == null) {
           continue;
         }
         for (JavaCodeUnit entry : calls.entryPointsOf(unit)) {
-          if (pathIsTransactional(item, entry, unit, calls, transactional)) {
+          if (pathIsTransactional(item, entry, unit, calls, transactional, markers)) {
             continue;
           }
           events.add(
@@ -132,10 +159,10 @@ private static ArchCondition<JavaClass> beTransactionalWhenMutating(List<String>
    * The effect of a code unit that needs a transaction, worded for the violation, or {@code null}
    * when the unit neither writes through a Repository nor publishes domain events.
    */
-  private static String transactionalEffectOf(JavaCodeUnit unit) {
-    boolean saves = calls(unit, Repository.class, "save");
-    boolean deletes = calls(unit, Repository.class, "deleteById");
-    boolean publishes = calls(unit, DomainEventPublisher.class);
+  private static String transactionalEffectOf(JavaCodeUnit unit, DcaMarkers markers) {
+    boolean saves = calls(unit, markers.repository(), "save");
+    boolean deletes = calls(unit, markers.repository(), "deleteById");
+    boolean publishes = calls(unit, markers.domainEventPublisher());
     if (!saves && !deletes && !publishes) {
       return null;
     }
@@ -167,13 +194,15 @@ private static ArchCondition<JavaClass> beTransactionalWhenMutating(List<String>
       JavaCodeUnit entry,
       JavaCodeUnit publisher,
       IntraClassCalls calls,
-      List<String> transactional) {
+      List<String> transactional,
+      DcaMarkers markers) {
     if (AnnotationRoles.isMetaAnnotatedWithAny(item, transactional)) {
       return true;
     }
     Predicate<JavaCodeUnit> uncovered =
         unit ->
-            !AnnotationRoles.isMetaAnnotatedWithAny(unit, transactional) && !callsBoundary(unit);
+            !AnnotationRoles.isMetaAnnotatedWithAny(unit, transactional)
+                && !callsBoundary(unit, markers);
     return !calls.reachableThrough(entry, uncovered).contains(publisher);
   }
 ```
@@ -215,12 +244,12 @@ private static ArchCondition<JavaClass> beTransactionalWhenMutating(List<String>
 ### `calls`
 
 ```java
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType) {
+private static boolean calls(JavaCodeUnit unit, String targetType) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(call -> call.getTargetOwner().isAssignableTo(targetType));
 }
 
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType, String methodName) {
+private static boolean calls(JavaCodeUnit unit, String targetType, String methodName) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(
           call ->
@@ -232,9 +261,9 @@ private static boolean calls(JavaCodeUnit unit, Class<?> targetType, String meth
 ### `callsBoundary`
 
 ```java
-private static boolean callsBoundary(JavaCodeUnit unit) {
+private static boolean callsBoundary(JavaCodeUnit unit, DcaMarkers markers) {
   return unit.getMethodCallsFromSelf().stream()
-      .anyMatch(call -> call.getTargetOwner().isAssignableTo(TransactionBoundary.class));
+      .anyMatch(call -> call.getTargetOwner().isAssignableTo(markers.transactionBoundary()));
 }
 ```
 
@@ -289,11 +318,15 @@ private static boolean callsBoundary(JavaCodeUnit unit) {
 ```java
 private boolean isEntryPoint(JavaCodeUnit unit) {
   Set<JavaModifier> modifiers = unit.getModifiers();
-  boolean externallyCallable =
-      !modifiers.contains(JavaModifier.PRIVATE)
-          && !modifiers.contains(JavaModifier.SYNTHETIC)
-          && !modifiers.contains(JavaModifier.BRIDGE);
-  return externallyCallable || callers.getOrDefault(unit, Set.of()).isEmpty();
+  if (modifiers.contains(JavaModifier.SYNTHETIC) || modifiers.contains(JavaModifier.BRIDGE)) {
+    // A unit the compiler wrote, not a path anyone enters on. The bridge method a generic input
+    // port produces - execute(Object) beside execute(Command) - has no caller inside the class,
+    // so the "nothing calls it" fallback below would otherwise make it a second entry point and
+    // report every use case over a generic port twice.
+    return false;
+  }
+  return !modifiers.contains(JavaModifier.PRIVATE)
+      || callers.getOrDefault(unit, Set.of()).isEmpty();
 }
 ```
 
@@ -317,7 +350,7 @@ private static Set<JavaCodeUnit> closure(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -339,19 +372,27 @@ DcaRule.Check("DCA-USE-012", "Use cases that save an aggregate or publish domain
                 var runtime = arch.RuntimeType(type)!;
                 var graph = new IntraClassCalls(runtime);
                 foreach (var unit in graph.Units) {
-                    var effect = TransactionalEffectOf(unit);
+                    var effect = TransactionalEffectOf(unit, arch.Layout.Markers);
                     if (effect is null) continue;
                     foreach (var entry in graph.EntryPointsOf(unit)) {
                         if (!Transactional(runtime, layout.FrameworkTypes.TransactionalAttribute)
-                            && graph.ReachableThrough(entry, u => !Transactional(u, layout.FrameworkTypes.TransactionalAttribute) && !CallsBoundary(u)).Contains(unit))
-                            violations.Add($"{type.FullName}.{IntraClassCalls.PathName(entry, unit)} {effect} without transaction coverage on every entry path");
+                            && graph.ReachableThrough(entry, u => !Transactional(u, layout.FrameworkTypes.TransactionalAttribute) && !CallsBoundary(u, arch.Layout.Markers)).Contains(unit))
+                            violations.Add(
+                                $"{type.FullName}.{IntraClassCalls.PathName(entry, unit)} {effect} without "
+                                + DescribeTransactionalAttribute(layout.FrameworkTypes.TransactionalAttribute)
+                                + " on the class or on a method of that path, and without"
+                                + " ITransactionBoundary.InTransactionAsync(...) on it");
                     }
                 }
             }
-            DcaRule.Fail("Use cases that save, delete or publish require transaction coverage", violations.Distinct().ToList());
+            DcaRule.Fail(
+                "Use cases that save an aggregate or publish domain events must have a transaction boundary",
+                violations.Distinct().ToList(),
+                "wrap load, mutate, save and publish in ITransactionBoundary.InTransactionAsync(...),"
+                + " or carry the configured transactional attribute on the class or on every entry path");
         })
     .Selecting("Concrete application operations selected by IInputPort marker or suffix with loadable runtime types, including closure and async units.")
-    .Checking("Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately.")
+    .Checking("Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. The declarative path is empty by default in .NET - AspNetCore() and None() both leave TransactionalAttribute unset, because ASP.NET Core has no ambient transaction attribute - so out of the box only the explicit boundary satisfies the rule, while the Java twin also accepts the framework's transactional annotation. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
 ```
 
 ### C# helper OperationPolicy
@@ -374,7 +415,7 @@ internal static class OperationPolicy
     internal static bool Operation(IType type, DcaArchitecture arch) => type is Class { IsAbstract: false }
         && arch.RuntimeType(type) is { IsNested: false }
         && Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-        && (type.IsAssignableTo(typeof(IInputPort).FullName!) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
+        && (type.IsAssignableTo(arch.Layout.Markers.InputPort) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
 
     internal static void Invocation(DcaArchitecture arch)
     {
@@ -396,7 +437,7 @@ internal static class OperationPolicy
         foreach (var target in current.Dependencies.Select(d => d.Target).Distinct())
         {
             if (own.Contains(target.FullName)) continue;
-            if (target.IsAssignableTo(typeof(IInputPort).FullName!) || Operation(target, arch))
+            if (target.IsAssignableTo(arch.Layout.Markers.InputPort) || Operation(target, arch))
                 violations.Add($"{caller.FullName} -> {target.FullName}" + (via.Count == 0 ? "" : $" [via {string.Join(" -> ", via)}]"));
             else if (target is not Interface && Regex.IsMatch(target.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
                 && arch.ModuleRootOf(caller.Namespace.FullName) == arch.ModuleRootOf(target.Namespace?.FullName ?? ""))
@@ -410,7 +451,7 @@ internal static class OperationPolicy
         foreach (var type in arch.Types.Where(t => Operation(t, arch)))
         {
             var runtime = arch.RuntimeType(type)!;
-            var methods = runtime.GetInterfaces().Where(i => typeof(IInputPort).IsAssignableFrom(i))
+            var methods = runtime.GetInterfaces().Where(i => DcaMarkers.IsAssignableToByName(i, arch.Layout.Markers.InputPort))
                 .SelectMany(i => runtime.GetInterfaceMap(i).TargetMethods).ToHashSet();
             foreach (var method in runtime.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
@@ -540,8 +581,8 @@ internal sealed class IntraClassCalls
             && (declaring.Name.StartsWith('<') || declaring.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
     /// <summary>Whether the unit's IL calls a method named <paramref name="method"/> on a type assignable to <paramref name="marker"/>.</summary>
-    public static bool Calls(MethodBase unit, string method, Type marker) =>
-        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && marker.IsAssignableFrom(m.DeclaringType));
+    public static bool Calls(MethodBase unit, string method, string marker) =>
+        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, marker));
 
     /// <summary>
     /// The source-level name of a unit: <c>ExecuteAsync</c> for the method itself, for its state machine's
@@ -725,6 +766,7 @@ internal sealed class IntraClassCalls
 ## Evidence slices
 
 - [Overview](/evidence/rule/usecase/dca-use-012/overview.md)
+- [`useCases`](/evidence/rule/usecase/dca-use-012/usecases.md)
 - [`beTransactionalWhenMutating`](/evidence/rule/usecase/dca-use-012/betransactionalwhenmutating.md)
 - [`transactionalEffectOf`](/evidence/rule/usecase/dca-use-012/transactionaleffectof.md)
 - [`pathIsTransactional`](/evidence/rule/usecase/dca-use-012/pathistransactional.md)

@@ -29,7 +29,7 @@ Direct or meta-annotations: types prohibit injectable, persistenceEntity and tra
 
 **Selection.** Domain.Model types except events, services, factories and specifications, which have exclusive ADV ownership.
 
-**Check.** Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. Missing runtime types are skipped; wiring is not established.
+**Check.** Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. The container role is empty in both shipped presets: .NET registers services in code, not through an attribute, so the half of this rule that does the most work in Java - a container stereotype on a domain type - selects nothing here until a project names its own. Missing runtime types are skipped; wiring is not established.
 
 ## Implementation
 
@@ -55,7 +55,7 @@ static void check(DcaArchitecture arch, String id) {
   List<String> violations = new ArrayList<>();
   for (JavaClass type : arch.classes()) {
     if (type.isInterface()
-        || !owner(type).equals(id)
+        || !owner(type, arch.layout().markers(), arch.layout().specificationSuffix()).equals(id)
         || !JavaClass.Predicates.resideInAnyPackage(arch.allDomainPatterns()).test(type))
       continue;
     if (id.equals("DCA-ONI-003")
@@ -99,12 +99,12 @@ static void check(DcaArchitecture arch, String id) {
 ### `DomainMetadata.owner`
 
 ```java
-static String owner(JavaClass type) {
-  String tactical = "dev.domaincentric.dca.buildingblocks.ddd.tactical.";
-  if (type.isAssignableTo(tactical + "DomainEvent")) return "DCA-ADV-004";
-  if (type.isAssignableTo(tactical + "DomainService")) return "DCA-ADV-011";
-  if (type.isAssignableTo(tactical + "Factory")) return "DCA-ADV-015";
-  if (type.getSimpleName().endsWith("Specification")) return "DCA-ADV-018";
+static String owner(JavaClass type, DcaMarkers markers, String specificationSuffix) {
+  if (type.isAssignableTo(markers.domainEvent())) return "DCA-ADV-004";
+  if (type.isAssignableTo(markers.domainService())) return "DCA-ADV-011";
+  if (type.isAssignableTo(markers.factory())) return "DCA-ADV-015";
+  if (type.isAssignableTo(markers.specification())
+      || type.getSimpleName().endsWith(specificationSuffix)) return "DCA-ADV-018";
   return "DCA-ONI-003";
 }
 ```
@@ -133,7 +133,7 @@ DcaRule.Check("DCA-ONI-003", "Domain models must not carry prohibited framework 
         "Domain metadata does not configure infrastructure concerns",
         arch => DomainMetadata.Check(arch, "DCA-ONI-003"))
     .Selecting("Domain.Model types except events, services, factories and specifications, which have exclusive ADV ownership.")
-    .Checking("Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. Missing runtime types are skipped; wiring is not established.")
+    .Checking("Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. The container role is empty in both shipped presets: .NET registers services in code, not through an attribute, so the half of this rule that does the most work in Java - a container stereotype on a domain type - selects nothing here until a project names its own. Missing runtime types are skipped; wiring is not established.")
 ```
 
 ### C# helper DomainMetadata
@@ -153,19 +153,23 @@ namespace DomainCentric.ArchRules.Rules;
 /// <summary>Exclusive ownership and configurable role-by-target domain metadata policy.</summary>
 internal static class DomainMetadata
 {
-    internal static string Owner(IType type)
+    internal static string Owner(DcaArchitecture arch, IType type)
     {
-        if (type.IsAssignableTo(typeof(IDomainEvent).FullName!)) return "DCA-ADV-004";
-        if (type.IsAssignableTo(typeof(IDomainService).FullName!)) return "DCA-ADV-011";
-        if (type.IsAssignableTo(typeof(IFactory).FullName!)) return "DCA-ADV-015";
-        return type.Name.EndsWith("Specification", StringComparison.Ordinal) ? "DCA-ADV-018" : "DCA-ONI-003";
+        var markers = arch.Layout.Markers;
+        if (type.IsAssignableTo(markers.DomainEvent)) return "DCA-ADV-004";
+        if (type.IsAssignableTo(markers.DomainService)) return "DCA-ADV-011";
+        if (type.IsAssignableTo(markers.Factory)) return "DCA-ADV-015";
+        return AdvancedPatternRules.IsSpecificationRole(arch, type)
+            || type.Name.EndsWith(arch.Layout.SpecificationSuffix, StringComparison.Ordinal)
+            ? "DCA-ADV-018"
+            : "DCA-ONI-003";
     }
 
     internal static void Check(DcaArchitecture arch, string id)
     {
         var roles = arch.Layout.FrameworkTypes;
         var violations = new List<string>();
-        foreach (var type in arch.Types.Where(t => t is not Interface && Owner(t) == id
+        foreach (var type in arch.Types.Where(t => t is not Interface && Owner(arch, t) == id
             && Regex.IsMatch(t.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainPatterns()))))
         {
             if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns()))) continue;
@@ -196,13 +200,6 @@ internal static class DomainMetadata
     }
 }
 ```
-
-## Related mentions (heuristic)
-
-- [DomainEvent](/marker/tactical/domainevent.md)
-- [DomainService](/marker/tactical/domainservice.md)
-- [Factory](/marker/tactical/factory.md)
-- [Specification<T>](/marker/tactical/specification.md)
 
 ## Configured by
 

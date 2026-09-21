@@ -21,13 +21,15 @@ evidence_for: "/rule/usecase/dca-use-012.md#pathistransactional"
       JavaCodeUnit entry,
       JavaCodeUnit publisher,
       IntraClassCalls calls,
-      List<String> transactional) {
+      List<String> transactional,
+      DcaMarkers markers) {
     if (AnnotationRoles.isMetaAnnotatedWithAny(item, transactional)) {
       return true;
     }
     Predicate<JavaCodeUnit> uncovered =
         unit ->
-            !AnnotationRoles.isMetaAnnotatedWithAny(unit, transactional) && !callsBoundary(unit);
+            !AnnotationRoles.isMetaAnnotatedWithAny(unit, transactional)
+                && !callsBoundary(unit, markers);
     return !calls.reachableThrough(entry, uncovered).contains(publisher);
   }
 ```

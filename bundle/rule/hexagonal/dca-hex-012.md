@@ -48,7 +48,7 @@ DcaRule.of(
                 .resideInAnyPackage(arch.allIncomingAdapterPatterns())
                 .should()
                 .dependOnClassesThat()
-                .areAssignableTo(DomainService.class)
+                .areAssignableTo(arch.layout().markers().domainService())
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root, event consumers"
@@ -58,12 +58,13 @@ DcaRule.of(
             + " interface, any sub-interface of it and every class implementing one. A domain"
             + " class without the marker is not a domain service by this rule. Injecting it,"
             + " calling it or naming it in a signature all count as a dependency. An empty"
-            + " selection passes.")
+            + " selection passes.",
+        "move the collaboration into the use case and carry its outcome in the result")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -83,7 +84,7 @@ DcaRule.Check(
             {
                 var services = adapter.Dependencies
                     .Select(d => d.Target)
-                    .Where(t => !t.IsGenericParameter && IsAssignableTo(arch, t, typeof(IDomainService)))
+                    .Where(t => !t.IsGenericParameter && IsAssignableTo(arch, t, arch.Layout.Markers.DomainService))
                     .Select(t => t.FullName);
                 var runtime = arch.RuntimeType(adapter);
                 if (runtime is not null)
@@ -92,7 +93,7 @@ DcaRule.Check(
                         .GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                         .SelectMany(c => c.GetParameters())
                         .Select(p => p.ParameterType)
-                        .Where(t => typeof(IDomainService).IsAssignableFrom(t))
+                        .Where(t => DcaMarkers.IsAssignableToByName(t, arch.Layout.Markers.DomainService))
                         .Select(t => t.FullName!));
                 }
 

@@ -4,7 +4,7 @@ id: DCA-ERR-002
 title: Domain and use-case exceptions reside in the layer whose failure they name
 rule: The base type states which layer owns the failure; declaring it elsewhere puts the vocabulary of that layer outside it and lets an adapter invent failures the application never reports.
 constraint: Domain and use-case exceptions reside in the layer whose failure they name.
-selects: "Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, except the two base types themselves and anything else in the building-blocks package."
+selects: "Classes anywhere on the classpath under scan that are assignable to the domain-exception or the use-case-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed."
 checks: "A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of UseCaseException in <module>.application... Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-002"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules
 
 ## Selection
 
-Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, except the two base types themselves and anything else in the building-blocks package.
+Classes anywhere on the classpath under scan that are assignable to the domain-exception or the use-case-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed.
 
 ## Check
 
@@ -43,13 +43,14 @@ DcaRule.check(
         arch -> {
           CollectedViolations collected =
               CollectedViolations.withHeader(
-                  "DCA-ERR-002: an exception resides outside the layer its base type names");
+                  "An exception resides outside the layer its base type names");
           collected.addAll(
               classes()
                   .that()
-                  .areAssignableTo(DomainException.class)
+                  .areAssignableTo(arch.layout().markers().domainException())
                   .and()
-                  .resideOutsideOfPackage(DcaLayout.BUILDING_BLOCKS_PACKAGE)
+                  .resideOutsideOfPackages(
+                      arch.layout().markers().declaringPackagePatterns().toArray(String[]::new))
                   .should()
                   .resideInAnyPackage(arch.allDomainPatterns())
                   .allowEmptyShould(true),
@@ -58,9 +59,10 @@ DcaRule.check(
           collected.addAll(
               classes()
                   .that()
-                  .areAssignableTo(UseCaseException.class)
+                  .areAssignableTo(arch.layout().markers().useCaseException())
                   .and()
-                  .resideOutsideOfPackage(DcaLayout.BUILDING_BLOCKS_PACKAGE)
+                  .resideOutsideOfPackages(
+                      arch.layout().markers().declaringPackagePatterns().toArray(String[]::new))
                   .should()
                   .resideInAnyPackage(arch.allApplicationPatterns())
                   .allowEmptyShould(true),
@@ -69,9 +71,10 @@ DcaRule.check(
           collected.throwIfAny();
         })
     .selecting(
-        "Classes anywhere on the classpath under scan that are assignable to DomainException or"
-            + " to UseCaseException, except the two base types themselves and anything else in"
-            + " the building-blocks package.")
+        "Classes anywhere on the classpath under scan that are assignable to the domain-exception"
+            + " or the use-case-exception role, except the vocabulary's own code: the packages the"
+            + " configured role types live in are excluded, so a project's own base class is not"
+            + " reported as residing outside a layer it never claimed.")
     .checking(
         "A subtype of DomainException resides in <module>.domain.. of some module root, a"
             + " subtype of UseCaseException in <module>.application... Both findings are"
@@ -162,7 +165,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `allDomainPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `allDomainPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -180,18 +183,18 @@ DcaRule.Check(
         foreach (var type in ProjectExceptions(arch))
         {
             var ns = type.Namespace?.FullName ?? "";
-            if (IsAssignableTo(type, typeof(DomainException)) && !domain.IsMatch(ns))
+            if (IsAssignableTo(type, arch.Layout.Markers.DomainException) && !domain.IsMatch(ns))
             {
                 violations.Add($"{type.FullName} is a domain exception outside the domain layer");
             }
 
-            if (IsAssignableTo(type, typeof(UseCaseException)) && !application.IsMatch(ns))
+            if (IsAssignableTo(type, arch.Layout.Markers.UseCaseException) && !application.IsMatch(ns))
             {
                 violations.Add($"{type.FullName} is a use-case exception outside the application layer");
             }
         }
 
-        DcaRule.Fail("DCA-ERR-002: an exception resides outside the layer its base type names", violations);
+        DcaRule.Fail("An exception resides outside the layer its base type names", violations);
     })
     .Selecting(
         "Types anywhere under the root namespace that are assignable to DomainException or to "

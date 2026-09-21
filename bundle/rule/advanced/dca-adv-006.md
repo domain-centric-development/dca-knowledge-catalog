@@ -29,7 +29,7 @@ Name heuristic: declared or inherited fields named schemaVersion, eventVersion o
 
 **Selection.** Non-interface types anywhere under scan that are assignable to IIntegrationEvent.
 
-**Check.** Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. The heuristic cannot infer business meaning; an empty selection passes.
+**Check.** Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. The heuristic cannot infer business meaning; an empty selection passes.
 
 ## Implementation
 
@@ -43,7 +43,9 @@ DcaRule.check(
           List<String> violations =
               violations(
                   arch,
-                  c -> c.isAssignableTo(IntegrationEvent.class) && !c.isInterface(),
+                  c ->
+                      c.isAssignableTo(arch.layout().markers().integrationEvent())
+                          && !c.isInterface(),
                   AdvancedPatternRules::hasVersionField,
                   c ->
                       c.getName()
@@ -93,7 +95,7 @@ private static void failIfAny(List<String> violations, String header) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -107,13 +109,13 @@ DcaRule.Check(
             + " single source of truth:",
         Violations(
             arch,
-            t => t is not Interface && IsIntegrationEvent(t),
+            t => t is not Interface && IsIntegrationEvent(t, arch.Layout.Markers),
             t => HasVersionField(arch, t),
             t => $"{t.FullName} carries an explicit schema-version field — declare the version in"
                 + " [IntegrationEventType] instead")))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IIntegrationEvent.")
-    .Checking("Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. The heuristic cannot infer business meaning; an empty selection passes.")
+    .Checking("Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. The heuristic cannot infer business meaning; an empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

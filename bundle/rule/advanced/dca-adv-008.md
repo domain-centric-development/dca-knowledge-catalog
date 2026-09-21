@@ -5,7 +5,7 @@ title: Domain Events must have a timestamp field
 rule: "An event records something that happened — without a timestamp the fact cannot be ordered, replayed or audited."
 constraint: Domain Events must have a timestamp field.
 selects: "Non-interface classes anywhere on the classpath under scan that are assignable to DomainEvent. IntegrationEvent does not extend DomainEvent, so an integration event is selected only when it also implements DomainEvent."
-checks: "At least one field - declared by the class or inherited from a supertype, static or not, of any name - has the raw type java.time.Instant, java.time.LocalDateTime or java.time.ZonedDateTime; a record component of one of these types counts. OffsetDateTime, LocalDate, long or Date fields do not satisfy it, and a timestamp method without a backing field does not either. Every offender is reported in one violation; an empty selection passes."
+checks: "At least one field - declared by the class or inherited from a supertype, static or not, of any name - has one of the configured timestamp types, by default java.time.Instant, OffsetDateTime, ZonedDateTime or LocalDateTime; a record component of one of these types counts. LocalDate, long or Date fields do not satisfy it, and a timestamp method without a backing field does not either - which is what the rule is for, because the marker already forces the accessor. A project whose own event vocabulary wraps the timestamp in a value object names that type with withTimestampTypes. Every offender is reported in one violation; an empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-008"
 status: enforced
 rule_set: advanced
@@ -23,13 +23,13 @@ Non-interface classes anywhere on the classpath under scan that are assignable t
 
 ## Check
 
-At least one field - declared by the class or inherited from a supertype, static or not, of any name - has the raw type java.time.Instant, java.time.LocalDateTime or java.time.ZonedDateTime; a record component of one of these types counts. OffsetDateTime, LocalDate, long or Date fields do not satisfy it, and a timestamp method without a backing field does not either. Every offender is reported in one violation; an empty selection passes.
+At least one field - declared by the class or inherited from a supertype, static or not, of any name - has one of the configured timestamp types, by default java.time.Instant, OffsetDateTime, ZonedDateTime or LocalDateTime; a record component of one of these types counts. LocalDate, long or Date fields do not satisfy it, and a timestamp method without a backing field does not either - which is what the rule is for, because the marker already forces the accessor. A project whose own event vocabulary wraps the timestamp in a value object names that type with withTimestampTypes. Every offender is reported in one violation; an empty selection passes.
 
 ## .NET reading
 
 **Selection.** Non-interface types anywhere under scan that are assignable to IDomainEvent. IIntegrationEvent does not extend IDomainEvent, so an integration event is selected only when it also implements IDomainEvent.
 
-**Check.** At least one field - declared by the type or inherited from a base type, static or not, of any name - has the type System.DateTimeOffset or System.DateTime; an auto-property or positional record parameter of one of these types counts through its backing field. DateOnly, TimeSpan, long or string fields do not satisfy it, and a computed property without a backing field does not either. Every offender is reported in one violation; an empty selection passes.
+**Check.** At least one field - declared by the type or inherited from a base type, static or not, of any name - has one of the configured timestamp types, by default System.DateTimeOffset or System.DateTime; an auto-property or positional record parameter of one of these types counts through its backing field. DateOnly, TimeSpan, long or string fields do not satisfy it, and a computed property without a backing field does not either - which is what the rule is for, because the marker already forces the accessor; a project whose own event vocabulary wraps the timestamp in a value type names that type with WithTimestampTypes. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. Every offender is reported in one violation; an empty selection passes.
 
 ## Implementation
 
@@ -43,8 +43,10 @@ DcaRule.check(
           List<String> violations =
               violations(
                   arch,
-                  c -> c.isAssignableTo(DomainEvent.class) && !c.isInterface(),
-                  c -> !hasTimestampField(c),
+                  c ->
+                      c.isAssignableTo(arch.layout().markers().domainEvent())
+                          && !c.isInterface(),
+                  c -> !hasTimestampField(c, arch.layout().timestampTypes()),
                   c -> c.getName() + " does not have a timestamp field");
           failIfAny(
               violations,
@@ -56,10 +58,13 @@ DcaRule.check(
             + " also implements DomainEvent.")
     .checking(
         "At least one field - declared by the class or inherited from a supertype, static or not, of any"
-            + " name - has the raw type java.time.Instant, java.time.LocalDateTime or java.time.ZonedDateTime;"
-            + " a record component of one of these types counts. OffsetDateTime, LocalDate, long or Date"
-            + " fields do not satisfy it, and a timestamp method without a backing field does not either."
-            + " Every offender is reported in one violation; an empty selection passes.")
+            + " name - has one of the configured timestamp types, by default java.time.Instant,"
+            + " OffsetDateTime, ZonedDateTime or LocalDateTime; a record component of one of these types"
+            + " counts. LocalDate, long or Date fields do not satisfy it, and a timestamp method without a"
+            + " backing field does not either - which is what the rule is for, because the marker already"
+            + " forces the accessor. A project whose own event vocabulary wraps the timestamp in a value"
+            + " object names that type with withTimestampTypes. Every offender is reported in one"
+            + " violation; an empty selection passes.")
 ```
 
 ## Helpers
@@ -85,13 +90,9 @@ private static List<String> violations(
 ### `hasTimestampField`
 
 ```java
-private static boolean hasTimestampField(JavaClass eventClass) {
+private static boolean hasTimestampField(JavaClass eventClass, List<String> timestampTypes) {
   return eventClass.getAllFields().stream()
-      .anyMatch(
-          f ->
-              f.getRawType().isEquivalentTo(Instant.class)
-                  || f.getRawType().isEquivalentTo(LocalDateTime.class)
-                  || f.getRawType().isEquivalentTo(ZonedDateTime.class));
+      .anyMatch(f -> timestampTypes.contains(f.getRawType().getName()));
 }
 ```
 
@@ -107,7 +108,7 @@ private static void failIfAny(List<String> violations, String header) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -120,7 +121,7 @@ DcaRule.Check(
         "Domain Events must have a timestamp field (when did the event occur?):",
         Violations(
             arch,
-            t => t is not Interface && IsDomainEvent(t),
+            t => t is not Interface && IsDomainEvent(t, arch.Layout.Markers),
             t => !HasTimestampField(arch, t),
             t => $"{t.FullName} does not have a timestamp field")))
     .Selecting(
@@ -129,11 +130,17 @@ DcaRule.Check(
         + "when it also implements IDomainEvent.")
     .Checking(
         "At least one field - declared by the type or inherited from a base type, static or not, "
-        + "of any name - has the type System.DateTimeOffset or System.DateTime; an auto-property or "
+        + "of any name - has one of the configured timestamp types, by default System.DateTimeOffset "
+        + "or System.DateTime; an auto-property or "
         + "positional record parameter of one of these types counts through its backing field. "
         + "DateOnly, TimeSpan, long or string fields do not satisfy it, and a computed property "
-        + "without a backing field does not either. Every offender is reported in one violation; an "
-        + "empty selection passes.")
+        + "without a backing field does not either - which is what the rule is for, because the "
+        + "marker already forces the accessor; a project whose own event vocabulary wraps the "
+        + "timestamp in a value type names that type with WithTimestampTypes. A type the loader "
+        + "cannot resolve is read "
+        + "through the ArchUnitNET member model instead, which does not carry the backing fields "
+        + "of auto-properties. Every offender is reported in one violation; an empty selection "
+        + "passes.")
 ```
 
 ## Related mentions (heuristic)

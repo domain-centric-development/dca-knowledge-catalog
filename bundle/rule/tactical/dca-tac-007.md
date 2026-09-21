@@ -44,7 +44,7 @@ DcaRule.check(
           for (JavaClass entity : nonRootEntities(arch)) {
             for (JavaField field : TypeInspection.instanceFields(entity)) {
               for (JavaClass involved : TypeInspection.involvedTypes(field, entity)) {
-                if (isConcreteAggregateRoot(involved)) {
+                if (isConcreteAggregateRoot(involved, arch.layout().markers())) {
                   violations.add(
                       fieldDescription(entity, field, involved)
                           + " which is an aggregate root");
@@ -72,8 +72,8 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(Entity.class)
-              && !c.isAssignableTo(AggregateRoot.class)
+          c.isAssignableTo(arch.layout().markers().entity())
+              && !c.isAssignableTo(arch.layout().markers().aggregateRoot())
               && !c.isInterface());
 }
 ```
@@ -81,8 +81,8 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
 ### `isConcreteAggregateRoot`
 
 ```java
-private static boolean isConcreteAggregateRoot(JavaClass type) {
-  return type.isAssignableTo(AggregateRoot.class);
+private static boolean isConcreteAggregateRoot(JavaClass type, DcaMarkers markers) {
+  return type.isAssignableTo(markers.aggregateRoot());
 }
 ```
 
@@ -241,7 +241,7 @@ private static void collect(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -254,7 +254,7 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var entity in NonRootEntities(arch))
         {
-            foreach (var member in DataMembers(arch, entity))
+            foreach (var member in InstanceDataMembers(arch, entity))
             {
                 if (IsConcreteAggregateRoot(arch, member.Type))
                 {

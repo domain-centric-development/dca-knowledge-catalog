@@ -42,7 +42,7 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(DomainEvent.class)
+                .areAssignableTo(arch.layout().markers().domainEvent())
                 .and()
                 .areNotInterfaces()
                 .should(TypeInspection.haveImmutableShape())
@@ -108,6 +108,10 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
         .toList();
   }
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -120,7 +124,7 @@ DcaRule.Check(
         "Domain Events must have immutable instance state:",
         Violations(
             arch,
-            t => t is not Interface && IsDomainEvent(t),
+            t => t is not Interface && IsDomainEvent(t, arch.Layout.Markers),
             t => !TacticalPatternRules.IsImmutableShape(t),
             t => $"{t.FullName} implements IDomainEvent but has mutable shape")))
     .Selecting(

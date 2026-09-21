@@ -11,9 +11,10 @@ evidence_for: "/rule/usecase/dca-use-009.md#eventfreeaggregaterepository"
 
 ```java
 static boolean repository(JavaClass repository, DcaArchitecture arch) {
+  DcaMarkers markers = arch.layout().markers();
   Type aggregate;
   try {
-    aggregate = aggregate(repository.reflect(), Map.of());
+    aggregate = aggregate(repository.reflect(), Map.of(), markers);
   } catch (LinkageError | RuntimeException failure) {
     return false;
   }
@@ -23,12 +24,12 @@ static boolean repository(JavaClass repository, DcaArchitecture arch) {
   JavaClass current = scanned.get(concrete.getName());
   if (current == null) return false;
   Set<String> hierarchy = new HashSet<>();
-  while (current != null && !platform(current.getName())) {
+  while (current != null && !platform(current.getName(), markers)) {
     if (!scanned.containsKey(current.getName())
-        || !noRegistration(current, scanned, new HashSet<>())) return false;
+        || !noRegistration(current, scanned, new HashSet<>(), markers)) return false;
     hierarchy.add(current.getName());
     current = current.getRawSuperclass().orElse(null);
   }
-  return noExternalRegistration(hierarchy, scanned);
+  return noExternalRegistration(hierarchy, scanned, markers);
 }
 ```

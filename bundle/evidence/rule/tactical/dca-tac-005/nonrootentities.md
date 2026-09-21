@@ -14,8 +14,8 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(Entity.class)
-              && !c.isAssignableTo(AggregateRoot.class)
+          c.isAssignableTo(arch.layout().markers().entity())
+              && !c.isAssignableTo(arch.layout().markers().aggregateRoot())
               && !c.isInterface());
 }
 ```

@@ -49,11 +49,12 @@ DcaRule.informational(
                 .test(type)) {
               continue;
             }
-            if (dependsOnAssignableTo(type, DomainException.class)
-                || dependsOnAssignableTo(type, UseCaseException.class)) {
+            if (dependsOnAssignableTo(type, arch.layout().markers().domainException())
+                || dependsOnAssignableTo(type, arch.layout().markers().useCaseException())) {
               packagesThatName.add(type.getPackageName());
             }
-            if (!type.isInterface() && dependsOnAssignableTo(type, InputPort.class)) {
+            if (!type.isInterface()
+                && dependsOnAssignableTo(type, arch.layout().markers().inputPort())) {
               drivingByPackage
                   .computeIfAbsent(type.getPackageName(), pkg -> new ArrayList<>())
                   .add(type);
@@ -91,7 +92,7 @@ DcaRule.informational(
 ### `dependsOnAssignableTo`
 
 ```java
-private static boolean dependsOnAssignableTo(JavaClass type, Class<?> target) {
+private static boolean dependsOnAssignableTo(JavaClass type, String target) {
   return type.getDirectDependenciesFromSelf().stream()
       .anyMatch(dependency -> dependency.getTargetClass().isAssignableTo(target));
 }
@@ -99,7 +100,7 @@ private static boolean dependsOnAssignableTo(JavaClass type, Class<?> target) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -123,12 +124,12 @@ DcaRule.Informational(
             }
 
             var targets = type.Dependencies.Select(d => d.Target).ToList();
-            if (targets.Any(t => IsAssignableTo(t, typeof(DomainException)) || IsAssignableTo(t, typeof(UseCaseException))))
+            if (targets.Any(t => IsAssignableTo(t, arch.Layout.Markers.DomainException) || IsAssignableTo(t, arch.Layout.Markers.UseCaseException)))
             {
                 namespacesThatName.Add(ns);
             }
 
-            if (type is not Interface && targets.Any(t => IsAssignableTo(t, typeof(IInputPort))))
+            if (type is not Interface && targets.Any(t => IsAssignableTo(t, arch.Layout.Markers.InputPort)))
             {
                 if (!driving.TryGetValue(ns, out var names))
                 {

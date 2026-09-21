@@ -43,13 +43,13 @@ DcaRule.of(
                 .that()
                 .areInterfaces()
                 .and()
-                .haveSimpleNameEndingWith(STORE_SUFFIX)
+                .haveSimpleNameEndingWith(arch.layout().storeSuffix())
                 .and()
-                .doNotHaveSimpleName(STORE_SUFFIX)
+                .doNotHaveSimpleName(arch.layout().storeSuffix())
                 .should()
-                .beAssignableTo(Store.class)
+                .beAssignableTo(arch.layout().markers().store())
                 .andShould()
-                .notBeAssignableTo(Repository.class)
+                .notBeAssignableTo(arch.layout().markers().repository())
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces anywhere under scan whose simple name ends with Store, the marker "
@@ -59,6 +59,10 @@ DcaRule.of(
             + "Repository; both must hold. An interface not named *Store is never reported; "
             + "an empty selection passes.")
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -71,17 +75,17 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var candidate in arch.Interfaces)
         {
-            if (!HasSuffixButIsNotMarker(candidate, StoreSuffix))
+            if (!HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, candidate, typeof(IStore)))
+            if (!IsAssignableTo(arch, candidate, arch.Layout.Markers.Store))
             {
                 violations.Add($"{candidate.FullName} is named *Store but does not extend {nameof(IStore)}");
             }
 
-            if (IsAssignableTo(arch, candidate, typeof(IRepository)))
+            if (IsAssignableTo(arch, candidate, arch.Layout.Markers.Repository))
             {
                 violations.Add($"{candidate.FullName} is named *Store but extends {nameof(IRepository)}");
             }

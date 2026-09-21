@@ -12,7 +12,6 @@ APPLIES_TO = {
     "DCA-ADV-001": ("DomainEvent",),
     "DCA-ADV-005": ("IntegrationEvent",),
     "DCA-ADV-006": ("IntegrationEvent",),
-    "DCA-ADV-009": ("DomainService",),
     "DCA-ADV-010": ("DomainService",),
     "DCA-USE-001": ("InputPort",),
 }

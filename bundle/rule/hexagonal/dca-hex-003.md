@@ -50,7 +50,7 @@ DcaRule.of(
                         layout.frameworkAnnotations().restController()))
                 .should()
                 .dependOnClassesThat()
-                .areAssignableTo(Repository.class)
+                .areAssignableTo(arch.layout().markers().repository())
                 .allowEmptyShould(true))
     .selecting(
         "Classes anywhere on the classpath under scan whose simple name ends with the"
@@ -96,6 +96,10 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
       : predicate;
 }
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -105,7 +109,7 @@ DcaRule.Of(
         "Controllers must go through use cases (input ports), never directly to repositories",
         arch => Classes().That().FollowCustomPredicate(c => IsController(c, Layout), "are controllers")
             .Should().NotDependOnAnyTypesThat()
-            .FollowCustomPredicate(t => t.IsAssignableTo(typeof(IRepository).FullName!), "are repositories"))
+            .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.Repository), "are repositories"))
     .Selecting(
         "Controller classes anywhere in the loaded assemblies: a class whose name ends with"
             + " the configured controller suffix or the configured REST-controller suffix, one deriving"

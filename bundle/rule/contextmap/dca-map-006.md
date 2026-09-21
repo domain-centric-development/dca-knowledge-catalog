@@ -9,10 +9,10 @@ checks: "The set of declared edges 'context :: channel' equals the set of allowe
 enforced_by: "ContextMapRules#DCA-MAP-006"
 status: enforced
 rule_set: contextmap
-implementations: [java]
+implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
-not_applicable_dotnet: Upstream declarations and the module declaration's allowed dependencies must agree — .NET has no module-declaration attribute; project boundaries take that role
+resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
 ---
 
 # Upstream declarations and the module declaration's allowed dependencies must agree
@@ -24,6 +24,12 @@ Every package carrying @BoundedContext, provided the layout configures at least 
 ## Check
 
 The set of declared edges 'context :: channel' equals the set of allowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored. A context that declares @Upstream edges but whose package-info carries none of the configured module declaration annotations is reported once, as a missing module declaration with unknown allowed dependencies - its edges are not compared; a context without @Upstream declarations and without a module declaration has nothing to compare and passes.
+
+## .NET reading
+
+**Selection.** Every namespace carrying [BoundedContext], provided the layout configures at least one module declaration attribute (a module system's per-module declaration) that is in the loaded assemblies; reads its [Upstream] declarations (Context, Via; Planned included) and, reflectively, the AllowedDependencies property of every configured module declaration the marker class carries. Without a configured and loadable module declaration the rule selects nothing and passes - which is the default here, because .NET draws module boundaries with projects and no preset names an attribute.
+
+**Check.** The set of declared edges 'context :: channel' equals the set of AllowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored. A context that declares [Upstream] edges but whose marker class carries none of the configured module declaration attributes is reported once, as a missing module declaration with unknown allowed dependencies - its edges are not compared; a context without [Upstream] declarations and without a module declaration has nothing to compare and passes.
 
 ## Implementation
 
@@ -276,6 +282,79 @@ private static String channelName(DcaArchitecture arch, Upstream.Consumes channe
 ## Architecture queries
 
 [DcaArchitecture](/reference/architecture.md) methods the rule relies on: `boundedContextPackages()`, `contextName()`, `layout()`, `packageAnnotation()`, `packageAnnotations()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+### C# expression
+
+```csharp
+DcaRule.Check(
+        "DCA-MAP-006",
+        "Upstream declarations and the module declaration's allowed dependencies must agree",
+        "Neither the context map nor the module boundary may know more than the other — an edge"
+            + " that exists only on one side is stale",
+        arch =>
+        {
+            var declarations = ModuleDeclarationTypes(arch);
+            if (declarations.Count == 0)
+            {
+                return;
+            }
+
+            var violations = new List<string>();
+            var moduleNames = ModuleNames(arch);
+            foreach (var ns in arch.BoundedContextNamespaces)
+            {
+                var source = ShortName(arch, ns);
+                var declared = DeclaredEdges(arch, ns);
+                var carried = ModuleDeclarationsOn(arch, ns, declarations);
+                if (declared.Count > 0 && carried.Count == 0)
+                {
+                    violations.Add("Context '" + source + "': module declaration missing on '" + source
+                        + "', allowed dependencies unknown - it declares [Upstream] edges "
+                        + Listed(declared)
+                        + " but its marker class carries none of the configured module declaration"
+                        + " attributes; declare the module there so both sides can be compared");
+                    continue;
+                }
+
+                var allowed = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var entry in AllowedDependencies(carried))
+                {
+                    var normalized = Regex.Replace(entry, @"\s*::\s*", " :: ").Trim();
+                    if (normalized.Contains(" :: ", StringComparison.Ordinal)
+                        && moduleNames.Contains(normalized.Split(" :: ")[0]))
+                    {
+                        allowed.Add(normalized);
+                    }
+                }
+
+                if (!declared.SetEquals(allowed))
+                {
+                    violations.Add("Context '" + source + "': [Upstream] declarations " + Listed(declared)
+                        + " and the module declaration's allowedDependencies named-interface entries "
+                        + Listed(allowed)
+                        + " must describe the same edges — neither side may know more than the other");
+                }
+            }
+
+            DcaRule.Fail("Upstream declarations and the module declaration must agree", violations);
+        })
+    .Selecting(
+        "Every namespace carrying [BoundedContext], provided the layout configures at least one"
+            + " module declaration attribute (a module system's per-module declaration) that is in"
+            + " the loaded assemblies; reads its [Upstream] declarations (Context, Via; Planned"
+            + " included) and, reflectively, the AllowedDependencies property of every configured"
+            + " module declaration the marker class carries. Without a configured and loadable"
+            + " module declaration the rule selects nothing and passes - which is the default here,"
+            + " because .NET draws module boundaries with projects and no preset names an attribute.")
+    .Checking(
+        "The set of declared edges 'context :: channel' equals the set of AllowedDependencies"
+            + " entries of the form 'module :: named-interface' whose module is a bounded context,"
+            + " whitespace around '::' normalized. Entries without '::' and entries naming a"
+            + " non-context module are ignored. A context that declares [Upstream] edges but whose"
+            + " marker class carries none of the configured module declaration attributes is"
+            + " reported once, as a missing module declaration with unknown allowed dependencies -"
+            + " its edges are not compared; a context without [Upstream] declarations and without a"
+            + " module declaration has nothing to compare and passes.")
+```
 
 ## Related mentions (heuristic)
 
@@ -286,3 +365,21 @@ private static String channelName(DcaArchitecture arch, Upstream.Consumes channe
 
 - [DcaArchitecture](/reference/architecture.md)
 - [DcaLayout](/reference/layout.md)
+
+## Evidence slices
+
+- [Overview](/evidence/rule/contextmap/dca-map-006/overview.md)
+- [`moduleAnnotationTypes`](/evidence/rule/contextmap/dca-map-006/moduleannotationtypes.md)
+- [`moduleNames`](/evidence/rule/contextmap/dca-map-006/modulenames.md)
+- [`declaredEdges`](/evidence/rule/contextmap/dca-map-006/declarededges.md)
+- [`carriesModuleDeclaration`](/evidence/rule/contextmap/dca-map-006/carriesmoduledeclaration.md)
+- [`allowedDependencies`](/evidence/rule/contextmap/dca-map-006/alloweddependencies.md)
+- [`CollectedViolations.check`](/evidence/rule/contextmap/dca-map-006/collectedviolations-check.md)
+- [`CollectedViolations.withoutHeader`](/evidence/rule/contextmap/dca-map-006/collectedviolations-withoutheader.md)
+- [`CollectedViolations.isEmpty`](/evidence/rule/contextmap/dca-map-006/collectedviolations-isempty.md)
+- [`CollectedViolations.add`](/evidence/rule/contextmap/dca-map-006/collectedviolations-add.md)
+- [`CollectedViolations.require`](/evidence/rule/contextmap/dca-map-006/collectedviolations-require.md)
+- [`CollectedViolations.throwIfAny`](/evidence/rule/contextmap/dca-map-006/collectedviolations-throwifany.md)
+- [`channelName`](/evidence/rule/contextmap/dca-map-006/channelname.md)
+- [`CollectedViolations.addAll`](/evidence/rule/contextmap/dca-map-006/collectedviolations-addall.md)
+- [C# expression](/evidence/rule/contextmap/dca-map-006/c-expression.md)

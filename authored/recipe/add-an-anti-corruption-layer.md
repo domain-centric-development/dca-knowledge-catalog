@@ -4,7 +4,7 @@ title: Add an anti-corruption layer
 tags: [recipe, strategic, anti-corruption-layer]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/strategic/dca-str-009.md, /rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /guide/integration-patterns.md, /guide/package-structure.md]
+evidence: [/rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /guide/integration-patterns.md, /guide/package-structure.md]
 ---
 
 Protect your domain from a foreign model — another bounded context or an external system. An anti-corruption layer (ACL) is a translation boundary: your context speaks its own ubiquitous language, and the ACL adapter converts to and from the foreign contract so the foreign model never leaks inward.
@@ -24,7 +24,6 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 
 ## Rules to satisfy (build-time checklist)
 
-- [Anti-corruption layer components must be in acl packages](/rule/strategic/dca-str-009.md)
 - [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/dca-str-006.md)
 - [Event listeners consuming integration events should use an anti-corruption layer](/rule/strategic/dca-str-010.md)
 - [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/dca-str-006.md)

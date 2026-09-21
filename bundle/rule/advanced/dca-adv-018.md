@@ -4,7 +4,7 @@ id: DCA-ADV-018
 title: Specifications must not carry prohibited framework metadata
 rule: "Domain objects carry no metadata for container management, persistence or transaction coordination."
 constraint: Specifications must not carry prohibited framework metadata.
-selects: "Non-interface specifications in domain packages. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types."
+selects: "Non-interface types in domain packages that are assignable to the configured specification role or whose simple name ends with Specification. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types."
 checks: "Direct or meta-annotations: types prohibit injectable, persistenceEntity and transactional roles; fields prohibit injectionSite and persistenceMapping; methods prohibit transactional and eventListener, plus injectionSite except on events; constructors prohibit injectionSite. Unclassified annotations are allowed by this check. Empty configured roles select no metadata; wiring is not established."
 enforced_by: "AdvancedPatternRules#DCA-ADV-018"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRul
 
 ## Selection
 
-Non-interface specifications in domain packages. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types.
+Non-interface types in domain packages that are assignable to the configured specification role or whose simple name ends with Specification. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types.
 
 ## Check
 
@@ -27,7 +27,7 @@ Direct or meta-annotations: types prohibit injectable, persistenceEntity and tra
 
 ## .NET reading
 
-**Selection.** Non-interface specifications in domain namespaces. Exclusive ownership: events, services, factories, specifications, then domain-model types.
+**Selection.** Non-interface types in domain namespaces that are assignable to the configured specification role or whose simple name ends with Specification. Exclusive ownership: events, services, factories, specifications, then domain-model types.
 
 **Check.** Configured attribute namespaces classify the attribute type or any base type: types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and, except on events, injection; constructors prohibit injection. There is no default event-listener attribute role. Unclassified attributes are allowed; runtime types that cannot load are skipped.
 
@@ -40,7 +40,7 @@ DcaRule.check(
         "Domain objects carry no metadata for container management, persistence or transaction coordination",
         arch -> DomainMetadata.check(arch, "DCA-ADV-018"))
     .selecting(
-        "Non-interface specifications in domain packages. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types.")
+        "Non-interface types in domain packages that are assignable to the configured specification role or whose simple name ends with Specification. Metadata ownership is exclusive: events, services, factories, specifications, then domain.model types.")
     .checking(
         "Direct or meta-annotations: types prohibit injectable, persistenceEntity and transactional roles; fields prohibit injectionSite and persistenceMapping; methods prohibit transactional and eventListener, plus injectionSite except on events; constructors prohibit injectionSite. Unclassified annotations are allowed by this check. Empty configured roles select no metadata; wiring is not established.")
 ```
@@ -55,7 +55,7 @@ static void check(DcaArchitecture arch, String id) {
   List<String> violations = new ArrayList<>();
   for (JavaClass type : arch.classes()) {
     if (type.isInterface()
-        || !owner(type).equals(id)
+        || !owner(type, arch.layout().markers(), arch.layout().specificationSuffix()).equals(id)
         || !JavaClass.Predicates.resideInAnyPackage(arch.allDomainPatterns()).test(type))
       continue;
     if (id.equals("DCA-ONI-003")
@@ -99,12 +99,12 @@ static void check(DcaArchitecture arch, String id) {
 ### `DomainMetadata.owner`
 
 ```java
-static String owner(JavaClass type) {
-  String tactical = "dev.domaincentric.dca.buildingblocks.ddd.tactical.";
-  if (type.isAssignableTo(tactical + "DomainEvent")) return "DCA-ADV-004";
-  if (type.isAssignableTo(tactical + "DomainService")) return "DCA-ADV-011";
-  if (type.isAssignableTo(tactical + "Factory")) return "DCA-ADV-015";
-  if (type.getSimpleName().endsWith("Specification")) return "DCA-ADV-018";
+static String owner(JavaClass type, DcaMarkers markers, String specificationSuffix) {
+  if (type.isAssignableTo(markers.domainEvent())) return "DCA-ADV-004";
+  if (type.isAssignableTo(markers.domainService())) return "DCA-ADV-011";
+  if (type.isAssignableTo(markers.factory())) return "DCA-ADV-015";
+  if (type.isAssignableTo(markers.specification())
+      || type.getSimpleName().endsWith(specificationSuffix)) return "DCA-ADV-018";
   return "DCA-ONI-003";
 }
 ```
@@ -132,7 +132,7 @@ private static void inspect(
 DcaRule.Check("DCA-ADV-018", "Specifications must not carry prohibited framework metadata",
         "Domain objects carry no metadata for container management, persistence or transaction coordination",
         arch => DomainMetadata.Check(arch, "DCA-ADV-018"))
-    .Selecting("Non-interface specifications in domain namespaces. Exclusive ownership: events, services, factories, specifications, then domain-model types.")
+    .Selecting("Non-interface types in domain namespaces that are assignable to the configured specification role or whose simple name ends with Specification. Exclusive ownership: events, services, factories, specifications, then domain-model types.")
     .Checking("Configured attribute namespaces classify the attribute type or any base type: types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and, except on events, injection; constructors prohibit injection. There is no default event-listener attribute role. Unclassified attributes are allowed; runtime types that cannot load are skipped.")
 ```
 
@@ -153,19 +153,23 @@ namespace DomainCentric.ArchRules.Rules;
 /// <summary>Exclusive ownership and configurable role-by-target domain metadata policy.</summary>
 internal static class DomainMetadata
 {
-    internal static string Owner(IType type)
+    internal static string Owner(DcaArchitecture arch, IType type)
     {
-        if (type.IsAssignableTo(typeof(IDomainEvent).FullName!)) return "DCA-ADV-004";
-        if (type.IsAssignableTo(typeof(IDomainService).FullName!)) return "DCA-ADV-011";
-        if (type.IsAssignableTo(typeof(IFactory).FullName!)) return "DCA-ADV-015";
-        return type.Name.EndsWith("Specification", StringComparison.Ordinal) ? "DCA-ADV-018" : "DCA-ONI-003";
+        var markers = arch.Layout.Markers;
+        if (type.IsAssignableTo(markers.DomainEvent)) return "DCA-ADV-004";
+        if (type.IsAssignableTo(markers.DomainService)) return "DCA-ADV-011";
+        if (type.IsAssignableTo(markers.Factory)) return "DCA-ADV-015";
+        return AdvancedPatternRules.IsSpecificationRole(arch, type)
+            || type.Name.EndsWith(arch.Layout.SpecificationSuffix, StringComparison.Ordinal)
+            ? "DCA-ADV-018"
+            : "DCA-ONI-003";
     }
 
     internal static void Check(DcaArchitecture arch, string id)
     {
         var roles = arch.Layout.FrameworkTypes;
         var violations = new List<string>();
-        foreach (var type in arch.Types.Where(t => t is not Interface && Owner(t) == id
+        foreach (var type in arch.Types.Where(t => t is not Interface && Owner(arch, t) == id
             && Regex.IsMatch(t.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainPatterns()))))
         {
             if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns()))) continue;
@@ -199,9 +203,6 @@ internal static class DomainMetadata
 
 ## Related mentions (heuristic)
 
-- [DomainEvent](/marker/tactical/domainevent.md)
-- [DomainService](/marker/tactical/domainservice.md)
-- [Factory](/marker/tactical/factory.md)
 - [Specification<T>](/marker/tactical/specification.md)
 
 ## Configured by

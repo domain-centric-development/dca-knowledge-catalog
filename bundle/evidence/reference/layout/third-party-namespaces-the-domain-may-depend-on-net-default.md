@@ -10,7 +10,6 @@ evidence_for: "/reference/layout.md#third-party-namespaces-the-domain-may-depend
 ### Third-party namespaces the domain may depend on (.NET default)
 
 - `System`
-- `Microsoft.Extensions.Logging.Abstractions`
 - `DomainCentric.BuildingBlocks`
 
 Note the difference to Java: the whole `DomainCentric.BuildingBlocks` namespace is allowed, strategic and `Ports.In` markers included.

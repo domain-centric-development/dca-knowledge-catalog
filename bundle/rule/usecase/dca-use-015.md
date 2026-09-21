@@ -4,7 +4,7 @@ id: DCA-USE-015
 title: Use Case Result Models must not expose aggregate roots or entities
 rule: "A result is the use case's answer, not a handle on the model: identity and behaviour stay behind the port; values, enriched models and read models may cross. Checked transitively through nested records, part records anywhere in the application layer (application.shared included), generic type arguments (List<T>, Optional<T>, Map<K,V>) and inherited fields, a generic base class's type parameters resolved as the result binds them."
 constraint: Use Case Result Models must not expose aggregate roots or entities.
-selects: "Non-interface, non-nested classes in <module>.application.. whose simple name ends with Result."
+selects: "Non-interface, non-nested classes in <module>.application.. whose simple name ends with Result, types assignable to the value role excluded - a domain value object named *Result crosses the port as a value, as DCA-USE-006 already allows."
 checks: "No instance field - inherited ones included, walked through raw type and generic type arguments, and transitively into every record that lives in an application package - involves a type assignable to AggregateRoot or Entity. Records outside the application layer (domain value objects, read models) are not walked. Every offending path is reported."
 enforced_by: "UseCaseRules#DCA-USE-015"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 
 ## Selection
 
-Non-interface, non-nested classes in <module>.application.. whose simple name ends with Result.
+Non-interface, non-nested classes in <module>.application.. whose simple name ends with Result, types assignable to the value role excluded - a domain value object named *Result crosses the port as a value, as DCA-USE-006 already allows.
 
 ## Check
 
@@ -29,7 +29,7 @@ No instance field - inherited ones included, walked through raw type and generic
 
 **Selection.** Top-level classes and structs in each module application namespace ending in Result, excluding IValue types.
 
-**Check.** No public instance result member transitively through application part records and generic wrappers exposes IAggregateRoot or IEntity; classes and structs are checked. Domain values and read models are not traversed.
+**Check.** No instance result member of any visibility - the walk binds public and non-public members - transitively through application part records and generic wrappers exposes IAggregateRoot or IEntity; classes and structs are checked. Domain values and read models are not traversed. A type the loader cannot resolve is not walked.
 
 ## Implementation
 
@@ -45,9 +45,13 @@ DcaRule.check(
             + " the result binds them",
         arch -> checkResultsCarryNoIdentities(arch))
     .selecting(
-        "Non-interface, non-nested classes in <module>.application.. whose simple name ends with Result.")
+        "Non-interface, non-nested classes in <module>.application.. whose simple name ends"
+            + " with Result, types assignable to the value role excluded - a domain value"
+            + " object named *Result crosses the port as a value, as DCA-USE-006 already"
+            + " allows.")
     .checking(
-        "No instance field - inherited ones included, walked through raw type and generic type arguments, and transitively into every record that lives in an application package - involves a type assignable to AggregateRoot or Entity. Records outside the application layer (domain value objects, read models) are not walked. Every offending path is reported.")
+        "No instance field - inherited ones included, walked through raw type and generic type arguments, and transitively into every record that lives in an application package - involves a type assignable to AggregateRoot or Entity. Records outside the application layer (domain value objects, read models) are not walked. Every offending path is reported.",
+        "carry ids and primitives in a result, never an aggregate, an entity or a domain object")
 ```
 
 ## Helpers
@@ -61,6 +65,7 @@ private static void checkResultsCarryNoIdentities(DcaArchitecture arch) {
     if (result.isInterface()
         || result.isNestedClass()
         || !result.getSimpleName().endsWith("Result")
+        || result.isAssignableTo(arch.layout().markers().value())
         || !residesInAny(result, arch.allApplicationPatterns())) {
       continue;
     }
@@ -69,7 +74,8 @@ private static void checkResultsCarryNoIdentities(DcaArchitecture arch) {
         result,
         result.getSimpleName(),
         new ArrayDeque<>(),
-        violations);
+        violations,
+        arch.layout().markers());
   }
   if (!violations.isEmpty()) {
     throw new DcaRuleViolation(
@@ -106,7 +112,8 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
       JavaClass current,
       String path,
       Deque<String> recordsOnPath,
-      List<String> violations) {
+      List<String> violations,
+      DcaMarkers markers) {
     if (recordsOnPath.contains(current.getName())) {
       return;
     }
@@ -114,7 +121,7 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
     for (JavaField field : TypeInspection.instanceFields(current)) {
       String fieldPath = path + "." + field.getName();
       for (JavaClass involved : TypeInspection.involvedTypes(field, current)) {
-        String identity = identityKind(involved);
+        String identity = identityKind(involved, markers);
         if (identity != null) {
           violations.add(fieldPath + " : " + involved.getSimpleName() + " (" + identity + ")");
         } else if (isPartRecord(involved, applicationPatterns)) {
@@ -123,7 +130,8 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
               involved,
               fieldPath + " -> " + involved.getSimpleName(),
               recordsOnPath,
-              violations);
+              violations,
+              markers);
         }
       }
     }
@@ -135,12 +143,12 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
 
 ```java
 /** The marker a class carries into the result, or null when it is a value or plain type. */
-  private static String identityKind(JavaClass javaClass) {
-    if (javaClass.isAssignableTo(AggregateRoot.class)) {
-      return "AggregateRoot";
+  private static String identityKind(JavaClass javaClass, DcaMarkers markers) {
+    if (javaClass.isAssignableTo(markers.aggregateRoot())) {
+      return simpleName(markers.aggregateRoot());
     }
-    if (javaClass.isAssignableTo(Entity.class)) {
-      return "Entity";
+    if (javaClass.isAssignableTo(markers.entity())) {
+      return simpleName(markers.entity());
     }
     return null;
   }
@@ -198,6 +206,15 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
     Set<JavaClass> involved = new LinkedHashSet<>();
     collect(field.getType(), typeArgumentBindings(viewedFrom), involved, new HashSet<>());
     return new ArrayList<>(involved);
+  }
+```
+
+### `simpleName`
+
+```java
+/** The simple name of a configured marker, for a message a reader has to recognise. */
+  private static String simpleName(String fqn) {
+    return fqn.substring(fqn.lastIndexOf('.') + 1);
   }
 ```
 
@@ -282,7 +299,7 @@ private static void collect(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -296,13 +313,15 @@ DcaRule.Check(
         CheckResultsCarryNoIdentities)
     .Selecting("Top-level classes and structs in each module application namespace ending in Result, excluding IValue types.")
     .Checking(
-        "No public instance result member transitively through application part records and generic wrappers exposes IAggregateRoot or IEntity; classes and structs are checked. Domain values and read models are not traversed." )
+        "No instance result member of any visibility - the walk binds public and non-public members - "
+        + "transitively through application part records and generic wrappers exposes IAggregateRoot or "
+        + "IEntity; classes and structs are checked. Domain values and read models are not traversed. A "
+        + "type the loader cannot resolve is not walked.")
 ```
 
 ## Related mentions (heuristic)
 
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
-- [Entity<T, ID>](/marker/tactical/entity.md)
 
 ## Configured by
 

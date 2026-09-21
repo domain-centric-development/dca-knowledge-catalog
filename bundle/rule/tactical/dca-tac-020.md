@@ -43,7 +43,7 @@ DcaRule.of(
                 .that()
                 .areNotInterfaces()
                 .and()
-                .areAssignableTo(Store.class)
+                .areAssignableTo(arch.layout().markers().store())
                 .should()
                 .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
                 .allowEmptyShould(true))
@@ -57,7 +57,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -66,7 +66,7 @@ DcaRule.Check(
     "Store implementations must reside in the Adapter.Outgoing namespace",
     "Store implementations are outgoing adapters in bounded contexts",
     arch => RequireNamespace(
-        ConcreteTypesAssignableTo(arch, typeof(IStore)),
+        ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Store),
         DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns()), "Store implementations", "the outgoing adapter namespace"))
     .Selecting(
         "Non-interface types below the root namespace assignable to IStore, abstract "

@@ -53,5 +53,6 @@ clearing to the caller and is not the sanctioned form.
 ## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [Setup and Configuration](/guide/archunit-governance/setup-and-configuration.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [Building blocks, as the library defines them](/guide/elements/building-blocks-as-the-library-defines-them.md)

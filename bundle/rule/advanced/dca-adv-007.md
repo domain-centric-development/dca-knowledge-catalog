@@ -29,7 +29,7 @@ Name heuristic: declared or inherited fields named schemaVersion, eventVersion o
 
 **Selection.** Non-interface types anywhere under scan that are assignable to IDomainEvent but not to IIntegrationEvent. A type assignable to both is not selected.
 
-**Check.** Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. The heuristic cannot infer business meaning; an empty selection passes.
+**Check.** Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. The heuristic cannot infer business meaning; an empty selection passes.
 
 ## Implementation
 
@@ -44,8 +44,8 @@ DcaRule.check(
               violations(
                   arch,
                   c ->
-                      c.isAssignableTo(DomainEvent.class)
-                          && !c.isAssignableTo(IntegrationEvent.class)
+                      c.isAssignableTo(arch.layout().markers().domainEvent())
+                          && !c.isAssignableTo(arch.layout().markers().integrationEvent())
                           && !c.isInterface(),
                   AdvancedPatternRules::hasVersionField,
                   c ->
@@ -96,7 +96,7 @@ private static void failIfAny(List<String> violations, String header) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -110,14 +110,14 @@ DcaRule.Check(
             + " only for IIntegrationEvents:",
         Violations(
             arch,
-            t => t is not Interface && IsDomainEvent(t) && !IsIntegrationEvent(t),
+            t => t is not Interface && IsDomainEvent(t, arch.Layout.Markers) && !IsIntegrationEvent(t, arch.Layout.Markers),
             t => HasVersionField(arch, t),
             t => $"{t.FullName} has an explicit schema-version field but is not an IIntegrationEvent — only"
                 + " IIntegrationEvents need schema versioning")))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IDomainEvent but not to "
         + "IIntegrationEvent. A type assignable to both is not selected.")
-    .Checking("Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. The heuristic cannot infer business meaning; an empty selection passes.")
+    .Checking("Name heuristic: schemaVersion, eventVersion and contractVersion fields (case-insensitive), declared or inherited, including auto-property backing fields and record parameters, are reported. A business revision named version is allowed, whatever its type. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. The heuristic cannot infer business meaning; an empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

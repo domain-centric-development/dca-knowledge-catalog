@@ -5,7 +5,7 @@ title: Domain and use-case exception names must stay in the language of their la
 rule: "A failure named after a transport concept is a decision about the answer, taken in a layer that does not know the protocol; the name should say what went wrong, not what the caller should be told."
 constraint: Domain and use-case exception names must stay in the language of their layer.
 selects: "Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded."
-checks: "The simple name ends with none of Error, Fault, Failure and contains none of Http, Status, Response. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes."
+checks: "The simple name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-005"
 status: enforced
 rule_set: errors
@@ -23,13 +23,13 @@ Classes anywhere on the classpath under scan that are assignable to DomainExcept
 
 ## Check
 
-The simple name ends with none of Error, Fault, Failure and contains none of Http, Status, Response. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
+The simple name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
 
 ## .NET reading
 
-**Selection.** Types anywhere under the root namespace that are assignable to DomainException or to UseCaseException, the building-blocks namespace excluded.
+**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
-**Check.** The type name ends with none of Error, Fault, Failure and contains none of Http, Status, Response. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
+**Check.** The type name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
 
 ## Implementation
 
@@ -43,9 +43,9 @@ DcaRule.check(
         arch -> {
           CollectedViolations collected =
               CollectedViolations.withHeader(
-                  "DCA-ERR-005: a technical or transport word in an exception name");
+                  "A technical or transport word in an exception name");
           for (JavaClass type : arch.classes()) {
-            if (!isProjectException(type)) {
+            if (!isProjectException(type, arch.layout().markers())) {
               continue;
             }
             String name = type.getSimpleName();
@@ -67,9 +67,11 @@ DcaRule.check(
             + " to UseCaseException, the building-blocks package excluded.")
     .checking(
         "The simple name ends with none of Error, Fault, Failure and contains none of Http,"
-            + " Status, Response. Whether the remaining name is a term of the Ubiquitous"
-            + " Language is not decidable here and stays with review. An empty selection"
-            + " passes.")
+            + " StatusCode, ResponseStatus, ResponseEntity. The bare words Status and"
+            + " Response are not matched: they are transport words and domain words, and"
+            + " the name alone does not tell them apart, so OrderStatusInvalidException"
+            + " passes. Whether the remaining name is a term of the Ubiquitous Language is"
+            + " not decidable here and stays with review. An empty selection passes.")
 ```
 
 ## Helpers
@@ -78,10 +80,10 @@ DcaRule.check(
 
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
-  private static boolean isProjectException(JavaClass type) {
-    return (type.isAssignableTo(DomainException.class)
-            || type.isAssignableTo(UseCaseException.class))
-        && !type.getPackageName().startsWith(BUILDING_BLOCKS_PREFIX);
+  private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
+    return (type.isAssignableTo(markers.domainException())
+            || type.isAssignableTo(markers.useCaseException()))
+        && !markers.declaresTypesIn(type.getPackageName());
   }
 ```
 
@@ -177,7 +179,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -203,15 +205,20 @@ DcaRule.Check(
             }
         }
 
-        DcaRule.Fail("DCA-ERR-005: a technical or transport word in an exception name", violations);
+        DcaRule.Fail("A technical or transport word in an exception name", violations);
     })
     .Selecting(
-        "Types anywhere under the root namespace that are assignable to DomainException or to "
-        + "UseCaseException, the building-blocks namespace excluded.")
+        "Types anywhere under the root namespace that are assignable to the domain-exception or the "
+        + "use-case-exception role, the vocabulary's own code excluded: the namespaces the configured "
+        + "role types live in are not selected, so a project's own base type is not reported as "
+        + "residing outside a layer it never claimed.")
     .Checking(
-        "The type name ends with none of Error, Fault, Failure and contains none of Http, Status, "
-        + "Response. Whether the remaining name is a term of the Ubiquitous Language is not "
-        + "decidable here and stays with review. An empty selection passes.")
+        "The type name ends with none of Error, Fault, Failure and contains none of Http, "
+        + "StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are "
+        + "not matched: they are transport words and domain words, and the name alone does not "
+        + "tell them apart, so OrderStatusInvalidException passes. Whether the remaining name "
+        + "is a term of the Ubiquitous Language is not decidable here and stays with review. "
+        + "An empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

@@ -12,10 +12,14 @@ evidence_for: "/rule/usecase/dca-use-012.md#intraclasscallsisentrypoint"
 ```java
 private boolean isEntryPoint(JavaCodeUnit unit) {
   Set<JavaModifier> modifiers = unit.getModifiers();
-  boolean externallyCallable =
-      !modifiers.contains(JavaModifier.PRIVATE)
-          && !modifiers.contains(JavaModifier.SYNTHETIC)
-          && !modifiers.contains(JavaModifier.BRIDGE);
-  return externallyCallable || callers.getOrDefault(unit, Set.of()).isEmpty();
+  if (modifiers.contains(JavaModifier.SYNTHETIC) || modifiers.contains(JavaModifier.BRIDGE)) {
+    // A unit the compiler wrote, not a path anyone enters on. The bridge method a generic input
+    // port produces - execute(Object) beside execute(Command) - has no caller inside the class,
+    // so the "nothing calls it" fallback below would otherwise make it a second entry point and
+    // report every use case over a generic port twice.
+    return false;
+  }
+  return !modifiers.contains(JavaModifier.PRIVATE)
+      || callers.getOrDefault(unit, Set.of()).isEmpty();
 }
 ```

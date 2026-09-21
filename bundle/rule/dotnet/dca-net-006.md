@@ -5,7 +5,7 @@ title: Application layer must not use persistence or transaction frameworks
 rule: "The transaction boundary of a use case is drawn by a decorator around IUseCase or by ITransactionBoundary (an application-layer execution abstraction implemented in infrastructure), never by DbContext, SaveChanges, TransactionScope or IDbTransaction in the use case itself. Framework types in the application layer bind use cases to one persistence technology and hide where the boundary is; the ITransactionBoundary implementation is the single place that knows how to open and commit a transaction."
 constraint: Application layer must not use persistence or transaction frameworks.
 selects: "Types in <module>.Application of every module root."
-checks: "No dependency on a type whose full name starts with Microsoft.EntityFrameworkCore, System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only these six namespace prefixes are checked - another persistence library is not reported, and the domain and adapter layers are not selected. An empty selection passes."
+checks: "No dependency on a type whose full name starts with Microsoft.EntityFrameworkCore, System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only these six namespace prefixes are checked - another persistence library is not reported, and the domain and adapter layers are not selected. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, where DCA-LAY-003 forbids the infrastructure packages and not the persistence API itself."
 enforced_by: "DotnetRules#DCA-NET-006"
 status: enforced
 rule_set: dotnet
@@ -20,7 +20,7 @@ Types in <module>.Application of every module root.
 
 ## Check
 
-No dependency on a type whose full name starts with Microsoft.EntityFrameworkCore, System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only these six namespace prefixes are checked - another persistence library is not reported, and the domain and adapter layers are not selected. An empty selection passes.
+No dependency on a type whose full name starts with Microsoft.EntityFrameworkCore, System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only these six namespace prefixes are checked - another persistence library is not reported, and the domain and adapter layers are not selected. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, where DCA-LAY-003 forbids the infrastructure packages and not the persistence API itself.
 
 ### C# expression
 
@@ -59,7 +59,9 @@ DcaRule.Check(
             + " System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only"
             + " these six namespace prefixes are checked - another persistence library is not"
             + " reported, and the domain and adapter layers are not selected. An empty selection"
-            + " passes.")
+            + " passes. The statement is language-neutral, but it is carried under a dotnet id:"
+            + " Java has no twin, where DCA-LAY-003 forbids the infrastructure packages and not"
+            + " the persistence API itself.")
 ```
 
 ## Configured by

@@ -164,6 +164,24 @@ def _framework_annotations(source: str) -> tuple[list[tuple[str, str]], dict[str
     return [(r, _unescape(descriptions.get(r, ""))) for r in roles], presets
 
 
+def _marker_roles(source: str) -> list[tuple[str, str, str]]:
+    """``[(role, default fqn, description)]`` for every role of the Java ``DcaMarkers`` record: the
+    component order of the record, the ``@param`` text, and the value ``dca()`` gives it."""
+    params = re.findall(r"@param (\w+) (.+?)(?=\n \* @param|\n \*/)", source, re.S)
+    descriptions = {name: re.sub(r"\s*\n\s*\*\s*", " ", text).strip() for name, text in params}
+    header = source[source.index("public record DcaMarkers(") : source.index(") {")]
+    roles = [r for r in re.findall(r"^\s{4}String (\w+),?$", header, re.M) if r != "name"]
+    defaults: dict[str, str] = {}
+    body = re.search(r"public static DcaMarkers dca\(\) \{(.*?)\n  \}", source, re.S)
+    if body:
+        values = re.findall(r'DCA_BUILDING_BLOCKS \+ "([\w.]+)"', body.group(1))
+        prefix = re.search(r'DCA_BUILDING_BLOCKS = "([\w.]+)"', source)
+        base = prefix.group(1) if prefix else ""
+        for role, value in zip(roles, values):
+            defaults[role] = base + value
+    return [(r, defaults.get(r, ""), _unescape(descriptions.get(r, ""))) for r in roles]
+
+
 # --------------------------------------------------------------------------- .net
 
 def _xml_to_markdown(lines: list[str]) -> str:
@@ -289,7 +307,7 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
     return "\n".join(out)
 
 
-def _layout_body(java: str, annotations: str, cs: str, types: str) -> str:
+def _layout_body(java: str, annotations: str, cs: str, types: str, markers: str) -> str:
     setters = _java_setters(java)
     defaults = _java_defaults(java)
     parts = [_class_javadoc(java)]
@@ -361,6 +379,28 @@ def _layout_body(java: str, annotations: str, cs: str, types: str) -> str:
         "requires a role accepts any of them. The preset in use is named in the test report.\n\n"
         + _table(["Role"] + [f"`{p}()`" for p in named] + ["Used for"], rows)
     )
+
+    roles = _marker_roles(markers)
+    if roles:
+        parts.append(
+            "## Building-block types the rules select on (`DcaMarkers`)\n\n"
+            "The rules never name a building block as a type: every selection asks the layout for a *role*, "
+            "resolved by fully qualified name. The default vocabulary is this library's own markers, so a project "
+            "on the building blocks configures nothing. A project that already has its own markers - or another "
+            "library's - points the roles at its own types and is then governed by the whole catalog, instead of "
+            "excluding the rule ids that would have selected nothing. The same roles exist in both languages "
+            "(`withMarkers(DcaMarkers.dca().withAggregateRoot(\"...\"))` in Java, "
+            "`WithMarkers(DcaMarkers.Dca() with { AggregateRoot = \"...\" })` in .NET; the .NET defaults are the "
+            "`I`-prefixed twins).\n\n"
+            "A role names exactly one type and must not be blank - an empty role would select nothing and report "
+            "success. Two vocabularies at once are outside this: a migration points the role at one of them. What "
+            "the roles do **not** cover are the strategic annotations, because the rules read their members (the "
+            "context a relationship names, the dependencies a module allows) and a type name carries none.\n\n"
+            + _table(
+                ["Role", "Default (Java)", "Selects"],
+                [[f"`{role}`", f"`{default}`" if default else "-", description] for role, default, description in roles],
+            )
+        )
 
     # ---- .NET
     parts.append("## .NET twin: `DcaLayout` in `DomainCentric.ArchRules`\n\n" + _cs_class_doc(cs))
@@ -435,6 +475,7 @@ def extract(repo_root: Path) -> list[Node]:
 
     layout_java = read(java_dir / "DcaLayout.java")
     annotations_java = read(java_dir / "FrameworkAnnotations.java")
+    markers_java = read(java_dir / "DcaMarkers.java")
     arch_java = read(java_dir / "DcaArchitecture.java")
     layout_cs = read(cs_dir / "DcaLayout.cs")
     types_cs = read(cs_dir / "FrameworkTypes.cs")
@@ -453,7 +494,7 @@ def extract(repo_root: Path) -> list[Node]:
                 "resource_dotnet": f"{DOTNET_SRC_REL}/DcaLayout.cs",
                 "tags": ["reference", "archunit", "archunitnet"],
             },
-            body=_layout_body(layout_java, annotations_java, layout_cs, types_cs),
+            body=_layout_body(layout_java, annotations_java, layout_cs, types_cs, markers_java),
             meta={"name": "DcaLayout", "kind": "reference"},
         ),
         Node(

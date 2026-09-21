@@ -40,18 +40,19 @@ DcaRule.check(
         "An Entity is defined by its identity, which is a value object implementing the Id marker",
         arch -> {
           List<String> violations = new ArrayList<>();
-          for (JavaClass entity : concreteClassesAssignableTo(arch, Entity.class)) {
+          for (JavaClass entity :
+              concreteClassesAssignableTo(arch, arch.layout().markers().entity())) {
             if (entity.getModifiers().contains(JavaModifier.ABSTRACT)) {
               continue;
             }
             boolean hasIdField =
                 entity.getAllFields().stream()
-                    .anyMatch(f -> f.getRawType().isAssignableTo(Id.class));
+                    .anyMatch(f -> f.getRawType().isAssignableTo(arch.layout().markers().id()));
             if (!hasIdField) {
               violations.add(
                   entity.getName()
                       + " has no field whose type implements "
-                      + Id.class.getSimpleName());
+                      + simpleName(arch.layout().markers().id()));
             }
           }
           fail(
@@ -72,10 +73,18 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(
-    DcaArchitecture arch, Class<?> marker) {
+private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
   return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
 }
+```
+
+### `simpleName`
+
+```java
+/** The simple name of a configured marker, for a message a reader has to recognise. */
+  private static String simpleName(String fqn) {
+    return fqn.substring(fqn.lastIndexOf('.') + 1);
+  }
 ```
 
 ### `fail`
@@ -99,7 +108,7 @@ private static List<JavaClass> classesMatching(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -110,15 +119,15 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var entity in ConcreteTypesAssignableTo(arch, typeof(IEntity)))
+        foreach (var entity in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Entity))
         {
             if (entity is Class { IsAbstract: true })
             {
                 continue;
             }
 
-            var hasIdMember = DataMembers(arch, entity).Any(m => IsAssignableTo(arch, m.Type, typeof(IId)))
-                || RuntimeDataMemberTypes(arch, entity).Any(t => typeof(IId).IsAssignableFrom(t));
+            var hasIdMember = DataMembers(arch, entity).Any(m => IsAssignableTo(arch, m.Type, arch.Layout.Markers.Id))
+                || RuntimeDataMemberTypes(arch, entity).Any(t => DcaMarkers.IsAssignableToByName(t, arch.Layout.Markers.Id));
             if (!hasIdMember)
             {
                 violations.Add($"{entity.FullName} has no field or property whose type implements {nameof(IId)}");
@@ -141,7 +150,6 @@ DcaRule.Check(
 
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [Entity<T, ID>](/marker/tactical/entity.md)
-- [Id](/marker/tactical/id.md)
 
 ## Configured by
 

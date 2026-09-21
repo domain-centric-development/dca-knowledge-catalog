@@ -17,3 +17,4 @@
 - [Use cases that save an aggregate must publish its domain events — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Use cases that save an aggregate must publish its domain events — `pathName`](pathname.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Use cases that save an aggregate must publish its domain events — `publishAfterSaving`](publishaftersaving.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Use cases that save an aggregate must publish its domain events — `useCases`](usecases.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

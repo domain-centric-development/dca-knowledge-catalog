@@ -4,8 +4,8 @@ id: DCA-TAC-001
 title: "Aggregate Roots must implement AggregateRoot<T, ID>"
 rule: "Classes named *AggregateRoot must implement AggregateRoot interface (DDD pattern)."
 constraint: "Aggregate Roots must implement AggregateRoot<T, ID>."
-selects: "Non-interface classes in <module>.domain.model.. of every module root whose simple name ends with AggregateRoot, the marker interface AggregateRoot itself excluded."
-checks: "The class implements the AggregateRoot marker. Only the name suffix triggers selection - an aggregate root not named *AggregateRoot is never reported, and an empty selection passes."
+selects: "Non-interface classes in <module>.domain.model.. of every module root whose simple name ends with AggregateRoot, the marker of the aggregate-root role itself excluded."
+checks: "The class is assignable to the aggregate-root role - through the marker or an intermediate base class. Only the name suffix triggers selection - an aggregate root not named *AggregateRoot is never reported, and an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-001"
 status: enforced
 rule_set: tactical
@@ -19,11 +19,11 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRul
 
 ## Selection
 
-Non-interface classes in <module>.domain.model.. of every module root whose simple name ends with AggregateRoot, the marker interface AggregateRoot itself excluded.
+Non-interface classes in <module>.domain.model.. of every module root whose simple name ends with AggregateRoot, the marker of the aggregate-root role itself excluded.
 
 ## Check
 
-The class implements the AggregateRoot marker. Only the name suffix triggers selection - an aggregate root not named *AggregateRoot is never reported, and an empty selection passes.
+The class is assignable to the aggregate-root role - through the marker or an intermediate base class. Only the name suffix triggers selection - an aggregate root not named *AggregateRoot is never reported, and an empty selection passes.
 
 ## .NET reading
 
@@ -43,27 +43,28 @@ DcaRule.of(
                 .that()
                 .resideInAnyPackage(arch.allDomainModelPatterns())
                 .and()
-                .haveSimpleNameEndingWith("AggregateRoot")
+                .haveSimpleNameEndingWith(layout.aggregateRootSuffix())
                 .and()
                 .areNotInterfaces()
                 .and()
-                .doNotHaveSimpleName("AggregateRoot")
+                .doNotHaveSimpleName(layout.aggregateRootSuffix())
                 .should()
-                .implement(AggregateRoot.class)
+                .beAssignableTo(arch.layout().markers().aggregateRoot())
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.domain.model.. of every module root whose "
-            + "simple name ends with AggregateRoot, the marker interface AggregateRoot itself "
-            + "excluded.")
+            + "simple name ends with AggregateRoot, the marker of the aggregate-root role "
+            + "itself excluded.")
     .checking(
-        "The class implements the AggregateRoot marker. Only the name suffix triggers "
+        "The class is assignable to the aggregate-root role - through the marker or an "
+            + "intermediate base class. Only the name suffix triggers "
             + "selection - an aggregate root not named *AggregateRoot is never reported, and "
             + "an empty selection passes.")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -76,14 +77,14 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var type in NonInterfaceTypes(arch))
         {
-            if (!type.Name.EndsWith("AggregateRoot", StringComparison.Ordinal)
-                || type.Name == "AggregateRoot"
+            if (!type.Name.EndsWith(arch.Layout.AggregateRootSuffix, StringComparison.Ordinal)
+                || type.Name == arch.Layout.AggregateRootSuffix
                 || !ResidesInAny(type, arch.AllDomainModelPatterns()))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, type, typeof(IAggregateRoot)))
+            if (!IsAssignableTo(arch, type, arch.Layout.Markers.AggregateRoot))
             {
                 violations.Add($"{type.FullName} is named *AggregateRoot but does not implement {nameof(IAggregateRoot)}");
             }

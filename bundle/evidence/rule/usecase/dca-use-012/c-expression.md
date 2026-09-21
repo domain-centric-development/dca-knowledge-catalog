@@ -28,17 +28,25 @@ DcaRule.Check("DCA-USE-012", "Use cases that save an aggregate or publish domain
                 var runtime = arch.RuntimeType(type)!;
                 var graph = new IntraClassCalls(runtime);
                 foreach (var unit in graph.Units) {
-                    var effect = TransactionalEffectOf(unit);
+                    var effect = TransactionalEffectOf(unit, arch.Layout.Markers);
                     if (effect is null) continue;
                     foreach (var entry in graph.EntryPointsOf(unit)) {
                         if (!Transactional(runtime, layout.FrameworkTypes.TransactionalAttribute)
-                            && graph.ReachableThrough(entry, u => !Transactional(u, layout.FrameworkTypes.TransactionalAttribute) && !CallsBoundary(u)).Contains(unit))
-                            violations.Add($"{type.FullName}.{IntraClassCalls.PathName(entry, unit)} {effect} without transaction coverage on every entry path");
+                            && graph.ReachableThrough(entry, u => !Transactional(u, layout.FrameworkTypes.TransactionalAttribute) && !CallsBoundary(u, arch.Layout.Markers)).Contains(unit))
+                            violations.Add(
+                                $"{type.FullName}.{IntraClassCalls.PathName(entry, unit)} {effect} without "
+                                + DescribeTransactionalAttribute(layout.FrameworkTypes.TransactionalAttribute)
+                                + " on the class or on a method of that path, and without"
+                                + " ITransactionBoundary.InTransactionAsync(...) on it");
                     }
                 }
             }
-            DcaRule.Fail("Use cases that save, delete or publish require transaction coverage", violations.Distinct().ToList());
+            DcaRule.Fail(
+                "Use cases that save an aggregate or publish domain events must have a transaction boundary",
+                violations.Distinct().ToList(),
+                "wrap load, mutate, save and publish in ITransactionBoundary.InTransactionAsync(...),"
+                + " or carry the configured transactional attribute on the class or on every entry path");
         })
     .Selecting("Concrete application operations selected by IInputPort marker or suffix with loadable runtime types, including closure and async units.")
-    .Checking("Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately.")
+    .Checking("Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. The declarative path is empty by default in .NET - AspNetCore() and None() both leave TransactionalAttribute unset, because ASP.NET Core has no ambient transaction attribute - so out of the box only the explicit boundary satisfies the rule, while the Java twin also accepts the framework's transactional annotation. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
 ```

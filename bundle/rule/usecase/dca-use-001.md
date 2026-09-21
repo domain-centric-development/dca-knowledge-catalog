@@ -4,7 +4,7 @@ id: DCA-USE-001
 title: The base InputPort contract is not redeclared in the project
 rule: "Base InputPort interface defines the generic contract for all use cases (Hexagonal Architecture)."
 constraint: The base InputPort contract is not redeclared in the project.
-selects: Interfaces named InputPort anywhere on the classpath under scan.
+selects: "Interfaces named InputPort or IInputPort anywhere on the classpath under scan - both spellings, so the rule means the same in both languages."
 checks: The interface resides in the building-blocks package hexagonal.port.in - the generic contract is not redeclared in the project.
 enforced_by: "UseCaseRules#DCA-USE-001"
 status: enforced
@@ -19,7 +19,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 
 ## Selection
 
-Interfaces named InputPort anywhere on the classpath under scan.
+Interfaces named InputPort or IInputPort anywhere on the classpath under scan - both spellings, so the rule means the same in both languages.
 
 ## Check
 
@@ -43,12 +43,15 @@ DcaRule.of(
             classes()
                 .that()
                 .areInterfaces()
-                .and()
-                .haveSimpleName("InputPort")
+                .and(
+                    JavaClass.Predicates.simpleName("InputPort")
+                        .or(JavaClass.Predicates.simpleName("IInputPort")))
                 .should()
                 .resideInAPackage(DcaLayout.BUILDING_BLOCKS_PORT_IN_PACKAGE)
                 .allowEmptyShould(true))
-    .selecting("Interfaces named InputPort anywhere on the classpath under scan.")
+    .selecting(
+        "Interfaces named InputPort or IInputPort anywhere on the classpath under scan - both"
+            + " spellings, so the rule means the same in both languages.")
     .checking(
         "The interface resides in the building-blocks package hexagonal.port.in - the generic contract is not redeclared in the project.")
 ```

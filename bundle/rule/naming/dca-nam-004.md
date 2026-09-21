@@ -58,7 +58,8 @@ DcaRule.of(
         "The simple name ends with Repository (RepositoryPort or ProductRepositoryAdapter is"
             + " reported). Selection is by name only - whether the interface extends the"
             + " Repository marker is not checked, and classes are not selected. An empty"
-            + " selection passes.")
+            + " selection passes.",
+        "rename the interface to <Aggregate>Repository")
 ```
 
 ## Architecture queries

@@ -3,7 +3,7 @@
 - [ADAPTER LAYER RULES](adapter-layer-rules.md) — ADAPTER LAYER RULES
 - [APPLICATION LAYER RULES](application-layer-rules.md) — This is where the collection metaphor stops. A `Map`-backed adapter that returns `store.get(id)`
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
-- [DOMAIN LAYER RULES](domain-layer-rules.md) — stable logical name are a **class property** via `@IntegrationEventType(name, version)` —
+- [DOMAIN LAYER RULES](domain-layer-rules.md) — domain layer, not a segment within it
 - [ERROR HANDLING RULES](error-handling-rules.md) — Every failure carries its own type, and only the adapter turns it into an answer.
 - [INFRASTRUCTURE LAYER RULES](infrastructure-layer-rules.md) — INFRASTRUCTURE LAYER RULES
 - [Operation boundaries and declared contracts](operation-boundaries-and-declared-contracts.md) — Ordinary use cases do not invoke other use cases, whether directly, through an

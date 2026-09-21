@@ -1,0 +1,17 @@
+# dca-map-006
+
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `allowedDependencies`](alloweddependencies.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — C# expression](c-expression.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `carriesModuleDeclaration`](carriesmoduledeclaration.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `channelName`](channelname.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.add`](collectedviolations-add.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.addAll`](collectedviolations-addall.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.check`](collectedviolations-check.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.isEmpty`](collectedviolations-isempty.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.require`](collectedviolations-require.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.throwIfAny`](collectedviolations-throwifany.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `CollectedViolations.withoutHeader`](collectedviolations-withoutheader.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `declaredEdges`](declarededges.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `moduleAnnotationTypes`](moduleannotationtypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — `moduleNames`](modulenames.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Upstream declarations and the module declaration's allowed dependencies must agree — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

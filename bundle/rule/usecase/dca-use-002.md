@@ -1,9 +1,9 @@
 ---
 type: Rule
 id: DCA-USE-002
-title: Use Case Commands must end with 'Command' and reside in application package
+title: "Types named *Command reside in the application layer"
 rule: "Use case commands should be in application layer (CQRS pattern)."
-constraint: Use Case Commands must end with 'Command' and reside in application package.
+constraint: "Types named *Command reside in the application layer."
 selects: Classes under the base package whose simple name ends with Command.
 checks: "Each resides in an application package of some module root (<module>.application..). A Command in a domain, adapter or infrastructure package is reported."
 enforced_by: "UseCaseRules#DCA-USE-002"
@@ -15,7 +15,7 @@ tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 ---
 
-# Use Case Commands must end with 'Command' and reside in application package
+# Types named *Command reside in the application layer
 
 ## Selection
 
@@ -36,7 +36,7 @@ Each resides in an application package of some module root (<module>.application
 ```java
 DcaRule.of(
         "DCA-USE-002",
-        "Use Case Commands must end with 'Command' and reside in application package",
+        "Types named *Command reside in the application layer",
         "Use case commands should be in application layer (CQRS pattern)",
         arch ->
             classes()
@@ -60,7 +60,7 @@ DcaRule.of(
 ```csharp
 DcaRule.Of(
         "DCA-USE-002",
-        "Use Case Commands must end with 'Command' and reside in application namespace",
+        "Types named *Command reside in the application layer",
         "Use case commands should be in application layer (CQRS pattern)",
         arch =>
             Types()

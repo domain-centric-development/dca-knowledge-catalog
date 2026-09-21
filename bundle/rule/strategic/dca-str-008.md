@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-STR-008
 title: Integration Events should have immutable shape
-rule: "Integration Events must be immutable to ensure event integrity across contexts (Event Sourcing best practice)."
+rule: "An integration event is a published contract: once another context has read it, its shape may only grow, never change under an existing reader. A mutable event cannot make that promise - any holder can rewrite what a second consumer will read."
 constraint: Integration Events should have immutable shape.
 selects: Non-interface classes assignable to IntegrationEvent - directly or through a sub-interface - anywhere on the classpath under scan.
 checks: "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded."
@@ -37,12 +37,16 @@ The class is final or a record with final inherited instance fields and no insta
 DcaRule.of(
         "DCA-STR-008",
         "Integration Events should have immutable shape",
-        "Integration Events must be immutable to ensure event integrity across contexts (Event"
-            + " Sourcing best practice)",
+        "An integration event is a published contract: once another context has read it, its"
+            + " shape may only grow, never change under an existing reader. A mutable event"
+            + " cannot make that promise - any holder can rewrite what a second consumer will"
+            + " read",
         arch ->
             classes()
                 .that()
-                .implement(IntegrationEvent.class)
+                .areAssignableTo(arch.layout().markers().integrationEvent())
+                .and()
+                .areNotInterfaces()
                 .should(TypeInspection.haveImmutableShape())
                 .allowEmptyShould(true))
     .selecting(
@@ -50,7 +54,8 @@ DcaRule.of(
             + " sub-interface - anywhere on the classpath under scan.")
     .checking(
         "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter)."
-            + " Referenced objects and collection contents are not inspected. Interfaces are excluded.")
+            + " Referenced objects and collection contents are not inspected. Interfaces are excluded.",
+        "declare the event as a final record")
 ```
 
 ## Helpers
@@ -106,18 +111,22 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
         .toList();
   }
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Check(
         "DCA-STR-008",
         "Integration Events should have immutable shape",
-        "Integration Events must be immutable to ensure event integrity across contexts (Event Sourcing best practice)",
+        "An integration event is a published contract: once another context has read it, its shape may only grow, never change under an existing reader. A mutable event cannot make that promise - any holder can rewrite what a second consumer will read",
         arch =>
         {
             var violations = arch.Types
                 .Where(t => t is not Interface && !t.IsCompilerGenerated)
-                .Where(t => t.ImplementedInterfaces.Any(i => i.FullName == typeof(IIntegrationEvent).FullName))
+                .Where(t => t.ImplementedInterfaces.Any(i => i.FullName == arch.Layout.Markers.IntegrationEvent))
                 .Where(t => !TacticalPatternRules.IsImmutableShape(t))
                 .Select(t => "Integration event " + t.FullName + " has mutable shape")
                 .ToList();

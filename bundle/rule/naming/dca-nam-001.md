@@ -4,8 +4,8 @@ id: DCA-NAM-001
 title: Application layer InputPort implementations must end with 'UseCase'
 rule: "InputPort implementations (use cases) should follow consistent naming conventions (Hexagonal Architecture)."
 constraint: Application layer InputPort implementations must end with 'UseCase'.
-selects: "Non-interface, non-record classes in <module>.application.. of every module root that implement UseCase."
-checks: The simple name ends with the configured use-case suffix. Interfaces and records are not selected; a class implementing only InputPort without UseCase is not selected either. An empty selection passes.
+selects: "Non-interface, non-record classes in <module>.application.. of every module root that are assignable to the configured use-case role - through the interface or an intermediate base class."
+checks: The simple name ends with the configured use-case suffix. Interfaces and records are not selected; a class assignable only to the input-port role without the use-case role is not selected either. An empty selection passes.
 enforced_by: "NamingRules#DCA-NAM-001"
 status: enforced
 rule_set: naming
@@ -19,11 +19,11 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
 
 ## Selection
 
-Non-interface, non-record classes in <module>.application.. of every module root that implement UseCase.
+Non-interface, non-record classes in <module>.application.. of every module root that are assignable to the configured use-case role - through the interface or an intermediate base class.
 
 ## Check
 
-The simple name ends with the configured use-case suffix. Interfaces and records are not selected; a class implementing only InputPort without UseCase is not selected either. An empty selection passes.
+The simple name ends with the configured use-case suffix. Interfaces and records are not selected; a class assignable only to the input-port role without the use-case role is not selected either. An empty selection passes.
 
 ## .NET reading
 
@@ -50,22 +50,24 @@ DcaRule.of(
                 .and()
                 .areNotRecords()
                 .and()
-                .implement(UseCase.class)
+                .areAssignableTo(arch.layout().markers().useCase())
                 .should()
                 .haveSimpleNameEndingWith(layout.useCaseSuffix())
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface, non-record classes in <module>.application.. of every module root that"
-            + " implement UseCase.")
+            + " are assignable to the configured use-case role - through the interface or an"
+            + " intermediate base class.")
     .checking(
         "The simple name ends with the configured use-case suffix. Interfaces and records are"
-            + " not selected; a class implementing only InputPort without UseCase is not"
-            + " selected either. An empty selection passes.")
+            + " not selected; a class assignable only to the input-port role without the"
+            + " use-case role is not selected either. An empty selection passes.",
+        "rename the class to *" + layout.useCaseSuffix())
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -100,7 +102,6 @@ DcaRule.Check(
 ## Related mentions (heuristic)
 
 - [InputPort](/marker/port-in/inputport.md)
-- [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 
 ## Configured by
 

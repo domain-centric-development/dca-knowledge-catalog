@@ -41,11 +41,12 @@ DcaRule.check(
             + " in domain services over supplied snapshots. Review callback parameters manually; this field check cannot prove semantic responsibility",
         arch -> {
           List<String> violations = new ArrayList<>();
-          for (JavaClass aggregate : concreteClassesAssignableTo(arch, AggregateRoot.class)) {
+          for (JavaClass aggregate :
+              concreteClassesAssignableTo(arch, arch.layout().markers().aggregateRoot())) {
             for (JavaField field : aggregate.getAllFields()) {
               JavaClass fieldType = field.getRawType();
-              if (fieldType.isAssignableTo(Repository.class)
-                  || fieldType.isAssignableTo(OutputPort.class)) {
+              if (fieldType.isAssignableTo(arch.layout().markers().repository())
+                  || fieldType.isAssignableTo(arch.layout().markers().outputPort())) {
                 violations.add(
                     aggregate.getName()
                         + " has field '"
@@ -76,8 +77,7 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(
-    DcaArchitecture arch, Class<?> marker) {
+private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
   return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
 }
 ```
@@ -103,7 +103,7 @@ private static List<JavaClass> classesMatching(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -115,12 +115,12 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var aggregate in ConcreteTypesAssignableTo(arch, typeof(IAggregateRoot)))
+        foreach (var aggregate in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.AggregateRoot))
         {
             foreach (var member in DataMembers(arch, aggregate))
             {
                 var fieldType = member.Type;
-                if (IsAssignableTo(arch, fieldType, typeof(IRepository)) || IsAssignableTo(arch, fieldType, typeof(IOutputPort)))
+                if (IsAssignableTo(arch, fieldType, arch.Layout.Markers.Repository) || IsAssignableTo(arch, fieldType, arch.Layout.Markers.OutputPort))
                 {
                     violations.Add($"{FieldDescription(aggregate, member)} which is a repository/output port");
                 }

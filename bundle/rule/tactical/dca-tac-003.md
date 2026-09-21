@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-TAC-003
 title: Aggregate Roots must not have fields with other Aggregate Root types
-rule: "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep aggregate boundaries and transactional consistency intact."
+rule: "Vernon's Aggregate Design Rule #3: reference other Aggregates by identity to keep aggregate boundaries and transactional consistency intact."
 constraint: Aggregate Roots must not have fields with other Aggregate Root types.
 selects: "Non-interface classes anywhere under scan assignable to AggregateRoot, abstract ones included."
 checks: "No instance field - inherited ones included, static ones excluded - involves AggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid."
@@ -37,14 +37,15 @@ No instance field - inherited ones included, static ones excluded - involves Agg
 DcaRule.check(
         "DCA-TAC-003",
         "Aggregate Roots must not have fields with other Aggregate Root types",
-        "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep"
+        "Vernon's Aggregate Design Rule #3: reference other Aggregates by identity to keep"
             + " aggregate boundaries and transactional consistency intact",
         arch -> {
           List<String> violations = new ArrayList<>();
-          for (JavaClass aggregate : concreteClassesAssignableTo(arch, AggregateRoot.class)) {
+          for (JavaClass aggregate :
+              concreteClassesAssignableTo(arch, arch.layout().markers().aggregateRoot())) {
             for (JavaField field : TypeInspection.instanceFields(aggregate)) {
               for (JavaClass involved : TypeInspection.involvedTypes(field, aggregate)) {
-                if (isConcreteAggregateRoot(involved)) {
+                if (isConcreteAggregateRoot(involved, arch.layout().markers())) {
                   violations.add(
                       fieldDescription(aggregate, field, involved)
                           + " which is another aggregate root");
@@ -53,7 +54,7 @@ DcaRule.check(
             }
           }
           fail(
-              "Aggregates must reference other aggregates by ID only (Vernon's Rule #2).",
+              "Aggregates must reference other aggregates by ID only (Vernon's Rule #3).",
               violations);
         })
     .selecting(
@@ -68,8 +69,7 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(
-    DcaArchitecture arch, Class<?> marker) {
+private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
   return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
 }
 ```
@@ -77,8 +77,8 @@ private static List<JavaClass> concreteClassesAssignableTo(
 ### `isConcreteAggregateRoot`
 
 ```java
-private static boolean isConcreteAggregateRoot(JavaClass type) {
-  return type.isAssignableTo(AggregateRoot.class);
+private static boolean isConcreteAggregateRoot(JavaClass type, DcaMarkers markers) {
+  return type.isAssignableTo(markers.aggregateRoot());
 }
 ```
 
@@ -237,19 +237,19 @@ private static void collect(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Check(
     "DCA-TAC-003",
     "Aggregate Roots must not have fields with other Aggregate Root types",
-    "Vernon's Aggregate Design Rule #2: reference other Aggregates by identity to keep"
+    "Vernon's Aggregate Design Rule #3: reference other Aggregates by identity to keep"
     + " aggregate boundaries and transactional consistency intact",
     arch =>
     {
         var violations = new List<string>();
-        foreach (var aggregate in ConcreteTypesAssignableTo(arch, typeof(IAggregateRoot)))
+        foreach (var aggregate in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.AggregateRoot))
         {
             foreach (var member in InstanceDataMembers(arch, aggregate))
             {
@@ -268,7 +268,7 @@ DcaRule.Check(
             }
         }
 
-        DcaRule.Fail("Aggregates must reference other aggregates by ID only (Vernon's Rule #2).", violations);
+        DcaRule.Fail("Aggregates must reference other aggregates by ID only (Vernon's Rule #3).", violations);
     })
     .Selecting(
         "Non-interface types below the root namespace assignable to IAggregateRoot, "

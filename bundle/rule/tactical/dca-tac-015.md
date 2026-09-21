@@ -5,7 +5,7 @@ title: Repository Implementations must reside in adapter.outgoing package
 rule: Repository implementations are outgoing adapters in bounded contexts.
 constraint: Repository Implementations must reside in adapter.outgoing package.
 selects: "Non-interface classes anywhere under scan assignable to Repository, abstract base classes included."
-checks: "The class resides in <module>.adapter.outgoing.. of some module root. An implementation in any other package under scan - a test double, say - is reported; an empty selection passes."
+checks: "The class resides in <module>.adapter.outgoing.. of some module root. An implementation in any other package under scan - a test double, say - is reported; an empty selection passes. An implementation that carries the repository role and is also named *Repository is reported by DCA-HEX-008 as well: that rule finds unmarked implementations by name, and the two populations overlap where a project does both."
 enforced_by: "TacticalPatternRules#DCA-TAC-015"
 status: enforced
 rule_set: tactical
@@ -23,13 +23,13 @@ Non-interface classes anywhere under scan assignable to Repository, abstract bas
 
 ## Check
 
-The class resides in <module>.adapter.outgoing.. of some module root. An implementation in any other package under scan - a test double, say - is reported; an empty selection passes.
+The class resides in <module>.adapter.outgoing.. of some module root. An implementation in any other package under scan - a test double, say - is reported; an empty selection passes. An implementation that carries the repository role and is also named *Repository is reported by DCA-HEX-008 as well: that rule finds unmarked implementations by name, and the two populations overlap where a project does both.
 
 ## .NET reading
 
 **Selection.** Non-interface types below the root namespace assignable to IRepository, abstract base classes included.
 
-**Check.** The type resides in <module>.Adapter.Outgoing of some module root. An implementation anywhere else below the root - a test double, say - is reported; an empty selection passes.
+**Check.** The type resides in <module>.Adapter.Outgoing of some module root. An implementation anywhere else below the root - a test double, say - is reported; an empty selection passes. An implementation that carries the repository role and is also named *Repository is reported by DCA-HEX-008 as well: that rule finds unmarked implementations by name, and the two populations overlap where a project does both.
 
 ## Implementation
 
@@ -43,7 +43,7 @@ DcaRule.of(
                 .that()
                 .areNotInterfaces()
                 .and()
-                .areAssignableTo(Repository.class)
+                .areAssignableTo(arch.layout().markers().repository())
                 .should()
                 .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
                 .allowEmptyShould(true))
@@ -53,12 +53,15 @@ DcaRule.of(
     .checking(
         "The class resides in <module>.adapter.outgoing.. of some module root. An "
             + "implementation in any other package under scan - a test double, say - is "
-            + "reported; an empty selection passes.")
+            + "reported; an empty selection passes. An implementation that carries the "
+            + "repository role and is also named *Repository is reported by DCA-HEX-008 as "
+            + "well: that rule finds unmarked implementations by name, and the two "
+            + "populations overlap where a project does both.")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -67,7 +70,7 @@ DcaRule.Check(
     "Repository Implementations must reside in the Adapter.Outgoing namespace",
     "Repository implementations are outgoing adapters in bounded contexts",
     arch => RequireNamespace(
-        ConcreteTypesAssignableTo(arch, typeof(IRepository)),
+        ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Repository),
         DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns()), "Repository implementations", "the outgoing adapter namespace"))
     .Selecting(
         "Non-interface types below the root namespace assignable to IRepository, "
@@ -75,7 +78,10 @@ DcaRule.Check(
     .Checking(
         "The type resides in <module>.Adapter.Outgoing of some module root. An "
         + "implementation anywhere else below the root - a test double, say - is "
-        + "reported; an empty selection passes.")
+        + "reported; an empty selection passes. An implementation that carries the "
+        + "repository role and is also named *Repository is reported by DCA-HEX-008 as well: "
+        + "that rule finds unmarked implementations by name, and the two populations overlap "
+        + "where a project does both.")
 ```
 
 ## Related mentions (heuristic)

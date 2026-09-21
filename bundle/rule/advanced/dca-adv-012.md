@@ -29,7 +29,7 @@ Every field - declared or inherited from a superclass, static fields included - 
 
 **Selection.** Non-interface types in <module>.Domain of every module root that are assignable to IDomainService.
 
-**Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field; a get-only one passes. Field types are not inspected, so a readonly field holding mutable state passes. An empty selection passes.
+**Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field; a get-only one passes. Field types are not inspected, so a readonly field holding mutable state passes. A type the loader cannot resolve is read through the ArchUnitNET member model instead, and a field whose writability neither model states is not reported. An empty selection passes.
 
 ## Implementation
 
@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(DomainService.class)
+                .areAssignableTo(arch.layout().markers().domainService())
+                .and()
+                .areNotInterfaces()
                 .and()
                 .resideInAnyPackage(arch.allDomainPatterns())
                 .should(haveOnlyFinalFieldsIncludingInherited())
@@ -90,7 +92,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -102,7 +104,7 @@ DcaRule.Check(
         "Domain Services must have only readonly fields:",
         NonReadonlyFieldViolations(
             arch,
-            t => t is not Interface && InDomain(arch, t) && t.IsAssignableTo(typeof(IDomainService).FullName!))))
+            t => t is not Interface && InDomain(arch, t) && t.IsAssignableTo(arch.Layout.Markers.DomainService))))
     .Selecting(
         "Non-interface types in <module>.Domain of every module root that are assignable to "
         + "IDomainService.")
@@ -110,7 +112,9 @@ DcaRule.Check(
         "Every field - declared by the type or inherited from a base type, static fields included "
         + "- is readonly or const. A settable auto-property is reported through its backing field; "
         + "a get-only one passes. Field types are not inspected, so a readonly field holding "
-        + "mutable state passes. An empty selection passes.")
+        + "mutable state passes. A type the loader cannot resolve is read through the "
+        + "ArchUnitNET member model instead, and a field whose writability neither model states "
+        + "is not reported. An empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

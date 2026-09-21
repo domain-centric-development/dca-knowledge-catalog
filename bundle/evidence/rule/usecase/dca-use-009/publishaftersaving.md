@@ -20,14 +20,20 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
             .filter(
                 c ->
                     c.getTarget().getName().equals("save")
-                        && c.getTargetOwner().isAssignableTo(Repository.class))
+                        && c.getTargetOwner()
+                            .isAssignableTo(arch.layout().markers().repository()))
             .allMatch(c -> EventFreeAggregate.repository(c.getTargetOwner(), arch))) {
           continue;
         }
         for (JavaCodeUnit entry : calls.entryPointsOf(unit)) {
           boolean publishes =
               calls.reachableFrom(entry).stream()
-                  .anyMatch(u -> calls(u, DomainEventPublisher.class, "publishAndClearEvents"));
+                  .anyMatch(
+                      u ->
+                          calls(
+                              u,
+                              arch.layout().markers().domainEventPublisher(),
+                              "publishAndClearEvents"));
           if (!publishes) {
             events.add(
                 SimpleConditionEvent.violated(

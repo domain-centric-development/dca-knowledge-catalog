@@ -64,6 +64,7 @@ DcaLayout.forBasePackage("com.company.project")
     .withOutgoingSubpackage("out")
     .withUseCaseSuffix("ApplicationService")
     .withControllerSuffix("Page")
+    .withTimestampTypes("com.company.platform.Timestamp")   // what a domain event stores its time in
     .allowingInDomain("org.jmolecules..")         // extra third-party packages tolerated in the domain
     .withFrameworkAnnotations(FrameworkAnnotations.jakarta());   // default: spring()
 ```
@@ -72,7 +73,9 @@ The rules never name a framework. Where a rule needs one — the optional stereo
 annotations a domain model must not carry, the transactional annotation, the controller stereotypes,
 a module system's declarations — it reads a *role* from `FrameworkAnnotations`: `injectable`,
 `webController`, `restController`, `transactional`, `eventListener`, `moduleDeclaration`,
-`publishedInterface`, `persistenceEntity`, `injectionSite`, `persistenceMapping`. Each role is a list of fully qualified annotation names.
+`publishedInterface`, `persistenceEntity`, `injectionSite`, `persistenceMapping`, `transportStatus`,
+and the two the rules match as class dependencies rather than as annotations, `transactionApi` and
+`transactionManager`. Each role is a list of fully qualified names.
 Presets fill them: `spring()` (the default), `jakarta()` (CDI scopes, JAX-RS, JTA, JPA), `quarkus()`,
 `micronaut()`, and `none()` for a hand-wired application. Adjust a single role when your platform
 has its own annotation:
@@ -90,6 +93,31 @@ forbids it forbids all of them.
 
 An empty role is not an error: a rule that forbids it has nothing to forbid, a rule that requires it
 selects nothing, and the rules about transactions then count only the explicit `TransactionBoundary`.
+
+The same idea covers the building blocks themselves. The rules do not name `AggregateRoot`,
+`Repository` or `InputPort` as types either — they read a *role* from `DcaMarkers`, resolved by fully
+qualified name, and the default vocabulary is the one the building blocks ship. A code base that
+already has its own markers, or another library's, keeps them and says so once:
+
+```java
+DcaLayout.forBasePackage("com.company.project")
+    .withMarkers(
+        DcaMarkers.dca()
+            .named("company")
+            .withAggregateRoot("com.company.platform.ddd.AggregateRoot")
+            .withRepository("com.company.platform.ddd.Repository"));
+```
+
+It is then governed by the whole catalog, instead of switching off the rules that would have selected
+nothing. `withRole("aggregateRoot", "...")` sets a role by name where the code is generated rather
+than written. A role names exactly one type and must not be blank: an empty role would select nothing
+and report success, which is the failure mode these rules exist to prevent. Selection is by
+assignability, so the marker may be an interface or a base class. Two vocabularies at once are
+outside this — during a migration the role names the one the rules should follow. The strategic
+annotations (`@BoundedContext`, `@Upstream` and their siblings) are deliberately not roles, because
+the rules read their members and a type name carries none. The test report names the vocabulary in
+use — `building block markers: dca (library default)`, or the name and the roles that differ — so a
+wrong vocabulary is visible instead of silently selecting nothing.
 
 Usually you name no preset at all: `DcaLayout.forBasePackage` detects the framework on the test class
 path and picks the matching preset — Spring when it finds nothing — and the test report names the
@@ -223,8 +251,11 @@ per bounded context is fine — pass all assemblies. Differences worth knowing:
   class, `[ApiController]`, page-model base, `TransactionScope`); `FrameworkTypes.None()` leaves every
   role empty, a `with` expression adjusts one. .NET has no injectable stereotype, so the **Java rules
   that check only a container stereotype** are listed as *not applicable*; six `DCA-NET`
-  rules exist only for .NET (synchronous domain, `Async` suffix on port methods, one `ExecuteAsync`,
-  records for values and ids).
+  rules exist only for .NET (synchronous domain, `Async` suffix on port methods, an awaitable and
+  cancellable use-case contract, records for values and ids, no persistence framework in the
+  application layer). Two of those six — the synchronous domain and the persistence-free application
+  layer — say something about architecture rather than about C#; Java has no twin for them yet, and
+  their `checks` texts say so.
 - **No baseline dial** (`frozen`): ArchUnitNET has no `FreezingArchRule`; lower such rules to a warning
   instead. The `dca-archunit.properties` keys are otherwise the same.
 
@@ -235,4 +266,7 @@ per bounded context is fine — pass all assemblies. Differences worth knowing:
 - [TransactionBoundary](/marker/application/transactionboundary.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
+- [Repository<T, ID>](/marker/port-out/repository.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
+- [@Upstream](/marker/strategic/upstream.md)
+- [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)

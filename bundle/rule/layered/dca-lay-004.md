@@ -27,9 +27,9 @@ Annotations and transaction use: the method is declared in, or the class resides
 
 ## .NET reading
 
-**Selection.** Two selections. Transaction use: types under scan that depend on a configured transaction-API type - TransactionScope (by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: types under scan that depend on one of the TransactionManagerTypes (empty by default) or on ITransactionBoundary. A field, a local, a method call or a using block all count; implementations of ITransactionBoundary itself are never selected. With no transaction type configured only ITransactionBoundary dependencies are selected.
+**Selection.** Three selections. Declarative: types under scan that carry the configured transactional attribute, and types that declare a method carrying it - empty by default, because neither .NET preset configures one. Transaction use: types under scan that depend on a configured transaction-API type - TransactionScope (by default System.Transactions.TransactionScope) or one of the TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: types under scan that depend on one of the TransactionManagerTypes (empty by default) or on ITransactionBoundary. A field, a local, a method call or a using block all count; implementations of ITransactionBoundary itself are never selected. With no transaction type configured only ITransactionBoundary dependencies are selected.
 
-**Check.** Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a type in the global or shared-kernel infrastructure namespace that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked.
+**Check.** Declarative: the type resides in an application namespace of some module root or in an outgoing adapter namespace of some module root - the same places the transaction API is allowed, as in the Java twin. With no transactional attribute configured this selection is empty and the rule checks the other two only. Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a type in the global or shared-kernel infrastructure namespace that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked.
 
 ## Implementation
 
@@ -79,7 +79,7 @@ DcaRule.check(
                   .that()
                   .resideOutsideOfPackages(allowed)
                   .and()
-                  .areNotAssignableTo(TransactionBoundary.class)
+                  .areNotAssignableTo(arch.layout().markers().transactionBoundary())
                   .should()
                   .dependOnClassesThat(usesTransactionApi)
                   .allowEmptyShould(true),
@@ -94,13 +94,13 @@ DcaRule.check(
                   "a configured transaction manager or TransactionBoundary",
                   c ->
                       transactionManager.contains(c.getName())
-                          || c.isAssignableTo(TransactionBoundary.class));
+                          || c.isAssignableTo(arch.layout().markers().transactionBoundary()));
           violations.addAll(
               noClasses()
                   .that()
                   .resideOutsideOfPackages(wiringAllowed.toArray(String[]::new))
                   .and()
-                  .areNotAssignableTo(TransactionBoundary.class)
+                  .areNotAssignableTo(arch.layout().markers().transactionBoundary())
                   .should()
                   .dependOnClassesThat(managerOrBoundary)
                   .allowEmptyShould(true),
@@ -242,7 +242,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -277,11 +277,15 @@ DcaRule.Check(
             .Where(t => !IsBoundary(t))
             .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(programmatic).Select(target => target.FullName).Distinct()
                 .Select(target => $"{t.FullName} uses {target} outside the application layer"));
-        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary)).ToList();
+        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary))
+            .Concat(DeclarativeFindings(arch, allowed, types.TransactionalAttribute))
+            .ToList();
         DcaRule.Fail($"Transaction boundaries belong to the application layer\nbecause {rationale}", violations);
     })
     .Selecting(
-        "Two selections. Transaction use: types under scan that depend on a configured transaction-API "
+        "Three selections. Declarative: types under scan that carry the configured transactional "
+        + "attribute, and types that declare a method carrying it - empty by default, because neither "
+        + ".NET preset configures one. Transaction use: types under scan that depend on a configured transaction-API "
         + "type - TransactionScope (by default System.Transactions.TransactionScope) or one of the "
         + "TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the "
         + "persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: "
@@ -290,7 +294,10 @@ DcaRule.Check(
         + "implementations of ITransactionBoundary itself are never selected. With no transaction type "
         + "configured only ITransactionBoundary dependencies are selected.")
     .Checking(
-        "Transaction use: the type resides in an application namespace of some module root "
+        "Declarative: the type resides in an application namespace of some module root or in an "
+        + "outgoing adapter namespace of some module root - the same places the transaction API is "
+        + "allowed, as in the Java twin. With no transactional attribute configured this selection is "
+        + "empty and the rule checks the other two only. Transaction use: the type resides in an application namespace of some module root "
         + "(<module>.Application or below) or in an outgoing adapter namespace of some module root "
         + "(<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace "
         + "is reported, the global one included. Wiring: additionally allowed in the global "

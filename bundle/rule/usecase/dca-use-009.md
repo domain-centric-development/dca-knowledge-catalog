@@ -5,7 +5,7 @@ title: Use cases that save an aggregate must publish its domain events
 rule: "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the instance they may later be published out of context. Publishing belongs after the save, in the use case that owns the unit of work - unless the aggregate is proven never to register an event: its whole hierarchy is under scan and no code unit of it, of a helper it calls, or of any other scanned class registering on that aggregate (a nested class it never calls) calls registerEvent; a helper in another top-level class cannot reach the protected method; an unresolved type argument keeps the requirement. Checked per entry path, following calls within the use case class: every entry point that reaches a save - a method callable from outside the class, or one nothing in the class calls - must also reach a publication; a wrapper that publishes does not cover a direct call of the public method it wraps, and a helper two methods share does not connect them. That the publication follows the save and concerns the same aggregate is not established statically. Only DomainEventPublisher.publishAndClearEvents counts as a publication: iterating domainEvents() and calling publish(event), even followed by clearDomainEvents(), separates dispatch from acknowledgement and is not accepted."
 constraint: Use cases that save an aggregate must publish its domain events.
 selects: "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix."
-checks: "Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes."
+checks: "Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it."
 enforced_by: "UseCaseRules#DCA-USE-009"
 status: enforced
 rule_set: usecase
@@ -23,13 +23,13 @@ Non-interface classes in <module>.application.. that implement InputPort or whos
 
 ## Check
 
-Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes.
+Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.
 
 ## .NET reading
 
 **Selection.** Classes in <module>.Application of every module root selected by IInputPort assignability or the configured use-case suffix, whose runtime type is in the loaded assemblies.
 
-**Check.** Only a resolved IRepository<T,ID> aggregate with its complete non-building-block hierarchy under scan and no registration call, including helpers, is exempt. Unresolved arguments, partial scans and undecidable external helpers are not exempt. For every non-exempt method calling IRepository.SaveAsync, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of IDomainEventPublisher.PublishAndClearEventsAsync. Calls are read from the IL of the class and its nested state-machine and closure types, so async methods and lambdas are followed. Only PublishAndClearEventsAsync counts - PublishAsync(event), even followed by ClearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes.
+**Check.** Only a resolved IRepository<T,ID> aggregate is exempt, and only when its complete hierarchy is under scan and nothing registers an event on it: neither the hierarchy itself nor a type outside it. The walk stops at the platform and at the namespaces the configured marker roles live in, so a project's own vocabulary stops it where the library's does. Unresolved arguments and partial scans are not exempt. For every non-exempt method calling IRepository.SaveAsync, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of IDomainEventPublisher.PublishAndClearEventsAsync. Calls are read from the IL of the class and its nested state-machine and closure types, so async methods and lambdas are followed. Only PublishAndClearEventsAsync counts - PublishAsync(event), even followed by ClearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.
 
 ## Implementation
 
@@ -54,23 +54,47 @@ DcaRule.of(
             + " clearDomainEvents(), separates dispatch from acknowledgement and is not accepted",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
-                .and()
-                .haveSimpleNameEndingWith(layout.useCaseSuffix())
-                .or()
-                .areAssignableTo(InputPort.class)
-                .and()
-                .areNotInterfaces()
+                .that(useCases(arch, layout))
                 .should(publishAfterSaving(arch))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix.")
     .checking(
-        "Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes.")
+        "Only a resolved Repository<T,ID> whose aggregate and every non-building-block superclass are scanned and have no registration call (including helpers) is exempt. Unresolved generics, partial scans or undecidable external helpers remain required. For every non-exempt method of the class that calls Repository.save, every entry point reaching it (a method callable from outside the class, or one nothing in the class calls) also reaches, through calls within the class, a call of DomainEventPublisher.publishAndClearEvents. Only publishAndClearEvents counts - publish(event), even followed by clearDomainEvents(), does not. A use case without a save (a query, a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.",
+        "call DomainEventPublisher.publishAndClearEvents(aggregate) after Repository.save(aggregate) on every path that saves")
 ```
 
 ## Helpers
+
+### `useCases`
+
+```java
+/**
+   * The documented use-case selection: a non-interface class in an application package that either
+   * carries the configured use-case suffix or implements the input-port role.
+   *
+   * <p>Spelled inline, ArchUnit joins {@code and}/{@code or} left to right, so {@code
+   * resideInAnyPackage(app).and().haveSimpleNameEndingWith(suffix).or().areAssignableTo(port)
+   * .and().areNotInterfaces()} reads {@code ((inApplication ∧ suffix) ∨ isInputPort) ∧ ¬interface}
+   * and selects every input-port implementation anywhere, adapters included — which is neither what
+   * the rule texts say nor what the .NET twin does.
+   */
+  private static DescribedPredicate<JavaClass> useCases(DcaArchitecture arch, DcaLayout layout) {
+    DescribedPredicate<JavaClass> inApplication =
+        JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns());
+    DescribedPredicate<JavaClass> named =
+        JavaClass.Predicates.simpleNameEndingWith(layout.useCaseSuffix());
+    DescribedPredicate<JavaClass> port =
+        JavaClass.Predicates.assignableTo(arch.layout().markers().inputPort());
+    return inApplication
+        .and(named.or(port))
+        .and(DescribedPredicate.not(JavaClass.Predicates.INTERFACES))
+        .as(
+            "non-interface classes in an application package that implement the input port or end"
+                + " with \"%s\"",
+            layout.useCaseSuffix());
+  }
+```
 
 ### `publishAfterSaving`
 
@@ -85,14 +109,20 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
             .filter(
                 c ->
                     c.getTarget().getName().equals("save")
-                        && c.getTargetOwner().isAssignableTo(Repository.class))
+                        && c.getTargetOwner()
+                            .isAssignableTo(arch.layout().markers().repository()))
             .allMatch(c -> EventFreeAggregate.repository(c.getTargetOwner(), arch))) {
           continue;
         }
         for (JavaCodeUnit entry : calls.entryPointsOf(unit)) {
           boolean publishes =
               calls.reachableFrom(entry).stream()
-                  .anyMatch(u -> calls(u, DomainEventPublisher.class, "publishAndClearEvents"));
+                  .anyMatch(
+                      u ->
+                          calls(
+                              u,
+                              arch.layout().markers().domainEventPublisher(),
+                              "publishAndClearEvents"));
           if (!publishes) {
             events.add(
                 SimpleConditionEvent.violated(
@@ -113,12 +143,12 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
 ### `calls`
 
 ```java
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType) {
+private static boolean calls(JavaCodeUnit unit, String targetType) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(call -> call.getTargetOwner().isAssignableTo(targetType));
 }
 
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType, String methodName) {
+private static boolean calls(JavaCodeUnit unit, String targetType, String methodName) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(
           call ->
@@ -140,9 +170,10 @@ private static boolean calls(JavaCodeUnit unit, Class<?> targetType, String meth
 
 ```java
 static boolean repository(JavaClass repository, DcaArchitecture arch) {
+  DcaMarkers markers = arch.layout().markers();
   Type aggregate;
   try {
-    aggregate = aggregate(repository.reflect(), Map.of());
+    aggregate = aggregate(repository.reflect(), Map.of(), markers);
   } catch (LinkageError | RuntimeException failure) {
     return false;
   }
@@ -152,13 +183,13 @@ static boolean repository(JavaClass repository, DcaArchitecture arch) {
   JavaClass current = scanned.get(concrete.getName());
   if (current == null) return false;
   Set<String> hierarchy = new HashSet<>();
-  while (current != null && !platform(current.getName())) {
+  while (current != null && !platform(current.getName(), markers)) {
     if (!scanned.containsKey(current.getName())
-        || !noRegistration(current, scanned, new HashSet<>())) return false;
+        || !noRegistration(current, scanned, new HashSet<>(), markers)) return false;
     hierarchy.add(current.getName());
     current = current.getRawSuperclass().orElse(null);
   }
-  return noExternalRegistration(hierarchy, scanned);
+  return noExternalRegistration(hierarchy, scanned, markers);
 }
 ```
 
@@ -199,7 +230,8 @@ static boolean repository(JavaClass repository, DcaArchitecture arch) {
 ### `EventFreeAggregate.aggregate`
 
 ```java
-private static Type aggregate(Type type, Map<TypeVariable<?>, Type> inherited) {
+private static Type aggregate(
+    Type type, Map<TypeVariable<?>, Type> inherited, DcaMarkers markers) {
   Class<?> raw;
   Map<TypeVariable<?>, Type> bindings = new HashMap<>(inherited);
   if (type instanceof ParameterizedType p) {
@@ -213,39 +245,45 @@ private static Type aggregate(Type type, Map<TypeVariable<?>, Type> inherited) {
     }
   } else if (type instanceof Class<?> c) raw = c;
   else return null;
-  if (raw == Repository.class) return bindings.get(raw.getTypeParameters()[0]);
+  if (raw.getName().equals(markers.repository())) return bindings.get(raw.getTypeParameters()[0]);
   for (Type parent : raw.getGenericInterfaces()) {
-    Type found = aggregate(parent, bindings);
+    Type found = aggregate(parent, bindings, markers);
     if (found != null) return found;
   }
   return raw.getGenericSuperclass() == null
       ? null
-      : aggregate(raw.getGenericSuperclass(), bindings);
+      : aggregate(raw.getGenericSuperclass(), bindings, markers);
 }
 ```
 
 ### `EventFreeAggregate.platform`
 
 ```java
-private static boolean platform(String name) {
-  return name.startsWith("java.") || name.startsWith("dev.domaincentric.dca.buildingblocks.");
-}
+/**
+   * A type the walk does not enter: the platform's own, or one of the vocabulary's - a marker and
+   * the base classes beside it register no event. Derived from the configured roles, so a project's
+   * own vocabulary stops the walk where the library's does.
+   */
+  private static boolean platform(String name, DcaMarkers markers) {
+    return name.startsWith("java.")
+        || markers.declaresTypesIn(name.substring(0, Math.max(name.lastIndexOf('.'), 0)));
+  }
 ```
 
 ### `EventFreeAggregate.noRegistration`
 
 ```java
 private static boolean noRegistration(
-    JavaClass type, Map<String, JavaClass> scanned, Set<String> visited) {
+    JavaClass type, Map<String, JavaClass> scanned, Set<String> visited, DcaMarkers markers) {
   if (!visited.add(type.getName())) return true;
   for (var unit : type.getCodeUnits())
     for (var call : unit.getCallsFromSelf()) {
       var owner = call.getTargetOwner();
       if (call.getTarget().getName().equals("registerEvent")
-          && owner.isAssignableTo(AggregateRoot.class)) return false;
-      if (platform(owner.getName())) continue;
+          && owner.isAssignableTo(markers.aggregateRoot())) return false;
+      if (platform(owner.getName(), markers)) continue;
       var target = scanned.get(owner.getName());
-      if (target == null || !noRegistration(target, scanned, visited)) return false;
+      if (target == null || !noRegistration(target, scanned, visited, markers)) return false;
     }
   return true;
 }
@@ -261,15 +299,16 @@ private static boolean noRegistration(
    * supertypes disables the exemption.
    */
   private static boolean noExternalRegistration(
-      Set<String> hierarchy, Map<String, JavaClass> scanned) {
+      Set<String> hierarchy, Map<String, JavaClass> scanned, DcaMarkers markers) {
     for (JavaClass type : scanned.values()) {
       if (hierarchy.contains(type.getName())) continue;
       for (var unit : type.getCodeUnits())
         for (var call : unit.getCallsFromSelf()) {
           var owner = call.getTargetOwner();
           if (call.getTarget().getName().equals("registerEvent")
-              && owner.isAssignableTo(AggregateRoot.class)
-              && (hierarchy.contains(owner.getName()) || platform(owner.getName()))) return false;
+              && owner.isAssignableTo(markers.aggregateRoot())
+              && (hierarchy.contains(owner.getName()) || platform(owner.getName(), markers)))
+            return false;
         }
     }
     return true;
@@ -290,11 +329,15 @@ private static boolean noRegistration(
 ```java
 private boolean isEntryPoint(JavaCodeUnit unit) {
   Set<JavaModifier> modifiers = unit.getModifiers();
-  boolean externallyCallable =
-      !modifiers.contains(JavaModifier.PRIVATE)
-          && !modifiers.contains(JavaModifier.SYNTHETIC)
-          && !modifiers.contains(JavaModifier.BRIDGE);
-  return externallyCallable || callers.getOrDefault(unit, Set.of()).isEmpty();
+  if (modifiers.contains(JavaModifier.SYNTHETIC) || modifiers.contains(JavaModifier.BRIDGE)) {
+    // A unit the compiler wrote, not a path anyone enters on. The bridge method a generic input
+    // port produces - execute(Object) beside execute(Command) - has no caller inside the class,
+    // so the "nothing calls it" fallback below would otherwise make it a second entry point and
+    // report every use case over a generic port twice.
+    return false;
+  }
+  return !modifiers.contains(JavaModifier.PRIVATE)
+      || callers.getOrDefault(unit, Set.of()).isEmpty();
 }
 ```
 
@@ -318,7 +361,7 @@ private static Set<JavaCodeUnit> closure(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -343,7 +386,7 @@ DcaRule.Check(
             var useCases = arch.Classes
                 .Where(c => c.Namespace is not null
                     && Matches(c.Namespace.FullName, DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-                    && (IsAssignableTo(arch, c, typeof(IInputPort)) || c.Name.Split('`')[0].EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)))
+                    && (IsAssignableTo(arch, c, arch.Layout.Markers.InputPort) || c.Name.Split('`')[0].EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)))
                 .OrderBy(c => c.FullName, StringComparer.Ordinal);
             foreach (var useCase in useCases)
             {
@@ -354,14 +397,14 @@ DcaRule.Check(
                 }
 
                 var calls = new IntraClassCalls(runtime);
-                foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", typeof(IRepository))))
+                foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", arch.Layout.Markers.Repository)))
                 {
-                    if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && typeof(IRepository).IsAssignableFrom(m.DeclaringType))
+                    if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, arch.Layout.Markers.Repository))
                         .All(m => EventFreeAggregate.Repository(m, arch))) continue;
                     foreach (var entry in calls.EntryPointsOf(unit))
                     {
                         var publishes = calls.ReachableFrom(entry)
-                            .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", typeof(IDomainEventPublisher)));
+                            .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", arch.Layout.Markers.DomainEventPublisher));
                         if (!publishes)
                         {
                             violations.Add($"{useCase.FullName}.{IntraClassCalls.PathName(entry, unit)} saves an aggregate without"
@@ -380,14 +423,14 @@ DcaRule.Check(
         "Classes in <module>.Application of every module root selected by IInputPort assignability or the"
             + " configured use-case suffix, whose runtime type is in the loaded assemblies.")
     .Checking(
-        "Only a resolved IRepository<T,ID> aggregate with its complete non-building-block hierarchy under scan and no registration call, including helpers, is exempt. Unresolved arguments, partial scans and undecidable external helpers are not exempt. For every non-exempt method calling IRepository.SaveAsync, every entry point"
+        "Only a resolved IRepository<T,ID> aggregate is exempt, and only when its complete hierarchy is under scan and nothing registers an event on it: neither the hierarchy itself nor a type outside it. The walk stops at the platform and at the namespaces the configured marker roles live in, so a project's own vocabulary stops it where the library's does. Unresolved arguments and partial scans are not exempt. For every non-exempt method calling IRepository.SaveAsync, every entry point"
             + " reaching it (a method callable from outside the class, or one nothing in the"
             + " class calls) also reaches, through calls within the class, a call of"
             + " IDomainEventPublisher.PublishAndClearEventsAsync. Calls are read from the IL of"
             + " the class and its nested state-machine and closure types, so async methods and"
             + " lambdas are followed. Only PublishAndClearEventsAsync counts - PublishAsync(event),"
             + " even followed by ClearDomainEvents(), does not. A use case without a save (a query,"
-            + " a bulk delete) is selected but has nothing to check and passes.")
+            + " a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
 ```
 
 ### C# helper EventFreeAggregate
@@ -406,34 +449,108 @@ internal static class EventFreeAggregate
 {
     internal static bool Repository(MethodBase save, DcaArchitecture arch)
     {
+        var markers = arch.Layout.Markers;
         var owner = save.DeclaringType;
         if (owner is null) return false;
-        var repository = owner.GetInterfaces().Append(owner).FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IRepository<,>));
+        var repository = owner.GetInterfaces().Append(owner).FirstOrDefault(t => t.IsGenericType && DcaMarkers.IsRole(t.GetGenericTypeDefinition(), markers.Repository));
         var aggregate = repository?.GetGenericArguments()[0];
         if (aggregate is null || aggregate.IsGenericParameter || aggregate.IsInterface) return false;
         var scanned = arch.Types.Select(arch.RuntimeType).Where(t => t is not null).Cast<Type>().ToHashSet();
         if (!scanned.Contains(aggregate)) return false;
-        for (var current = aggregate; current is not null && !Platform(current); current = current.BaseType)
-            if (!scanned.Contains(current) || !NoRegistration(current, scanned, new HashSet<Type>())) return false;
+        var hierarchy = new HashSet<Type>();
+        for (var current = aggregate; current is not null && !Platform(current, markers); current = current.BaseType)
+        {
+            if (!scanned.Contains(current) || !NoRegistration(current, scanned, new HashSet<Type>(), markers)) return false;
+            hierarchy.Add(current);
+        }
+
+        return NoExternalRegistration(hierarchy, scanned, markers);
+    }
+
+    /// <summary>
+    /// A type outside the aggregate's hierarchy that registers an event on it — a neighbouring class
+    /// reaching the protected method — is invisible from the aggregate's own code units, so every
+    /// scanned type is inspected. The Java twin reads the receiver of the call; IL names the
+    /// <em>declaring</em> type instead (the inherited <c>RegisterEvent</c> of the marker's base
+    /// class), so the receiver is approximated: a registering type disables the exemption when it
+    /// also references a type of the hierarchy. Conservative in the right direction — it exempts
+    /// less, never more.
+    /// </summary>
+    private static bool NoExternalRegistration(HashSet<Type> hierarchy, HashSet<Type> scanned, DcaMarkers markers)
+    {
+        foreach (var type in scanned)
+        {
+            if (hierarchy.Contains(type)) continue;
+            var registers = new IntraClassCalls(type).Units
+                .SelectMany(IntraClassCalls.IlCalls)
+                .Any(call => call.Name == "RegisterEvent"
+                    && call.DeclaringType is { } owner
+                    && DcaMarkers.CarriesRole(owner, markers.AggregateRoot));
+            if (registers && References(type, hierarchy))
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
-    private static bool NoRegistration(Type type, HashSet<Type> scanned, HashSet<Type> visited)
+    /// <summary>Whether the type names any of the given types in its members or in what it calls.</summary>
+    private static bool References(Type type, HashSet<Type> hierarchy)
+    {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+            | BindingFlags.Static | BindingFlags.DeclaredOnly;
+        foreach (var nested in type.GetNestedTypes(flags).Append(type))
+        {
+            if (nested.GetFields(flags).Any(f => hierarchy.Contains(f.FieldType))
+                || nested.GetProperties(flags).Any(p => hierarchy.Contains(p.PropertyType)))
+            {
+                return true;
+            }
+
+            foreach (var method in nested.GetMethods(flags).Cast<MethodBase>().Concat(nested.GetConstructors(flags)))
+            {
+                if (method.GetParameters().Any(parameter => hierarchy.Contains(parameter.ParameterType)))
+                {
+                    return true;
+                }
+
+                if (IntraClassCalls.IlCalls(method).Any(call => call.DeclaringType is { } owner && hierarchy.Contains(owner)))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool NoRegistration(Type type, HashSet<Type> scanned, HashSet<Type> visited, DcaMarkers markers)
     {
         if (!visited.Add(type)) return true;
         foreach (var call in new IntraClassCalls(type).Units.SelectMany(IntraClassCalls.IlCalls))
         {
             var owner = call.DeclaringType;
             if (owner is null) return false;
-            if (call.Name == "RegisterEvent" && typeof(IAggregateRoot).IsAssignableFrom(owner)) return false;
-            if (Platform(owner)) continue;
-            if (!scanned.Contains(owner) || !NoRegistration(owner, scanned, visited)) return false;
+            if (call.Name == "RegisterEvent" && DcaMarkers.CarriesRole(owner, markers.AggregateRoot)) return false;
+            if (Platform(owner, markers)) continue;
+            if (!scanned.Contains(owner) || !NoRegistration(owner, scanned, visited, markers)) return false;
         }
         return true;
     }
 
-    private static bool Platform(Type type) => (type.FullName ?? "").StartsWith("System.", StringComparison.Ordinal)
-        || (type.FullName ?? "").StartsWith("DomainCentric.BuildingBlocks.", StringComparison.Ordinal);
+    /// <summary>
+    /// A type the walk does not enter: the platform's own, or one of the vocabulary's — a marker and
+    /// the base classes beside it register no event. Derived from the configured roles, so a project's
+    /// own vocabulary stops the walk where the library's does; hard-wiring the building-blocks prefix
+    /// would leave the exemption unreachable for such a project.
+    /// </summary>
+    private static bool Platform(Type type, DcaMarkers markers)
+    {
+        var name = type.FullName ?? "";
+        return name.StartsWith("System.", StringComparison.Ordinal)
+            || markers.DeclaresTypesIn(type.Namespace ?? "");
+    }
 }
 ```
 
@@ -547,8 +664,8 @@ internal sealed class IntraClassCalls
             && (declaring.Name.StartsWith('<') || declaring.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
     /// <summary>Whether the unit's IL calls a method named <paramref name="method"/> on a type assignable to <paramref name="marker"/>.</summary>
-    public static bool Calls(MethodBase unit, string method, Type marker) =>
-        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && marker.IsAssignableFrom(m.DeclaringType));
+    public static bool Calls(MethodBase unit, string method, string marker) =>
+        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, marker));
 
     /// <summary>
     /// The source-level name of a unit: <c>ExecuteAsync</c> for the method itself, for its state machine's
@@ -719,7 +836,6 @@ internal sealed class IntraClassCalls
 
 ## Related mentions (heuristic)
 
-- [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
@@ -732,6 +848,7 @@ internal sealed class IntraClassCalls
 ## Evidence slices
 
 - [Overview](/evidence/rule/usecase/dca-use-009/overview.md)
+- [`useCases`](/evidence/rule/usecase/dca-use-009/usecases.md)
 - [`publishAfterSaving`](/evidence/rule/usecase/dca-use-009/publishaftersaving.md)
 - [`calls`](/evidence/rule/usecase/dca-use-009/calls.md)
 - [`pathName`](/evidence/rule/usecase/dca-use-009/pathname.md)

@@ -10,4 +10,4 @@
 - [Converters must reside in the adapter layer](dca-nam-008.md) — Converters/Mappers translate between layers and should be in adapters.
 - [No technical bucket packages - package by domain concept](dca-nam-009.md) — Packages are named after domain concepts from the ubiquitous language, not technical patterns.
 - [Domain classes must not use technical suffixes (Helper, Util, Impl, Implementation)](dca-nam-010.md) — Domain names come from the ubiquitous language - name services by their specialty, not by technical role.
-- [ViewModels must reside in adapter.incoming.web packages](dca-nam-011.md) — ViewModels are presentation concerns and must reside in incoming web adapter packages.
+- [ViewModels must reside in the configured web adapter package](dca-nam-011.md) — A ViewModel is shaped for the protocol of one incoming adapter and belongs in it. It has no reading in the domain or ...

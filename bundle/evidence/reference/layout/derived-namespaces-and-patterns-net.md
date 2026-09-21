@@ -20,7 +20,7 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 | `string DomainPattern` | Pattern for `Root.*.Domain` and below — the domain layer of every direct child namespace (context). |
 | `string DomainModelPattern` | Pattern for `Root.*.Domain.Model` and below. |
 | `string ApplicationPattern` | Pattern for `Root.*.Application` and below. |
-| `string SharedOutputPortPattern` | Pattern for `Root.*.Application.Shared` and below — output ports shared by the use cases of one context. |
+| `string SharedOutputPortPattern` | Pattern for `Root.*.Application.<Shared>` and below — output ports shared by the use cases of one context. |
 | `string AdapterPattern` | Pattern for `Root.*.Adapter` and below. |
 | `string IncomingAdapterPattern` | Pattern for `Root.*.Adapter.Incoming` and below. |
 | `string OutgoingAdapterPattern` | Pattern for `Root.*.Adapter.Outgoing` and below. |

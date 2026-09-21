@@ -34,7 +34,6 @@ Software"
 
 ## Governed by
 
-- [Marked domain services reside in the configured domain service segment](/rule/advanced/dca-adv-009.md)
 - [Marked domain services reside in a module domain](/rule/advanced/dca-adv-010.md)
 
 ## Related mentions in guides (heuristic)

@@ -5,7 +5,7 @@ title: Store interfaces must not declare save or delete methods
 rule: "save/delete are Repository semantics; a Store that has them is a Repository wearing the wrong name, and the stored object should then be an Aggregate Root."
 constraint: Store interfaces must not declare save or delete methods.
 selects: "Interfaces anywhere under scan assignable to Store, the marker Store itself excluded."
-checks: "No method declared on the interface itself is named save, deleteById or delete - matched by name alone, parameters and return type disregarded. Inherited methods are not inspected, and no particular vocabulary (record, count, exists) is required."
+checks: "No method declared on the interface itself is named save, deleteById, delete or one of their asynchronous forms saveAsync, deleteByIdAsync, deleteAsync - matched by name alone, parameters and return type disregarded and case ignored, so both languages match the same six names. Inherited methods are not inspected, and no particular vocabulary (record, count, exists) is required. The six names are fixed and are not part of the marker roles: a vocabulary that writes under another name is selected and then found to declare no write."
 enforced_by: "TacticalPatternRules#DCA-TAC-021"
 status: enforced
 rule_set: tactical
@@ -23,13 +23,13 @@ Interfaces anywhere under scan assignable to Store, the marker Store itself excl
 
 ## Check
 
-No method declared on the interface itself is named save, deleteById or delete - matched by name alone, parameters and return type disregarded. Inherited methods are not inspected, and no particular vocabulary (record, count, exists) is required.
+No method declared on the interface itself is named save, deleteById, delete or one of their asynchronous forms saveAsync, deleteByIdAsync, deleteAsync - matched by name alone, parameters and return type disregarded and case ignored, so both languages match the same six names. Inherited methods are not inspected, and no particular vocabulary (record, count, exists) is required. The six names are fixed and are not part of the marker roles: a vocabulary that writes under another name is selected and then found to declare no write.
 
 ## .NET reading
 
 **Selection.** Interfaces below the root namespace assignable to IStore; an interface named exactly Store excluded.
 
-**Check.** No method declared on the interface itself is named SaveAsync, DeleteByIdAsync or DeleteAsync, nor their synchronous forms Save, DeleteById and Delete, nor the camel-cased save, deleteById and delete - matched by name alone, parameters and return type disregarded. Inherited methods are not inspected, and no particular vocabulary (Record, Count, Exists) is required.
+**Check.** No method declared on the interface itself is named Save, DeleteById, Delete or one of their asynchronous forms SaveAsync, DeleteByIdAsync, DeleteAsync - matched by name alone, parameters and return type disregarded and case ignored, so both languages match the same six names. Inherited methods are not inspected, and no particular vocabulary (Record, Count, Exists) is required. The six names are fixed and are not part of the marker roles: a vocabulary that writes under another name is selected and then found to declare no write.
 
 ## Implementation
 
@@ -43,7 +43,8 @@ DcaRule.check(
           List<String> violations = new ArrayList<>();
           for (JavaClass store : storeInterfaces(arch)) {
             for (JavaMethod method : store.getMethods()) {
-              if (REPOSITORY_METHOD_NAMES.contains(method.getName())) {
+              if (REPOSITORY_METHOD_NAMES.contains(
+                  method.getName().toLowerCase(java.util.Locale.ROOT))) {
                 violations.add(
                     store.getFullName()
                         + "."
@@ -62,10 +63,14 @@ DcaRule.check(
         "Interfaces anywhere under scan assignable to Store, the marker Store itself "
             + "excluded.")
     .checking(
-        "No method declared on the interface itself is named save, deleteById "
-            + "or delete - matched by name alone, parameters and return type disregarded. "
-            + "Inherited methods are not inspected, and no particular vocabulary (record, "
-            + "count, exists) is required.")
+        "No method declared on the interface itself is named save, deleteById, delete "
+            + "or one of their asynchronous forms saveAsync, deleteByIdAsync, "
+            + "deleteAsync - matched by name alone, parameters and return type "
+            + "disregarded and case ignored, so both languages match the same six names. Inherited methods "
+            + "are not inspected, and no particular vocabulary (record, count, exists) "
+            + "is required. The six names are fixed and are not part of the marker "
+            + "roles: a vocabulary that writes under another name is selected and then "
+            + "found to declare no write.")
 ```
 
 ## Helpers
@@ -77,9 +82,9 @@ private static List<JavaClass> storeInterfaces(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(Store.class)
+          c.isAssignableTo(arch.layout().markers().store())
               && c.isInterface()
-              && !c.getSimpleName().equals(STORE_SUFFIX));
+              && !c.getSimpleName().equals(arch.layout().storeSuffix()));
 }
 ```
 
@@ -104,7 +109,7 @@ private static List<JavaClass> classesMatching(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -137,12 +142,13 @@ DcaRule.Check(
         "Interfaces below the root namespace assignable to IStore; an interface named "
         + "exactly Store excluded.")
     .Checking(
-        "No method declared on the interface itself is named "
-        + "SaveAsync, DeleteByIdAsync or DeleteAsync, nor their synchronous forms "
-        + "Save, DeleteById and Delete, nor the camel-cased save, "
-        + "deleteById and delete - matched by name alone, parameters and return type "
-        + "disregarded. Inherited methods are not inspected, and no particular "
-        + "vocabulary (Record, Count, Exists) is required.")
+        "No method declared on the interface itself is named Save, DeleteById, Delete "
+        + "or one of their asynchronous forms SaveAsync, DeleteByIdAsync, DeleteAsync - "
+        + "matched by name alone, parameters and return type disregarded and case "
+        + "ignored, so both languages match the same six names. Inherited methods are not "
+        + "inspected, and no particular vocabulary (Record, Count, Exists) is required. "
+        + "The six names are fixed and are not part of the marker roles: a vocabulary that "
+        + "writes under another name is selected and then found to declare no write.")
 ```
 
 ## Related mentions (heuristic)

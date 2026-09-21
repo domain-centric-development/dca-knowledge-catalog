@@ -1,6 +1,6 @@
 # rule
 
-- [advanced/](advanced/index.md) (17)
+- [advanced/](advanced/index.md) (16)
 - [contextmap/](contextmap/index.md) (12)
 - [cycles/](cycles/index.md) (5)
 - [dotnet/](dotnet/index.md) (6)

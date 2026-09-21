@@ -41,7 +41,8 @@ DcaRule.check(
             + " ubiquitous language, never through public setters",
         arch -> {
           List<String> violations = new ArrayList<>();
-          for (JavaClass domainClass : concreteClassesAssignableTo(arch, Entity.class)) {
+          for (JavaClass domainClass :
+              concreteClassesAssignableTo(arch, arch.layout().markers().entity())) {
             for (JavaMethod method : domainClass.getAllMethods()) {
               if (isSetter(method) && method.getModifiers().contains(JavaModifier.PUBLIC)) {
                 violations.add(
@@ -69,8 +70,7 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(
-    DcaArchitecture arch, Class<?> marker) {
+private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
   return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
 }
 ```
@@ -109,7 +109,7 @@ private static List<JavaClass> classesMatching(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -121,7 +121,7 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var domainClass in ConcreteTypesAssignableTo(arch, typeof(IEntity)))
+        foreach (var domainClass in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Entity))
         {
             foreach (var setter in Setters(domainClass, publicOnly: true))
             {

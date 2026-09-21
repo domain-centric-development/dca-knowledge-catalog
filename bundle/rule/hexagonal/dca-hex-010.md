@@ -42,7 +42,7 @@ DcaRule.of(
         arch ->
             noClasses()
                 .that()
-                .areAssignableTo(OutputPort.class)
+                .areAssignableTo(arch.layout().markers().outputPort())
                 .and()
                 .areInterfaces()
                 .should()
@@ -59,7 +59,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -68,7 +68,7 @@ DcaRule.Of(
         "Output ports must not reside in the domain layer",
         "output ports (IRepository, IStore, IOutputPort) are an application-layer concern and must live"
             + " in Application/Shared/, not Domain/",
-        arch => Interfaces().That().AreAssignableTo(typeof(IOutputPort))
+        arch => Interfaces().That().FollowCustomPredicate(i => i.IsAssignableTo(arch.Layout.Markers.OutputPort), "are output ports")
             .Should().NotResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
     .Selecting(
         "Interfaces anywhere in the loaded assemblies that are assignable to"

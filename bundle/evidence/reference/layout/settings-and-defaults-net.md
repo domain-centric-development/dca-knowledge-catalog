@@ -24,6 +24,14 @@ Create the default layout with `DcaLayout.ForRootNamespace(string)`.
 | `EventsSegment` | `Events` | `WithEventsSegment(...)` |
 | `UseCaseSuffix` | `UseCase` | `WithUseCaseSuffix(...)` |
 | `ControllerSuffix` | `Controller` | `WithControllerSuffix(...)` |
-| `RestControllerSuffix` | `Controller` | `WithRestControllerSuffix(...)` |
+| `RestControllerSuffix` | `// The REST endpoint class is *Resource` | `WithRestControllerSuffix(...)` |
+| `OperationContainers` | `FrameworkTypes.AspNetCore()` | `WithOperationContainers(...)` |
 | `ModelSegment` | `Model` | `WithModelSegment(...)` |
 | `IncomingEventSegment` | `Event` | `WithIncomingEventSegment(...)` |
+| `WebSegment` | `Web` | `WithWebSegment(...)` |
+| `SharedSegment` | `Shared` | `WithSharedSegment(...)` |
+| `AggregateRootSuffix` | `AggregateRoot` | `WithAggregateRootSuffix(...)` |
+| `RepositorySuffix` | `Repository` | `WithRepositorySuffix(...)` |
+| `StoreSuffix` | `Store` | `WithStoreSuffix(...)` |
+| `FactorySuffix` | `Factory` | `WithFactorySuffix(...)` |
+| `SpecificationSuffix` | `Specification` | `WithSpecificationSuffix(...)` |

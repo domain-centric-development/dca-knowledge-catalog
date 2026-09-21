@@ -43,7 +43,7 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .areAssignableTo(IntegrationEvent.class)
+                .areAssignableTo(arch.layout().markers().integrationEvent())
                 .and()
                 .areNotInterfaces()
                 .should()
@@ -56,6 +56,10 @@ DcaRule.of(
         "The class itself is annotated with @IntegrationEventType. An annotation on a supertype does not"
             + " count; the annotation's name and version values are not checked. An empty selection passes.")
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -69,7 +73,7 @@ DcaRule.Check(
         "Integration Events must be annotated with [IntegrationEventType]:",
         Violations(
             arch,
-            t => t is not Interface && IsIntegrationEvent(t),
+            t => t is not Interface && IsIntegrationEvent(t, arch.Layout.Markers),
             t => !t.HasAttribute(typeof(IntegrationEventTypeAttribute).FullName!),
             t => $"{t.FullName} is not annotated with [IntegrationEventType]")))
     .Selecting(

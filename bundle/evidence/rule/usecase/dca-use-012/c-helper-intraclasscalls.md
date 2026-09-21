@@ -117,8 +117,8 @@ internal sealed class IntraClassCalls
             && (declaring.Name.StartsWith('<') || declaring.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
     /// <summary>Whether the unit's IL calls a method named <paramref name="method"/> on a type assignable to <paramref name="marker"/>.</summary>
-    public static bool Calls(MethodBase unit, string method, Type marker) =>
-        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && marker.IsAssignableFrom(m.DeclaringType));
+    public static bool Calls(MethodBase unit, string method, string marker) =>
+        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, marker));
 
     /// <summary>
     /// The source-level name of a unit: <c>ExecuteAsync</c> for the method itself, for its state machine's

@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(DomainEvent.class)
+                .areAssignableTo(arch.layout().markers().domainEvent())
+                .and()
+                .areNotInterfaces()
                 .should()
                 .resideInAnyPackage(arch.allDomainPatterns())
                 .allowEmptyShould(true))
@@ -54,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -64,7 +66,7 @@ DcaRule.Of(
     "Domain events are part of the domain layer (named in past tense)",
     arch => Types()
         .That()
-        .AreAssignableTo(typeof(IDomainEvent))
+        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.DomainEvent), "are domain events")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()

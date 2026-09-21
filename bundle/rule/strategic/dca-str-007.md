@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(IntegrationEvent.class)
+                .areAssignableTo(arch.layout().markers().integrationEvent())
+                .and()
+                .areNotInterfaces()
                 .should()
                 .resideInAnyPackage(".." + layout.eventsSubpackage() + "..")
                 .allowEmptyShould(true))
@@ -52,6 +54,10 @@ DcaRule.of(
     .checking(
         "Every integration-event contract resides in a package containing the configured events segment. Adapter outgoing event packages are not an alternative; move contracts to events or exclude STR-007 during migration. Translators and transport adapters stay separate.")
 ```
+
+## Architecture queries
+
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -60,7 +66,7 @@ DcaRule.Of(
         "Integration event contracts reside in the configured Events segment",
         "Integration contracts are published separately from translators and transport adapters",
         arch =>
-            Types().That().ImplementInterface(typeof(IIntegrationEvent)).And().AreNot(Interfaces())
+            Types().That().FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.IntegrationEvent), "are integration events").And().AreNot(Interfaces())
                 .Should().ResideInNamespaceMatching(AnySegment(Layout.EventsSegment)))
     .Selecting(
         "Non-interface types below the root namespace whose implemented interfaces include"

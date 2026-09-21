@@ -42,7 +42,7 @@ DcaRule.informational(
                 && com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
                         arch.allApplicationPatterns())
                     .test(type)
-                && (type.isAssignableTo(InputPort.class)
+                && (type.isAssignableTo(arch.layout().markers().inputPort())
                     || type.getSimpleName().endsWith(layout.useCaseSuffix()))
                 && !AnnotationRoles.annotatedWithAny(injectable).test(type)
                 && !AnnotationRoles.isMetaAnnotatedWithAny(type, injectable)) {
@@ -109,7 +109,7 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 
 ## Related mentions (heuristic)
 

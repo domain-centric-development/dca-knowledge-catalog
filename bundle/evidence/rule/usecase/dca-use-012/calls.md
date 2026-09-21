@@ -10,12 +10,12 @@ evidence_for: "/rule/usecase/dca-use-012.md#calls"
 ### `calls`
 
 ```java
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType) {
+private static boolean calls(JavaCodeUnit unit, String targetType) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(call -> call.getTargetOwner().isAssignableTo(targetType));
 }
 
-private static boolean calls(JavaCodeUnit unit, Class<?> targetType, String methodName) {
+private static boolean calls(JavaCodeUnit unit, String targetType, String methodName) {
   return unit.getMethodCallsFromSelf().stream()
       .anyMatch(
           call ->

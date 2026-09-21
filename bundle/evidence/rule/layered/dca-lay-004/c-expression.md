@@ -41,11 +41,15 @@ DcaRule.Check(
             .Where(t => !IsBoundary(t))
             .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(programmatic).Select(target => target.FullName).Distinct()
                 .Select(target => $"{t.FullName} uses {target} outside the application layer"));
-        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary)).ToList();
+        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary))
+            .Concat(DeclarativeFindings(arch, allowed, types.TransactionalAttribute))
+            .ToList();
         DcaRule.Fail($"Transaction boundaries belong to the application layer\nbecause {rationale}", violations);
     })
     .Selecting(
-        "Two selections. Transaction use: types under scan that depend on a configured transaction-API "
+        "Three selections. Declarative: types under scan that carry the configured transactional "
+        + "attribute, and types that declare a method carrying it - empty by default, because neither "
+        + ".NET preset configures one. Transaction use: types under scan that depend on a configured transaction-API "
         + "type - TransactionScope (by default System.Transactions.TransactionScope) or one of the "
         + "TransactionApiTypes (by default CommittableTransaction, IDbTransaction, DbTransaction and the "
         + "persistence library's IDbContextTransaction), the types code runs a transaction with. Wiring: "
@@ -54,7 +58,10 @@ DcaRule.Check(
         + "implementations of ITransactionBoundary itself are never selected. With no transaction type "
         + "configured only ITransactionBoundary dependencies are selected.")
     .Checking(
-        "Transaction use: the type resides in an application namespace of some module root "
+        "Declarative: the type resides in an application namespace of some module root or in an "
+        + "outgoing adapter namespace of some module root - the same places the transaction API is "
+        + "allowed, as in the Java twin. With no transactional attribute configured this selection is "
+        + "empty and the rule checks the other two only. Transaction use: the type resides in an application namespace of some module root "
         + "(<module>.Application or below) or in an outgoing adapter namespace of some module root "
         + "(<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace "
         + "is reported, the global one included. Wiring: additionally allowed in the global "

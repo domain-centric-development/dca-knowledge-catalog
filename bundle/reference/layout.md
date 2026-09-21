@@ -48,9 +48,11 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `domainSubpackage` | `domain` | `withDomainSubpackage(...)` |  |
 | `modelSubpackage` | `model` | `withModelSubpackage(...)` | Sub-package of the domain layer that holds the domain model — aggregates, entities, value objects — e.g. `"model"` (default) or `"entities"`. The domain-model rules and the domain cycle rule select `.domain...`. |
 | `applicationSubpackage` | `application` | `withApplicationSubpackage(...)` |  |
+| `sharedSubpackage` | `shared` | `withSharedSubpackage(...)` | Sub-package of the application layer that holds the output ports shared by the use cases of one context - e.g. `"shared"` (default), `"ports"` or `"spi"`. The name is reserved: it may not be used as an operation container. |
 | `adapterSubpackage` | `adapter` | `withAdapterSubpackage(...)` |  |
 | `incomingSubpackage` | `incoming` | `withIncomingSubpackage(...)` | Name of the incoming (driving/primary) adapter sub-package — `"in"` in some projects. |
 | `incomingEventSubpackage` | `event` | `withIncomingEventSubpackage(...)` | Sub-package of the incoming adapters that holds the event consumers — the adapters that react to other modules' integration events — e.g. `"event"` (default) or `"listener"`. Classes below `.adapter.incoming...` are the one kind of incoming adapter the adapter-isolation rules exempt. |
+| `webSubpackage` | `web` | `withWebSubpackage(...)` | Sub-package of the incoming adapters that holds the web adapter - e.g. `"web"` (default), `"ui"` or `"mvc"`. Only `DCA-NAM-011` reads it: a ViewModel belongs below `.adapter.incoming...`. |
 | `outgoingSubpackage` | `outgoing` | `withOutgoingSubpackage(...)` | Name of the outgoing (driven/secondary) adapter sub-package — `"out"` in some projects. |
 | `infrastructureSubpackage` | `infrastructure` | `withInfrastructureSubpackage(...)` |  |
 | `apiSubpackage` | `api` | `withApiSubpackage(...)` | Sub-package of a module's *synchronous* published contract, e.g. `"api"` (default) or `"contract"`. Together with `withEventsSubpackage(String)` it is the only part of a module another module's adapters may depend on; the context-map rules and renderer use the same name for the channel. |
@@ -58,6 +60,13 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `useCaseSuffix` | `UseCase` | `withUseCaseSuffix(...)` | Suffix of use-case implementations, e.g. `"UseCase"` or `"ApplicationService"`. |
 | `controllerSuffix` | `Controller` | `withControllerSuffix(...)` | Suffix of MVC (server-rendered) controllers, e.g. `"Controller"` (default) or `"Page"`. Read by the naming rule for classes carrying the configured `@Controller` annotation and by the rule that keeps controllers away from repositories; the REST suffix is configured separately. |
 | `restControllerSuffix` | `Resource` | `withRestControllerSuffix(...)` | Suffix of REST controllers, e.g. `"Resource"` or `"Controller"`. |
+| `aggregateRootSuffix` | `AggregateRoot` | `withAggregateRootSuffix(...)` | Suffix by which `DCA-TAC-001` finds a project's aggregate roots by name - `"AggregateRoot"` by default. Only the suffix selects: an aggregate root named otherwise is never reported by that rule, and the role is what every other tactical rule selects on. |
+| `repositorySuffix` | `Repository` | `withRepositorySuffix(...)` | Suffix of a repository port, `"Repository"` by default - read by `DCA-TAC-013` and `DCA-TAC-016`, which also requires the name to be the bound aggregate plus this suffix. |
+| `storeSuffix` | `Store` | `withStoreSuffix(...)` | Suffix of a store port, `"Store"` by default - read by `DCA-TAC-018`. |
+| `factorySuffix` | `Factory` | `withFactorySuffix(...)` | Suffix of a factory, `"Factory"` by default - read by `DCA-ADV-013`. |
+| `specificationSuffix` | `Specification` | `withSpecificationSuffix(...)` | Suffix by which a specification is found when it carries no marker, `"Specification"` by default - read by `DCA-ADV-017` and `DCA-ADV-018` alongside the specification role. |
+| `timestampTypes` | `DEFAULT_TIMESTAMP_TYPES` | `withTimestampTypes(...)` | Types a domain event may store its occurrence time in, by fully qualified name. Replaces the default list (`java.time.Instant`, `OffsetDateTime`, `ZonedDateTime`, `LocalDateTime`) - a project whose own event vocabulary wraps the timestamp in a value object names that type here instead of excluding `DCA-ADV-008`. At least one name is required: an empty list would report every event. |
+| `markers` | `DcaMarkers.dca()` | `withMarkers(...)` | The building-block types the rules select on, by role — `dca()` by default, or a vocabulary pointed at the project's own markers. The rules then select what carries those types instead of the library's, so a code base with an established vocabulary needs no rule exclusions. |
 | `frameworkCandidates` | `detection.candidates()` | constructor only |  |
 | `OperationContainers` | see declaration | `withOperationContainers(...)` | Organisational package segments ignored when measuring operation depth; empty by default. |
 | `FrameworkPreset` | see declaration | `withFrameworkPreset(...)` | The preset registered under the given name — built-in (`spring`, `jakarta`, `quarkus`, `micronaut`, `none`) or contributed by a library through `FrameworkAnnotationsProvider`. This is what `dca.framework=` in `dca-archunit.properties` applies; an unknown name fails, a typo must not fall back silently. |
@@ -76,10 +85,6 @@ Replace the list with `withThirdPartyPackagesAllowedInDomain(List)` or extend it
 
 | Constant | Pattern |
 |---|---|
-| `BUILDING_BLOCKS_PACKAGE` | `dev.domaincentric.dca.buildingblocks..` |
-| `BUILDING_BLOCKS_TACTICAL_PACKAGE` | `dev.domaincentric.dca.buildingblocks.ddd.tactical..` |
-| `BUILDING_BLOCKS_STRATEGIC_PACKAGE` | `dev.domaincentric.dca.buildingblocks.ddd.strategic..` |
-| `BUILDING_BLOCKS_PORT_PACKAGE` | `dev.domaincentric.dca.buildingblocks.hexagonal.port..` |
 | `BUILDING_BLOCKS_PORT_IN_PACKAGE` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.in..` |
 | `BUILDING_BLOCKS_PORT_OUT_PACKAGE` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out..` |
 
@@ -100,7 +105,7 @@ ArchUnit pattern syntax: `..` any number of sub-packages, `*` exactly one segmen
 | `String domainPattern()` | `base.*.domain..` — the domain layer of every *direct* sub-package. Matches a bounded context only when it is a direct child of the base package; prefer `DcaArchitecture.contextDomainPatterns()`, which is derived from the declared contexts and holds at any depth. |
 | `String domainModelPattern()` | `base.*.domain.model..` |
 | `String applicationPattern()` | `base.*.application..` |
-| `String sharedOutputPortPattern()` | `base.*.application.shared..` — output ports shared by the use cases of one context. |
+| `String sharedOutputPortPattern()` | `base.*.application...` — output ports shared by the use cases of one context. |
 | `String adapterPattern()` | `base.*.adapter..` |
 | `String incomingAdapterPattern()` | `base.*.adapter.incoming..` |
 | `String outgoingAdapterPattern()` | `base.*.adapter.outgoing..` |
@@ -108,11 +113,12 @@ ArchUnit pattern syntax: `..` any number of sub-packages, `*` exactly one segmen
 | `String domainModelPattern(String contextPackage)` | `<contextPackage>.domain.model..` - the same pattern below the given context or module package. |
 | `String domainModelPackage(String contextPackage)` | `base.cart.domain.model` — a module's domain-model package (no pattern suffix). |
 | `String applicationPattern(String contextPackage)` | `<contextPackage>.application..` - the same pattern below the given context or module package. |
-| `String sharedOutputPortPattern(String contextPackage)` | `<contextPackage>.application.shared..` - the same pattern below the given context or module package. |
+| `String sharedOutputPortPattern(String contextPackage)` | `<contextPackage>.application...` - the same pattern below the given context or module package. |
 | `String adapterPattern(String contextPackage)` | `<contextPackage>.adapter..` - the same pattern below the given context or module package. |
 | `String incomingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.incoming..` - the same pattern below the given context or module package. |
 | `String incomingEventAdapterPattern()` | `..adapter.incoming.event..` — the event consumers of any module, at any depth; the segment names come from this layout. |
 | `String outgoingAdapterPattern(String contextPackage)` | `<contextPackage>.adapter.outgoing..` - the same pattern below the given context or module package. |
+| `String markersReport()` | One line for the report: `dca (library default)` while every role names the building blocks' own marker, or the vocabulary's name and the roles that differ, so a reader sees which types the rules actually selected on — `company (aggregateRoot=com.company.ddd.Root, repository=com.company.ddd.Store)`. |
 
 ## Framework annotations the rules look for (Java, `FrameworkAnnotations`)
 
@@ -132,6 +138,35 @@ Annotations are matched by fully qualified name and grouped by *role*; the rule 
 | `persistenceMapping` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version` | `jakarta.persistence.Id`<br>`jakarta.persistence.Column`<br>`jakarta.persistence.Embedded`<br>`jakarta.persistence.OneToMany`<br>`jakarta.persistence.ManyToOne`<br>`jakarta.persistence.OneToOne`<br>`jakarta.persistence.ManyToMany`<br>`jakarta.persistence.Transient`<br>`jakarta.persistence.Version`<br>`io.micronaut.data.annotation.Id`<br>`io.micronaut.data.annotation.MappedProperty`<br>`io.micronaut.data.annotation.Relation` | member-level persistence mapping annotations |
 | `transactionApi` | `org.springframework.transaction.support.TransactionTemplate`<br>`org.springframework.transaction.support.TransactionOperations`<br>`org.springframework.transaction.reactive.TransactionalOperator`<br>`jakarta.transaction.UserTransaction` | `jakarta.transaction.UserTransaction` | `jakarta.transaction.UserTransaction`<br>`io.quarkus.narayana.jta.QuarkusTransaction` | `io.micronaut.transaction.TransactionOperations`<br>`io.micronaut.transaction.SynchronousTransactionManager`<br>`jakarta.transaction.UserTransaction` | types code uses to run a transaction (templates, user transactions), matched as class dependencies rather than as annotations |
 | `transactionManager` | `org.springframework.transaction.PlatformTransactionManager`<br>`org.springframework.transaction.TransactionManager`<br>`org.springframework.transaction.ReactiveTransactionManager`<br>`jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | types a composition root declares or wires (transaction managers), matched as class dependencies rather than as annotations |
+| `transportStatus` | `org.springframework.web.bind.annotation.ResponseStatus` | — | — | `io.micronaut.http.annotation.Status` | annotations that fix the protocol answer of the type they sit on |
+
+## Building-block types the rules select on (`DcaMarkers`)
+
+The rules never name a building block as a type: every selection asks the layout for a *role*, resolved by fully qualified name. The default vocabulary is this library's own markers, so a project on the building blocks configures nothing. A project that already has its own markers - or another library's - points the roles at its own types and is then governed by the whole catalog, instead of excluding the rule ids that would have selected nothing. The same roles exist in both languages (`withMarkers(DcaMarkers.dca().withAggregateRoot("..."))` in Java, `WithMarkers(DcaMarkers.Dca() with { AggregateRoot = "..." })` in .NET; the .NET defaults are the `I`-prefixed twins).
+
+A role names exactly one type and must not be blank - an empty role would select nothing and report success. Two vocabularies at once are outside this: a migration points the role at one of them. What the roles do **not** cover are the strategic annotations, because the rules read their members (the context a relationship names, the dependencies a module allows) and a type name carries none.
+
+| Role | Default (Java) | Selects |
+|---|---|---|
+| `aggregateRoot` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.AggregateRoot` | the marker of an aggregate root |
+| `entity` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Entity` | the marker of an entity |
+| `value` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Value` | the marker of a value object |
+| `id` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Id` | the marker of an identifier |
+| `domainEvent` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent` | the marker of a domain event |
+| `integrationEvent` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.IntegrationEvent` | the marker of an integration event |
+| `domainService` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainService` | the marker of a domain service |
+| `factory` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Factory` | the marker of a factory |
+| `specification` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Specification` | the marker of a specification — a predicate over a domain object, selected by `DCA-ADV-017` and `DCA-ADV-018` alongside the name suffix |
+| `domainException` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainException` | the base type of a domain failure |
+| `useCaseException` | `dev.domaincentric.dca.buildingblocks.application.UseCaseException` | the base type of a use-case failure |
+| `transactionBoundary` | `dev.domaincentric.dca.buildingblocks.application.TransactionBoundary` | the explicit transaction boundary of the application layer |
+| `inputPort` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.in.InputPort` | the base type of every incoming (driving) port |
+| `useCase` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.in.UseCase` | the input port that takes a command or query and answers with a result |
+| `outputPort` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.OutputPort` | the base type of every outgoing (driven) port |
+| `repository` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.Repository` | the outgoing port that loads and stores an aggregate |
+| `store` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.Store` | the outgoing port that holds data no aggregate owns |
+| `domainEventPublisher` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.DomainEventPublisher` | the outgoing port that publishes an aggregate's domain events |
+| `integrationEventPublisher` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.IntegrationEventPublisher` | the outgoing port that publishes an integration event — read by `DCA-USE-013`, which separates the output ports that live inside the transaction from those that may leave the process. The .NET twin carries the role without a caller, because that rule is not applicable there |
 
 ## .NET twin: `DcaLayout` in `DomainCentric.ArchRules`
 
@@ -184,14 +219,21 @@ Create the default layout with `DcaLayout.ForRootNamespace(string)`.
 | `EventsSegment` | `Events` | `WithEventsSegment(...)` |
 | `UseCaseSuffix` | `UseCase` | `WithUseCaseSuffix(...)` |
 | `ControllerSuffix` | `Controller` | `WithControllerSuffix(...)` |
-| `RestControllerSuffix` | `Controller` | `WithRestControllerSuffix(...)` |
+| `RestControllerSuffix` | `// The REST endpoint class is *Resource` | `WithRestControllerSuffix(...)` |
+| `OperationContainers` | `FrameworkTypes.AspNetCore()` | `WithOperationContainers(...)` |
 | `ModelSegment` | `Model` | `WithModelSegment(...)` |
 | `IncomingEventSegment` | `Event` | `WithIncomingEventSegment(...)` |
+| `WebSegment` | `Web` | `WithWebSegment(...)` |
+| `SharedSegment` | `Shared` | `WithSharedSegment(...)` |
+| `AggregateRootSuffix` | `AggregateRoot` | `WithAggregateRootSuffix(...)` |
+| `RepositorySuffix` | `Repository` | `WithRepositorySuffix(...)` |
+| `StoreSuffix` | `Store` | `WithStoreSuffix(...)` |
+| `FactorySuffix` | `Factory` | `WithFactorySuffix(...)` |
+| `SpecificationSuffix` | `Specification` | `WithSpecificationSuffix(...)` |
 
 ### Third-party namespaces the domain may depend on (.NET default)
 
 - `System`
-- `Microsoft.Extensions.Logging.Abstractions`
 - `DomainCentric.BuildingBlocks`
 
 Note the difference to Java: the whole `DomainCentric.BuildingBlocks` namespace is allowed, strategic and `Ports.In` markers included.
@@ -201,9 +243,6 @@ Note the difference to Java: the whole `DomainCentric.BuildingBlocks` namespace 
 | Constant | Namespace |
 |---|---|
 | `BuildingBlocksNamespace` | `DomainCentric.BuildingBlocks` |
-| `BuildingBlocksTacticalNamespace` | `DomainCentric.BuildingBlocks.Ddd.Tactical` |
-| `BuildingBlocksStrategicNamespace` | `DomainCentric.BuildingBlocks.Ddd.Strategic` |
-| `BuildingBlocksPortsNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports` |
 | `BuildingBlocksPortsInNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports.In` |
 | `BuildingBlocksPortsOutNamespace` | `DomainCentric.BuildingBlocks.Hexagonal.Ports.Out` |
 
@@ -220,7 +259,7 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 | `string DomainPattern` | Pattern for `Root.*.Domain` and below — the domain layer of every direct child namespace (context). |
 | `string DomainModelPattern` | Pattern for `Root.*.Domain.Model` and below. |
 | `string ApplicationPattern` | Pattern for `Root.*.Application` and below. |
-| `string SharedOutputPortPattern` | Pattern for `Root.*.Application.Shared` and below — output ports shared by the use cases of one context. |
+| `string SharedOutputPortPattern` | Pattern for `Root.*.Application.<Shared>` and below — output ports shared by the use cases of one context. |
 | `string AdapterPattern` | Pattern for `Root.*.Adapter` and below. |
 | `string IncomingAdapterPattern` | Pattern for `Root.*.Adapter.Incoming` and below. |
 | `string OutgoingAdapterPattern` | Pattern for `Root.*.Adapter.Outgoing` and below. |
@@ -255,6 +294,13 @@ Types are matched by full name and grouped by role; `DcaLayout` defaults to the 
 | `InjectionAttributeNamespaces` | `Microsoft.Extensions.DependencyInjection` | Attribute namespaces classified as injection-site metadata. |
 | `TransactionAttributeNamespaces` | `(empty)` | Attribute namespaces classified as transaction metadata. |
 | `ContainerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as container stereotypes. |
+| `WebControllerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as a web-controller stereotype — the counterpart of the Java library's `webController` role. Empty in every preset: ASP.NET Core has no attribute that makes a class a controller, and none that could sit on an exception. The role exists so that `DCA-ERR-004` has the same contract in both languages and a project whose framework does have such an attribute can name it. |
+| `RestControllerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as a REST-controller stereotype — the counterpart of the Java library's `restController` role. `[ApiController]` is not classified here: it marks a controller, not a failure, and no exception can carry it. Empty in every preset, for the same reason as `WebControllerAttributeNamespaces`. |
+| `ModuleDeclarationAttributeTypes` | `(empty)` | Full type names of a module system's per-package module declaration — the counterpart of the Java library's `moduleDeclaration` role, where Spring Modulith's `@ApplicationModule` fills it. `DCA-MAP-006` reads the declaration's `AllowedDependencies` and compares it with the `[Upstream]` declarations. Empty in every preset: .NET draws module boundaries with projects rather than with an attribute, so a project that has such an attribute names it. |
+| `EventListenerAttributeNamespaces` | `(empty)` | Attribute namespaces classified as an event-listener stereotype — the counterpart of the Java library's `eventListener` role. Empty in every preset: .NET subscribes in code, not through an attribute. |
+| `TransportStatusAttributeTypes` | `(empty)` | Full attribute type names that fix the protocol answer of the type they sit on — the role `DCA-ERR-004` forbids on the exceptions of the domain and application layers, because which status a failure earns is the incoming adapter's decision and a second adapter on another protocol has no use for it. Empty in every preset: the platform answers through a mapper type rather than through an attribute on the failure. A project that defines such an attribute itself adds it via a with-expression, and the Java library's `transportStatus` role is the same setting under the same rule. |
+| `PresetNames` | `(empty)` | The names the presets are known under, for `dca.framework` and error messages. |
+| `name` | `(empty)` | The preset registered under the given name, or `null` when there is none. This is what `dca.framework=<name>` in `dca-archunit.properties` resolves, matching `dca-archunit`'s `FrameworkAnnotations.preset(name)`. Names are compared case-insensitively.  Unlike the Java library this has no provider SPI yet: a framework without a preset here is configured in code with a `with` expression on `None`. |
 | `role` | `(empty)` | Whether a role is configured (non-blank). |
 | `ToString` | `(empty)` |  |
 

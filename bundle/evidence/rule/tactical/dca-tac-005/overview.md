@@ -46,10 +46,9 @@ DcaRule.check(
                         && (caller.getPackageName().equals(domain)
                             || caller.getPackageName().startsWith(domain + "."));
                 boolean role =
-                    caller.isAssignableTo(AggregateRoot.class)
-                        || caller.isAssignableTo(Entity.class)
-                        || caller.isAssignableTo(
-                            dev.domaincentric.dca.buildingblocks.ddd.tactical.Factory.class);
+                    caller.isAssignableTo(arch.layout().markers().aggregateRoot())
+                        || caller.isAssignableTo(arch.layout().markers().entity())
+                        || caller.isAssignableTo(arch.layout().markers().factory());
                 if (!caller.equals(entity) && !(sameDomain && role)) {
                   violations.add(
                       caller.getName()

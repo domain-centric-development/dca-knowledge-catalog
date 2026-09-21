@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(Factory.class)
+                .areAssignableTo(arch.layout().markers().factory())
+                .and()
+                .areNotInterfaces()
                 .should()
                 .resideInAnyPackage(arch.allDomainPatterns())
                 .allowEmptyShould(true))
@@ -54,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -64,7 +66,7 @@ DcaRule.Of(
     "Factories are part of the domain layer (complex aggregate creation logic)",
     arch => Types()
         .That()
-        .AreAssignableTo(typeof(IFactory))
+        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.Factory), "are factories")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()

@@ -54,10 +54,9 @@ DcaRule.check(
                         && (caller.getPackageName().equals(domain)
                             || caller.getPackageName().startsWith(domain + "."));
                 boolean role =
-                    caller.isAssignableTo(AggregateRoot.class)
-                        || caller.isAssignableTo(Entity.class)
-                        || caller.isAssignableTo(
-                            dev.domaincentric.dca.buildingblocks.ddd.tactical.Factory.class);
+                    caller.isAssignableTo(arch.layout().markers().aggregateRoot())
+                        || caller.isAssignableTo(arch.layout().markers().entity())
+                        || caller.isAssignableTo(arch.layout().markers().factory());
                 if (!caller.equals(entity) && !(sameDomain && role)) {
                   violations.add(
                       caller.getName()
@@ -86,8 +85,8 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(Entity.class)
-              && !c.isAssignableTo(AggregateRoot.class)
+          c.isAssignableTo(arch.layout().markers().entity())
+              && !c.isAssignableTo(arch.layout().markers().aggregateRoot())
               && !c.isInterface());
 }
 ```
@@ -138,8 +137,9 @@ DcaRule.Check(
                 var ns = runtime.Namespace ?? "";
                 var sameDomain = root is not null && root == arch.ModuleRootOf(ns)
                     && (ns == domain || ns.StartsWith(domain + ".", StringComparison.Ordinal));
-                var role = typeof(IAggregateRoot).IsAssignableFrom(runtime) || typeof(IEntity).IsAssignableFrom(runtime)
-                    || typeof(IFactory).IsAssignableFrom(runtime);
+                var role = DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.AggregateRoot)
+                    || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Entity)
+                    || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Factory);
                 if (runtime != entity && !(sameDomain && role))
                     violations.Add($"{runtime.FullName} constructs entity {entity.FullName} outside its domain construction boundary");
             }
@@ -260,8 +260,8 @@ internal sealed class IntraClassCalls
             && (declaring.Name.StartsWith('<') || declaring.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
     /// <summary>Whether the unit's IL calls a method named <paramref name="method"/> on a type assignable to <paramref name="marker"/>.</summary>
-    public static bool Calls(MethodBase unit, string method, Type marker) =>
-        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && marker.IsAssignableFrom(m.DeclaringType));
+    public static bool Calls(MethodBase unit, string method, string marker) =>
+        IlCalls(unit).Any(m => m.Name == method && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, marker));
 
     /// <summary>
     /// The source-level name of a unit: <c>ExecuteAsync</c> for the method itself, for its state machine's

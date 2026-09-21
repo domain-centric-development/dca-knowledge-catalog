@@ -29,7 +29,7 @@ Every field - declared or inherited from a superclass, static fields included - 
 
 **Selection.** Non-interface types in <module>.Domain of every module root that are assignable to IFactory.
 
-**Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field. Field types are not inspected. An empty selection passes.
+**Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field. Field types are not inspected. A type the loader cannot resolve is read through the ArchUnitNET member model instead, and a field whose writability neither model states is not reported. An empty selection passes.
 
 ## Implementation
 
@@ -41,7 +41,9 @@ DcaRule.of(
         arch ->
             classes()
                 .that()
-                .implement(Factory.class)
+                .areAssignableTo(arch.layout().markers().factory())
+                .and()
+                .areNotInterfaces()
                 .and()
                 .resideInAnyPackage(arch.allDomainPatterns())
                 .should(haveOnlyFinalFieldsIncludingInherited())
@@ -89,7 +91,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -101,14 +103,16 @@ DcaRule.Check(
         "Factories must have only readonly fields:",
         NonReadonlyFieldViolations(
             arch,
-            t => t is not Interface && InDomain(arch, t) && t.IsAssignableTo(typeof(IFactory).FullName!))))
+            t => t is not Interface && InDomain(arch, t) && t.IsAssignableTo(arch.Layout.Markers.Factory))))
     .Selecting(
         "Non-interface types in <module>.Domain of every module root that are assignable to "
         + "IFactory.")
     .Checking(
         "Every field - declared by the type or inherited from a base type, static fields included "
         + "- is readonly or const. A settable auto-property is reported through its backing field. "
-        + "Field types are not inspected. An empty selection passes.")
+        + "Field types are not inspected. A type the loader cannot resolve is read through the "
+        + "ArchUnitNET member model instead, and a field whose writability neither model states is "
+        + "not reported. An empty selection passes.")
 ```
 
 ## Related mentions (heuristic)

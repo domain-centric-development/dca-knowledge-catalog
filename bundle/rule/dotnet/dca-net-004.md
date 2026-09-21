@@ -2,7 +2,7 @@
 type: Rule
 id: DCA-NET-004
 title: Struct value objects must be readonly
-rule: "Records give attribute-based equality, immutability by default and with-expressions — the C# way to write a Value Object."
+rule: "A struct is copied by value but its fields stay assignable unless the struct is declared readonly, so a mutating method silently changes a copy and leaves the original behind. readonly makes the compiler enforce what a Value Object promises. Whether a value object is a record, a class or a struct is not prescribed here - DCA-TAC-012 accepts any immutable type with value equality."
 constraint: Struct value objects must be readonly.
 selects: "Non-interface, non-abstract types in <module>.Domain of every module root that are assignable to IValue and whose runtime type is in the loaded assemblies."
 checks: Struct values must carry the readonly modifier. Classes are governed by TAC-009/010/012; equality is checked by TAC-012. An IValue outside a domain namespace is not selected.
@@ -28,7 +28,7 @@ Struct values must carry the readonly modifier. Classes are governed by TAC-009/
 DcaRule.Check(
         "DCA-NET-004",
         "Struct value objects must be readonly",
-        "Records give attribute-based equality, immutability by default and with-expressions — the C# way to write a Value Object",
+        "A struct is copied by value but its fields stay assignable unless the struct is declared readonly, so a mutating method silently changes a copy and leaves the original behind. readonly makes the compiler enforce what a Value Object promises. Whether a value object is a record, a class or a struct is not prescribed here - DCA-TAC-012 accepts any immutable type with value equality",
         arch =>
         {
             var domain = arch.AllDomainPatterns().Select(p => new Regex(p)).ToList();
@@ -36,7 +36,7 @@ DcaRule.Check(
             foreach (var type in arch.Types.Where(t => domain.Any(r => r.IsMatch(t.Namespace.FullName))))
             {
                 var runtime = arch.RuntimeType(type);
-                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !typeof(IValue).IsAssignableFrom(runtime))
+                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Value))
                 {
                     continue;
                 }

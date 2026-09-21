@@ -46,7 +46,7 @@ DcaRule.of(
                 .that()
                 .resideInAnyPackage(arch.allIncomingAdapterPatterns())
                 .should()
-                .dependOnClassesThat(useCaseImplementations())
+                .dependOnClassesThat(useCaseImplementations(arch.layout().markers()))
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root, event consumers"
@@ -64,11 +64,11 @@ DcaRule.of(
 
 ```java
 /** A use case implementation: a class (never an interface) behind an {@link InputPort}. */
-  private static DescribedPredicate<JavaClass> useCaseImplementations() {
+  private static DescribedPredicate<JavaClass> useCaseImplementations(DcaMarkers markers) {
     return new DescribedPredicate<>("are use case implementations rather than input ports") {
       @Override
       public boolean test(JavaClass javaClass) {
-        return !javaClass.isInterface() && javaClass.isAssignableTo(InputPort.class);
+        return !javaClass.isInterface() && javaClass.isAssignableTo(markers.inputPort());
       }
     };
   }
@@ -76,7 +76,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

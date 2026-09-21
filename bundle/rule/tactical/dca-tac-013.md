@@ -45,11 +45,11 @@ DcaRule.of(
                 .and()
                 .areInterfaces()
                 .and()
-                .haveSimpleNameEndingWith(REPOSITORY_SUFFIX)
+                .haveSimpleNameEndingWith(arch.layout().repositorySuffix())
                 .and()
-                .doNotHaveSimpleName(REPOSITORY_SUFFIX)
+                .doNotHaveSimpleName(arch.layout().repositorySuffix())
                 .should()
-                .beAssignableTo(Repository.class)
+                .beAssignableTo(arch.layout().markers().repository())
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces in <module>.application.. of every module root whose simple name "
@@ -61,7 +61,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -75,12 +75,12 @@ DcaRule.Check(
         foreach (var candidate in arch.Interfaces)
         {
             if (!ResidesInAny(candidate, arch.AllApplicationPatterns())
-                || !HasSuffixButIsNotMarker(candidate, RepositorySuffix))
+                || !HasSuffixButIsNotMarker(candidate, arch.Layout.RepositorySuffix))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, candidate, typeof(IRepository)))
+            if (!IsAssignableTo(arch, candidate, arch.Layout.Markers.Repository))
             {
                 violations.Add($"{candidate.FullName} is named *Repository but does not extend {nameof(IRepository)}");
             }
