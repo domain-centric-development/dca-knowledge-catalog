@@ -1,9 +1,9 @@
 ---
 type: Rule
 id: DCA-STR-010
-title: Event Listeners consuming integration events should use Anti-Corruption Layer
+title: "Diagnostic: Event Listeners consuming integration events should use Anti-Corruption Layer"
 rule: "Consumed integration events are translated into the consuming context's own language before they reach its domain — verified by code review, not statically."
-constraint: Event Listeners consuming integration events should use Anti-Corruption Layer.
+constraint: "Diagnostic: Event Listeners consuming integration events should use Anti-Corruption Layer."
 selects: Informational - selects nothing and never fails; it carries doctrine only.
 checks: Nothing is asserted. Whether a consumed integration event is translated into the consuming context's own language before it reaches the domain is a code-review check.
 enforced_by: "StrategicPatternRules#DCA-STR-010"
@@ -15,7 +15,7 @@ tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
 ---
 
-# Event Listeners consuming integration events should use Anti-Corruption Layer
+# Diagnostic: Event Listeners consuming integration events should use Anti-Corruption Layer
 
 ## Selection
 
@@ -30,7 +30,8 @@ Nothing is asserted. Whether a consumed integration event is translated into the
 ```java
 DcaRule.informational(
         "DCA-STR-010",
-        "Event Listeners consuming integration events should use Anti-Corruption Layer",
+        "Diagnostic: Event Listeners consuming integration events should use Anti-Corruption"
+            + " Layer",
         "Consumed integration events are translated into the consuming context's own language"
             + " before they reach its domain — verified by code review, not statically",
         arch -> {})
@@ -48,7 +49,7 @@ DcaRule.informational(
 ```csharp
 DcaRule.Informational(
         "DCA-STR-010",
-        "Event Listeners consuming integration events should use Anti-Corruption Layer",
+        "Diagnostic: Event Listeners consuming integration events should use Anti-Corruption Layer",
         "Consumed integration events are translated into the consuming context's own language before they reach"
             + " its domain — verified by code review, not statically",
         arch => { })
