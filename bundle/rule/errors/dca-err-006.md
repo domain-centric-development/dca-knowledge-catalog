@@ -42,6 +42,7 @@ DcaRule.informational(
             + " everything escape to a generic handler or catches a generic type and answers"
             + " every outcome the same way; whether it does is not visible in the import model",
         arch -> {
+          List<String> observed = new ArrayList<>();
           Map<String, List<JavaClass>> drivingByPackage = new TreeMap<>();
           Set<String> packagesThatName = new HashSet<>();
           for (JavaClass type : arch.classes()) {
@@ -65,14 +66,14 @@ DcaRule.informational(
                 if (packagesThatName.contains(pkg)) {
                   return;
                 }
-                System.out.println(
-                    "[DCA-ERR-006] "
-                        + pkg
+                observed.add(
+                    pkg
                         + ": drives an input port and names no failure type of the inner layers"
                         + " ("
                         + driving.stream().map(JavaClass::getSimpleName).sorted().toList()
                         + ")");
               });
+          return observed;
         })
     .selecting(
         "Incoming adapter packages of every module root (<module>.adapter.incoming..) that hold"
@@ -112,6 +113,7 @@ DcaRule.Informational(
         + " way; whether it does is not visible in the type model",
     arch =>
     {
+        var observed = new List<string>();
         var incoming = new Regex(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()));
         var driving = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
         var namespacesThatName = new HashSet<string>(StringComparer.Ordinal);
@@ -149,9 +151,11 @@ DcaRule.Informational(
             }
 
             names.Sort(StringComparer.Ordinal);
-            Console.WriteLine(
-                $"[DCA-ERR-006] {ns}: drives an input port and names no failure type of the inner layers ({string.Join(", ", names)})");
+            observed.Add(
+                $"{ns}: drives an input port and names no failure type of the inner layers ({string.Join(", ", names)})");
         }
+
+        return observed;
     })
     .Selecting(
         "Incoming adapter namespaces of every module root (<Module>.Adapter.Incoming) that hold at "

@@ -34,7 +34,7 @@ DcaRule.informational(
             + " Layer",
         "Consumed integration events are translated into the consuming context's own language"
             + " before they reach its domain — verified by code review, not statically",
-        arch -> {})
+        arch -> List.of())
     .selecting("Informational - selects nothing and never fails; it carries doctrine only.")
     .checking(
         "Nothing is asserted. Whether a consumed integration event is translated into the"
@@ -52,7 +52,7 @@ DcaRule.Informational(
         "Diagnostic: Event Listeners consuming integration events should use Anti-Corruption Layer",
         "Consumed integration events are translated into the consuming context's own language before they reach"
             + " its domain — verified by code review, not statically",
-        arch => { })
+        arch => Array.Empty<string>())
     .Selecting("Informational - selects nothing and never fails; it carries doctrine only.")
     .Checking(
         "Nothing is asserted. Whether a consumed integration event is translated into the"

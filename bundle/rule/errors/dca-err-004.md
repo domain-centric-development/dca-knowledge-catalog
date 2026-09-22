@@ -29,7 +29,7 @@ The type carries none of the configured injectable, persistence-entity, transact
 
 **Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
-**Check.** The type carries no attribute the layout classifies into the container, persistence, transaction, transport-status, web-controller, REST-controller or event-listener role, neither directly nor through a base attribute type - the same seven roles the Java twin forbids. Four of them are empty in every preset: the platform has no container stereotype, no controller attribute a failure could carry and no event-listener attribute, and it answers a failure through a mapper type rather than through an attribute on it. They exist so the id has one contract in both languages and a project whose framework does have such an attribute names it. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is not inspected; it is counted and named on standard output rather than passing silently. With the roles empty the rule selects no metadata and passes.
+**Check.** The type carries no attribute the layout classifies into the container, persistence, transaction, transport-status, web-controller, REST-controller or event-listener role, neither directly nor through a base attribute type - the same seven roles the Java twin forbids. Four of them are empty in every preset: the platform has no container stereotype, no controller attribute a failure could carry and no event-listener attribute, and it answers a failure through a mapper type rather than through an attribute on it. They exist so the id has one contract in both languages and a project whose framework does have such an attribute names it. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is not inspected; it is counted and named in the rule's own outcome rather than passing silently. With the roles empty the rule selects no metadata and passes.
 
 ## Implementation
 
@@ -262,7 +262,7 @@ DcaRule.Check(
         + "whose framework does have such an attribute names it. Fields, properties and methods "
         + "are not inspected, and an attribute the layout classifies into no role is allowed. A "
         + "type whose runtime reflection is unavailable is not inspected; it is counted and named "
-        + "on standard output rather than passing silently. With the roles empty the rule selects "
+        + "in the rule's own outcome rather than passing silently. With the roles empty the rule selects "
         + "no metadata and passes.")
 ```
 

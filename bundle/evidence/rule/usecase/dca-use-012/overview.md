@@ -70,7 +70,9 @@ DcaRule.of(
             + " saves, deletes nor publishes (a query, a Store write) is selected but has nothing"
             + " to check and passes. Whether the save or publish call sits inside the"
             + " inTransaction block is not checked - ArchUnit folds a lambda into its enclosing"
-            + " method. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
+            + " method. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.",
+        "wrap load, mutate, save and publish in inTransaction(...), or carry the configured"
+            + " transactional annotation on the class or on every entry path")
 ```
 
 ## Helpers

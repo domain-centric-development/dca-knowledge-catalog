@@ -5,7 +5,7 @@ title: "Diagnostic: Display declared context map"
 rule: Printing the declared edges makes the executable context map reviewable at a glance.
 constraint: "Diagnostic: Display declared context map."
 selects: "Every @Upstream, @ExternalUpstream and @Partnership declaration on the package-info of every package carrying @BoundedContext, reading context() or name(), translation(), and via() or interaction()."
-checks: "Informational - prints every declared edge to standard output and never fails; it carries no assertion. status() is not printed, so a PLANNED edge is listed like an implemented one."
+checks: "Informational - reports every declared edge in the rule's own outcome and never fails; it carries no assertion. status() is not printed, so a PLANNED edge is listed like an implemented one."
 enforced_by: "ContextMapRules#DCA-MAP-013"
 status: informational
 rule_set: contextmap
@@ -23,13 +23,13 @@ Every @Upstream, @ExternalUpstream and @Partnership declaration on the package-i
 
 ## Check
 
-Informational - prints every declared edge to standard output and never fails; it carries no assertion. status() is not printed, so a PLANNED edge is listed like an implemented one.
+Informational - reports every declared edge in the rule's own outcome and never fails; it carries no assertion. status() is not printed, so a PLANNED edge is listed like an implemented one.
 
 ## .NET reading
 
 **Selection.** Every [Upstream], [ExternalUpstream] and [Partnership] declaration on the marker class of every namespace carrying [BoundedContext], reading Context or Name, Translation, and Via or Interaction.
 
-**Check.** Informational - prints every declared edge to standard output and never fails; it carries no assertion. Status is not printed, so a Planned edge is listed like an implemented one.
+**Check.** Informational - reports every declared edge in the rule's own outcome and never fails; it carries no assertion. Status is not printed, so a Planned edge is listed like an implemented one.
 
 ## Implementation
 
@@ -39,14 +39,13 @@ DcaRule.informational(
         "Diagnostic: Display declared context map",
         "Printing the declared edges makes the executable context map reviewable at a glance",
         arch -> {
-          System.out.println("=== Context Map (declared) ===");
+          List<String> observed = new ArrayList<>();
           for (String pkg : arch.boundedContextPackages()) {
             String source = arch.contextName(pkg);
             for (Upstream u : arch.packageAnnotations(pkg, Upstream.class)) {
               for (Upstream.Consumes channel : u.via()) {
-                System.out.println(
-                    "  "
-                        + source
+                observed.add(
+                    source
                         + " --["
                         + u.translation()
                         + " / "
@@ -56,9 +55,8 @@ DcaRule.informational(
               }
             }
             for (ExternalUpstream e : arch.packageAnnotations(pkg, ExternalUpstream.class)) {
-              System.out.println(
-                  "  "
-                      + source
+              observed.add(
+                  source
                       + " --["
                       + e.translation()
                       + " / "
@@ -67,17 +65,17 @@ DcaRule.informational(
                       + e.name());
             }
             for (Partnership p : arch.packageAnnotations(pkg, Partnership.class)) {
-              System.out.println("  " + source + " <--[PARTNERSHIP]--> " + p.context());
+              observed.add(source + " <--[PARTNERSHIP]--> " + p.context());
             }
           }
-          System.out.println("==============================");
+          return observed;
         })
     .selecting(
         "Every @Upstream, @ExternalUpstream and @Partnership declaration on the"
             + " package-info of every package carrying @BoundedContext, reading context()"
             + " or name(), translation(), and via() or interaction().")
     .checking(
-        "Informational - prints every declared edge to standard output and never"
+        "Informational - reports every declared edge in the rule's own outcome and never"
             + " fails; it carries no assertion. status() is not printed, so a PLANNED edge"
             + " is listed like an implemented one.")
 ```
@@ -112,7 +110,7 @@ DcaRule.Informational(
         "Printing the declared edges makes the executable context map reviewable at a glance",
         arch =>
         {
-            Console.WriteLine("=== Context Map (declared) ===");
+            var observed = new List<string>();
             foreach (var ns in arch.BoundedContextNamespaces)
             {
                 var source = ShortName(arch, ns);
@@ -120,26 +118,26 @@ DcaRule.Informational(
                 {
                     foreach (var channel in u.Via)
                     {
-                        Console.WriteLine("  " + source + " --[" + u.Translation + " / " + ChannelName(arch, channel) + "]--> " + u.Context);
+                        observed.Add(source + " --[" + u.Translation + " / " + ChannelName(arch, channel) + "]--> " + u.Context);
                     }
                 }
                 foreach (var e in arch.NamespaceAttributes<ExternalUpstreamAttribute>(ns))
                 {
-                    Console.WriteLine("  " + source + " --[" + e.Translation + " / " + e.Interaction + "]--> (external) " + e.Name);
+                    observed.Add(source + " --[" + e.Translation + " / " + e.Interaction + "]--> (external) " + e.Name);
                 }
                 foreach (var p in arch.NamespaceAttributes<PartnershipAttribute>(ns))
                 {
-                    Console.WriteLine("  " + source + " <--[Partnership]--> " + p.Context);
+                    observed.Add(source + " <--[Partnership]--> " + p.Context);
                 }
             }
-            Console.WriteLine("==============================");
+            return observed;
         })
     .Selecting(
         "Every [Upstream], [ExternalUpstream] and [Partnership] declaration on the"
             + " marker class of every namespace carrying [BoundedContext], reading Context"
             + " or Name, Translation, and Via or Interaction.")
     .Checking(
-        "Informational - prints every declared edge to standard output and never"
+        "Informational - reports every declared edge in the rule's own outcome and never"
             + " fails; it carries no assertion. Status is not printed, so a Planned edge"
             + " is listed like an implemented one.")
 ```

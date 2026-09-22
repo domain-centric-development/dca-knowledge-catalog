@@ -40,7 +40,7 @@ DcaRule.informational(
         "Traditional layering (application accessed only by incoming adapters) contradicts Ports"
             + " and Adapters, where outgoing adapters implement application-level output ports;"
             + " the hexagonal rules cover the intended dependency direction",
-        arch -> {})
+        arch -> List.of())
     .selecting(
         "Informational - selects nothing. ArchUnit's layered-architecture definition (adapter"
             + " layer accesses application, application accesses domain, domain accesses"
@@ -59,7 +59,7 @@ DcaRule.Informational(
     "Traditional layering (application accessed only by incoming adapters) contradicts Ports"
         + " and Adapters, where outgoing adapters implement application-level output ports;"
         + " the hexagonal rules cover the intended dependency direction",
-    arch => { })
+    arch => Array.Empty<string>())
     .Selecting(
         "Informational - selects nothing. A classic layered-architecture definition (adapter "
         + "layer accesses application, application accesses domain, domain accesses nothing) is not "

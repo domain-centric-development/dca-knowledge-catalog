@@ -33,8 +33,9 @@ DcaRule.informational(
         "Diagnostic: use cases without injectable stereotypes",
         "Use cases may be registered by configuration or annotated; static references cannot prove wiring",
         arch -> {
+          List<String> observed = new ArrayList<>();
           List<String> injectable = layout.frameworkAnnotations().injectable();
-          if (injectable.isEmpty()) return;
+          if (injectable.isEmpty()) return observed;
           for (var type : arch.classes()) {
             if (!type.isInterface()
                 && !type.isRecord()
@@ -46,12 +47,10 @@ DcaRule.informational(
                     || type.getSimpleName().endsWith(layout.useCaseSuffix()))
                 && !AnnotationRoles.annotatedWithAny(injectable).test(type)
                 && !AnnotationRoles.isMetaAnnotatedWithAny(type, injectable)) {
-              System.out.println(
-                  "[DCA-NAM-002] "
-                      + type.getName()
-                      + ": register by configuration or annotate");
+              observed.add(type.getName() + ": register by configuration or annotate");
             }
           }
+          return observed;
         })
     .selecting(
         "Concrete non-nested, non-record application classes selected by InputPort marker or use-case suffix when the injectable role is configured - records are excluded, as in DCA-NAM-001.")
