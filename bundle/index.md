@@ -6,7 +6,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 
 **What `review:` means on an authored node.** `reviewed` — an owner and evidence have been verified. `draft` — written and wired into the graph, not yet through a review pass: usable, and it never overrides a generated node, because rules, markers and guide text are derived from the code and win on every contradiction. `superseded` — history; follow `superseded_by`. Most construction guidance is currently `draft`.
 
-- [decision/](decision/index.md) (25) — Decision guides for design forks (which pattern, when).
+- [decision/](decision/index.md) (26) — Decision guides for design forks (which pattern, when).
 - [evidence/](evidence/index.md) (125)
 - [guide/](guide/index.md) (208) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (31) — Architectural marker interfaces — the contracts a new application implements.
