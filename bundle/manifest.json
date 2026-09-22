@@ -17,29 +17,29 @@
   "format": "dca-bundle-manifest-v1",
   "library_versions": {
     "dotnet": {
-      "DomainCentric.ArchRules": "0.6.0-SNAPSHOT",
-      "DomainCentric.ArchRules.Xunit": "0.5.0",
-      "DomainCentric.BuildingBlocks": "0.2.0"
+      "DomainCentric.ArchRules": "0.6.0",
+      "DomainCentric.ArchRules.Xunit": "0.6.0",
+      "DomainCentric.BuildingBlocks": "0.2.1"
     },
     "java": {
-      "archunitSpringModulithVersion": "0.2.0-SNAPSHOT",
-      "archunitVersion": "0.6.0-SNAPSHOT",
-      "buildingBlocksVersion": "0.4.0-SNAPSHOT",
-      "dcaSpringVersion": "0.2.0-SNAPSHOT"
+      "archunitSpringModulithVersion": "0.3.0-SNAPSHOT",
+      "archunitVersion": "0.6.0",
+      "buildingBlocksVersion": "0.3.1",
+      "dcaSpringVersion": "0.3.0-SNAPSHOT"
     }
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "fd7ccc31e169ca01c2bccf3a11ab01daf5bb9d04",
-      "source_sha256": "ede0758abfe16d47a087083f3c61e2e31b92ceaabe21513b93dfea128ec90733"
+      "revision": "a1c95bed54500fdbae994395a7ce5a182a31a4f9",
+      "source_sha256": "ef76cbffb2969852278249aca7ed477204291ea1a6613de7d09d5c865d20ff72"
     },
     "dca-guide": {
       "revision": "433a6e46b0fa400304a6cafb1834adc1d9dbefd1",
       "source_sha256": "aff78ac3c79cead4308572cac2ce7a060067e8d42da4881d6d315227a41cf93b"
     },
     "dca-java": {
-      "revision": "df165765ea013ec1d87238048812e4948fd09765",
-      "source_sha256": "2a33d9b39a743d5914754bcd1c1239f4c7f2654cba71a04a7bdd98323f9beab1"
+      "revision": "b85dfe46a519e8af9154ee729d4160a9e93dbb30",
+      "source_sha256": "6cb33939273a25acff7692f475a59a9bc69d3b210c8a11931311be7be3ba7aad"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
