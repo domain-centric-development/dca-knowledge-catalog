@@ -37,4 +37,4 @@ Classify the subdomain first, then the pattern style follows:
 
 - Guide: [Context-specific rule sets](/guide/archunit-governance/context-specific-rule-sets.md) · [Java package structure](/guide/package-structure.md)
 - Related recipe: [Add a bounded context](/recipe/add-a-bounded-context.md)
-- Related decision: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md)
+- Related decisions: [Shared kernel vs duplication](/decision/shared-kernel-vs-duplication.md) · [Rules that differ per context](/decision/rules-that-differ-per-context.md)

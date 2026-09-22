@@ -48,3 +48,4 @@ Carve a new top-level package annotated with [@BoundedContext](/marker/strategic
 - Recipes: [Add a bounded context](/recipe/add-a-bounded-context.md) · [Add a use case](/recipe/add-a-use-case.md)
 - Related decisions: [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md) · [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
 - Related pitfall: [Operational module marked as a bounded context](/pitfall/operational-module-marked-as-a-bounded-context.md)
+- Same rule on both sides of a boundary: [The same rule in two contexts](/decision/same-rule-in-two-contexts.md)
