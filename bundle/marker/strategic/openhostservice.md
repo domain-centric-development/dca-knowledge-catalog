@@ -43,4 +43,5 @@ public class ProductCatalogService {
 
 ## Related mentions in guides (heuristic)
 
+- [Declaring Context Relationships in Code](/guide/integration-patterns/declaring-context-relationships-in-code.md)
 - [Open Host Service Pattern](/guide/integration-patterns/open-host-service-pattern.md)

@@ -47,6 +47,21 @@ The provider raises a `DomainEvent` internally; an ACL translates it to a versio
 
 **Default:** prefer the **asynchronous integration event** unless the consumer genuinely needs an answer to proceed — it keeps the two contexts independently deployable and available, which is the whole point of the boundary. Reach for the synchronous OHS call when a use case cannot continue without the provider's data. Never share a database between contexts and never let the application layer import another context directly — both collapse the boundary into hidden coupling.
 
+## Which name does the relationship carry
+
+Three questions, three answers, and only two of them are in the code. The declared `translation`
+(`ANTI_CORRUPTION_LAYER` / `CONFORMIST`) says how the *downstream* protects its model. The upstream's
+publication style is stated by the upstream itself, through `@OpenHostService` / `[OpenHostService]` and the
+published `api` / `events` packages. The organisational relationship — Customer/Supplier, Partnership,
+Separate Ways — is a statement about teams that no declaration carries; it belongs in prose, or in the
+declaration's `rationale`.
+
+One relationship usually answers all three at once, so "Open Host Service", "Anti-Corruption Layer" and
+"Customer/Supplier" are not competing names for it. Naming the organisational pattern where the declaration
+asks for the translation loses the mechanical check with it: a rule can demand a translation site for every
+declared channel, but no site corresponds to "Customer/Supplier". A hand-maintained context map therefore
+keeps the two apart in two columns instead of merging them into one called "pattern".
+
 ## Anchors
 
 - Markers: [@OpenHostService](/marker/strategic/openhostservice.md) · [OutputPort](/marker/port-out/outputport.md) · [DomainGateway](/marker/tactical/domaingateway.md) · [DomainEventPublisher](/marker/port-out/domaineventpublisher.md) · [IntegrationEvent](/marker/tactical/integrationevent.md)

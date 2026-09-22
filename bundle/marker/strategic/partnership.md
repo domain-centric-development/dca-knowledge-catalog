@@ -35,4 +35,5 @@ declare `@Partnership`
 
 ## Related mentions in guides (heuristic)
 
+- [Declaring Context Relationships in Code](/guide/integration-patterns/declaring-context-relationships-in-code.md)
 - [Declaring Contexts and Relationships](/guide/language-mappings/declaring-contexts-and-relationships.md)
