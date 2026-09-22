@@ -8,7 +8,7 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 - Guides: 20
 - Sections: 188
 - Markers: 31
-- Rules: 125
+- Rules: 127
 - Process: 1
 - Reference: 128
 

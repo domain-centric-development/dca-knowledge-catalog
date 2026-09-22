@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "9d5754c2c1c177429ef4c4ca95486281285368464d87e3269c603ba872d2f8a7",
+  "bundle_sha256": "7612a0d1fbac378b30a2a487264394342324996154d9feca8ef61103c7dbaa93",
   "counts": {
     "Decision": 25,
     "Guide": 20,
@@ -9,7 +9,7 @@
     "Process": 1,
     "Recipe": 19,
     "Reference": 128,
-    "Rule": 125,
+    "Rule": 127,
     "Section": 188,
     "Template": 49
   },
@@ -17,34 +17,36 @@
   "format": "dca-bundle-manifest-v1",
   "library_versions": {
     "dotnet": {
-      "DomainCentric.ArchRules": "0.5.0",
+      "DomainCentric.ArchRules": "0.6.0-SNAPSHOT",
       "DomainCentric.ArchRules.Xunit": "0.5.0",
       "DomainCentric.BuildingBlocks": "0.2.0"
     },
     "java": {
       "archunitSpringModulithVersion": "0.2.0-SNAPSHOT",
-      "archunitVersion": "0.5.0",
-      "buildingBlocksVersion": "0.3.0",
+      "archunitVersion": "0.6.0-SNAPSHOT",
+      "buildingBlocksVersion": "0.4.0-SNAPSHOT",
       "dcaSpringVersion": "0.2.0-SNAPSHOT"
     }
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "c7ceec5f4a7a73db6dec3482d34fee9b47323ee5",
-      "source_sha256": "6ea9db80ec10baf4df1c8936d9e9ab1a5d7701d85629a6f676af747e4866c2ad"
+      "dirty": true,
+      "revision": "36cf9e9f71ea7b5a703da57872c78d6d4a63c7a7",
+      "source_sha256": "878aa48061c17fbf4b5998ba1887f22dddca4200e0041c214221761d0a7b9d9e"
     },
     "dca-guide": {
-      "revision": "527df2107787f9cf2658a688baeb9e069ab3d589",
-      "source_sha256": "617a0baf0b6e29f41f272e89885f415ba1dcc0dc0c3661e15b82c73e0d6d030a"
+      "revision": "433a6e46b0fa400304a6cafb1834adc1d9dbefd1",
+      "source_sha256": "aff78ac3c79cead4308572cac2ce7a060067e8d42da4881d6d315227a41cf93b"
     },
     "dca-java": {
-      "revision": "e6a8933daa736cf4c59df81a066657911df375f5",
-      "source_sha256": "ce8401a26bfd16bd5c982b4758c576616e0e8c6b634b3430ca44feef40c22f7d"
+      "dirty": true,
+      "revision": "93f64830c543160f137f77d4d4221bb78934b1b9",
+      "source_sha256": "15bdc6a66a6d333542127976519540a6858256f03a3081941f91146861a6a248"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "c45066ce5bbe23fcade8d93fd6350d389f1b82d88ed7979d1b2b58a3d137fb67"
+      "source_sha256": "28f1fbec555c33072f885ac777b5b3e47eff3f01d0bdd9cf8b54c68679ea4a31"
     }
   }
 }

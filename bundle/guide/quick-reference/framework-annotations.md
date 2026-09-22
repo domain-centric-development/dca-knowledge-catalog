@@ -14,5 +14,6 @@ Domain         | never                 | pure Java / C# only
 Application    | minimal, or none      | possibly a stereotype on the use case
 Adapter        | yes                   | @RestController, @Entity
 Infrastructure | yes                   | @Configuration, @Bean
-Shared kernel  | neutral metadata only | @Nullable, own annotations
+Shared kernel  | its domain: never       | @Nullable, own annotations
+               | its adapters: yes       | the shared outbox, the transaction boundary
 ```

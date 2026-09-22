@@ -12,10 +12,17 @@ tags: [tactical, marker]
 Marker interface for Domain Gateways.
 
 A Domain Gateway is an interface declared in the **domain layer** that the domain itself
-uses to consult external facts or delegate technology-bound operations, without coupling the
-domain to framework or infrastructure types. The implementation lives outside the domain
-(typically in an outgoing adapter), but the contract is owned by the domain and expressed in
-domain language.
+uses to obtain facts it does not hold, or to delegate a technology-bound computation, without
+coupling the domain to framework or infrastructure types. The implementation lives outside the
+domain (typically in an outgoing adapter), but the contract is owned by the domain and expressed
+in domain language.
+
+**It never writes to the outside.** A gateway enriches the model with information so that
+the model can decide; it does not change the state of any external system. Persisting, sending,
+publishing and calling a remote operation that has an effect are the application's business,
+through an output port. A computation that touches nothing outside the process — hashing a
+password, converting a currency with a supplied rate — is a gateway, because no external state
+changes.
 
 **How it differs from related concepts:**
 
@@ -35,7 +42,7 @@ exposes external capability (cryptography, availability check, geocoding, …).
 - No framework dependencies in the interface
 - Implementation in the outgoing adapter layer
 - Typically called by aggregates, entities, or domain services
-- Side-effect-free or read-only operations are the typical case
+- Read-only towards the outside: no external state is created, changed or removed
 
 **Example use cases:**
 
