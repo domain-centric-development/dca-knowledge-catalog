@@ -7,6 +7,7 @@ resource: dca-guide/process/factory.md
 tags: [guide, section]
 ---
 
+- [The product scope](#the-product-scope)
 - [The backlog contract](#the-backlog-contract)
 - [Outcome events](#outcome-events)
 - [The stages and their hand-over files](#the-stages-and-their-hand-over-files)

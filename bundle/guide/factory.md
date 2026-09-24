@@ -19,6 +19,7 @@ detail that may change without the process changing.
 ## Sections
 
 - [Table of Contents](/guide/factory/table-of-contents.md)
+- [The product scope](/guide/factory/the-product-scope.md)
 - [The backlog contract](/guide/factory/the-backlog-contract.md)
 - [Outcome events](/guide/factory/outcome-events.md)
 - [The stages and their hand-over files](/guide/factory/the-stages-and-their-hand-over-files.md)

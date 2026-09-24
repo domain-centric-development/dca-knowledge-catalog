@@ -26,3 +26,13 @@ says so instead of answering it:
   or an endpoint the context does not offer, adding one is a product decision, and where the surface
   needs a guard it is an authorisation decision as well. A guard nobody decided is a guard no test
   holds.
+
+**The question is a file, and so is the answer.** A run that stops writes the question as a record
+of its own — the story it blocks, the stage that asked, the options it sees, its recommendation —
+never into a chat and never as an answer. Whoever decides writes the answer into that record with
+their name and the time; a recommendation, a default, a timeout or an unsigned draft is not one.
+The stage that asked runs again with the answer in front of it, and a check that reads the record
+— not the stage's word — refuses the story while the question is open and marks the record applied
+once the stage has taken it up. Three things follow: the question survives the session, a second
+person can answer it without the first one's transcript, and nobody can mistake a suggestion for a
+decision.

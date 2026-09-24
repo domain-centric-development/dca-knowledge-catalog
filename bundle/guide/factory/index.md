@@ -7,5 +7,6 @@
 - [Starting where you are](starting-where-you-are.md) — fails on absence: each stage says which file to create, and the gate reports what it skipped and
 - [Table of Contents](table-of-contents.md) — Table of Contents
 - [The backlog contract](the-backlog-contract.md) — The backlog is markdown with front matter, one file per item, readable and reviewable without any
+- [The product scope](the-product-scope.md) — Before the first story, one file describes the product: what is built and for whom, how each actor
 - [The stages and their hand-over files](the-stages-and-their-hand-over-files.md) — One story runs through six stages. Every stage is a **closed assignment**: it reads the story and
 - [What the project declares](what-the-project-declares.md) — Nothing above knows how your project builds. That knowledge lives in one file the project owns —

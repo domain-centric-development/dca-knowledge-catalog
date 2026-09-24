@@ -14,12 +14,20 @@ without changing the result.
 
 | Stage | Reads | Writes |
 |---|---|---|
-| plan | the story, the glossary and context map if present | `tasks/<story>/plan.md` |
-| test | the story, `plan.md` | `tasks/<story>/tests.md` — with the criterion-to-test table |
-| build | the story, `plan.md`, `tests.md` | `tasks/<story>/build.md` |
-| tidy | the story, `plan.md`, `build.md`, the green code | `tasks/<story>/tidy.md` |
-| judge | the story, all predecessors, the diff | `tasks/<story>/judge.md` — with a verdict |
-| document | the story, all predecessors, the project's documents | `tasks/<story>/document.md` |
+| plan | the story, the product scope, the glossary and context map if present | `tasks/<story>/plan.md` |
+| test | the story, `plan.md` and the files it names | `tasks/<story>/tests.md` — with the criterion-to-test table |
+| build | the story, `plan.md`, `tests.md` and the files they name | `tasks/<story>/build.md` |
+| tidy | the story, `plan.md`, `build.md`, the files the story changed | `tasks/<story>/tidy.md` |
+| judge | the story, all predecessors, the story's diff, the product scope | `tasks/<story>/judge.md` — with a verdict |
+| document | the story, all predecessors, the story's diff, the project's documents | `tasks/<story>/document.md` |
+
+**What a story changed is recorded, not reconstructed.** Around every stage the pipeline records
+which files changed, and after it the whole story's diff. The diff is taken against a snapshot of the
+working tree at the story's first stage, so a repository without a single commit gets one too.
+Every hand-over names its files: what the plan expects to change and what a later stage should read,
+the tests written, and the files build and tidy touched, which a gate checks against what actually
+changed. The next stage opens those files first. A stage that has to rebuild the diff itself
+explores the repository, and that exploration is paid again on every turn of the stage.
 
 The **plan** names the elements that change — aggregates, value objects, use cases with their ports,
 adapters — in the project's own vocabulary, and picks the shape of the end-user test per criterion
