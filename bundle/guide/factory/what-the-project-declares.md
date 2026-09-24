@@ -12,8 +12,8 @@ build and test commands, one entry per test source set, the architecture suite, 
 the backlog, the glossary and the context map it keeps anyway. A stage asks the project; it never
 assumes a build tool, a test framework or a directory layout.
 
-The same file says whether the project drives a browser: `browser: playwright` when its end-user command
-runs a browser suite, `none` when it deliberately has none. A criterion only a browser can observe then
+The same file says whether the project drives a browser: the runner's name (`browser: playwright`) when
+its end-user command runs a browser suite, `none` when it deliberately has none. A criterion only a browser can observe then
 gets a browser test; with `none` the plan takes the next lower level and says what that cannot show.
 Unset, such a criterion stops the plan once for the stack decision rather than degrading every story.
 

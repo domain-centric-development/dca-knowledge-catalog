@@ -54,7 +54,9 @@ the build gate accepts a green test only if it is in that record. This is what c
 between "the criterion is met" and "something green exists".
 
 A command the project has not declared is **skipped and named**, never failed. A gate that fails on
-something nobody configured gets switched off, and then there is no governance at all.
+something nobody configured gets switched off, and then there is no governance at all. The one
+exception is one the project writes itself: a `required:` line in the same file names the checks
+that must hold, and a required check that is missing or ran nothing fails.
 
 The same commands belong on the **commit** as well. Tool configurations do not travel between
 editors, but every tool commits through version control, so a pre-commit check that runs the

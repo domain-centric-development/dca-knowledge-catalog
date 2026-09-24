@@ -97,17 +97,19 @@ nobody has a reason to bypass it, because a bypassed check guards nothing.
 
 ### Configuration, not knowledge
 
-**A command the project has not declared is skipped and named, never failed.** A gate that fails on
-something nobody configured gets switched off within a week, and then there is no governance at
-all. Skipping loudly keeps the gate installed and the gap visible.
+**A command the project has not declared is skipped and named, never failed** — unless the project
+itself declared it mandatory (`required:`). A gate that fails on something nobody configured gets
+switched off within a week, and then there is no governance at all. Skipping loudly keeps the gate
+installed and the gap visible.
 
 **The process knows no project.** Build commands, test source sets, runners, formatters, the
 reviewer for a perspective: all of it is the project's, in one file the project owns. A stage that
 would break in a system without your domain in it is not a stage, it is a local habit.
 
-**Model and effort are the tool's business, and a broken default must not stop the run.** Keep them
-out of the process, and let the environment supply them — otherwise the pipeline is unusable
-wherever a default provider happens to be unavailable.
+**Model and effort are the project's choice per tool, never the process's, and a broken default must
+not stop the run.** The process names no model; the project may bind one to a tool
+(`model.<tool>.<stage>`, above), and without that key the tool's own default applies — otherwise the
+pipeline is unusable wherever a default provider happens to be unavailable.
 
 ### Doctrine has to decide
 
