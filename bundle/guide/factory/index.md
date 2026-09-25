@@ -4,6 +4,7 @@
 - [Building one: what actually holds](building-one-what-actually-holds.md) — Everything above is the shape. This is why it is that shape — each rule with the failure it
 - [Escalation: the three answers a run may not give itself](escalation-the-three-answers-a-run-may-not-give-itself.md) — The judge returns exactly one of three verdicts, and the third is the reason this list exists:
 - [Gates](gates.md) — Between the stages runs a **gate**: a deterministic check, callable from the command line and from
+- [Journeys: a guard over what is delivered](journeys-a-guard-over-what-is-delivered.md) — An epic may name its **journey** — the flow through its stories that must never break, walked to its
 - [Outcome events](outcome-events.md) — An epic's `metric` is a **domain or integration event whose publication in production is the
 - [Starting where you are](starting-where-you-are.md) — be built, the technical decisions, the designed cut — and its skeleton second, from the stack's own
 - [Table of Contents](table-of-contents.md) — Table of Contents

@@ -39,7 +39,7 @@ scenario with a **key**, grouped under the business rule it illustrates:
 
 ### Rule: An entry nobody has recorded is not an error
 
-#### shows-empty-state
+#### shows-empty-state (happy path)
 - Given the reader has recorded nothing
 - When they open the list
 - Then they see an invitation to start

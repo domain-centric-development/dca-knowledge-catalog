@@ -7,7 +7,7 @@
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (8)
 - [e2e-testing/](e2e-testing/index.md) (11)
 - [elements/](elements/index.md) (5)
-- [factory/](factory/index.md) (12)
+- [factory/](factory/index.md) (13)
 - [integration-patterns/](integration-patterns/index.md) (10)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (19)
 - [language-mappings/](language-mappings/index.md) (11)
@@ -20,6 +20,7 @@
 - [spring-modulith/](spring-modulith/index.md) (11)
 - [strategic-design/](strategic-design/index.md) (2)
 - [team-topologies/](team-topologies/index.md) (11)
+- [testing-levels/](testing-levels/index.md) (7)
 
 - [ArchUnit Governance for Domain-Centric Architecture](archunit-governance.md) — ArchUnit Governance for Domain-Centric Architecture
 - [Domain-Centric Architecture vs Clean Architecture](clean-architecture-comparison.md) — Domain-Centric Architecture vs Clean Architecture
@@ -41,3 +42,4 @@
 - [Spring Modulith Implementation](spring-modulith.md) — Spring Modulith Implementation
 - [Strategic Architecture](strategic-design.md) — Strategic Architecture
 - [Team Topologies Integration](team-topologies.md) — Team Topologies Integration
+- [Test Levels in Domain-Centric Architecture](testing-levels.md) — This document defines the three test levels a story's scenarios are tested at, which scenario goes to which
