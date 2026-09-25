@@ -42,3 +42,4 @@ one.
 - [Partnership declarations are symmetric](/rule/contextmap/dca-map-012.md)
 - [New context or extend an existing one](/decision/new-context-vs-extend-existing.md)
 - [Cross-context communication](/decision/cross-context-communication.md)
+- [Designed context map reconciled to the code](/pitfall/designed-map-reconciled-to-the-code.md)

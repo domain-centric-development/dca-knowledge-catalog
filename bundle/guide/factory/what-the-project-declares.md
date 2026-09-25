@@ -10,7 +10,11 @@ tags: [guide, section]
 Nothing above knows how your project builds. That knowledge lives in one file the project owns —
 build and test commands, one entry per test source set, the architecture suite, the formatter — plus
 the backlog, the glossary and the context map it keeps anyway. A stage asks the project; it never
-assumes a build tool, a test framework or a directory layout.
+assumes a build tool, a test framework or a directory layout. The file can be prefilled by
+detection — one small description per build tool, browser runner or formatter the setup recognises —
+and a person corrects it where detection is wrong; detection is never consulted during a run, so the
+file stays the one contract. The formatter appears twice: as the check the gate runs, and as the
+command that corrects the formatting, which the stages that write code run before they finish.
 
 The same file says whether the project drives a browser: the runner's name (`browser: playwright`) when
 its end-user command runs a browser suite, `none` when it deliberately has none. A criterion only a browser can observe then

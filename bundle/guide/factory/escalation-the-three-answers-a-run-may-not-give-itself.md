@@ -20,8 +20,9 @@ Two more questions belong to a human by construction, and a run that meets one o
 says so instead of answering it:
 
 - **A new bounded context, or a new relationship between contexts.** That is a decision about
-  language boundaries and ownership, recorded as a decision and reflected on the context map — never
-  smuggled in by a story.
+  language boundaries and ownership, recorded as a decision and reflected on the designed map — never
+  smuggled in by a story. A context that is designed and not built yet is no such question: the
+  story plans it as new.
 - **A surface the story's actor does not have.** If the criteria can only be observed through a page
   or an endpoint the context does not offer, adding one is a product decision, and where the surface
   needs a guard it is an authorisation decision as well. A guard nobody decided is a guard no test

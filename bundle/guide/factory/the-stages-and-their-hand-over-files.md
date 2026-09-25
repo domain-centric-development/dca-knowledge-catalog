@@ -14,11 +14,11 @@ without changing the result.
 
 | Stage | Reads | Writes |
 |---|---|---|
-| plan | the story, the product scope, the glossary and context map if present | `tasks/<story>/plan.md` |
+| plan | the story, the project description, the glossary and the generated context map if present | `tasks/<story>/plan.md` |
 | test | the story, `plan.md` and the files it names | `tasks/<story>/tests.md` — with the criterion-to-test table |
 | build | the story, `plan.md`, `tests.md` and the files they name | `tasks/<story>/build.md` |
 | tidy | the story, `plan.md`, `build.md`, the files the story changed | `tasks/<story>/tidy.md` |
-| judge | the story, all predecessors, the story's diff, the product scope | `tasks/<story>/judge.md` — with a verdict |
+| judge | the story, all predecessors, the story's diff, the product and the technical description | `tasks/<story>/judge.md` — with a verdict |
 | document | the story, all predecessors, the story's diff, the project's documents | `tasks/<story>/document.md` |
 
 **The builder stages may share one context, the judge never.** Plan, test, build and tidy can run one

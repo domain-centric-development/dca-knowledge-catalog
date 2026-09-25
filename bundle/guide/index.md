@@ -7,7 +7,7 @@
 - [domain-services-with-data-dependencies/](domain-services-with-data-dependencies/index.md) (8)
 - [e2e-testing/](e2e-testing/index.md) (11)
 - [elements/](elements/index.md) (5)
-- [factory/](factory/index.md) (10)
+- [factory/](factory/index.md) (11)
 - [integration-patterns/](integration-patterns/index.md) (10)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (19)
 - [language-mappings/](language-mappings/index.md) (11)

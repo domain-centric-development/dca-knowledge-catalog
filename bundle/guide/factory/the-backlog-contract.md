@@ -11,7 +11,7 @@ The backlog is markdown with front matter, one file per item, readable and revie
 tooling — no database, and no JSON as the source of truth.
 
 ```text
-backlog/
+project/backlog/
   <epic>/
     epic.md          the epic
     <story>.md       one story
@@ -30,8 +30,8 @@ refused before any planning starts:
 This is not bureaucracy. A stage that cannot read the intent invents one, and an invented intent is
 indistinguishable from a stated one once it is in the code.
 
-A **story** names the bounded context it changes — a context the project's context map already
-carries — and states its acceptance criteria as observable end-user behaviour. Each criterion is a
+A **story** names the bounded context it changes — a context the designed map already carries,
+built or not yet — and states its acceptance criteria as observable end-user behaviour. Each criterion is a
 scenario with a **key**, grouped under the business rule it illustrates:
 
 ```markdown
@@ -81,13 +81,16 @@ human released this story for building. The most expensive mistake is well-built
 
 **A story is planned when it is written, not when it runs.** A question the story leaves open stops
 the plan stage later, at the moment nobody is there to answer it. So before a story is released, the
-backlog skill goes through a fixed list of questions against the story, the product scope, the
-context map and the code the story touches, while the person who writes it is still there:
+backlog skill goes through a fixed list of questions against the story, the project description and
+the code the story touches, while the person who writes it is still there:
 
 - Does a trigger or an outcome need a way in the system does not have yet — a page, an endpoint, a
   message — and who may use it? The question asks *whether*, never *which* one to build.
-- Does the story rely on an external system the context map does not carry? Then it is a scoping
-  question first, and the system's contract belongs on the map, not in every story.
+- Is the story's context on the designed map, and does it need nothing the technical decisions
+  exclude — a second persistence, a client framework on server-rendered pages?
+- Does the story rely on an external system neither the designed map nor the technical decisions
+  carry? Then it is a question about the description first, and the system's contract belongs
+  there, not in every story.
 - For every input: the format, the allowed range, what happens at the boundaries.
 - For every default: one stated value.
 - For every dependency: what the user sees when it fails, and after how long a slow answer counts
@@ -101,5 +104,5 @@ context map and the code the story touches, while the person who writes it is st
 - Can a user probe or exhaust a rule by repeating it?
 - Does every rule have a scenario, and does every scenario have one cause?
 
-What the product scope already answers is not asked again. What stays open becomes an `open:`
+What the project description already answers is not asked again. What stays open becomes an `open:`
 assumption, and a story whose open assumption fixes an observable result stays a draft.
