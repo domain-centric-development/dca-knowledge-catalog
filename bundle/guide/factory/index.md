@@ -1,5 +1,6 @@
 # factory
 
+- [Acceptance: a human looks before it counts](acceptance-a-human-looks-before-it-counts.md) — Every gate can pass and the page can still be wrong: four cards where two fit, buttons that page
 - [Building one: what actually holds](building-one-what-actually-holds.md) — Everything above is the shape. This is why it is that shape — each rule with the failure it
 - [Escalation: the three answers a run may not give itself](escalation-the-three-answers-a-run-may-not-give-itself.md) — The judge returns exactly one of three verdicts, and the third is the reason this list exists:
 - [Gates](gates.md) — Between the stages runs a **gate**: a deterministic check, callable from the command line and from
