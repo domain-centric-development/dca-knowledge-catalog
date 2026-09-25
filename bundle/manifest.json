@@ -1,13 +1,13 @@
 {
-  "bundle_sha256": "e422553fb16ec6b5816dd30850d62946bed2df0b6c62f00b667325826f4cc6e8",
+  "bundle_sha256": "fdcacd9519fa37fe72c471a32f8557fb8ebcc9970591b21ee422460e2dfca776",
   "counts": {
-    "Decision": 29,
+    "Decision": 30,
     "Guide": 21,
     "Marker": 31,
     "Note": 1,
-    "Pitfall": 37,
+    "Pitfall": 38,
     "Process": 1,
-    "Recipe": 21,
+    "Recipe": 22,
     "Reference": 128,
     "Rule": 127,
     "Section": 199,
@@ -34,8 +34,8 @@
       "source_sha256": "ef76cbffb2969852278249aca7ed477204291ea1a6613de7d09d5c865d20ff72"
     },
     "dca-guide": {
-      "revision": "d1f1c92446c7bb6777052d042dc04c84bf13a548",
-      "source_sha256": "d2954b8d4caf8001c7af4eea150ca5c772ded360b5140bb5b23886f7fcea0d22"
+      "revision": "746788642c4e449ee3de24147b7d59418eca155c",
+      "source_sha256": "bc0039bdc3b64e623c780ffe81b357872ec36e7c39f1ee58b4769b26ee0343e7"
     },
     "dca-java": {
       "revision": "b85dfe46a519e8af9154ee729d4160a9e93dbb30",
@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "f4a472a083357ddf9281b85071623e34ae3c689696e6958060ab92f1acd373b3"
+      "source_sha256": "1a029cdf3061817a6f43f4b6ffa438c6de7976693c6f6d9c63cfe3178408272e"
     }
   }
 }
