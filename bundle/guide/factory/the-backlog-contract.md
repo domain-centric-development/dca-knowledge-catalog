@@ -39,7 +39,7 @@ scenario with a **key**, grouped under the business rule it illustrates:
 
 ### Rule: An entry nobody has recorded is not an error
 
-#### shows-empty-state
+#### shows-empty-state (happy path)
 - Given the reader has recorded nothing
 - When they open the list
 - Then they see an invitation to start
@@ -60,6 +60,10 @@ scenario with a **key**, grouped under the business rule it illustrates:
 
 - open: Does an archived entry still count towards the list?
 ```
+
+A scenario may carry a `Title:` line under its heading; without one, its title is the key in words. The
+scenario's end-to-end test carries that title verbatim as its display name, and the gate checks it: two
+implementations of one story then name the test alike, and a test report names the scenario it proves.
 
 A scenario has exactly one `When`. Two triggers are two scenarios, and every rule has at least one
 scenario. A check can count both, and does. Concrete values belong in the steps, because a value is

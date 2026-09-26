@@ -39,12 +39,15 @@ changed. The next stage opens those files first. A stage that has to rebuild the
 explores the repository, and that exploration is paid again on every turn of the stage.
 
 The **plan** names the elements that change — aggregates, value objects, use cases with their ports,
-adapters — in the project's own vocabulary, and picks the shape of the end-user test per criterion
-from what the project can run *today*. It backs every statement about the code with a file and a
+adapters — in the project's own vocabulary, and gives every criterion its test level from what the
+project can run *today*: the one scenario the story marks as its **happy path** end to end, every other
+scenario integrated through the wired application, `browser-only` with a reason where only a browser
+observes the outcome ([Test Levels](/guide/testing-levels.md)). It backs every statement about the code with a file and a
 line. It writes no code.
 
-The **test** stage writes one end-user test per acceptance criterion, plus unit tests for the
-invariants the story introduces, and records the mapping:
+The **test** stage writes one test per acceptance criterion at the level the plan gave it — an external
+system stubbed at the protocol, never mocked at the port — plus unit tests for the invariants the story
+introduces, and records the mapping:
 
 ```markdown
 | criterion | test |

@@ -27,6 +27,7 @@ detail that may change without the process changing.
 - [Gates](/guide/factory/gates.md)
 - [What the project declares](/guide/factory/what-the-project-declares.md)
 - [Escalation: the three answers a run may not give itself](/guide/factory/escalation-the-three-answers-a-run-may-not-give-itself.md)
+- [Journeys: a guard over what is delivered](/guide/factory/journeys-a-guard-over-what-is-delivered.md)
 - [Acceptance: a human looks before it counts](/guide/factory/acceptance-a-human-looks-before-it-counts.md)
 - [Building one: what actually holds](/guide/factory/building-one-what-actually-holds.md)
 - [Starting where you are](/guide/factory/starting-where-you-are.md)
