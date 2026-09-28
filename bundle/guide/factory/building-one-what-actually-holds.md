@@ -66,6 +66,13 @@ nothing, an accepted one only its last gate. Where the file of the stage it resu
 gate checks it on today's tree first. A report from a round the machine lost otherwise becomes the
 next stage's instruction, and the stage fixes what is no longer wrong.
 
+**A stage that runs again ends the pass after it.** A re-plan, a build after the judge asked for
+changes: the files the later stages wrote describe work that came before, and a story resumed on
+them skips every stage in between. They stay as the record; they no longer say where the story
+stands. The last gate delivers only a story whose stages all ran, in order, in this pass, over a
+judge's pass and the story as it was planned — a document written for an earlier pass delivers
+nothing.
+
 **An answer that exists only in a reply is lost.** A scoping decision, an assumption the domain
 expert settled, a reason for a deviation: if it is not written where the next run will look, the
 same question comes back in a month with a different answer.
