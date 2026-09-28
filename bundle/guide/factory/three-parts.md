@@ -14,15 +14,24 @@ A factory that delivers stories has three parts, and each lives in its own place
 - a **runner** that works the backlog off, stage by stage, with a check between the stages.
 
 ```text
+dca-factory.profile.yaml   the stack profile — the person's, committed
 project/                   what is to be built (people write it)
   product.md               what, for whom, surfaces, qualities, what it is not
   tech.md                  stack, frontend approach, persistence, runtime, integrations, version policy
   domain.md                the designed cut: contexts, subdomain types, relationships and why
-  backlog/
-.agents/factory/           how it is worked off (the machine: profile, checks, runner)
-tasks/<story>/             the stages' hand-overs
+  epics/<epic>/            the epic, its stories, and beside each story its decisions
+.agents/factory/           the installed pipeline (checks, runner) — replaced whole by an update
+.dca-factory/runs/<story>/ the run's protocol: hand-overs, marks, journal — disposable
 docs/                      what exists and why — written after the code, some of it generated
 ```
+
+One owner per place. `project/` is the people's — the description, the epics with their stories and,
+beside each story, the questions a stage asked and the answers a person gave. `.agents/factory/` is
+installed code, `dca-factory.profile.yaml` the person's configuration, `.dca-factory/` the run's
+protocol. A story carries its own state: `status: draft | approved | adopted | superseded` is the
+person's line, `status: delivered` and `delivered:` are written by the last gate and by nothing else.
+So the run folder can be deleted at any time and the factory still knows what is delivered and what
+was decided; what is lost is history — hand-overs, the journal, what a story cost.
 
 `project/` holds **intent**: written before the code, and read by every stage as input. `docs/` holds
 **what exists and why** — architecture documentation, decision records, maps generated from the

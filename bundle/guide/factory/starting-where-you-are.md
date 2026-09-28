@@ -32,7 +32,8 @@ Adopting describes what the system does today, with evidence, and is how a brown
 backlog. A story with `status: adopted` is never built: its scenarios are mapped to tests that exist and
 are green, a test the adoption has to write itself is shown to work by a break — a minimal change to the
 production code, applied to a scratch copy, that turns exactly this test red — and a fresh judge confirms
-that each test asserts its scenario. Then the story counts as delivered, and a new story can depend on it.
+that each test asserts its scenario. Then the story counts as delivered — the gate writes the time into
+the story, its status stays `adopted` — and a new story can depend on it.
 Two limits hold: green is weaker than red-then-green, which is why the judge reads every mapped test and a
 written test needs its break; and adoption is incremental — a project adopts the part the next new story
 touches, not the whole system in one run.

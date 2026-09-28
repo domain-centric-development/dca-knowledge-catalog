@@ -51,6 +51,13 @@ were red, which stage is next, what the reviewer decided. An orchestrator that r
 resumed, cannot be handed to another tool, and cannot be checked afterwards — and its memory is the
 one part of the run nobody can audit.
 
+**State and protocol are two things, and they live apart.** What is delivered and what was decided
+is state: it goes where people read and write — into the story's own front matter, written by the
+gate alone, and into the records beside the story. What a run produced on the way — hand-overs,
+marks, the journal — is protocol: it goes into a folder of its own that can be deleted without the
+factory forgetting anything but history. A fresh clone without the run folder must show the same
+delivered stories and the same next one; when it does not, state was hiding in protocol.
+
 **A repeat round must be able to read why the last one was refused.** Hand the refusal on as a
 file the stage is told to read. A stage that repeats blind reproduces exactly what was rejected,
 and the loop burns rounds on it.

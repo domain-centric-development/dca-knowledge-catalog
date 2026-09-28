@@ -11,11 +11,16 @@ The backlog is markdown with front matter, one file per item, readable and revie
 tooling — no database, and no JSON as the source of truth.
 
 ```text
-project/backlog/
+project/epics/
   <epic>/
-    epic.md          the epic
-    <story>.md       one story
+    epic.md              the epic
+    <story>.md           one story, with its state in its front matter
+    <story>.decisions/   its questions and acceptances, one file each
 ```
+
+Stories stay with their epic for life. *Backlog* is a view — the stories that can be pulled:
+approved, not delivered, their dependencies met — not a folder things move in and out of. A story's
+id is unique in the whole project; a second one under the same id is refused, naming both.
 
 An **epic** carries four mandatory fields, and a story whose epic is missing one of them is
 refused before any planning starts:
