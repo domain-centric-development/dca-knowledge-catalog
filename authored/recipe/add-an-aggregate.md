@@ -12,7 +12,7 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 ## Steps
 
 1. **Model the boundary** — one aggregate = one consistency boundary. Keep it small; reference other aggregates by their `Id`, never by object.
-2. **Create the package** `domain/{name}/` and generate from the [aggregate template](/template/aggregate-root.md): `{Name}Id` (typed identity), `{Name}` (root extends `BaseAggregateRoot`), `{Name}Created` (domain event).
+2. **Generate from the [aggregate template](/template/aggregate-root.md)**: `{Name}Id` (typed identity) and `{Name}` (root extends `BaseAggregateRoot`) in the domain model package `domain/model/`, `{Name}Created` (domain event) in `domain/event/`.
 3. **Enforce invariants in a factory** — `static {Name} create(...)` validates and registers the creation event. No public setters; mutate via intention-revealing methods that re-check invariants.
 4. **Register domain events** on every meaningful state change; the use case publishes + clears them after save.
 5. **Add the repository** — interface `{Name}Repository extends Repository<{Name}, {Name}Id>` in `application/shared/` (output port), implementation in `adapter/outgoing/` ([Deviations from the literature](/guide/readme/deviations-from-the-literature.md)). One repository per aggregate root only.

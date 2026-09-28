@@ -16,8 +16,9 @@ governs it stay in that node; this file carries the skeleton only.
 ## `{Name}{PastTense}.java` — the domain event
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.event;
 
+import {basePackage}.{context}.domain.model.{Name}Id;
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;

@@ -16,7 +16,7 @@ governs it stay in that node; this file carries the skeleton only.
 ## `{Name}Id.java` — typed identity (value object)
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.Id;
 import java.util.UUID;
@@ -39,8 +39,9 @@ public record {Name}Id(UUID value) implements Id {
 ## `{Name}Created.java` — domain event (past tense, immutable)
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.event;
 
+import {basePackage}.{context}.domain.model.{Name}Id;
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;
@@ -57,8 +58,9 @@ public record {Name}Created(UUID eventId, Instant occurredOn, {Name}Id {name}Id)
 ## `{Name}.java` — the aggregate root
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
+import {basePackage}.{context}.domain.event.{Name}Created;
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.BaseAggregateRoot;
 
 /**

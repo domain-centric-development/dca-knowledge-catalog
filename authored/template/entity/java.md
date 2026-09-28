@@ -16,7 +16,7 @@ governs it stay in that node; this file carries the skeleton only.
 ## `{Name}Id.java` — the entity's identity (value object)
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.Id;
 import java.util.UUID;
@@ -33,7 +33,7 @@ public record {Name}Id(UUID value) implements Id {
 ## `{Name}.java` — the entity
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.Entity;
 

@@ -16,7 +16,7 @@ governs it stay in that node; this file carries the skeleton only.
 ## `{Name}.java` — the value object
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.Value;
 

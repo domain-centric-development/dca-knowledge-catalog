@@ -16,9 +16,9 @@ governs it stay in that node; this file carries the skeleton only.
 ## `{Name}Factory.java` — factory (domain layer)
 
 ```java
-package {basePackage}.{context}.domain.{name};
+package {basePackage}.{context}.domain.model;
 
-import {basePackage}.{context}.domain.{name}.event.{Name}Created;
+import {basePackage}.{context}.domain.event.{Name}Created;
 import dev.domaincentric.dca.buildingblocks.ddd.tactical.Factory;
 
 /**

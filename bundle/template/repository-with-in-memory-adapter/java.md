@@ -18,8 +18,8 @@ governs it stay in that node; this file carries the skeleton only.
 ```java
 package {basePackage}.{context}.application.shared;
 
-import {basePackage}.{context}.domain.{name}.{Name};
-import {basePackage}.{context}.domain.{name}.{Name}Id;
+import {basePackage}.{context}.domain.model.{Name};
+import {basePackage}.{context}.domain.model.{Name}Id;
 import dev.domaincentric.dca.buildingblocks.hexagonal.port.out.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +53,8 @@ the marker, which is what keeps it recognisable as an output port.
 package {basePackage}.{context}.adapter.outgoing.persistence;
 
 import {basePackage}.{context}.application.shared.{Name}Repository;
-import {basePackage}.{context}.domain.{name}.{Name};
-import {basePackage}.{context}.domain.{name}.{Name}Id;
+import {basePackage}.{context}.domain.model.{Name};
+import {basePackage}.{context}.domain.model.{Name}Id;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

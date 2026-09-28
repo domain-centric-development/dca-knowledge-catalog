@@ -38,9 +38,9 @@ Aggregate parts either become columns of this row, a JSON column, or a child tab
 package {basePackage}.{context}.adapter.outgoing.persistence;
 
 import {basePackage}.{context}.application.shared.{Name}Repository;
-import {basePackage}.{context}.domain.{name}.{Name};
-import {basePackage}.{context}.domain.{name}.{Name}Id;
-import {basePackage}.{context}.domain.{name}.{Name}Status;
+import {basePackage}.{context}.domain.model.{Name};
+import {basePackage}.{context}.domain.model.{Name}Id;
+import {basePackage}.{context}.domain.model.{Name}Status;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;

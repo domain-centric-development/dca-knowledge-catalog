@@ -77,8 +77,8 @@ This interface speaks entities and primitives, so it must **not** be injected in
 package {basePackage}.{context}.adapter.outgoing.persistence.jpa;
 
 import {basePackage}.{context}.application.shared.{Name}Repository;
-import {basePackage}.{context}.domain.{name}.{Name};
-import {basePackage}.{context}.domain.{name}.{Name}Id;
+import {basePackage}.{context}.domain.model.{Name};
+import {basePackage}.{context}.domain.model.{Name}Id;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
