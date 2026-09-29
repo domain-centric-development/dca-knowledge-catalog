@@ -11,8 +11,40 @@ from .mirror import strip_resource
 from .okf import Node, slugify
 
 
+#: The sections of a rule node that carry ArchUnit code, not its meaning: the verbatim expression and the
+#: helpers it calls. In a large rule node they move into its evidence slices, which hold them in full.
+RULE_CODE_SECTIONS = ("Implementation", "Helpers")
+
+
+def _without_code(body: str, pointer: str) -> str:
+    """The rule body without its code, fence-aware, with one pointer where it stood: the Java sections
+    (`## Implementation`, `## Helpers` with its `###` helpers) and the C# subsections the .NET merge appends
+    (`### C# expression`, `### C# helper …`)."""
+    out, fenced, pointed = [], False, False
+    in_section = False                        # inside a `## Implementation` / `## Helpers` section
+    in_subsection = False                     # inside a `### C# …` subsection of any section
+    for line in body.splitlines(keepends=True):
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced and line.startswith("## "):
+            in_section = line[3:].strip() in RULE_CODE_SECTIONS
+            in_subsection = False
+        elif not fenced and line.startswith("### "):
+            in_subsection = line[4:].strip().startswith("C# ")
+        skip = in_section or in_subsection
+        if skip and not pointed:
+            out.append(pointer)
+            pointed = True
+        if not skip:
+            out.append(line)
+    return "".join(out)
+
+
 def evidence_slices(nodes: list[Node], threshold: int = 16_000) -> list[Node]:
-    """Keep the complete node; expose its fence-aware level-three sections separately."""
+    """Expose a large node's fence-aware level-three sections separately. A large rule node keeps what it
+    selects and checks and leaves its ArchUnit code — the expression and its helpers, often ten times the rest —
+    to the slices: a reader asking what a rule requires reads a page, one asking how it is implemented follows a
+    link. Every other node stays complete."""
     result = []
     for node in nodes:
         if len(node.render().encode()) <= threshold:
@@ -43,6 +75,12 @@ def evidence_slices(nodes: list[Node], threshold: int = 16_000) -> list[Node]:
                 "tags": ["reference"], "evidence_for": "/" + node.path + anchor,
             }, f"[Full node and context](/{node.path}{anchor}). This is an evidence excerpt; retain the parent selection and caveats.\n\n" + body))
             targets.append((heading, "/" + path))
+        if node.frontmatter.get("type") == "Rule" and any(f"\n## {name}\n" in "\n" + node.body for name in RULE_CODE_SECTIONS):
+            overview = next((path for heading, path in targets if heading == "Overview"), None)
+            node.body = _without_code(node.body, (
+                "## Implementation\n\nThe verbatim ArchUnit expression is in the evidence slice "
+                f"[Overview]({overview}); every helper it calls has a slice of its own, listed under "
+                "*Evidence slices* below.\n\n"))
         node.add_section("Evidence slices", targets)
     return result
 

@@ -673,6 +673,10 @@ def test_rule_nodes_embed_referenced_helpers(bundle: Path):
         fm, body = _split_frontmatter(p.read_text(encoding="utf-8"))
         if "java" not in fm.get("implementations", ""):
             continue
+        # a large rule node keeps its code in its evidence slices; read them as the node's code
+        slices = bundle / "evidence" / p.relative_to(bundle).with_suffix("")
+        if slices.is_dir():
+            body += "\n" + "\n".join(s.read_text(encoding="utf-8") for s in sorted(slices.glob("*.md")))
         impl = re.search(r"## Implementation\n\n```java\n(.*?)\n```", body, re.S)
         assert impl, f"{p.name}: no implementation block"
         class_name = fm["enforced_by"].strip('"').split("#")[0]
@@ -947,9 +951,12 @@ def test_all_dotnet_rules_have_extracted_csharp_evidence(bundle):
     for entry in entries:
         path = bundle / 'rule' / entry['set'] / (entry['id'].lower() + '.md')
         text = path.read_text()
+        # a large rule node keeps its C# evidence in its slices; the node and its slices together carry it
+        slices = bundle / 'evidence' / path.relative_to(bundle).with_suffix('')
+        evidence = text + ''.join(p.read_text() for p in sorted(slices.glob('*.md'))) if slices.is_dir() else text
         source = (REPO_ROOT / DOTNET_RULES_SRC_REL / (_dotnet_class(entry['set']) + '.cs')).read_text()
         assert _expression_at(source, entry['id'])
-        assert '```csharp' in text and 'DcaRule.' in text, entry['id']
+        assert '```csharp' in evidence and 'DcaRule.' in evidence, entry['id']
         if not entry['id'].startswith('DCA-NET-'):
             assert '## .NET reading' in text
 
@@ -966,6 +973,25 @@ def test_evidence_slices_keep_full_nodes_and_ignore_headings_in_code():
     assert not any('inside-a-code-fence' in s.path for s in slices)
     assert all('Full node and context' in s.body for s in slices)
     assert [s.path for s in slices] == [s.path for s in evidence_slices([Node(node.path, node.frontmatter, body)], threshold=100)]
+
+
+def test_a_large_rule_node_leaves_its_code_to_the_slices_and_loses_nothing():
+    from dca_catalog.okf import Node
+    from dca_catalog.retrieval import evidence_slices
+    code = "return DcaRule.of(\"X\")\n" * 40
+    body = ("## Selection\n\nClasses.\n\n## Check\n\nThey hold.\n\n## Implementation\n\n```java\n" + code + "```\n\n"
+            "## Helpers\n\n### `helper`\n\n```java\nboolean helper() { return true; }\n```\n\n## Configured by\n\n- layout\n")
+    node = Node("rule/x/dca-x-001.md", {"type": "Rule", "title": "X"}, body)
+    slices = evidence_slices([node], threshold=100)
+    assert "## Selection" in node.body and "## Check" in node.body and "## Configured by" in node.body
+    assert "DcaRule.of" not in node.body and "boolean helper()" not in node.body
+    assert "/evidence/rule/x/dca-x-001/overview.md" in node.body
+    joined = "".join(s.body for s in slices)
+    assert code in joined and "boolean helper()" in joined
+    guide = Node("guide/x/long.md", {"type": "Section", "title": "G"}, "## Implementation\n\n" + "text " * 100 + "\n### A\n\nmore\n")
+    before = guide.body
+    evidence_slices([guide], threshold=100)
+    assert guide.body == before, "a node that is not a rule stays complete"
 
 
 def test_templates_have_applicability_and_router_has_both_commands(bundle):

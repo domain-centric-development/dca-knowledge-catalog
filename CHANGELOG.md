@@ -6,6 +6,11 @@ every regeneration.
 
 ## [Unreleased]
 
+- Changed: a large rule node (above the evidence-slice threshold) keeps what it selects and checks, its .NET reading and
+  its links, and leaves its ArchUnit code — the Java expression, its helpers, the C# expression and helpers — to its
+  evidence slices, which already held it in full. `dca-use-012` 41 KB → 8 KB, `dca-use-009` 43 → 8, no rule node above
+  15 KB. Measured in the todoapp bench: one read of `dca-use-012` was a fifth of all the catalog a session read.
+
 - Changed (WP-77): the repository adapter templates order `findAll` by a sequence column the database assigns on insert
   (JDBC: `sequence … GENERATED ALWAYS AS IDENTITY`, `ORDER BY sequence`; JPA: a read-only `sequence` field and
   `findAllByOrderBySequenceAsc()`; in-memory: a `LinkedHashMap` that keeps insertion order) instead of
