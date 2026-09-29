@@ -6,6 +6,12 @@ every regeneration.
 
 ## [Unreleased]
 
+- Changed (WP-77): the repository adapter templates order `findAll` by a sequence column the database assigns on insert
+  (JDBC: `sequence … GENERATED ALWAYS AS IDENTITY`, `ORDER BY sequence`; JPA: a read-only `sequence` field and
+  `findAllByOrderBySequenceAsc()`; in-memory: a `LinkedHashMap` that keeps insertion order) instead of
+  `ORDER BY created_at, id`, whose tie-break is a random UUID for two rows of one instant; the port contract test
+  names the two-rows-one-instant case. New pitfall `ordering-by-timestamp`.
+
 - Fixed: the manifest's own-repository entry no longer records a Git revision (the carrying commit is the revision), so a commit
   that lands generator sources or authored nodes together with the regenerated bundle stays fresh under `scripts/check.sh`;
   hashed sibling inputs are narrowed to what the generator reads (guide agent files and `DomainCentric.BuildingBlocks`

@@ -36,6 +36,10 @@ public class {Name}JpaEntity {
     @Column(length = 64)
     private String id;
 
+    /** Insertion order for findAll — the database assigns it (identity column), JPA never writes it. */
+    @Column(insertable = false, updatable = false)
+    private Long sequence;
+
     @Column(nullable = false, length = 32)
     private String status;
 
@@ -53,6 +57,8 @@ public class {Name}JpaEntity {
 
 This class is a plain persistence structure: no invariants, no domain methods. Aggregate parts (child entities) cascade from the root with `orphanRemoval = true`; **never** cascade across an aggregate boundary. Value objects can be flattened to columns or mapped `@Embeddable`.
 
+**The order comes from the database, not from a timestamp.** `sequence` is an identity column the schema declares (`GENERATED ALWAYS AS IDENTITY`, `AUTO_INCREMENT` by dialect) and the entity only reads: `insertable = false, updatable = false` keeps JPA from ever writing it. With `ddl-auto` the column would be created without the identity, so the schema migration (or `schema.sql`) owns it. `findAll` orders by it; ordering by `updated_at` or a creation timestamp cannot tell two rows of one instant apart — the [ordering by timestamp](/pitfall/ordering-by-timestamp.md) pitfall.
+
 ## `SpringData{Name}Repository.java` — Spring Data interface (outgoing adapter)
 
 ```java
@@ -64,6 +70,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /** Spring Data CRUD over the entity — keyed by the primitive id, not the domain id type. */
 public interface SpringData{Name}Repository extends JpaRepository<{Name}JpaEntity, String> {
+
+    /** The order the rows were written — never a timestamp, which cannot order two rows of one instant. */
+    List<{Name}JpaEntity> findAllByOrderBySequenceAsc();
 
     List<{Name}JpaEntity> findByStatus(String status);
 }
@@ -120,7 +129,7 @@ public class Jpa{Name}RepositoryAdapter implements {Name}Repository {
     @Override
     @Transactional(readOnly = true)
     public List<{Name}> findAll() {
-        return jpa.findAll().stream().map(this::toDomain).toList();
+        return jpa.findAllByOrderBySequenceAsc().stream().map(this::toDomain).toList();
     }
 
     private {Name}JpaEntity toEntity(final {Name} aggregate) {

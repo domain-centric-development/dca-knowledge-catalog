@@ -55,9 +55,11 @@ package {basePackage}.{context}.adapter.outgoing.persistence;
 import {basePackage}.{context}.application.shared.{Name}Repository;
 import {basePackage}.{context}.domain.model.{Name};
 import {basePackage}.{context}.domain.model.{Name}Id;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -66,40 +68,47 @@ import org.springframework.stereotype.Repository;
  * <p>The store holds snapshots, not the live aggregates: every read and write goes through
  * {@code {Name}.reconstitute(...)}, so a caller who mutates an aggregate and forgets {@code save()}
  * changes nothing — exactly as a database adapter would behave.
+ *
+ * <p>The map keeps insertion order — the port's promise that {@code findAll} returns aggregates
+ * in the order they were first saved; a database adapter keeps it with a sequence column.
  */
 @Repository
 public class InMemory{Name}Repository implements {Name}Repository {
 
-    private final ConcurrentHashMap<{Name}Id, {Name}> store = new ConcurrentHashMap<>();
+    private final Map<{Name}Id, {Name}> store = new LinkedHashMap<>();
 
     @Override
-    public Optional<{Name}> findById(final {Name}Id id) {
+    public synchronized Optional<{Name}> findById(final {Name}Id id) {
         return Optional.ofNullable(store.get(id)).map(this::copyOf);
     }
 
     @Override
-    public {Name} save(final {Name} aggregate) {
-        store.put(aggregate.id(), copyOf(aggregate));
+    public synchronized {Name} save(final {Name} aggregate) {
+        store.put(aggregate.id(), copyOf(aggregate));   // re-saving keeps the first position
         return aggregate;
     }
 
     @Override
-    public void deleteById(final {Name}Id id) {
+    public synchronized void deleteById(final {Name}Id id) {
         store.remove(id);
     }
 
     @Override
-    public List<{Name}> findAll() {
-        return store.values().stream().map(this::copyOf).toList();
+    public synchronized List<{Name}> findAll() {
+        final List<{Name}> copies = new ArrayList<>(store.size());
+        for (final {Name} stored : store.values()) {
+            copies.add(copyOf(stored));
+        }
+        return copies;
     }
 
     @Override
-    public long count() {
+    public synchronized long count() {
         return store.size();
     }
 
     @Override
-    public void deleteAll() {
+    public synchronized void deleteAll() {
         store.clear();
     }
 
