@@ -67,5 +67,5 @@ and needs no method of its own.
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
 - [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
-- [TRANSACTION RULES](/guide/rules/transaction-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
+- [The use case once, each adapter its translation](/guide/testing-levels/the-use-case-once-each-adapter-its-translation.md)

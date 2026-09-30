@@ -16,6 +16,8 @@ level, and the three kinds of end-to-end test that are easy to mix up.
 - [Table of Contents](/guide/testing-levels/table-of-contents.md)
 - [The three levels](/guide/testing-levels/the-three-levels.md)
 - [The happy path end to end, the rest integrated](/guide/testing-levels/the-happy-path-end-to-end-the-rest-integrated.md)
+- [The use case once, each adapter its translation](/guide/testing-levels/the-use-case-once-each-adapter-its-translation.md)
+- [Every invariant a unit test, every guard an invariant](/guide/testing-levels/every-invariant-a-unit-test-every-guard-an-invariant.md)
 - [Integrated, not integrated against another system](/guide/testing-levels/integrated-not-integrated-against-another-system.md)
 - [Smoke test, happy-path test, journey test](/guide/testing-levels/smoke-test-happy-path-test-journey-test.md)
 - [Test shapes](/guide/testing-levels/test-shapes.md)

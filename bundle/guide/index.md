@@ -20,7 +20,7 @@
 - [spring-modulith/](spring-modulith/index.md) (11)
 - [strategic-design/](strategic-design/index.md) (2)
 - [team-topologies/](team-topologies/index.md) (11)
-- [testing-levels/](testing-levels/index.md) (7)
+- [testing-levels/](testing-levels/index.md) (9)
 
 - [ArchUnit Governance for Domain-Centric Architecture](archunit-governance.md) — ArchUnit Governance for Domain-Centric Architecture
 - [Domain-Centric Architecture vs Clean Architecture](clean-architecture-comparison.md) — Domain-Centric Architecture vs Clean Architecture
