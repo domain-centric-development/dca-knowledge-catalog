@@ -28,6 +28,13 @@ or an annotation.
 `PasswordTooWeak` — yes, so each is a domain exception with that word in its name. "Must not be null", "must
 be positive", "must not exceed 255 characters" — no, so those stay `IllegalArgumentException`.
 
+**The name is the broken rule, in the domain's words; the suffix is the project's.** `InsufficientStock`
+says what the domain refuses; `InvalidInput` or `ValidationError` says only that something failed. The
+suffix follows the platform by default — `Exception`, as both Java and .NET expect — and a project may
+drop it where its language reads better without (`InsufficientStock`). The project records the
+choice, and every failure of the project follows it: a run that has to pick the suffix picks differently
+each time.
+
 The two kinds sit next to each other in one method, and telling them apart is the point:
 
 ```java

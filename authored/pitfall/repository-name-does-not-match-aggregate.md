@@ -32,3 +32,4 @@ Pick one name per concept and use it for the aggregate, its id, its repository a
 - Rules: [Repositories must only exist for Aggregate Roots](/rule/tactical/dca-tac-016.md) · [Repository Interfaces must end with 'Repository'](/rule/naming/dca-nam-004.md)
 - Guide: [Layer rules](/guide/rules.md) · [Java package structure](/guide/package-structure.md)
 - Recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
+- Decision: [Name an operation in the glossary](/decision/name-an-operation-in-the-glossary.md) — the same choice for the verbs

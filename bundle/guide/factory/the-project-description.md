@@ -39,6 +39,23 @@ in them is invented: a stage that reads an invented look builds it.
 |---|---|
 | Bounded contexts | each context, its responsibility and its subdomain type (core, supporting, generic) |
 | Relationships | upstream and downstream, the pattern, where the translation happens, and the reason |
+| Glossary | per context, the terms and the operations as the people who own the domain say them, each with the word the code uses |
+
+The glossary names **operations as well as terms**, because a verb is a modelling decision, not a
+translation. *Create* brings a thing into existence; *add* puts an existing thing into a collection. A
+word like the German *anlegen* covers both, and which one the operation is says where its invariants
+live. A model that has to translate the word picks one of them, and the next run may pick the other;
+where the glossary gives the code word, every run uses it. So the code word of an operation is decided
+before the first story: the description names the operations it already knows, and the backlog skill
+asks for each one a story brings.
+
+The questions behind the domain part follow the grammar of Event Storming, without the workshop: first
+the **domain events** — what happened, in the past tense, in the words of the people who own the
+domain, because people agree on a fact more readily than on a procedure — then the **command** that
+caused each event, the **aggregate** that accepts the command and holds the invariants, the **read
+model** a person looks at to decide, the **policies** ("whenever this happens, do that") and the **hot
+spots**, the questions nobody can answer yet. An event, a command and a read model each become a
+glossary line; a hot spot becomes an open assumption.
 
 They hold decisions, never code design. "The client keeps the draft; the server stores what is
 submitted" belongs in the product; "server-rendered pages, no client framework" in the technical

@@ -9,6 +9,8 @@ tags: [guide, section]
 
 ### Use Case / Application Service Rules
 - One use case class per business operation
+- A use case is named after an operation of the glossary: its code word plus the term (`PlaceOrder`,
+  `CancelOrder`); a verb the glossary does not name is a question, not a choice
 - Use case implements Input Port interface
 - Use case orchestrates domain objects
 - Use case is thin, delegates to domain

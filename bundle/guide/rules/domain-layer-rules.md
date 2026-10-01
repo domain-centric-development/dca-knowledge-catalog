@@ -50,6 +50,8 @@ tags: [guide, section]
 ### Domain Event Rules (Internal to Bounded Context)
 - Domain Events are immutable
 - Domain Events use past tense naming (e.g., OrderCreated, not CreateOrder)
+- A domain event's name is the term plus the past participle of the operation's code word in the
+  glossary: the operation *place* on an order gives `OrderPlaced`, never `OrderSubmitted` beside it
 - Domain Events represent something that happened in the domain
 - Domain Events are part of the domain model: `{context}/domain/model/`, or an own
   `{context}/domain/event/` segment once the model package grows. `DCA-ADV-002` requires the
@@ -151,6 +153,10 @@ adapter behind it does. Nothing above this line depends on the answer.
 - Domain can be tested without infrastructure
 - Domain reflects business, not database structure
 - Ubiquitous Language used throughout domain code
+- The context's glossary names the terms **and the operations**, each with the word the code uses; an
+  operation's code word is decided by the people who own the domain, not by whoever translates it
+- *Create* and *add* are different operations: one brings a thing into existence, the other puts an
+  existing thing into a collection. Which one an operation is decides which aggregate holds its invariants
 
 ## Related mentions (heuristic)
 
