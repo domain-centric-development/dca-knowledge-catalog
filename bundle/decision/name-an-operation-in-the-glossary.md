@@ -7,14 +7,16 @@ owner: DCA catalog maintainers
 evidence: [/guide/rules/domain-layer-rules.md, /guide/rules/application-layer-rules.md, /guide/rules/error-handling-rules.md, /guide/factory/the-project-description.md, /guide/factory/the-backlog-contract.md]
 ---
 
-A story says what a person does in the words of the people who own the domain — often not the language the code is written in. A glossary that names only the nouns leaves every verb to whoever writes the code, and a verb is not a translation: *create* brings a thing into existence, *add* puts an existing thing into a collection. A word like the German *anlegen* covers both. Two implementations of the same story then name the same operation `CreateEntry` and `AddEntry`, its event `EntryCreated` and `EntryAdded`, and each is a defensible translation. Where the glossary gives the code word, they agree.
+A story says what a person does in the words of the people who own the domain — often not the language the code is written in. A glossary that names only the nouns leaves every verb to whoever writes the code, and a verb is not a translation: one domain word can name operations with different effects. The German *anlegen* covers *create* — the thing comes into existence — and *add* — an existing thing goes into a collection; *löschen* covers *delete*, *cancel* and *archive* — gone, or kept with a state. Two implementations of the same story then name the same operation `CreateEntry` and `AddEntry`, its event `EntryCreated` and `EntryAdded`, and each is a defensible translation. Where the glossary gives the code word, they agree.
 
 ## The discriminator
 
 Ask, for every operation a story's `When` names:
 
-1. **Does the thing exist before this step?** If not, the operation brings it into existence: *create*, *register*, *open*, *place* — the thing itself is the aggregate and holds the invariants from the first moment. If it does, the operation puts it somewhere: *add*, *assign*, *attach* — the collection that receives it is the aggregate that decides whether it may.
-2. **What happened, in the past tense?** Ask for the domain event first. People who own the domain agree on a fact more readily than on a procedure, and the event's participle fixes the verb: `EntryCreated` or `EntryAdded` is the answer to question 1 in one word.
+1. **What exists before the step and after it, and whose state changes?** The effect picks the verb and the aggregate. Two pairs that recur in every domain:
+   - *Does the thing exist before?* If not, the operation brings it into existence — *create*, *register*, *open*, *place* — and the thing itself is the aggregate that holds the invariants from the first moment. If it does, the operation puts it somewhere — *add*, *assign*, *attach* — and the collection that receives it decides whether it may.
+   - *Does the thing exist afterwards?* If not, *delete* or *remove*. If it stays with a new state — *cancel*, *archive*, *close* — the thing keeps its history, and a later step may still read or reopen it.
+2. **What happened, in the past tense?** Ask for the domain event first. People who own the domain agree on a fact more readily than on a procedure, and the event's participle fixes the verb: `EntryCreated` or `EntryAdded`, `EntryDeleted` or `EntryCancelled` is the answer to question 1 in one word.
 3. **Does the glossary already carry it?** Then use its code word, verbatim. If not, the verb is a question for the people who own the domain — not a choice for whoever writes the code, and not a translation.
 
 ## Options
@@ -33,6 +35,12 @@ Decide it before the first story that needs it — in the project's description 
 ### The story's prose decides
 
 The verb is whatever the first implementation translated. Cheap the first time; afterwards every later story inherits the word, and a second implementation of the same story — another run, another team, another language — picks again. The divergence is not a defect of the model that translated; it is a gap in the input.
+
+## Where the field already has words — per bounded context
+
+Before the question is asked, look up how the field of **this** context names its operations: a published standard of its subdomain where one exists (healthcare, payments and logistics have them), the vocabulary of widely used systems in that field, and the operations they keep apart although they look alike. The lookup is per context, because one word names different operations in different contexts — *cancel* an authorization in a payment context, *cancel* an order in an ordering context — and a lookup for the whole product finds the wrong one.
+
+The distinctions are the most useful finding, more than the words: where the systems of a field disagree on a word, there is no right one to adopt, but that two look-alike operations exist is exactly what a story leaves open. What the lookup finds is offered with its source; the people who own the domain decide, and nothing enters the glossary unconfirmed. A **generic** context usually adopts the field's vocabulary — it often conforms to a product it integrates; a **core** context keeps its own language and takes the distinctions.
 
 ## Failures follow the same rule
 

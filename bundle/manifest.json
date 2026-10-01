@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "598deb5c06a2dd1d6add38600efdb7e44293e68183572de4019b2bafe8ec7466",
+  "bundle_sha256": "0c4018ad5887410552a3c72940b11b4779d6feffb1809a7a5ef98310d1702587",
   "counts": {
     "Decision": 31,
     "Guide": 21,
@@ -34,8 +34,8 @@
       "source_sha256": "ef76cbffb2969852278249aca7ed477204291ea1a6613de7d09d5c865d20ff72"
     },
     "dca-guide": {
-      "revision": "eab26a149f23db2d999ba5ad203030ad66f760c7",
-      "source_sha256": "eedf717f65fa161d37a2884fd7e810994c1ef61b0623b8184ec61a916e84fe6f"
+      "revision": "e4f54515bbdb630af28e435d1fd053859896eb7e",
+      "source_sha256": "d2eecf20ac9bfffd703d4a5b5b93d7e170739106bc02f418b75e6ca2358ab5a1"
     },
     "dca-java": {
       "revision": "b85dfe46a519e8af9154ee729d4160a9e93dbb30",
@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "51b351b82824dc4c3dfbc8b355e45d91f4a67c2ad80e253630dd483dad040fff"
+      "source_sha256": "6bf1a3534a530a8261960b3219dfc555c156d09b87bdb4b5151d2da0459ec958"
     }
   }
 }

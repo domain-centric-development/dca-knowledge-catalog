@@ -113,8 +113,9 @@ the code the story touches, while the person who writes it is still there:
 - Can a user probe or exhaust a rule by repeating it?
 - Does every rule have a scenario, and does every scenario have one cause?
 - Is every scenario's `When` an operation the glossary names, with its code word? A verb the glossary
-  lacks is asked as its meaning — does the thing exist before this step, or does this step create
-  it? — never translated by whoever writes the code.
+  lacks is asked as its effect — what exists before the step and after it, and whose state changes
+  (does the thing exist before, or does the step create it? is it gone afterwards, or kept with a
+  state?) — never translated by whoever writes the code.
 
 What the project description already answers is not asked again. What stays open becomes an `open:`
 assumption, and a story whose open assumption fixes an observable result stays a draft.
