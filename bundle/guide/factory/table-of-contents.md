@@ -10,6 +10,7 @@ tags: [guide, section]
 - [Three parts](#three-parts)
 - [The project description](#the-project-description)
 - [The backlog contract](#the-backlog-contract)
+- [Ideation: which problem is worth solving](#ideation-which-problem-is-worth-solving)
 - [Outcome events](#outcome-events)
 - [The stages and their hand-over files](#the-stages-and-their-hand-over-files)
 - [Gates](#gates)

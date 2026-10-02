@@ -22,6 +22,7 @@ detail that may change without the process changing.
 - [Three parts](/guide/factory/three-parts.md)
 - [The project description](/guide/factory/the-project-description.md)
 - [The backlog contract](/guide/factory/the-backlog-contract.md)
+- [Ideation: which problem is worth solving](/guide/factory/ideation-which-problem-is-worth-solving.md)
 - [Outcome events](/guide/factory/outcome-events.md)
 - [The stages and their hand-over files](/guide/factory/the-stages-and-their-hand-over-files.md)
 - [Gates](/guide/factory/gates.md)
