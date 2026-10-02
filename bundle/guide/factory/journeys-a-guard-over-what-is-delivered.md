@@ -13,3 +13,7 @@ the outcome event; a step whose command or event the glossary does not name is a
 building its steps. It becomes ready when they are delivered and runs plan, test, judge and document —
 there is nothing to build. Its gate expects the test **green**, the inverse of a story: every step exists
 when it is written, so it is a regression guard, not a criterion.
+
+An epic whose stories are all delivered and that has no journey is shown as **delivered, unguarded**: the way
+to its outcome event has no test. That is a hint, not a stop. An epic that decides against a journey says so —
+`- none: <why>` under `## Journey` — and is no longer named; silence decides nothing.
