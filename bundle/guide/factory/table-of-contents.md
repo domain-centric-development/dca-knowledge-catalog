@@ -8,6 +8,7 @@ tags: [guide, section]
 ---
 
 - [Three parts](#three-parts)
+- [A foundation once, then the cycle](#a-foundation-once-then-the-cycle)
 - [The project description](#the-project-description)
 - [The backlog contract](#the-backlog-contract)
 - [Ideation: which problem is worth solving](#ideation-which-problem-is-worth-solving)

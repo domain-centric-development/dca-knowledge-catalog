@@ -21,10 +21,12 @@ The step writes one report per topic, `project/discovery/<topic>/discovery.md`, 
 | Outcome | the fact the system records when the problem is solved for someone |
 | Risks and open questions | what is unknown, and who could answer it |
 | Proposed work | one proposal per epic worth doing: intent, goal, metric, domain contact |
+| Proposed description changes | optional: what the findings change in the project description — other users, a new "what it is not", a new quality; one per heading, cited |
 | Sources | every source once — a web page with the date it was read, a project file, an excerpt |
 
 A wished deliverable is one option, not the problem. Interviews and tickets the person hands over are kept
 as anonymised excerpts beside the report unless the person says otherwise; the originals stay in a folder
 version control ignores. The questions are fixed and asked in order, the shape and the citations are
 checked; the research is not deterministic, so its result stays a proposal, and a person chooses. A
-released proposal becomes an epic that links its report, and the backlog takes it from there.
+released proposal becomes an epic that links its report, and the backlog takes it from there. A released
+description change goes to whoever writes the description; the report itself never edits it.

@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "b423dae6a991c0aef19c39b227d8c5b6841a9632df3482d518da087bc2d9d8a2",
+  "bundle_sha256": "5ea91a2e067027451076a716b530fbc8651652c1ec94fd0bc146e42cc1e03e25",
   "counts": {
     "Decision": 31,
     "Guide": 21,
@@ -10,7 +10,7 @@
     "Recipe": 22,
     "Reference": 128,
     "Rule": 127,
-    "Section": 202,
+    "Section": 203,
     "Template": 49
   },
   "digest_algorithm": "sha256:sorted-path-NUL-resource-normalized-content-NUL",
@@ -34,8 +34,8 @@
       "source_sha256": "ef76cbffb2969852278249aca7ed477204291ea1a6613de7d09d5c865d20ff72"
     },
     "dca-guide": {
-      "revision": "c8844a0fecc8f904bb390ec5c2d5f2dbb3014def",
-      "source_sha256": "3f05476f4486e4ef09b41ae36ee67e1c1758fed1db244f16ed9db766264d1284"
+      "revision": "f8eefaf94b82ecff74aef5e16894fa408dee28de",
+      "source_sha256": "b69feef372cdc9d992693d3bb20daa6de971e9c27555ff0f8c434308df35f0e2"
     },
     "dca-java": {
       "revision": "b85dfe46a519e8af9154ee729d4160a9e93dbb30",

@@ -20,6 +20,7 @@ detail that may change without the process changing.
 
 - [Table of Contents](/guide/factory/table-of-contents.md)
 - [Three parts](/guide/factory/three-parts.md)
+- [A foundation once, then the cycle](/guide/factory/a-foundation-once-then-the-cycle.md)
 - [The project description](/guide/factory/the-project-description.md)
 - [The backlog contract](/guide/factory/the-backlog-contract.md)
 - [Ideation: which problem is worth solving](/guide/factory/ideation-which-problem-is-worth-solving.md)
