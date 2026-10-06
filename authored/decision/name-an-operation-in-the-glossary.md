@@ -17,7 +17,8 @@ Ask, for every operation a story's `When` names:
    - *Does the thing exist before?* If not, the operation brings it into existence — *create*, *register*, *open*, *place* — and the thing itself is the aggregate that holds the invariants from the first moment. If it does, the operation puts it somewhere — *add*, *assign*, *attach* — and the collection that receives it decides whether it may.
    - *Does the thing exist afterwards?* If not, *delete* or *remove*. If it stays with a new state — *cancel*, *archive*, *close* — the thing keeps its history, and a later step may still read or reopen it.
 2. **What happened, in the past tense?** Ask for the domain event first. People who own the domain agree on a fact more readily than on a procedure, and the event's participle fixes the verb: `EntryCreated` or `EntryAdded`, `EntryDeleted` or `EntryCancelled` is the answer to question 1 in one word.
-3. **Does the glossary already carry it?** Then use its code word, verbatim. If not, the verb is a question for the people who own the domain — not a choice for whoever writes the code, and not a translation.
+3. **And a read?** Looking at something changes nothing, so no event names it and question 2 never reaches its verb. Ask it on its own — *what do you call looking at this?* — and enter it with its code word: `ListEntries` and `ShowEntryList` are both defensible, and two runs that translate a read alone pick one each.
+4. **Does the glossary already carry it?** Then use its code word, verbatim. If not, the verb is a question for the people who own the domain — not a choice for whoever writes the code, and not a translation.
 
 ## Options
 
@@ -28,7 +29,7 @@ Enter the operation beside the term it acts on, in the domain's word and the cod
 - the use case is the code word plus the term: `CreateEntry`, `CompleteEntry`
 - its command or query follows the use case's name
 - its domain event is the term plus the past participle: `EntryCreated`, `EntryCompleted`
-- a read model is named by what the person looks at to decide, and is a glossary line of its own
+- a read model is named by what the person looks at to decide, and is a glossary line of its own; the verb for looking at it is an operation like the others, with its code word: `anzeigen (list)`
 
 Decide it before the first story that needs it — in the project's description where the operation is already known, in the backlog's question pass where a story brings a new one.
 
