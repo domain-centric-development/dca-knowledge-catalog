@@ -21,6 +21,11 @@ without changing the result.
 | judge | the story, all predecessors, the story's diff, the product and the technical description | `.dca-factory/runs/<story>/judge.md` — with a verdict |
 | document | the story, all predecessors, the story's diff, the project's documents | `.dca-factory/runs/<story>/document.md` |
 
+**After the last gate, the integration.** Where the factory runs a story on its own branch, the last gate
+does not deliver it: the main line is merged in, the story becomes one commit, and an integrate gate holds
+that tree to the tidy gate's checks once more before the main line takes it. Where git stops on a conflict,
+an integrate step resolves it in the story's worktree and writes `.dca-factory/runs/<story>/integrate.md`.
+
 **The builder stages share one context, the judge never the builder's.** By default plan, test, build
 and tidy run one after another in a single context, each still writing its own file and each still
 gated. That costs less, because each stage builds on what the one before read instead of reading it

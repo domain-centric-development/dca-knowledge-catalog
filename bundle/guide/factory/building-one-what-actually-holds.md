@@ -84,6 +84,23 @@ nothing.
 expert settled, a reason for a deviation: if it is not written where the next run will look, the
 same question comes back in a month with a different answer.
 
+### A story on its own branch
+
+**Code waits on a branch, state waits in one place.** Every story the factory runs gets a worktree of its own,
+on a branch of its own. A story that waits — for an answer, for an acceptance — waits there, and the next one
+runs. What is state does not go with it: the story, its questions and answers, the run's protocol stay in the
+main checkout and the worktree sees them through links. A question written on a branch is a question the
+inbox never shows, and an answer that lives on a branch is lost with it.
+
+**Delivered means on the main line, checked there.** A story is delivered when its code is on the main line,
+not when its last gate passed in the worktree. The main line is merged into the story, the story becomes one
+commit, and the gate runs once more on that tree before the main line moves. A story that passed against
+yesterday's main line has proven nothing about today's.
+
+**A conflict is resolved, not chosen.** Where two stories changed the same lines, both changes hold: the main
+line's, which a person already accepted, and the story's on top of it. Taking one side to make the conflict
+go away delivers one story by removing another.
+
 ### One source, or two truths
 
 **Never copy what you can point at.** A copied skill folder, a vendored knowledge catalog, a

@@ -15,9 +15,10 @@ waits behind whatever else is ready.
 
 **So a story with something to see stops before it is delivered.** Every check has passed; instead
 of marking the story done, the last gate asks a human to accept it, in a record like every other
-question: what to look at, criterion by criterion, and how to start the application. The story holds
-the checkout while it waits, so no other story builds on work nobody has accepted yet — with several
-stories in a backlog that is what keeps a correction from landing on someone else's code.
+question: what to look at, criterion by criterion, and how to start the application. The story waits on
+its own branch and reaches the main line only once it is accepted, so no other story builds on work nobody
+has accepted yet — with several stories in a backlog that is what keeps a correction from landing on someone
+else's code. The next story runs meanwhile: waiting holds no checkout.
 
 **The answer goes into the same story.** "Accepted" delivers it. A correction is written into the
 story itself — a criterion added or changed, the answer recorded as answered — and the story runs

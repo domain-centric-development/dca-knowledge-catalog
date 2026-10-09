@@ -14,10 +14,13 @@ tooling — no database, and no JSON as the source of truth.
 project/epics/
   <epic>/
     epic.md              the epic
-    <story>.md           one story, with its state in its front matter
-    <story>.decisions/   its questions and acceptances, one file each
+    <story>/             one story, a folder named after its id
+      story.md           the story, with its state in its front matter
+      decisions/         its questions and acceptances, one file each
+      findings.md        the judge's confirmed minors, kept once it is delivered
 ```
 
+One shape for both: a folder and its file. Everything that belongs to a story lives in its folder.
 Stories stay with their epic for life. *Backlog* is a view — the stories that can be pulled:
 approved, not delivered, their dependencies met — not a folder things move in and out of. A story's
 id is unique in the whole project; a second one under the same id is refused, naming both.
@@ -34,6 +37,11 @@ refused before any planning starts:
 
 This is not bureaucracy. A stage that cannot read the intent invents one, and an invented intent is
 indistinguishable from a stated one once it is in the code.
+
+**An epic may wait for another.** `depends_on:` in the epic names the epics that must be delivered before its
+stories start; an epic is delivered when every one of its stories is. Without it, epics run side by side
+where the factory runs more than one story, and the earlier epic first where it runs one. The order is
+written down, never assumed: an epic that names no epic there is, itself or a cycle is refused.
 
 A **story** names the bounded context it changes — a context the designed map already carries,
 built or not yet — and states its acceptance criteria as observable end-user behaviour. Each criterion is a
