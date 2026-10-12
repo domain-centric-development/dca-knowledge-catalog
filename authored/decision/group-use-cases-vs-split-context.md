@@ -45,7 +45,7 @@ If the context is small, or the only groups you can name are technical, do nothi
 
 ## What a feature is not
 
-A feature is not a layer, not a module, not an aggregate owner, not a deployment unit and not a participant of the context map. Nothing in the rule library infers a bounded context or aggregate ownership from a feature package, and no marker or annotation declares one — the package convention is the whole mechanism. Whether a feature name is truly a term of the ubiquitous language is decided by people and the glossary, not by a rule.
+A feature is not a layer, not a module, not an aggregate owner, not a deployment unit and not a participant of the context map. Nothing in the rule library infers a bounded context or aggregate ownership from a feature package, and no marker or annotation declares one — the package convention is the whole mechanism. Whether a feature name is truly a term of the ubiquitous language is decided by people and the glossary, not by a rule: a feature has a glossary entry of its own (`Type: Feature`), and where the project keeps a living spec of what holds, that spec is grouped by the same features — one folder each, beside the context's own file for what belongs to none. Group what holds by feature, never by epic: an epic is a change and ends with its delivery, a feature lasts.
 
 ## Anchors
 
