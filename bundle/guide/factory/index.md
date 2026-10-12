@@ -11,6 +11,7 @@
 - [Several factories on one backlog](several-factories-on-one-backlog.md) — Two colleagues with a clone each see the same backlog, and both would start the same story: a factory knows only
 - [Starting where you are](starting-where-you-are.md) — be built, the technical decisions, the designed cut — and its skeleton second, from the stack's own
 - [Table of Contents](table-of-contents.md) — Table of Contents
+- [Tasks: what keeps behaviour](tasks-what-keeps-behaviour.md) — Not every change is behaviour. Dead code, a method a port inherits and nobody calls, a placeholder file, copied test
 - [The backlog contract](the-backlog-contract.md) — The backlog is markdown with front matter, one file per item, readable and reviewable without any
 - [The living spec: stories are changes](the-living-spec-stories-are-changes.md) — A story says what is to change; it does not stay true. A later story changes the same behaviour, and
 - [The project description](the-project-description.md) — Before the first story, two files describe what is to be built and a third, optional one describes

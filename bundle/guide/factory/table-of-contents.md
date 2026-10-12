@@ -19,6 +19,7 @@ tags: [guide, section]
 - [What the project declares](#what-the-project-declares)
 - [Escalation: the three answers a run may not give itself](#escalation-the-three-answers-a-run-may-not-give-itself)
 - [Journeys: a guard over what is delivered](#journeys-a-guard-over-what-is-delivered)
+- [Tasks: what keeps behaviour](#tasks-what-keeps-behaviour)
 - [Acceptance: a human looks before it counts](#acceptance-a-human-looks-before-it-counts)
 - [Several factories on one backlog](#several-factories-on-one-backlog)
 - [Building one: what actually holds](#building-one-what-actually-holds)
