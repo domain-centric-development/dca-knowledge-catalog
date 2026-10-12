@@ -8,9 +8,11 @@
 - [Ideation: which problem is worth solving](ideation-which-problem-is-worth-solving.md) — An epic states why a body of work exists and which outcome event measures it. Where those two are not
 - [Journeys: a guard over what is delivered](journeys-a-guard-over-what-is-delivered.md) — An epic may name its **journey** — the flow through its stories that must never break, walked to its
 - [Outcome events](outcome-events.md) — An epic's `metric` is a **domain or integration event whose publication in production is the
+- [Several factories on one backlog](several-factories-on-one-backlog.md) — Two colleagues with a clone each see the same backlog, and both would start the same story: a factory knows only
 - [Starting where you are](starting-where-you-are.md) — be built, the technical decisions, the designed cut — and its skeleton second, from the stack's own
 - [Table of Contents](table-of-contents.md) — Table of Contents
 - [The backlog contract](the-backlog-contract.md) — The backlog is markdown with front matter, one file per item, readable and reviewable without any
+- [The living spec: stories are changes](the-living-spec-stories-are-changes.md) — A story says what is to change; it does not stay true. A later story changes the same behaviour, and
 - [The project description](the-project-description.md) — Before the first story, two files describe what is to be built and a third, optional one describes
 - [The stages and their hand-over files](the-stages-and-their-hand-over-files.md) — One story runs through six stages. Every stage is a **closed assignment**: it reads the story and
 - [Three parts](three-parts.md) — A factory that delivers stories has three parts, and each lives in its own place:

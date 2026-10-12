@@ -15,7 +15,7 @@ it either finds the evidence or it does not.
 |---|---|
 | plan | the epic is complete; the story is well-formed, released, marks exactly one happy path, and its context is on the map |
 | after test | every criterion is mapped to a test; the test exists in the sources; the test sources compile; **every mapped test is red**; an end-user test belongs to the happy path or a `browser-only` scenario |
-| after build | every mapped test is green **and was recorded red by the test stage**; the architecture suite passes; the formatter passes |
+| after build | every mapped test is green **and was recorded red by the test stage**; the architecture suite passes; the formatter passes; every file the plan names `new` is there and every one it names `removed` is gone |
 | after tidy | the same checks again — the stage's whole claim is that nothing changed |
 | after document | every path and identifier the stage claims exists; every glossary row says how it was checked |
 

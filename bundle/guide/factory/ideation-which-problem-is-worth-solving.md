@@ -11,7 +11,7 @@ An epic states why a body of work exists and which outcome event measures it. Wh
 clear yet — someone brings a problem, a goal, a key result or simply a wished deliverable — a step comes
 before the backlog: finding out which problem is worth solving, and how anyone would know it got better.
 
-The step writes one report per topic, `project/discovery/<topic>/discovery.md`, in a fixed shape:
+The step writes one report per topic, `product/discovery/<topic>/discovery.md`, in a fixed shape:
 
 | Section | What it holds |
 |---|---|

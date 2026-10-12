@@ -12,6 +12,8 @@ The judge returns exactly one of three verdicts, and the third is the reason thi
 - **pass** — the criteria are met and no confirmed defect blocks them.
 - **changes-requested** — confirmed defects go back to the build stage with their evidence. Count
   the rounds and stop at three: a loop that will not converge needs a human, not a fourth attempt.
+  A planned change left undone is such a defect whatever reason the build gives — ranked a minor, it
+  is recorded and delivered, and the plan quietly stops being what was built.
 - **story-conflict** — the story or the plan is wrong. This never goes back to the build stage. A
   correction that changes an agreed criterion must not happen silently; the story is the contract,
   and a human decides it.
