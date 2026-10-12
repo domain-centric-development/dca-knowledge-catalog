@@ -47,19 +47,37 @@ _WIKILINK_RE = re.compile(r"(?<!!)\[\[([^\]|#]+)(#[^\]|]*)?(?:\|([^\]]+))?\]\]")
 _TITLE_LINE_RE = re.compile(r"^title: (.+)$", re.MULTILINE)
 _SCHEME_RE = re.compile(r"^[a-z][a-z0-9+.-]*:", re.IGNORECASE)
 
-# graph-view color per node type directory (Obsidian graph.json colorGroups)
+# Graph-view color per top-level directory, from the DCA brand palette. Obsidian's
+# ``path:`` query matches anywhere in the path and the first matching group wins, so
+# each query carries the trailing slash and the order matters: ``evidence`` comes
+# first, or ``evidence/rule/`` and ``evidence/guide/`` take the rule and guide colors,
+# and ``guide`` precedes ``reference``, or ``guide/quick-reference/`` turns muted.
 _GRAPH_COLORS = {
-    "guide": 0x72B7B2,     # teal
-    "marker": 0xF58518,    # orange
-    "rule": 0xE45756,      # red
-    "process": 0x9D755D,   # brown
-    "reference": 0x4C78A8, # blue
-    "recipe": 0x54A24B,    # green
-    "decision": 0xEECA3B,  # yellow
-    "pitfall": 0xFF9DA6,   # rose
-    "template": 0x439894,  # dark teal
-    "note": 0xBAB0AC,      # grey
+    "evidence": 0x5B6472,  # muted: the bindings recede behind what they bind
+    "guide": 0x5F5BD0,     # indigo
+    "reference": 0x5B6472, # muted: the same node type as evidence
+    "process": 0x5B6472,   # muted
+    "note": 0x5B6472,      # muted
+    "marker": 0x148F96,    # teal, the brand accent: the building blocks are the core
+    "template": 0x0D6B70,  # dark teal: templates build on the markers
+    "rule": 0xC96A5A,      # coral
+    "pitfall": 0xC9922E,   # amber
+    "decision": 0xE8EAF0,  # mist
+    "recipe": 0x2F7D4F,    # green
 }
+
+
+def _color_groups() -> list[dict]:
+    return [{"query": f'path:"{d}/"', "color": {"a": 1, "rgb": rgb}}
+            for d, rgb in _GRAPH_COLORS.items()]
+
+
+def _owned_query(query: object) -> bool:
+    """True for a query this exporter writes, in its current or an earlier form."""
+    if not isinstance(query, str):
+        return False
+    m = re.fullmatch(r'path:"([^"/]+)/?"', query.strip())
+    return bool(m) and m.group(1) in _GRAPH_COLORS
 
 
 # --------------------------------------------------------------------------- export
@@ -111,7 +129,7 @@ def _merge_json(path: Path, updates: dict) -> None:
 
 def _vault_config(out: Path) -> None:
     """Vault settings: markdown links (never wikilinks) so authored edits stay
-    OKF-importable; graph colors per node type. Merges into any existing state
+    OKF-importable; graph colors per top-level directory. Merges into any existing state
     Obsidian wrote, so opening the vault does not get undone by re-export."""
     vault = out / ".obsidian"
     vault.mkdir(exist_ok=True)
@@ -127,21 +145,14 @@ def _vault_config(out: Path) -> None:
             data = json.loads(graph.read_text(encoding="utf-8"))
         except ValueError:
             data = {}
-    groups = data.get("colorGroups")
-    if not groups:
-        data["colorGroups"] = [
-            {"query": f'path:"{d}"', "color": {"a": 1, "rgb": rgb}}
-            for d, rgb in _GRAPH_COLORS.items()
-        ]
-        graph.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-        return
-    # Existing groups are the user's to tune, so they are never overwritten — but a
-    # group for a directory the bundle no longer has colors nothing, and a vault that
-    # keeps listing it suggests the zone is still there.
-    kept = [g for g in groups if not _names_missing_dir(g.get("query"), vault.parent)]
-    if len(kept) != len(groups):
-        data["colorGroups"] = kept
-        graph.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    # The exporter's own groups are rewritten on every export; a group someone added
+    # stays, ahead of them so it wins — unless it names a directory the bundle no
+    # longer has, which would suggest the zone is still there.
+    kept = [g for g in data.get("colorGroups") or []
+            if not _owned_query(g.get("query"))
+            and not _names_missing_dir(g.get("query"), vault.parent)]
+    data["colorGroups"] = kept + _color_groups()
+    graph.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
 def _names_missing_dir(query: object, out: Path) -> bool:

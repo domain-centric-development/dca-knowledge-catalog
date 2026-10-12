@@ -185,7 +185,7 @@ The canonical bundle is the OKF source of truth; an Obsidian vault is a derived
 - **Export** rewrites bundle-relative links to file-relative ones Obsidian
   resolves, injects `aliases: [<title>]` for autocompletion, applies vault
   settings that force markdown links (never wikilinks), colors the graph per
-  node type, and preserves any existing `.obsidian/` state across re-export.
+  top-level directory (DCA brand palette), and preserves any existing `.obsidian/` state across re-export.
 - **Import** (`make obsidian-import`) writes **extensible-zone** edits from the
   vault back into the canonical bundle: file-relative links and wikilinks are
   rewritten to bundle-relative markdown links, frontmatter must carry a

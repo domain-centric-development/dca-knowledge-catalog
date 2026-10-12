@@ -6,6 +6,11 @@ every regeneration.
 
 ## [Unreleased]
 
+- Fixed: the Obsidian graph colors each node by its top-level directory, in the DCA brand palette. The groups matched
+  their directory name anywhere in the path, so the 107 evidence nodes under `evidence/rule/` showed as rules and a
+  decision named after a rule did too; `evidence/` had no group at all. Each export now rewrites the exporter's own
+  groups and keeps any added by hand.
+
 - Changed: a large rule node (above the evidence-slice threshold) keeps what it selects and checks, its .NET reading and
   its links, and leaves its ArchUnit code — the Java expression, its helpers, the C# expression and helpers — to its
   evidence slices, which already held it in full. `dca-use-012` 41 KB → 8 KB, `dca-use-009` 43 → 8, no rule node above

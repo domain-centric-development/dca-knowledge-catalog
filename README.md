@@ -163,7 +163,7 @@ layout still holds (verified verbs: `generate`, `test`, `check`, `python`; profi
 
 The canonical bundle uses OKF **bundle-relative** links (leading `/`) that LLMs and
 the tests rely on but Obsidian does not resolve. Export a browsable vault (relative
-links, aliases, graph view with per-type colors, backlinks) without touching the
+links, aliases, graph view colored per top-level directory, backlinks) without touching the
 canonical bundle — and prepare authored sources in the owning checkout:
 
 ```bash

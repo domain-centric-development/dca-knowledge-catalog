@@ -6,6 +6,7 @@ and the catalog's own invariants. Also asserts idempotence (deterministic output
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -421,6 +422,31 @@ def test_obsidian_export_rewrites_links(bundle: Path, tmp_path):
         assert (node.parent / target).resolve().exists(), f"unresolved: {target}"
     assert (out / ".obsidian" / "app.json").exists()
 
+
+
+def test_obsidian_graph_colors_follow_top_level_directory(bundle: Path, tmp_path):
+    out = tmp_path / "vault"
+    # a vault opened before: one group of its own, one of ours in the old unanchored form
+    (out / ".obsidian").mkdir(parents=True)
+    (out / ".obsidian" / "graph.json").write_text(json.dumps({"colorGroups": [
+        {"query": "tag:#mine", "color": {"a": 1, "rgb": 1}},
+        {"query": 'path:"rule"', "color": {"a": 1, "rgb": 2}},
+    ]}), encoding="utf-8")
+    obsidian.export(bundle, out)
+
+    groups = json.loads((out / ".obsidian" / "graph.json").read_text())["colorGroups"]
+    assert groups[0]["query"] == "tag:#mine"  # someone's own group stays, first
+    assert 'path:"rule"' not in [g["query"] for g in groups]  # the old form is replaced
+    ours = [re.fullmatch(r'path:"([^"]+)/"', g["query"]).group(1) for g in groups[1:]]
+
+    # Obsidian matches path: anywhere in the path, first group wins — every node
+    # must land in the group of its own top-level directory
+    for p in out.rglob("*.md"):
+        rel = p.relative_to(out).as_posix()
+        if "/" not in rel:
+            continue
+        first = next((d for d in ours if f"{d}/" in rel), None)
+        assert first == rel.split("/", 1)[0], f"{rel} colored as {first}"
 
 def test_marker_discussed_in(bundle: Path):
     # reverse edge: markers link the sections that primarily discuss them

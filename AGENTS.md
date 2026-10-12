@@ -144,7 +144,7 @@ document acquired an outward reference: fix it there.
 - `obsidian.py` — Obsidian **export + import**. Export (`make obsidian` →
   `bundle-obsidian/`, gitignored): copies the bundle, rewrites leading-slash OKF links
   to file-relative ones Obsidian resolves, injects `aliases:` (title), forces
-  markdown-link vault settings, colors the graph per type; existing `.obsidian/` state
+  markdown-link vault settings, colors the graph per top-level directory; existing `.obsidian/` state
   survives re-export. Import (`make obsidian-import`): writes extensible-zone edits
   from the vault back into `bundle/` (relative links + wikilinks → bundle-relative,
   `type:` required); generated-zone edits are reported and ignored. See SPEC.md
