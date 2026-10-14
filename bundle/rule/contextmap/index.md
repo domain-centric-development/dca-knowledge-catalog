@@ -12,3 +12,4 @@
 - [Cross-context dependencies on published interfaces require an Upstream declaration](dca-map-011.md) — Every real dependency on a foreign api/ or events/ package is a context-map edge and must be declared as such.
 - [Partnership declarations must reference an existing bounded context, never themselves, and must be symmetric](dca-map-012.md) — A partnership is a mutual commitment — it exists only when both contexts declare it.
 - [Diagnostic: Display declared context map](dca-map-013.md) — Printing the declared edges makes the executable context map reviewable at a glance.
+- [Every allowed dependency of a module declaration must be backed by an actual code dependency](dca-map-014.md) — A context declares only the dependencies it uses. An allowed dependency no class uses is a door left open: the next d...

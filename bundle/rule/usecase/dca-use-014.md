@@ -81,13 +81,7 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
               || candidate.getSimpleName().endsWith(layout.useCaseSuffix()))) {
         continue;
       }
-      int depth =
-          pkg.equals(application)
-              ? 0
-              : (int)
-                  java.util.Arrays.stream(pkg.substring(application.length() + 1).split("\\."))
-                      .filter(segment -> !layout.operationContainers().contains(segment))
-                      .count();
+      int depth = useCaseSegments(pkg, application, layout).size();
       byDepth.computeIfAbsent(depth, d -> new TreeSet<>()).add(pkg);
     }
     if (byDepth.isEmpty()) {
@@ -134,6 +128,24 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
         violations);
   }
 }
+```
+
+### `useCaseSegments`
+
+```java
+/**
+   * The segments of a package below the module's application package, configured operation
+   * containers removed: {@code [placeorder]} for a flat use case package, {@code [ordering,
+   * placeorder]} for a grouped one, empty for the application package itself.
+   */
+  private static List<String> useCaseSegments(String pkg, String application, DcaLayout layout) {
+    if (pkg.equals(application)) {
+      return List.of();
+    }
+    return java.util.Arrays.stream(pkg.substring(application.length() + 1).split("\\."))
+        .filter(segment -> !layout.operationContainers().contains(segment))
+        .toList();
+  }
 ```
 
 ## Architecture queries

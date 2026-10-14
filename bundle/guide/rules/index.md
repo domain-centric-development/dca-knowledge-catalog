@@ -1,6 +1,6 @@
 # rules
 
-- [ADAPTER LAYER RULES](adapter-layer-rules.md) — for the page after a redirect is a fixed code in the redirect URL (`?notice=saved`), never the sentence: the
+- [ADAPTER LAYER RULES](adapter-layer-rules.md) — value type, parsed at the edge (or by the value type's own factory), never as text the use case parses. Text
 - [APPLICATION LAYER RULES](application-layer-rules.md) — the consumer that calls it; the same effect reached from a second trigger is the same use case
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
 - [DOMAIN LAYER RULES](domain-layer-rules.md) — value object that admits only those values. A string compared against a literal in several places is a typo the

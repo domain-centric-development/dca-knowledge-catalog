@@ -7,7 +7,7 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 **What `review:` means on an authored node.** `reviewed` — an owner and evidence have been verified. `draft` — written and wired into the graph, not yet through a review pass: usable, and it never overrides a generated node, because rules, markers and guide text are derived from the code and win on every contradiction. `superseded` — history; follow `superseded_by`. Most construction guidance is currently `draft`.
 
 - [decision/](decision/index.md) (31) — Decision guides for design forks (which pattern, when).
-- [evidence/](evidence/index.md) (125)
+- [evidence/](evidence/index.md) (192)
 - [guide/](guide/index.md) (227) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (31) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (1) — Compounded query answers — synthesis made permanent.
@@ -15,5 +15,5 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
 - [recipe/](recipe/index.md) (22) — Task playbooks — ordered steps to build a DCA construct.
 - [reference/](reference/index.md) (2) — The two classes every rule is parameterised by — DcaLayout (settings, defaults, patterns) and DcaArchitecture (how contexts and modules are discovered).
-- [rule/](rule/index.md) (131) — ArchUnit rules — the enforceable, machine-checkable architecture.
+- [rule/](rule/index.md) (142) — ArchUnit rules — the enforceable, machine-checkable architecture.
 - [template/](template/index.md) (49) — Domain-free code skeletons to fill in.

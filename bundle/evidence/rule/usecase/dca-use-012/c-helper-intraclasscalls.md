@@ -206,7 +206,15 @@ internal sealed class IntraClassCalls
     /// The methods a unit's IL refers to: the targets of <c>call</c>, <c>callvirt</c> and <c>newobj</c>, and the
     /// method a <c>ldftn</c>/<c>ldvirtftn</c> turns into a delegate — every instruction with a method operand.
     /// </summary>
-    public static IEnumerable<MethodBase> IlCalls(MethodBase method)
+    public static IEnumerable<MethodBase> IlCalls(MethodBase method) =>
+        IlInstructions(method).Where(i => i.Code.OperandType == OperandType.InlineMethod).Select(i => i.Operand).OfType<MethodBase>();
+
+    /// <summary>
+    /// The instructions of a unit's IL in order, each with its resolved operand where it names a method
+    /// (<c>InlineMethod</c>) or a type (<c>InlineType</c>, such as <c>box</c> and <c>constrained.</c>); other operands
+    /// are skipped and yield <c>null</c>. A token that does not resolve yields <c>null</c> as well.
+    /// </summary>
+    public static IEnumerable<(OpCode Code, object? Operand)> IlInstructions(MethodBase method)
     {
         byte[]? il;
         try
@@ -239,19 +247,22 @@ internal sealed class IntraClassCalls
                 yield break; // unknown opcode — stop scanning this body rather than misreading operands
             }
 
-            MethodBase? target = null;
+            object? operand = null;
             switch (opCode.OperandType)
             {
                 case OperandType.InlineMethod:
+                case OperandType.InlineType:
                     var token = BitConverter.ToInt32(il, position);
                     position += 4;
                     try
                     {
-                        target = method.Module.ResolveMethod(token, typeArgs, methodArgs);
+                        operand = opCode.OperandType == OperandType.InlineMethod
+                            ? method.Module.ResolveMethod(token, typeArgs, methodArgs)
+                            : method.Module.ResolveType(token, typeArgs, methodArgs);
                     }
                     catch (ArgumentException)
                     {
-                        target = null;
+                        operand = null;
                     }
 
                     break;
@@ -278,10 +289,7 @@ internal sealed class IntraClassCalls
                     break;
             }
 
-            if (target is not null)
-            {
-                yield return target;
-            }
+            yield return (opCode, operand);
         }
     }
 }
