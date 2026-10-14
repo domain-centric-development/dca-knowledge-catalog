@@ -8,6 +8,7 @@ selects: "Every @Upstream declaration with translation() ANTI_CORRUPTION_LAYER o
 checks: "Placement, whatever the status: no class below the declaring context's package outside the matching adapter depends on a class in the target context's channel sub-package or below - the outgoing adapter (<context>.adapter.outgoing..) for the API channel, the incoming adapter (<context>.adapter.incoming..) for the EVENTS channel. Presence, only for status() IMPLEMENTED (as in DCA-MAP-007): each declared interaction needs a class in that adapter depending on both that upstream channel and its own domain/application; a PLANNED declaration without any such code passes. Multiple upstream translators may share the package. Structure establishes a translation site, not translation quality."
 enforced_by: "ContextMapRules#DCA-MAP-008"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

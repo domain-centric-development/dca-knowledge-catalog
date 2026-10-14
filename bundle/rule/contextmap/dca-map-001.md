@@ -8,6 +8,7 @@ selects: "Every package at or below the base package that an imported class live
 checks: "The package declares no @Upstream, @ExternalUpstream or @Partnership. A declaration on a nested package (a use-case, feature or grouping package) is reported; whether a declaration is well-formed is left to the other rules."
 enforced_by: "ContextMapRules#DCA-MAP-001"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

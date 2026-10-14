@@ -8,6 +8,7 @@ selects: "Classes anywhere on the classpath under scan that are assignable to Do
 checks: "The simple name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-005"
 status: enforced
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

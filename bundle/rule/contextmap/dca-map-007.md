@@ -8,6 +8,7 @@ selects: "Every @Upstream declaration with status() IMPLEMENTED on the package-i
 checks: "For every channel in via(), at least one class anywhere below the declaring context's package has a direct dependency on a class in the target context's channel sub-package (api or events per the layout) or below. Which layer holds the dependency is not checked here."
 enforced_by: "ContextMapRules#DCA-MAP-007"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

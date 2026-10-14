@@ -8,6 +8,7 @@ selects: "Non-interface, non-record, non-enum classes in <module>.domain.model..
 checks: "The class carries the final modifier. Records, interfaces and enums are not selected, so a record value object always passes and an enum value object is never reported - an enum with constant-specific class bodies is compiled abstract and cannot be made final. A value object outside <module>.domain.model.. is never reported, and an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-009"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

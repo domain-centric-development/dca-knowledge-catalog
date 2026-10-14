@@ -8,6 +8,7 @@ selects: "Non-interface, non-abstract types in <module>.Domain of every module r
 checks: Struct values must carry the readonly modifier. Classes are governed by TAC-009/010/012; equality is checked by TAC-012. An IValue outside a domain namespace is not selected.
 enforced_by: "DotnetRules#DCA-NET-004"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

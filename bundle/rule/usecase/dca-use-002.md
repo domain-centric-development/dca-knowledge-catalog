@@ -8,6 +8,7 @@ selects: Classes under the base package whose simple name ends with Command.
 checks: "Each resides in an application package of some module root (<module>.application..). A Command in a domain, adapter or infrastructure package is reported."
 enforced_by: "UseCaseRules#DCA-USE-002"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

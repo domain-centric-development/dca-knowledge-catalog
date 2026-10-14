@@ -8,6 +8,7 @@ selects: Classes under the base package whose simple name ends with Converter.
 checks: "Each resides in an adapter package of some module root (<module>.adapter..), incoming or outgoing. Only the Converter suffix is checked - a class named *Mapper or *Assembler is not selected by this rule. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-008"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

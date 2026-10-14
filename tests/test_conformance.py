@@ -861,6 +861,44 @@ def test_explicit_status_overrides_legacy_derivation(tmp_path):
     assert node.body.startswith('# A descriptive title')
 
 
+def test_experimental_rule_node_states_its_binding_condition(tmp_path):
+    import json
+    from dca_catalog import retrieval, rules
+    java = tmp_path / 'dca-java'
+    java.mkdir()
+    base = {'set': 'layered', 'rationale': 'Why', 'selects': 'All classes', 'checks': 'Something holds',
+            'status': 'enforced'}
+    (java / 'rules.json').write_text(json.dumps({'rules': [
+        {**base, 'id': 'DCA-LAY-001', 'title': 'A released rule', 'maturity': 'released'},
+        {**base, 'id': 'DCA-LAY-002', 'title': 'An experimental rule', 'maturity': 'experimental'},
+    ], 'retired': []}))
+    nodes = {n.frontmatter['id']: n for n in rules.extract(tmp_path)}
+    released, experimental = nodes['DCA-LAY-001'], nodes['DCA-LAY-002']
+    assert released.frontmatter['maturity'] == 'released'
+    assert rules.EXPERIMENTAL_NOTICE not in released.body
+    assert experimental.frontmatter['maturity'] == 'experimental'
+    assert experimental.body.startswith('# An experimental rule\n\n' + rules.EXPERIMENTAL_NOTICE)
+    for needle in ('withExperimental()', 'dca.rules.experimental = true', 'dca-archunit.properties',
+                   'never a finding', 'never a reason to change code'):
+        assert needle in rules.EXPERIMENTAL_NOTICE
+    compact = retrieval.compact_index(list(nodes.values()))
+    assert '| enforced | experimental |' in compact and '| enforced | released |' in compact
+    (java / 'rules.json').write_text(json.dumps({'rules': [
+        {**base, 'id': 'DCA-LAY-001', 'title': 'A rule', 'maturity': 'beta'}], 'retired': []}))
+    with pytest.raises(ValueError, match='invalid rule maturity'):
+        rules.extract(tmp_path)
+
+
+def test_every_generated_rule_node_shows_its_maturity(bundle: Path):
+    from dca_catalog import rules
+    for p in (bundle / 'rule').rglob('*.md'):
+        if p.name in RESERVED or p.name == 'retired.md':
+            continue
+        fm, body = _split_frontmatter(p.read_text(encoding='utf-8'))
+        assert fm.get('maturity') in rules.MATURITIES, p
+        assert (rules.EXPERIMENTAL_NOTICE in body) == (fm['maturity'] == 'experimental'), p
+
+
 def test_retirement_migrates_existing_inbound_links(tmp_path, monkeypatch):
     import json
     import shutil

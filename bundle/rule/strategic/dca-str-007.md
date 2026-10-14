@@ -8,6 +8,7 @@ selects: Non-interface classes assignable to IntegrationEvent - directly or thro
 checks: Every integration-event contract resides in a package containing the configured events segment. Adapter outgoing event packages are not an alternative; move contracts to events or exclude STR-007 during migration. Translators and transport adapters stay separate.
 enforced_by: "StrategicPatternRules#DCA-STR-007"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

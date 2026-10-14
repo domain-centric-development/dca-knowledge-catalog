@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere on the classpath under scan that are ass
 checks: The simple name ends with Factory. Only the suffix is checked. An empty selection passes.
 enforced_by: "AdvancedPatternRules#DCA-ADV-013"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

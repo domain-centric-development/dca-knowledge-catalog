@@ -8,6 +8,7 @@ selects: "Types in <module>.Application of every module root."
 checks: "No dependency on a type whose full name starts with Microsoft.EntityFrameworkCore, System.Transactions, System.Data, Dapper, NHibernate or MongoDB.Driver. Only these six namespace prefixes are checked - another persistence library is not reported, and the domain and adapter layers are not selected. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, where DCA-LAY-003 forbids the infrastructure packages and not the persistence API itself."
 enforced_by: "DotnetRules#DCA-NET-006"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

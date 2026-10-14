@@ -8,6 +8,7 @@ selects: "Non-interface classes anywhere under scan assignable to Repository, ab
 checks: "The class resides in <module>.adapter.outgoing.. of some module root. An implementation in any other package under scan - a test double, say - is reported; an empty selection passes. An implementation that carries the repository role and is also named *Repository is reported by DCA-HEX-008 as well: that rule finds unmarked implementations by name, and the two populations overlap where a project does both."
 enforced_by: "TacticalPatternRules#DCA-TAC-015"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

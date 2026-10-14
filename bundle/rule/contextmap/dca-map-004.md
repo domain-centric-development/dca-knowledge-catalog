@@ -8,6 +8,7 @@ selects: "Every @Upstream declaration on the package-info of every package carry
 checks: "context() names an existing bounded context - a package carrying @BoundedContext, identified by its name relative to the base package - and is not the declaring context itself. Whether any code depends on the target is not established here."
 enforced_by: "ContextMapRules#DCA-MAP-004"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

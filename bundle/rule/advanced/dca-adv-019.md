@@ -8,6 +8,7 @@ selects: "Classes anywhere on the classpath under scan that carry the aggregate-
 checks: "None of them calls a method of, reads a field of, or instantiates a type carrying the domain-service role. Holding one as a parameter or a field type is not an access and is not reported. A domain service calling another domain service is outside this selection. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-019"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

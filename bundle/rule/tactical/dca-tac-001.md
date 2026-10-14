@@ -8,6 +8,7 @@ selects: "Non-interface classes in <module>.domain.model.. of every module root 
 checks: "The class is assignable to the aggregate-root role - through the marker or an intermediate base class. Only the name suffix triggers selection - an aggregate root not named *AggregateRoot is never reported, and an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-001"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

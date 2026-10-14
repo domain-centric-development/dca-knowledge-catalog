@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere under scan assignable to Entity - aggreg
 checks: "No method - inherited ones included - is a public setter: a name starting with set followed by an upper-case letter, exactly one parameter and return type void. A non-public setter, a fluent setter returning the instance, or a set-prefixed method with zero or two parameters does not count."
 enforced_by: "TacticalPatternRules#DCA-TAC-006"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

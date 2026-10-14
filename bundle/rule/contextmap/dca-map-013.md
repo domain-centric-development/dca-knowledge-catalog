@@ -8,6 +8,7 @@ selects: "Every @Upstream, @ExternalUpstream and @Partnership declaration on the
 checks: "Informational - reports every declared edge in the rule's own outcome and never fails; it carries no assertion. status() is not printed, so a PLANNED edge is listed like an implemented one."
 enforced_by: "ContextMapRules#DCA-MAP-013"
 status: informational
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

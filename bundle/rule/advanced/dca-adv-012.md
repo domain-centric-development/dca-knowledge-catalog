@@ -8,6 +8,7 @@ selects: "Non-interface classes in <module>.domain.. of every module root that a
 checks: "Every field - declared or inherited from a superclass, static fields included - is final. Field types are not inspected, so a final field holding mutable state passes. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-012"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

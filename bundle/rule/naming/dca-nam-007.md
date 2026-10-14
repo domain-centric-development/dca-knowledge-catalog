@@ -8,6 +8,7 @@ selects: Classes under the base package whose simple name ends with Dto.
 checks: "Each resides in an adapter package of some module root (<module>.adapter..), incoming or outgoing. A Dto in a domain, application or infrastructure package is reported; what the class contains is not checked. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-007"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

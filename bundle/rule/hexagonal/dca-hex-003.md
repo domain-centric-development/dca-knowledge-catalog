@@ -8,6 +8,7 @@ selects: Classes anywhere on the classpath under scan whose simple name ends wit
 checks: "No dependency on a class assignable to Repository - the port interface or an implementation. Other output ports (Store, event publishers) are not checked; a controller that reaches a repository through another class is not reported. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-003"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

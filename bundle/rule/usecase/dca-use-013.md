@@ -8,6 +8,7 @@ selects: "Non-interface classes in <module>.application.. that implement InputPo
 checks: "Every method that runs under one of the configured transactional annotations - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without such an annotation (explicit TransactionBoundary or none) is selected but never reported; with an empty role nothing is ever reported."
 enforced_by: "UseCaseRules#DCA-USE-013"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

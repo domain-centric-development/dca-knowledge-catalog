@@ -8,6 +8,7 @@ selects: "Types in <module>.Domain of every module root."
 checks: "No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken - in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T> are not checked. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, and CompletableFuture or Flow.Publisher in a domain model is reported by no rule there."
 enforced_by: "DotnetRules#DCA-NET-001"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

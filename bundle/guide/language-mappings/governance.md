@@ -13,6 +13,7 @@ tags: [guide, section]
 | Layout | `DcaLayout.forBasePackage("com.company.project")` | `DcaLayout.ForRootNamespace("Company.Project")` |
 | Layout options | `withIncomingSubpackage`, `withUseCaseSuffix`, `withControllerSuffix`, `allowingInDomain`, `withFrameworkAnnotations` (presets `spring`, `jakarta`, `quarkus`, `micronaut`, `none`) | `WithIncomingSegment`, `WithUseCaseSuffix`, `WithRestControllerSuffix`, `AllowingInDomain`, `WithFrameworkTypes` (presets `AspNetCore`, `None`) |
 | Selection | `additionalSelection()` → `DcaRuleSelection` | `AdditionalSelection` → `DcaRuleSelection` |
+| Experimental rules | off; opt in with `withExperimental()` or `dca.rules.experimental = true` | off; opt in with `WithExperimental()` or `dca.rules.experimental = true` |
 | Properties file | `dca-archunit.properties` on the test class path | `dca-archunit.properties` next to the test assembly (copy to output) |
 | Dials | scope, severity, exceptions, **baseline** (`frozen`) | scope, severity, exceptions — no baseline (ArchUnitNET has no `FreezingArchRule`) |
 | Build flavour | any | **Debug** — optimized builds hide async dependencies and are refused |

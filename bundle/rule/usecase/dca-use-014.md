@@ -8,6 +8,7 @@ selects: "Per module root: non-interface, non-abstract, non-nested classes below
 checks: "After removing configured operationContainers segments, all of them sit at one depth: application.<usecase> (flat) or application.<feature>.<usecase> (grouped). Reported are a use case directly in the application package, one nested deeper than a feature, and a module mixing both depths. What a feature means is not checked."
 enforced_by: "UseCaseRules#DCA-USE-014"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

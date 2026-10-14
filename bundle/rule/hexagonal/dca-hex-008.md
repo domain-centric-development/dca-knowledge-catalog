@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere on the classpath under scan whose simple
 checks: "Each resides in <module>.adapter.outgoing.. of some module root. Whether the class implements a Repository port is not checked - only the name is. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-008"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

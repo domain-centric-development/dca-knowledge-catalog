@@ -8,6 +8,7 @@ selects: "Concrete, non-record classes anywhere under scan assignable to Aggrega
 checks: "No constructor declared by the class itself is public. Private, package-private and protected constructors pass - a persistence framework that needs a no-argument constructor gets a non-public one. Who calls the factory methods is not checked. An empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-023"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

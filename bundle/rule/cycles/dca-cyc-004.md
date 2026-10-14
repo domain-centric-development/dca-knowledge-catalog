@@ -8,6 +8,7 @@ selects: "One slice per module root, holding the classes in <module>.adapter.inc
 checks: "The slices form no dependency cycle between modules' incoming adapters. Slices are per module root, so a cycle inside one module's incoming adapters is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the adapters within a module."
 enforced_by: "CycleRules#DCA-CYC-004"
 status: enforced
+maturity: released
 rule_set: cycles
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java

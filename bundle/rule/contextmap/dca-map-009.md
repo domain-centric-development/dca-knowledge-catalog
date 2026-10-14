@@ -8,6 +8,7 @@ selects: "Every @Upstream declaration with translation() CONFORMIST on the packa
 checks: "No class in the declaring context's domain layer (<context>.domain..) depends on a class in the target context's channel sub-package (api or events per the layout) or below. Application and adapter classes may use the upstream's contract types. Whether an implementation exists is DCA-MAP-007's question, not this rule's."
 enforced_by: "ContextMapRules#DCA-MAP-009"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

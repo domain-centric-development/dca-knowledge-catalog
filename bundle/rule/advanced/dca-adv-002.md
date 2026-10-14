@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere on the classpath under scan that are ass
 checks: "Each resides in a domain package of some module root (<module>.domain..). An event in an application, adapter or infrastructure package is reported. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-002"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

@@ -8,6 +8,7 @@ selects: "Non-interface classes anywhere on the classpath under scan that are as
 checks: "At least one field - declared by the class or inherited from a supertype, static or not, of any name - has one of the configured timestamp types, by default java.time.Instant, OffsetDateTime, ZonedDateTime or LocalDateTime; a record component of one of these types counts. LocalDate, long or Date fields do not satisfy it, and a timestamp method without a backing field does not either - which is what the rule is for, because the marker already forces the accessor. A project whose own event vocabulary wraps the timestamp in a value object names that type with withTimestampTypes. Every offender is reported in one violation; an empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-008"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

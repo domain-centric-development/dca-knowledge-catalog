@@ -8,6 +8,7 @@ selects: "Interfaces anywhere under scan assignable to Repository, whatever thei
 checks: "The interface resides in <module>.application.. of some module root, the shared kernel's included. Implementations are not selected; an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-014"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

@@ -8,6 +8,7 @@ selects: "Classes annotated with @OpenHostService anywhere on the classpath unde
 checks: "Each resides in a package whose path contains the configured api segment (..api..) or the configured incoming-adapter segments (..adapter.incoming..), at any depth and in any sub-package. One annotated in a domain, application or outgoing-adapter package is reported. Which module publishes it, and whether anyone consumes it, is not checked."
 enforced_by: "StrategicPatternRules#DCA-STR-005"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

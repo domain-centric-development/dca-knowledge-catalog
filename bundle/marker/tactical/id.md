@@ -42,11 +42,11 @@ public record ProductId(UUID value) implements Id {
 
 - [Complete Test Suites](/guide/archunit-governance/complete-test-suites.md)
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
+- [Tuning the Rule Catalog](/guide/archunit-governance/tuning-the-rule-catalog.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [Building blocks, as the library defines them](/guide/elements/building-blocks-as-the-library-defines-them.md)
 - [Open Host Service Pattern](/guide/integration-patterns/open-host-service-pattern.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [Building Blocks](/guide/language-mappings/building-blocks.md)
 - [Separate domain and persistence model](/guide/repository-vs-store/separate-domain-and-persistence-model.md)
-- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

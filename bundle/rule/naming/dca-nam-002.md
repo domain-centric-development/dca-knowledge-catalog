@@ -8,6 +8,7 @@ selects: "Concrete non-nested, non-record application classes selected by InputP
 checks: "Informational diagnostic only: lists operations without a direct or composed injectable stereotype and never fails. Configuration registration is equally valid; this does not prove wiring."
 enforced_by: "NamingRules#DCA-NAM-002"
 status: informational
+maturity: released
 rule_set: naming
 implementations: [java]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

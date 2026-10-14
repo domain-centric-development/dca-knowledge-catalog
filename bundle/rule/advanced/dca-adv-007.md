@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere on the classpath under scan that are ass
 checks: "Name heuristic: declared or inherited fields named schemaVersion, eventVersion or contractVersion are reported, including record components. A business revision named version is allowed, whatever its type. This does not infer a field's business meaning; an empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-007"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

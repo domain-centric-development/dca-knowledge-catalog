@@ -8,6 +8,7 @@ selects: Classes in the building-blocks package hexagonal.port.out.. on the clas
 checks: "Each is an interface. The project's own output ports in application.shared are not selected; when the building-blocks package is not imported, the rule passes."
 enforced_by: "LayeredRules#DCA-LAY-005"
 status: enforced
+maturity: released
 rule_set: layered
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java

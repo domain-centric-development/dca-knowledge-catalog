@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every module root, plus the classes of
 checks: "Every dependency targets a class in one of those same packages or in an allowed third-party package: by default java.., lombok.., org.apache.commons.lang3.., org.apache.commons.collections4.. and org.jspecify.annotations... A logging facade is deliberately not among them - which logging, validation or utility library a domain model may see is a project decision, made with withThirdPartyPackagesAllowedInDomain(...). The vocabulary's own packages are on the list because they are derived from the roles, so pointing a role at another library's type does not make that library a reported dependency. The application-layer roles and the incoming ports are not on the list, nor are the strategic annotations, nor the shared kernel unless it is a module root with a domain layer of its own. A dependency on any other package is reported."
 enforced_by: "OnionRules#DCA-ONI-002"
 status: enforced
+maturity: released
 rule_set: onion
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/OnionRules.java

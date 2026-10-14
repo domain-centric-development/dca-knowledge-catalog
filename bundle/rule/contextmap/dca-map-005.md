@@ -8,6 +8,7 @@ selects: "Every @Upstream declaration on the package-info of every package carry
 checks: "via() holds at least one channel, and the pair (context, channel) - the channel resolved to the layout's api or events sub-package name - occurs at most once among the declarations of one context. Two declarations towards the same context on different channels are allowed; the same context and channel declared twice, even with different translations, is reported."
 enforced_by: "ContextMapRules#DCA-MAP-005"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

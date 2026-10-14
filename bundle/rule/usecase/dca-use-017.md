@@ -8,6 +8,7 @@ selects: "Concrete non-nested application operations selected by InputPort marke
 checks: "Every effective public instance method, declared or inherited, matches a method of an implemented InputPort interface after generic substitution. Unrelated-interface methods and getters/setters are not exempt. A use case selected by suffix only, without an InputPort interface, has no permitted operation and is reported in full - implement the input port. Constructors, Object signatures, static and compiler-generated bridge/synthetic methods are excluded."
 enforced_by: "UseCaseRules#DCA-USE-017"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

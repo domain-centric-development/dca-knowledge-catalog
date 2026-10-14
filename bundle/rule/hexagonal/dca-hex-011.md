@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.incoming.. of every module root, event con
 checks: "No dependency on a use case implementation: a non-interface class assignable to InputPort, directly or through a *InputPort interface - abstract base classes included. Depending on the input port interfaces themselves is what the rule expects. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-011"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

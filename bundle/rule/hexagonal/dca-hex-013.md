@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.outgoing.. of every module root."
 checks: "No dependency on a type assignable to InputPort - the input port interfaces and the use case classes implementing them, of any module. Calling another module's published api is not a dependency on an input port, even where that api delegates to one - only direct dependencies are read. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-013"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

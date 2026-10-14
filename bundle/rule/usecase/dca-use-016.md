@@ -8,6 +8,7 @@ selects: Concrete non-nested application classes selected by InputPort marker or
 checks: "Reports dependencies on another input port or operation, directly or transitively through same-module application helpers. Own interfaces and base classes are excluded. Messages start Caller -> Target [via Helper], so an anchored caller-side ignore permits configured coordinators without permitting calls to them. Reflection, container lookups and unrelated interfaces are not resolved; CYC-005 still checks coordinator cycles."
 enforced_by: "UseCaseRules#DCA-USE-016"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

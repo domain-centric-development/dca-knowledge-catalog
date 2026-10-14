@@ -8,6 +8,7 @@ selects: "Public methods declared on non-interface classes carrying the domain-s
 checks: "At least one parameter of the method carries the aggregate-root or the entity role. Value objects and foreign facts may be passed alongside but do not satisfy the check on their own: a calculation that needs no aggregate is behaviour of the value object or the aggregate, not a domain service. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-020"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

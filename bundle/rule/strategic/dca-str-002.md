@@ -8,6 +8,7 @@ selects: "Classes in the package annotated with @SharedKernel and all its sub-pa
 checks: "No selected class depends on a class in a package carrying @BoundedContext or below it, checked once per declared context and reported together. A module that owns layers without declaring @BoundedContext is not a forbidden target here. Dependencies on the base package outside any context, on infrastructure and on third-party code are not checked."
 enforced_by: "StrategicPatternRules#DCA-STR-002"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

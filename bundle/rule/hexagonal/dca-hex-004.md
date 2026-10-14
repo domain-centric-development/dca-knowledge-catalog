@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.incoming.. of every module root."
 checks: "No dependency on a class in an infrastructure package: the global base.infrastructure or an isolated module's own <module>.infrastructure, the package itself or any sub-package with an exact segment boundary. The shared kernel's infrastructure package does not count as an infrastructure implementation. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-004"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

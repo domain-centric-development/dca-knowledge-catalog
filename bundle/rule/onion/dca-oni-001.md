@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every module root."
 checks: "No dependency on a class in an application package of any module root (<module>.application..), the module's own included. Dependencies on adapters or infrastructure are covered by other rules, not this one."
 enforced_by: "OnionRules#DCA-ONI-001"
 status: enforced
+maturity: released
 rule_set: onion
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/OnionRules.java

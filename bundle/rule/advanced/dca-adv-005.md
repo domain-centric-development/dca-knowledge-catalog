@@ -8,6 +8,7 @@ selects: "Non-interface classes anywhere on the classpath under scan that are as
 checks: "The class itself is annotated with @IntegrationEventType. An annotation on a supertype does not count; the annotation's name and version values are not checked. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-005"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

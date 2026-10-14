@@ -8,6 +8,7 @@ selects: "Concrete classes under scan with loadable runtime types that implement
 checks: "Every operation the use-case contract maps onto takes the input and a CancellationToken and returns Task<T>; explicit, inherited and ordinary implementations pass. With the library's own vocabulary the C# compiler already enforces the signature of IUseCase<TIn,TOut>, so the rule has something to report only where a project points the use-case role at a contract of its own. Whether a class exposes public members beyond the contract is DCA-USE-017's subject, not this one's."
 enforced_by: "DotnetRules#DCA-NET-003"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

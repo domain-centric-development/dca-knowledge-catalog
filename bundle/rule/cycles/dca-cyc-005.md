@@ -8,6 +8,7 @@ selects: "One slice per operation-root package (marker or suffix), with configur
 checks: "The slices form no dependency cycle: two features or two use cases that depend on each other, directly or through further slices, are reported. Dependencies on application.shared, the domain or an adapter do not count. Slices of all modules are checked together, so a cycle through another module's use case package is reported here as well."
 enforced_by: "CycleRules#DCA-CYC-005"
 status: enforced
+maturity: released
 rule_set: cycles
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java

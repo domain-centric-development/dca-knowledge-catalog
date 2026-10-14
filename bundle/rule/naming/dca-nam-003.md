@@ -8,6 +8,7 @@ selects: "Interfaces in <module>.application.. of every module root that are ass
 checks: "The simple name ends with InputPort - no prefix is required, because Java interfaces carry none; the .NET twin additionally requires the platform's I prefix. Classes and records are not selected, and an interface extending InputPort outside an application package is not checked. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-003"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

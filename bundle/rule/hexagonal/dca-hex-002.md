@@ -8,6 +8,7 @@ selects: "Classes in <module>.application.. of every module root, application.sh
 checks: "No dependency on a class in <module>.adapter.. of any module root. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-002"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

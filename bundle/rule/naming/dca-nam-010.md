@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every module root."
 checks: "No simple name ends with Helper, Util, Utils, Impl or Implementation. Only these five suffixes are checked, only in domain packages - a *Service or *Factory in the domain is not reported, and an Impl in an adapter package is not checked. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-010"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

@@ -8,6 +8,7 @@ selects: "Every package whose package-info carries @BoundedContext, at any depth
 checks: "Diagnostic - reports each discovered context's name, package and description and the shared kernel package in the rule's own outcome. It asserts nothing and never fails."
 enforced_by: "StrategicPatternRules#DCA-STR-001"
 status: informational
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

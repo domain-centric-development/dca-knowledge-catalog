@@ -8,6 +8,7 @@ selects: "Interfaces anywhere under scan assignable to Repository whose simple n
 checks: "The aggregate is read from the type argument the interface binds: the first argument of the parameterised Repository marker it extends, or of an intermediate port that is itself assignable to the marker. That type must be assignable to AggregateRoot, and the interface's simple name must be that type's simple name plus 'Repository' - so a repository bound to one aggregate and named after another is reported. An unresolved type argument is skipped: a generic intermediate port such as AuditedRepository<T, ID> binds no aggregate of its own. When the marker is not generic or is used raw, the aggregate is resolved by name instead: among all classes under scan with the interface's simple name minus 'Repository' and in the same context - the nearest enclosing package annotated with @BoundedContext or @SharedKernel, falling back to the first segment below the base package; anywhere when the interface lies outside the base package - at least one must exist and every one must be assignable to AggregateRoot. The interface's methods play no role."
 enforced_by: "TacticalPatternRules#DCA-TAC-016"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

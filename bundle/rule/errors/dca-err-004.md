@@ -8,6 +8,7 @@ selects: "Classes anywhere on the classpath under scan that are assignable to Do
 checks: "The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller, event-listener or transport-status annotations, directly or as a meta-annotation. The transport-status role is the one that fixes the protocol answer on the exception itself; where the framework answers through a mapper class instead of an annotation the role is empty and nothing is selected for it. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-004"
 status: enforced
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

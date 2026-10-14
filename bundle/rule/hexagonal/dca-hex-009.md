@@ -8,6 +8,7 @@ selects: "Top-level interfaces in <module>.application.<shared>.. of every modul
 checks: "The interface is assignable to OutputPort, directly or through Repository, Store, DomainEventPublisher, IntegrationEventPublisher or another OutputPort sub-interface. Classes, records and enums in application.shared are not checked. An empty selection passes. The rule presumes the vocabulary has a common port root: withOutputPort must be set whenever any port role is, because every port of the project is measured against it. A vocabulary that has no such root has nothing this rule can assert - switch the id off rather than pointing the role at an unrelated type."
 enforced_by: "HexagonalRules#DCA-HEX-009"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

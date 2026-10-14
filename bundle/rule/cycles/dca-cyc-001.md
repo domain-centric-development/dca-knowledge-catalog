@@ -8,6 +8,7 @@ selects: "One slice per module root, holding the classes in <module>.domain.mode
 checks: "The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Slices are per module root, so a cycle between classes inside one module's domain model is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the domain model within a module. Fewer than two slices pass."
 enforced_by: "CycleRules#DCA-CYC-001"
 status: enforced
+maturity: released
 rule_set: cycles
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java

@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.incoming.. of every module root, event con
 checks: "No dependency on a class assignable to DomainService - the building-block marker interface, any sub-interface of it and every class implementing one. A domain class without the marker is not a domain service by this rule. Injecting it, calling it or naming it in a signature all count as a dependency. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-012"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

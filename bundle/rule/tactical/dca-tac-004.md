@@ -8,6 +8,7 @@ selects: "Non-interface, non-abstract classes anywhere under scan assignable to 
 checks: "At least one field - inherited ones included - has a raw type assignable to the Id marker. A String or UUID identity does not count, and the field's name plays no role."
 enforced_by: "TacticalPatternRules#DCA-TAC-004"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

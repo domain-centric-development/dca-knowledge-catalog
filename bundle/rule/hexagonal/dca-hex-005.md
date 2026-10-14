@@ -8,6 +8,7 @@ selects: Classes in every module's outgoing adapter package.
 checks: Dependencies on global infrastructure and the adapter's own module infrastructure pass; infrastructure of another module fails. Module boundaries use exact package segments.
 enforced_by: "HexagonalRules#DCA-HEX-005"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

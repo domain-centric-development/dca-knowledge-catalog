@@ -8,6 +8,7 @@ selects: "Non-interface, non-abstract types anywhere under the root namespace th
 checks: "The type must be a readonly record struct. Reference types, plain structs and mutable record structs fail."
 enforced_by: "DotnetRules#DCA-NET-005"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

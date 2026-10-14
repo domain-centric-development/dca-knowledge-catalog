@@ -8,6 +8,7 @@ selects: "Interfaces in <module>.application.. of every module root whose simple
 checks: "The simple name ends with Repository (RepositoryPort or ProductRepositoryAdapter is reported). Selection is by name only - whether the interface extends the Repository marker is not checked, and classes are not selected. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-004"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

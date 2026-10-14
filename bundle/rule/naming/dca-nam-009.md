@@ -8,6 +8,7 @@ selects: Every class under the base package.
 checks: "No class resides in a package whose name contains a segment entities, valueobjects, helpers, util or utils, at any depth. Only these five segments are checked; other technical names such as model, service or impl are not reported. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-009"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

@@ -8,6 +8,7 @@ selects: "Classes in <module>.application.. of every module root that are assign
 checks: "Each extends UseCaseException, directly or through an intermediate base class. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-003"
 status: enforced
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

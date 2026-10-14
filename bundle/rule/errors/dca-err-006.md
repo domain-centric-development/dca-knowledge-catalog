@@ -8,6 +8,7 @@ selects: "Incoming adapter packages of every module root (<module>.adapter.incom
 checks: "Informational diagnostic only: lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing."
 enforced_by: "ErrorHandlingRules#DCA-ERR-006"
 status: informational
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

@@ -8,6 +8,7 @@ selects: "Every @ExternalUpstream declaration on the package-info of every packa
 checks: "With ANTI_CORRUPTION_LAYER, no class below the declaring context's package outside the matching adapter - <context>.adapter.outgoing.. for OUTBOUND, <context>.adapter.incoming.. for INBOUND - depends on a class in any of the contract packages. With any other translation (CONFORMIST), no class in <context>.domain.. does. That the adapter actually translates the contract is not established."
 enforced_by: "ContextMapRules#DCA-MAP-010"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

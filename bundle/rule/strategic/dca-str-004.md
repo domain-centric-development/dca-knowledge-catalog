@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every isolated module root - every pac
 checks: "No selected class depends on any class in another isolated module root or below it (<other>..) - not even on its published api or events packages. Dependencies on the shared kernel, on the module's own application, adapter and infrastructure packages and on third-party code are not checked by this rule. Violations are collected per module and reported together."
 enforced_by: "StrategicPatternRules#DCA-STR-004"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

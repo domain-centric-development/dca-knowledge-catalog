@@ -89,10 +89,10 @@ def compact_index(nodes: list[Node]) -> str:
     def excerpt(value: str) -> str:
         text = " ".join(value.split())
         return (text[:237] + "…" if len(text) > 240 else text).replace("|", "\\|")
-    lines = ["# Compact rule lookup", "", "Look up the id first. Excerpts route retrieval; read the full selection/check and language evidence before applying a rule.", "", "| Id | Title | Selects (excerpt) | Checks (excerpt) | Languages | Status |", "|---|---|---|---|---|---|"]
+    lines = ["# Compact rule lookup", "", "Look up the id first. Excerpts route retrieval; read the full selection/check and language evidence before applying a rule.", "", "| Id | Title | Selects (excerpt) | Checks (excerpt) | Languages | Status | Maturity |", "|---|---|---|---|---|---|---|"]
     for node in sorted((n for n in nodes if n.frontmatter.get("type") == "Rule"), key=lambda n: n.frontmatter["id"]):
         fm = node.frontmatter
-        lines.append(f"| [{fm['id']}](/{'/'.join(node.path.split('/'))}) | {excerpt(fm['title'])} | {excerpt(fm['selects'])} | {excerpt(fm['checks'])} | {', '.join(fm['implementations'])} | {fm['status']} |")
+        lines.append(f"| [{fm['id']}](/{'/'.join(node.path.split('/'))}) | {excerpt(fm['title'])} | {excerpt(fm['selects'])} | {excerpt(fm['checks'])} | {', '.join(fm['implementations'])} | {fm['status']} | {fm.get('maturity', 'released')} |")
     lines.extend(["", "[Retired ids and replacements](/rule/retired.md)", ""] if any(n.path == "rule/retired.md" for n in nodes) else [""])
     return "\n".join(lines)
 

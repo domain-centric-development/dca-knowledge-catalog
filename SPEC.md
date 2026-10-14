@@ -99,6 +99,12 @@ One rule of the `dca-archunit` rule library — an enforceable architecture rule
   it and what it deliberately does not establish. Mandatory.
 - `enforced_by`: `<RuleSetClass>#<id>`
 - `status`: `enforced | informational | retired`
+- `maturity`: `released | experimental` (from `rules.json`; `released` when absent; both
+  languages must agree). An experimental rule is off by default and runs only where a project
+  opted in; its body opens with one fixed paragraph, before **Selection**, saying that it binds
+  only with that opt-in (`withExperimental()` / `WithExperimental()` on the rule selection, or
+  `dca.rules.experimental = true` in `dca-archunit.properties`) and is otherwise information,
+  never a finding and never a reason to change code.
 - `rule_set`: the rule set name (`tactical`, `hexagonal`, `contextmap`, …)
 - `implementations`: the languages the rule is implemented in (`java`, `dotnet`; read from
   `dca-java/rules.json` and `dca-dotnet/rules.json`). Rules in the `dotnet` rule set
@@ -266,7 +272,7 @@ the catalog's own `src/` and `authored/`); a sibling revision is the last commit
 entry carries no revision: the commit that contains the bundle is its revision, and recording the last input-touching
 commit would make every commit that lands sources and bundle together stale under the freshness gate.
 
-`rule/index-compact.md` contains id, title, short selects/checks excerpts, languages and status. Search the id's
+`rule/index-compact.md` contains id, title, short selects/checks excerpts, languages, status and maturity. Search the id's
 row before reading the full node. Excerpts are routing aids; full selection/check and caveats remain authoritative.
 Shared rules include extracted C# expressions under `.NET reading`; .NET-only rules include C# evidence too.
 Nodes over 16,000 bytes retain their full text and gain fence-aware level-three evidence slices under `evidence/`.

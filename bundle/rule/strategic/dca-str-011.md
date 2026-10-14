@@ -8,6 +8,7 @@ selects: "The declared bounded contexts of the imported classes — every packag
 checks: "At least one such package exists. The rule says nothing about how many contexts there should be, about their boundaries, or about modules that own a layer without declaring a context — those are governed structurally and are not a substitute for the declaration."
 enforced_by: "StrategicPatternRules#DCA-STR-011"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

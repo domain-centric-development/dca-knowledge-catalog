@@ -8,6 +8,7 @@ selects: Classes under the base package whose simple name ends with ViewModel.
 checks: "Each resides in <module>.adapter.incoming.<web>.. of some module root - all three segments are the configured ones (withWebSubpackage changes the last). A ViewModel in a domain or application package, or in an incoming adapter other than the configured web one, such as adapter.incoming.mcp, is reported. An empty selection passes."
 enforced_by: "NamingRules#DCA-NAM-011"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

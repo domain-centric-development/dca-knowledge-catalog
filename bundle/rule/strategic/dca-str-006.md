@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.outgoing.. of every isolated module root -
 checks: "No selected class depends on a class in another isolated module root (<other>..) unless that class lives in the other module's published packages <other>.api.. or <other>.events.. (segment names from the layout). The other module's domain, application, adapter and infrastructure packages are internal and reported. The allow-list is the package convention alone - no framework annotation is read. Dependencies on the shared kernel and on third-party code are not checked."
 enforced_by: "StrategicPatternRules#DCA-STR-006"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

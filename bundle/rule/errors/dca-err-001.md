@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every module root that are assignable 
 checks: "Each extends DomainException, directly or through an intermediate base class. Where the exception is thrown is not checked - a throw site is not part of the import model - so a guard that raises the platform's argument exception is outside this rule. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-001"
 status: enforced
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

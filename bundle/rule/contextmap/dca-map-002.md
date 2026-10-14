@@ -8,6 +8,7 @@ selects: "Every @ExternalUpstream declaration on the package-info of every packa
 checks: "name() is not blank and is not the name of an internal bounded context (a context's package name relative to the base package), and the pair (name, interaction) occurs at most once per declaring context. The same external system declared by two different contexts is not reported; translation() and contractPackages() are not checked here."
 enforced_by: "ContextMapRules#DCA-MAP-002"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

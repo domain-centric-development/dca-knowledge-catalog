@@ -8,6 +8,7 @@ selects: "Classes anywhere on the classpath under scan that are assignable to th
 checks: "A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of UseCaseException in <module>.application... Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-002"
 status: enforced
+maturity: released
 rule_set: errors
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java

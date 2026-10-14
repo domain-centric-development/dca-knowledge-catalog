@@ -8,6 +8,7 @@ selects: "Every @Partnership declaration on the package-info of every package ca
 checks: "context() names an existing bounded context and is not the declaring context itself, and the target context's package-info carries a @Partnership whose context() names the declaring context in turn. A partnership grants no dependency permission - whether any code dependency exists between the two contexts is not checked."
 enforced_by: "ContextMapRules#DCA-MAP-012"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

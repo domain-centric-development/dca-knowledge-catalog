@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere under scan assignable to Value - records
 checks: "No method - inherited ones included - is a setter: a name starting with set followed by an upper-case letter, exactly one parameter and return type void, regardless of visibility. A wither that returns a new instance is not a setter."
 enforced_by: "TacticalPatternRules#DCA-TAC-011"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

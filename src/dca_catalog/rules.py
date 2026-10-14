@@ -291,6 +291,28 @@ def _status(title: str, code: str) -> str:
     return "enforced"
 
 
+MATURITIES = ("released", "experimental")
+
+EXPERIMENTAL_NOTICE = (
+    "**Experimental.** This rule is binding only in a project that opted in to experimental rules - "
+    "the architecture test calls `withExperimental()` (.NET: `WithExperimental()`) on its rule selection, "
+    "or `dca-archunit.properties` sets `dca.rules.experimental = true`; without that opt-in the rule does "
+    "not run and is information only, never a finding and never a reason to change code."
+)
+
+
+def _maturity(entry: dict, other: dict | None = None) -> str:
+    """``released`` unless the catalog marks the rule ``experimental``; both languages must agree."""
+    maturity = entry.get("maturity", "released")
+    if other is not None and other.get("maturity", "released") != maturity:
+        raise ValueError(f"maturity differs between the Java and .NET catalogs: {entry['id']}")
+    return maturity
+
+
+def _with_notice(maturity: str, body: str) -> str:
+    return EXPERIMENTAL_NOTICE + "\n\n" + body if maturity == "experimental" else body
+
+
 def _constraint(title: str) -> str:
     """The rule as a single-line, actionable precondition an LLM satisfies while
     generating code. The title is already an ``X must Y`` statement — normalize
@@ -308,6 +330,8 @@ def _catalog(path: Path) -> tuple[list[dict], list[dict]]:
     for entry in entries:
         if entry.get("status", "enforced") not in {"enforced", "informational", "n/a"}:
             raise ValueError(f"invalid rule status: {entry}")
+        if entry.get("status") != "n/a" and entry.get("maturity", "released") not in MATURITIES:
+            raise ValueError(f"invalid rule maturity: {entry}")
     for entry in retired:
         if not all(entry.get(key) for key in ("id", "reason", "replacement", "since")):
             raise ValueError(f"incomplete retirement: {entry}")
@@ -407,6 +431,7 @@ def extract(repo_root: Path) -> list[Node]:
             code = _dedent(expression)
         implementations = ["java"] + (["dotnet"] if rule_id in dotnet_ported else [])
         helpers, arch_methods = _helpers(code, sources[class_name], shared_sources) if code else ([], [])
+        maturity = _maturity(entry, dotnet_ported.get(rule_id))
         fm = {
             "type": "Rule",
             "id": rule_id,
@@ -417,6 +442,7 @@ def extract(repo_root: Path) -> list[Node]:
             "checks": checks,
             "enforced_by": f"{class_name}#{rule_id}",
             "status": entry.get("status", _status(title, code)),
+            "maturity": maturity,
             "rule_set": rule_set,
             "implementations": implementations,
             "resource": (Path(RULES_SRC_REL) / f"{class_name}.java").as_posix(),
@@ -436,7 +462,7 @@ def extract(repo_root: Path) -> list[Node]:
             Node(
                 path=f"rule/{rule_set}/{rule_id.lower()}.md",
                 frontmatter=fm,
-                body=f"# {title}\n\n" + body,
+                body=f"# {title}\n\n" + _with_notice(maturity, body),
                 meta={"name": title, "kind": "rule", "scan_text": scan_text},
             )
         )
@@ -444,6 +470,7 @@ def extract(repo_root: Path) -> list[Node]:
     for rule_id, entry in sorted(dotnet_ported.items()):
         rule_set, title, rationale = entry["set"], entry["title"], entry["rationale"]
         class_name = _dotnet_class(rule_set)
+        maturity = _maturity(entry)
         nodes.append(
             Node(
                 path=f"rule/{rule_set}/{rule_id.lower()}.md",
@@ -457,16 +484,17 @@ def extract(repo_root: Path) -> list[Node]:
                     "checks": entry.get("checks", ""),
                     "enforced_by": f"{class_name}#{rule_id}",
                     "status": entry.get("status", "enforced"),
+                    "maturity": maturity,
                     "rule_set": rule_set,
                     "implementations": ["dotnet"],
                     "resource": (Path(DOTNET_RULES_SRC_REL) / f"{class_name}.cs").as_posix(),
                     "tags": [rule_set, "archunitnet"],
                 },
-                body=(
+                body=_with_notice(maturity, (
                     f"## Selection\n\n{entry['selects']}\n\n## Check\n\n{entry['checks']}\n\n" + _cs_evidence(repo_root, rule_set, rule_id)
                     if entry.get("selects") and entry.get("checks")
                     else ""
-                ),
+                )),
                 meta={"name": title, "kind": "rule", "scan_text": ""},
             )
         )

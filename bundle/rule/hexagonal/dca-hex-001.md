@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.model.. of every module root - the domain m
 checks: "No dependency on a class in <module>.adapter.. of any module root, incoming or outgoing. Domain classes outside the model package (domain services, events) are not selected. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-001"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

@@ -8,6 +8,7 @@ selects: Interfaces anywhere on the classpath under scan that are assignable to 
 checks: "None resides in <module>.domain.. of any module root. Classes implementing an output port are not selected; where an interface outside the domain has to live is not checked here. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-010"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

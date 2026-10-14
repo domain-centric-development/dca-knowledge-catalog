@@ -8,6 +8,7 @@ selects: Non-interface classes anywhere on the classpath under scan that are ass
 checks: "The class is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected. Interfaces are excluded; an enum implementing DomainEvent is final by construction and passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-001"
 status: enforced
+maturity: released
 rule_set: advanced
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java

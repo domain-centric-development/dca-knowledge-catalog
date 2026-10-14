@@ -8,6 +8,7 @@ selects: Classes under the base package whose simple name ends with Result and t
 checks: "Each resides in an application package of some module root (<module>.application..). A domain value object named *Result is exempt because it implements Value."
 enforced_by: "UseCaseRules#DCA-USE-006"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

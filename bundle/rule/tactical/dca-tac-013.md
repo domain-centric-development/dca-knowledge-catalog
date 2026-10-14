@@ -8,6 +8,7 @@ selects: "Interfaces in <module>.application.. of every module root whose simple
 checks: "The interface is assignable to the Repository marker. A *Repository interface outside <module>.application.. is not selected; an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-013"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

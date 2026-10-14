@@ -8,6 +8,7 @@ selects: "Interfaces named InputPort or IInputPort anywhere on the classpath und
 checks: The interface resides in the building-blocks package hexagonal.port.in - the generic contract is not redeclared in the project.
 enforced_by: "UseCaseRules#DCA-USE-001"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

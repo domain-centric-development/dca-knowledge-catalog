@@ -8,6 +8,7 @@ selects: "Three selections. Declarative: methods and classes under scan that car
 checks: "Annotations and transaction use: the method is declared in, or the class resides in, an application package of some module root (<module>.application..) or an outgoing adapter package (..adapter.outgoing..) anywhere - a domain, incoming-adapter or infrastructure package is reported, the global infrastructure package included. Wiring: additionally allowed in the global infrastructure package (<base>.infrastructure.., the composition root that declares the manager) and in the shared kernel's infrastructure package (<base>.sharedkernel.infrastructure.., plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure package is reported. All findings are collected into one violation. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a class in the global or shared-kernel infrastructure package that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked."
 enforced_by: "LayeredRules#DCA-LAY-004"
 status: enforced
+maturity: released
 rule_set: layered
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java

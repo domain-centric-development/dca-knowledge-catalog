@@ -8,6 +8,7 @@ selects: "Non-interface, non-record, non-enum classes anywhere under scan assign
 checks: "The class, or a superclass other than Object, overrides both boolean equals(Object) and int hashCode() with exactly those signatures. An overload such as equals(Money) does not count, and overriding only one of the two is reported."
 enforced_by: "TacticalPatternRules#DCA-TAC-012"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

@@ -8,6 +8,7 @@ selects: "Interfaces anywhere under scan whose simple name ends with Store, the 
 checks: "The interface is assignable to the Store marker and not assignable to Repository; both must hold. An interface not named *Store is never reported; an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-018"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

@@ -8,6 +8,7 @@ selects: "Classes in <module>.domain.. of every module root, the shared kernel's
 checks: "No dependency on a class in the global infrastructure package (<base>.infrastructure..) or in any module's own infrastructure package (<module>.infrastructure..). The shared kernel's infrastructure package is not in that list. A module without a domain layer selects nothing and passes."
 enforced_by: "LayeredRules#DCA-LAY-002"
 status: enforced
+maturity: released
 rule_set: layered
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java

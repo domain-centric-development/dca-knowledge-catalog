@@ -8,6 +8,7 @@ selects: "Classes in <module>.application.. of every module root."
 checks: "No dependency on a class residing in the global infrastructure package or in any isolated module's own infrastructure package, sub-packages included, with an exact segment boundary. Dependencies on outgoing adapters are not checked here - only infrastructure packages count."
 enforced_by: "LayeredRules#DCA-LAY-003"
 status: enforced
+maturity: released
 rule_set: layered
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java

@@ -8,6 +8,7 @@ selects: Informational - selects nothing and never fails; it carries doctrine on
 checks: Nothing is asserted. Whether a consumed integration event is translated into the consuming context's own language before it reaches the domain is a code-review check.
 enforced_by: "StrategicPatternRules#DCA-STR-010"
 status: informational
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

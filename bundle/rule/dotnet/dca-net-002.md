@@ -8,6 +8,7 @@ selects: Interfaces under the root namespace that are assignable to IInputPort o
 checks: "Every public method declared on the interface itself (inherited members, property accessors and operators excluded) returns Task, Task<T>, ValueTask or ValueTask<T> exactly when its name ends with Async. Both directions are reported: an awaitable method without the suffix and a suffixed method that returns something else. An empty selection passes."
 enforced_by: "DotnetRules#DCA-NET-002"
 status: enforced
+maturity: released
 rule_set: dotnet
 implementations: [dotnet]
 resource: dca-dotnet/src/DomainCentric.ArchRules/Rules/DotnetRules.cs

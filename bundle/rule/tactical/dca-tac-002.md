@@ -8,6 +8,7 @@ selects: "Non-interface classes anywhere under scan assignable to AggregateRoot,
 checks: "No field of the class - inherited and static ones included, a static port breaks persistence ignorance just the same - has a raw type assignable to Repository or to any other OutputPort. Only the raw type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a field and passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-002"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

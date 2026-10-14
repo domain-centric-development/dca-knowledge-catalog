@@ -8,6 +8,7 @@ selects: "Non-interface, non-record classes in <module>.application.. of every m
 checks: The simple name ends with the configured use-case suffix. Interfaces and records are not selected; a class assignable only to the input-port role without the use-case role is not selected either. An empty selection passes.
 enforced_by: "NamingRules#DCA-NAM-001"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

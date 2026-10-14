@@ -8,6 +8,7 @@ selects: "Classes in <module>.application.. of every isolated module root - ever
 checks: "No selected class depends on any class in another isolated module root or below it (<other>..), the other module's api and events packages included. A dependency is any reference - field, parameter, return type, record component, type argument or call - not only a method call. Dependencies on the shared kernel, on infrastructure and on third-party code are not checked. Violations are collected per module and reported together."
 enforced_by: "StrategicPatternRules#DCA-STR-003"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

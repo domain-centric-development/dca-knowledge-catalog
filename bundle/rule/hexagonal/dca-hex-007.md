@@ -8,6 +8,7 @@ selects: "Per isolated module root - every module root except the shared kernel,
 checks: "No dependency on any class in another isolated module root (<other>..), its published api and events packages included - the allow-list DCA-STR-006 grants outgoing adapters does not apply on the incoming side. Event consumers are not selected and so may depend on the events they subscribe to. Dependencies on the shared kernel and on packages outside every module root are not checked. Findings of all modules are collected and reported together; a module without incoming adapters passes."
 enforced_by: "HexagonalRules#DCA-HEX-007"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

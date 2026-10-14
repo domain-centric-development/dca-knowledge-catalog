@@ -8,6 +8,7 @@ selects: "Every ordered pair of two distinct packages carrying @BoundedContext, 
 checks: "No class below the source context's package depends on a class in the target context's channel sub-package or below. Dependencies on a foreign context's other packages (domain, application, adapter) are not reported by this rule."
 enforced_by: "ContextMapRules#DCA-MAP-011"
 status: enforced
+maturity: released
 rule_set: contextmap
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java

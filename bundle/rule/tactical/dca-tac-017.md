@@ -8,6 +8,7 @@ selects: "Interfaces anywhere under scan assignable to Repository, the marker Re
 checks: "No return type of a method declared on the interface itself - walked through raw type, array component, generic type arguments and wildcard bounds, so Optional<T>, List<T> and Map<K,V> are seen through - involves a class assignable to Entity that is not also assignable to AggregateRoot. Inherited methods and parameter types are not inspected."
 enforced_by: "TacticalPatternRules#DCA-TAC-017"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

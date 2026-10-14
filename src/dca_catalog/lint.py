@@ -113,6 +113,8 @@ def lint(bundle: Path, repo_root: Path) -> list[Finding]:
         if fm.get("type") == "Rule":
             if fm.get("status") not in {"enforced", "informational", "retired"}:
                 findings.append(("ERROR", "rule-status", rel, str(fm.get("status"))))
+            if fm.get("status") != "retired" and fm.get("maturity") not in {"released", "experimental"}:
+                findings.append(("ERROR", "rule-maturity", rel, str(fm.get("maturity"))))
             for field in (() if fm.get("status") == "retired" else ("selects", "checks")):
                 if not str(fm.get(field) or "").strip():
                     findings.append(("ERROR", "undescribed-rule", rel, f"missing '{field}' frontmatter"))

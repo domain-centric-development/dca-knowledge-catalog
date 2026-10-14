@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.incoming.. of every module root that are d
 checks: "The simple name ends with the configured REST-controller suffix. Classes annotated only with a web-controller stereotype are not selected, and a REST controller outside an incoming-adapter package is not checked. An empty selection passes - which is always the case when the role is empty."
 enforced_by: "NamingRules#DCA-NAM-006"
 status: enforced
+maturity: released
 rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java

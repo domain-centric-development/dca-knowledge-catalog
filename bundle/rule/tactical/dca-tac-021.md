@@ -8,6 +8,7 @@ selects: "Interfaces anywhere under scan assignable to Store, the marker Store i
 checks: "No method declared on the interface itself is named save, deleteById, delete or one of their asynchronous forms saveAsync, deleteByIdAsync, deleteAsync - matched by name alone, parameters and return type disregarded and case ignored, so both languages match the same six names. Inherited methods are not inspected, and no particular vocabulary (record, count, exists) is required. The six names are fixed and are not part of the marker roles: a vocabulary that writes under another name is selected and then found to declare no write."
 enforced_by: "TacticalPatternRules#DCA-TAC-021"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java

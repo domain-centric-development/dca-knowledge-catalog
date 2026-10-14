@@ -8,6 +8,7 @@ selects: "Top-level interfaces in <module>.<events>.. of every module root, the 
 checks: "The interface is assignable to IntegrationEvent, directly or through another interface. Which classes implement it and whether they live in another module are not checked; DCA-ADV-005 and DCA-STR-008 cover the implementing class. An empty selection passes."
 enforced_by: "StrategicPatternRules#DCA-STR-013"
 status: enforced
+maturity: released
 rule_set: strategic
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java

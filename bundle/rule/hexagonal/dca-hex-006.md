@@ -8,6 +8,7 @@ selects: "Classes in <module>.adapter.incoming.. of every module root, excluding
 checks: "No dependency on a class in <module>.adapter.outgoing.. of any module root. The reverse direction (an outgoing adapter using an incoming one) and dependencies between two incoming or two outgoing adapters are not checked. An empty selection passes."
 enforced_by: "HexagonalRules#DCA-HEX-006"
 status: enforced
+maturity: released
 rule_set: hexagonal
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java

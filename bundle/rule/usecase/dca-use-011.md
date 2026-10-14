@@ -8,6 +8,7 @@ selects: "Classes in <module>.application.. of every module root."
 checks: "No dependency on a class whose simple name ends with Dto. Command, Query and Result models are not DTOs by this rule's definition - only the Dto suffix is checked."
 enforced_by: "UseCaseRules#DCA-USE-011"
 status: enforced
+maturity: released
 rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java

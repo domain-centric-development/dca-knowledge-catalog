@@ -8,6 +8,7 @@ selects: "Non-interface classes anywhere under scan assignable to Value - record
 checks: "No instance state, including inherited state, arrays and nested generic arguments, involves AggregateRoot or Entity. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid."
 enforced_by: "TacticalPatternRules#DCA-TAC-008"
 status: enforced
+maturity: released
 rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
