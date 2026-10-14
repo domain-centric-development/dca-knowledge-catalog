@@ -16,9 +16,9 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 ## Steps
 
 1. **Model it as a record** implementing `Value`, in the domain model package `domain/model/`, beside the aggregate that owns it (or the shared kernel if it is genuinely universal — [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)). Generate from the [value-object template](/template/value-object.md). A final class is a permitted alternative if the team prefers it — it must then override `equals`/`hashCode` for attribute equality.
-2. **Validate in the compact constructor** — reject invalid state at construction so an instance is always valid; throw on bad input rather than storing it.
+2. **Validate in the compact constructor** — reject invalid state at construction so an instance is always valid; throw on bad input rather than storing it. Give it **one factory per origin**: a value built from input and one rebuilt from storage run different checks, so each has its own named factory (`fromInput(...)`, `fromStored(...)`) and no neutral `of(...)` stands beside them. A value with one origin keeps its one factory.
 3. **Keep it immutable** — records give you final fields and value equality for free; a class must be final, hold only final fields, and implement `equals`/`hashCode` itself. No setters; derive new values by returning new instances.
-4. **Name from the ubiquitous language** — no technical suffixes (`Helper`, `Util`, `Utils`, `Impl`, `Implementation`) and no primitive obsession (wrap the primitive, don't pass a bare `String`).
+4. **Name from the ubiquitous language** — no technical suffixes (`Helper`, `Util`, `Utils`, `Impl`, `Implementation`) and no primitive obsession (wrap the primitive, don't pass a bare `String`). A value from a fixed set — a role, a status, a kind — is an enum or a value object that admits only those values; a class of string constants still lets every other string through.
 5. **Never embed an aggregate root or entity** inside a value object; hold their `Id` if a reference is needed.
 6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 

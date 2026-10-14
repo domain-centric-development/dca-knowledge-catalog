@@ -1,9 +1,9 @@
 # rules
 
-- [ADAPTER LAYER RULES](adapter-layer-rules.md) — ADAPTER LAYER RULES
-- [APPLICATION LAYER RULES](application-layer-rules.md) — This is where the collection metaphor stops. A `Map`-backed adapter that returns `store.get(id)`
+- [ADAPTER LAYER RULES](adapter-layer-rules.md) — for the page after a redirect is a fixed code in the redirect URL (`?notice=saved`), never the sentence: the
+- [APPLICATION LAYER RULES](application-layer-rules.md) — the consumer that calls it; the same effect reached from a second trigger is the same use case
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
-- [DOMAIN LAYER RULES](domain-layer-rules.md) — glossary: the operation *place* on an order gives `OrderPlaced`, never `OrderSubmitted` beside it
+- [DOMAIN LAYER RULES](domain-layer-rules.md) — value object that admits only those values. A string compared against a literal in several places is a typo the
 - [ERROR HANDLING RULES](error-handling-rules.md) — Every failure carries its own type, and only the adapter turns it into an answer.
 - [INFRASTRUCTURE LAYER RULES](infrastructure-layer-rules.md) — INFRASTRUCTURE LAYER RULES
 - [Operation boundaries and declared contracts](operation-boundaries-and-declared-contracts.md) — Ordinary use cases do not invoke other use cases, whether directly, through an

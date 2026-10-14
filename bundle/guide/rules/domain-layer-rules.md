@@ -23,6 +23,13 @@ tags: [guide, section]
 - Value Objects can be shared freely
 - Value Objects validate themselves; state the numeric range and rounding of every monetary value object. Reconstitution, deserialisation and default struct construction must not bypass invalid-state checks.
 - Side-effect-free methods only
+- A value from a fixed set — a role, a status, a kind — is a type whose instances are the set: an enum, or a
+  value object that admits only those values. A string compared against a literal in several places is a typo the
+  compiler cannot see, and a class of string constants still lets every other string through
+- One factory per origin. A value built from input and a value rebuilt from storage are two origins with
+  different checks — validated and derived on the way in, taken as given on the way back — and each has its own
+  named factory (`fromInput(...)`, `fromStored(...)`). A neutral `of(...)` beside them leaves the caller to guess
+  which checks run. A value with one origin keeps its one factory
 
 ### Aggregate Rules
 - Access external objects only through Aggregate Root

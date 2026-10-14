@@ -24,6 +24,14 @@ tags: [guide, section]
 - Use Context Map to document relationships and each context's subdomain type (Core/Supporting/Generic);
   generate it from the declarations so it cannot drift
 - Protect domain with Anti-Corruption Layer
+- A context names what it receives from another in its own language — in its model, its commands and the
+  contracts it owns, a trigger interface or its published API included. The data comes from the other context,
+  the names do not: what the upstream calls a booking line, the context that allocates capacity for it calls an
+  allocation line
+- A context's module declaration allows only the dependencies the context uses. An allowed dependency no class
+  needs — the global infrastructure, a shared module — widens the boundary without a decision, and the next change
+  uses it unreviewed. `DCA-MAP-006` and `DCA-MAP-007` compare only the entries that name a bounded context; an
+  unused entry to any other module stays with review
 - Shared Kernel requires team coordination
 - Keep Shared Kernel small
 - Upstream contexts influence downstream

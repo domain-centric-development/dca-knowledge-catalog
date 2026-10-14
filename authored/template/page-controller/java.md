@@ -31,7 +31,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.UUID;
 
 /**
@@ -51,12 +50,15 @@ public class {Name}PageController {
         this.{usecasename} = {usecasename};
     }
 
-    /** Read: GET renders, changes nothing. */
+    /** Read: GET renders, changes nothing. A notice arrives as a code in the URL. */
     @GetMapping("/{id}")
-    public String show(@PathVariable final UUID id, final Model model) {
+    public String show(@PathVariable final UUID id,
+                       @RequestParam(name = "notice", required = false) final String notice,
+                       final Model model) {
         final var result = show{Name}.execute(new Show{Name}Query(new {Name}Id(id)));
         model.addAttribute("{name}", {Name}PageViewModel.fromResult(result));
         model.addAttribute("form", {Name}Form.empty());
+        {Name}PageNotice.fromCode(notice).ifPresent(known -> model.addAttribute("notice", known));
         return "{context}/{name}";
     }
 
@@ -65,8 +67,7 @@ public class {Name}PageController {
     public String {usecasename}(@PathVariable final UUID id,
                                 @Valid @ModelAttribute("form") final {Name}Form form,
                                 final BindingResult binding,
-                                final Model model,
-                                final RedirectAttributes redirect) {
+                                final Model model) {
         if (binding.hasErrors()) {
             // re-render the same page with the submitted form and its messages
             final var result = show{Name}.execute(new Show{Name}Query(new {Name}Id(id)));
@@ -80,9 +81,8 @@ public class {Name}PageController {
         // 2. drive the use case through its input port
         final {Name}Result result = {usecasename}.execute(command);
 
-        // 3. POST–redirect–GET: a refresh must not repeat the change
-        redirect.addFlashAttribute("notice", "{name}.{usecasename}.done");
-        return "redirect:/{context}/{name}s/" + id;
+        // 3. POST–redirect–GET: a refresh must not repeat the change; the notice travels as a code
+        return "redirect:/{context}/{name}s/" + id + "?notice=" + {Name}PageNotice.DONE.code();
     }
 
     /** Domain exception → transport: a missing aggregate is a 404 page, not a stack trace. */
@@ -96,6 +96,48 @@ public class {Name}PageController {
 ```
 
 The two `show{Name}.execute(...)` calls are the read path — a re-render after a validation failure asks the same query the GET does. An `@GetMapping` never calls a command port: a link that creates, cancels or deletes is the [state-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) pitfall. Mapping and formatting is all the controller does; combining fields into a new business fact or checking an invariant here is [business logic in the adapter](/pitfall/business-logic-in-adapter.md).
+
+The notice after the redirect is a code in the URL, not a flash attribute: a flash attribute lives in the session of the instance that wrote it, and behind a load balancer the GET may reach another one — see [State kept in one instance](/pitfall/state-kept-in-one-instance.md).
+
+## `{Name}PageNotice.java` — the codes a redirect may carry (web adapter)
+
+```java
+package {basePackage}.{context}.adapter.incoming.web;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+/**
+ * The notices a {Name} page shows after a redirect. The URL carries the code, never the
+ * sentence; the page maps it here and shows nothing for a code it does not know.
+ */
+public enum {Name}PageNotice {
+
+    DONE("done", "{name}.{usecasename}.done");
+
+    private final String code;
+    private final String messageKey;
+
+    {Name}PageNotice(final String code, final String messageKey) {
+        this.code = code;
+        this.messageKey = messageKey;
+    }
+
+    public String code() {
+        return code;
+    }
+
+    public String messageKey() {
+        return messageKey;
+    }
+
+    public static Optional<{Name}PageNotice> fromCode(final String code) {
+        return Arrays.stream(values()).filter(notice -> notice.code.equals(code)).findFirst();
+    }
+}
+```
+
+One value per notice the pages of this controller show, each with its code and its text — here a message key the translations resolve. A code is part of a URL a person can bookmark or edit, so it names *which* notice, never data, and an unknown or stale one is ignored rather than rendered.
 
 ## `{Name}Form.java` — form record with Bean Validation (web adapter)
 
@@ -131,7 +173,7 @@ Bean Validation on the form checks *shape*: required, length, range, format. It 
     <p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></p>
     <button type="submit">Apply</button>
 </form>
-<p th:if="${notice}" th:text="#{${notice}}"></p>
+<p th:if="${notice}" th:text="#{${notice.messageKey()}}"></p>
 ```
 
-Every browser form that changes state carries the CSRF token (Spring Security's Thymeleaf integration adds it to `th:action` forms automatically; the explicit hidden field shows what must be there). Errors and the flash notice are rendered by the server, so the page degrades to plain HTML — no script is needed to submit, validate or confirm.
+Every browser form that changes state carries the CSRF token (Spring Security's Thymeleaf integration adds it to `th:action` forms automatically; the explicit hidden field shows what must be there). Errors and the notice are rendered by the server, so the page degrades to plain HTML — no script is needed to submit, validate or confirm.

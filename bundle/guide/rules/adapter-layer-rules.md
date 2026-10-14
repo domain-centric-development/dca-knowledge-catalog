@@ -17,6 +17,12 @@ tags: [guide, section]
 - Controller handles framework-specific concerns
 - One controller method per use case (preferred)
 - A state-changing use case is reached only by an unsafe HTTP method (`POST`, `PUT`, `DELETE`) — never by `GET`; links do not create sessions, orders or carts. Prefetching, crawlers and cross-site navigation would otherwise trigger the change
+- State a later request needs travels with that request or lives in a store every instance reads. A message
+  for the page after a redirect is a fixed code in the redirect URL (`?notice=saved`), never the sentence: the
+  page maps the code through an enum of the incoming adapter (code and text per value) and ignores a code it does
+  not know. A server session, a flash attribute (Spring MVC) or `TempData` (ASP.NET Core, without a
+  data-protection key ring the instances share) is held by one instance, and behind a load balancer without
+  sticky sessions the next request reaches another one
 - Every browser form that changes state carries a CSRF token; cookie-authenticated endpoints without one are a defect. Token-authenticated APIs (`Authorization: Bearer`) are exempt only if they neither read nor issue cookies
 
 ### Output Adapter Rules

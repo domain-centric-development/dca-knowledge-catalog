@@ -55,6 +55,12 @@ happened. The caller says it — **the exception's message is never what a perso
 words on a page or in an answer are the incoming adapter's, made from the failure's type and its values. A
 message passed through ties the user's language to the domain's and closes the door on a translation.
 
+**A failure carries ids and figures, never what a page shows.** Its fields are the typed identities and the values
+the rule compared. Not the caller's raw input: input that does not even parse into the id is a malformed call,
+not this failure. Not display data either: a name or a description of the thing the id refers to is resolved by
+the translation site, through the queries it already has. A failure that carries the name decides for every
+surface what it shows.
+
 ### Where a failure is declared
 
 - A domain exception lives in the domain package, beside the model. No separate `exception/` package.

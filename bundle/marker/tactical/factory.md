@@ -52,3 +52,4 @@ Domain Object"
 - [The stages and their hand-over files](/guide/factory/the-stages-and-their-hand-over-files.md)
 - [Three parts](/guide/factory/three-parts.md)
 - [Factory for Cross-Context Assembly](/guide/integration-patterns/factory-for-cross-context-assembly.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)

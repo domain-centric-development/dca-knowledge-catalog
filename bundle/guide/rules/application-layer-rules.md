@@ -11,6 +11,12 @@ tags: [guide, section]
 - One use case class per business operation
 - A use case is named after an operation of the glossary: its code word plus the term (`PlaceOrder`,
   `CancelOrder`); a verb the glossary does not name is a question, not a choice
+- A use case is named after its effect, never after its trigger or its caller: `ArchiveEntry`, not
+  `ArchiveEntryOnExpiry` or `ArchiveEntryAfterLogin`. When and by whom it runs is the business of the adapter or
+  the consumer that calls it; the same effect reached from a second trigger is the same use case
+- An operation speaks the domain, not data access. Neither a use case nor an operation of the context's published
+  API is named after a field it writes (`setLimit`, `updateStatus`); it is named after what the change means
+  (`RaiseLimit`, `GrantInitialLimit`), with the verb from the glossary
 - Use case implements Input Port interface
 - Use case orchestrates domain objects
 - Use case is thin, delegates to domain
@@ -22,6 +28,9 @@ tags: [guide, section]
 - Command results are small (ids, status, what the caller needs next); the view comes from a query or read model
 - A use case that saves an aggregate publishes and clears its domain events after the save (`publishAndClearEvents`, `DCA-USE-009`) — unless the aggregate is proven never to register events
 - A query use case carries no transaction and no publisher; it loads and assembles
+- A read never creates. A query has no side effect: it does not create, save or publish, and when nothing exists
+  it answers *none*. Find-or-create is a command, called where the caller is about to change state; a page or an
+  answer that only shows what exists asks the query
 - A bulk operation (delete all, archive everything before a date) is a method on the port — the port is freely extensible beyond `findById`/`save`/`deleteById` — that the use case calls without loading or saving a single aggregate: no domain event, no publisher, a declarative transaction. If other contexts must learn about it, one integration event describes the bulk fact
 - A number derived from a list (the count of open items on a list page) is a field of the list query's result, not a use case of its own and not a read model
 - No business logic in use cases

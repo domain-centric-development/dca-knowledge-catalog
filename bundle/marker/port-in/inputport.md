@@ -52,6 +52,7 @@ InputPort (marker)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
+- [Grouping use cases into features](/guide/package-structure/grouping-use-cases-into-features.md)
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
 - [Operation boundaries and declared contracts](/guide/rules/operation-boundaries-and-declared-contracts.md)
