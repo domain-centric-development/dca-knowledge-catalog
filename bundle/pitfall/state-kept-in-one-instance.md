@@ -26,14 +26,16 @@ Nothing reports it. The second instance does not know that something was expecte
 
 ## Do instead
 
-- **Carry it in the request.** A message for the next page is a fixed code in the redirect URL (`?notice=saved`), never the sentence. The page maps the code through an enum of the incoming adapter — one value per notice, with its code and its text or message key — and ignores a code it does not know. The code names *which* notice, never data: a person can bookmark or edit the URL.
+- **Carry it with the request, in a sealed cookie.** A message for the next page travels in a cookie that is encrypted and signed with a key every instance shares. The key comes from configuration, never one generated per process. The cookie holds the code from the page's enum of the incoming adapter — one value per notice, with its code and its text or message key — and a number where the sentence names one, never the sentence. The page maps the code and ignores a code it does not know.
+- **Address it to one page.** The notice is set for the page the redirect leads to and read only there; reading removes it. A notice for another page waits until that page is shown or expires after a few minutes, so a message never appears on a page it was not meant for, and it survives a chain of redirects. Spring MVC binds a flash attribute to the redirect's target path, but keeps it in the server session; a flash-map manager that writes the flash maps into the sealed cookie moves it there. ASP.NET Core's `TempData` is such a cookie already; one TempData key per page, read only by that page, addresses it.
+- **The address only where no cookie may be set.** The code can travel in the redirect URL (`?notice=saved`) instead. The URL is forgeable — a crafted link shows any notice and any number — and every redirect on the way must forward it. The code names *which* notice, never data.
 - **Or keep it in a store every instance reads.** State that does not fit a URL — a draft, a multi-step form — goes into the database or a shared cache, behind the same port as any other state, not into the session of one process.
-- **Share what protects the cookies.** Where the framework encrypts or signs cookies with keys of its own (ASP.NET Core's data protection), every instance uses the same key ring, persisted where all of them read it. A stateless token chain needs no session at all; keep it that way.
+- **Share what protects the cookies.** Where the framework encrypts or signs cookies with keys of its own (ASP.NET Core's data protection), every instance uses the same key ring, persisted where all of them read it. A cookie the project seals itself takes its key from the same configuration on every instance. A stateless token chain needs no session at all; keep it that way.
 - **Write the runtime down.** The project's technical description says whether the application runs as several instances and without sticky sessions. Then the choice above is a consequence, not a discovery.
 - **Test it with two instances.** One end-user test that sends the POST to one instance and the GET to another is the only test that sees this defect.
 
 ## Anchors
 
 - Guide: [Adapter layer rules](/guide/rules/adapter-layer-rules.md) — input adapter rules, state across requests · [CSRF protection](/guide/jwt-implementation-guide/8-csrf-protection.md) — the token strategy that needs no server-side session
-- Template: [Page controller](/template/page-controller.md) — the notice as a code in the redirect
+- Template: [Page controller](/template/page-controller.md) — the notice as a code in a sealed cookie addressed to the next page
 - Related pitfalls: [Cookies that do not travel together](/pitfall/cookies-that-do-not-travel-together.md) · [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md)

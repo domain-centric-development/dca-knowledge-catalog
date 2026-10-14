@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.UUID;
 
 /**
@@ -50,15 +51,14 @@ public class {Name}PageController {
         this.{usecasename} = {usecasename};
     }
 
-    /** Read: GET renders, changes nothing. A notice arrives as a code in the URL. */
+    /** Read: GET renders, changes nothing. A notice arrives as a code in a flash attribute. */
     @GetMapping("/{id}")
-    public String show(@PathVariable final UUID id,
-                       @RequestParam(name = "notice", required = false) final String notice,
-                       final Model model) {
+    public String show(@PathVariable final UUID id, final Model model) {
         final var result = show{Name}.execute(new Show{Name}Query(new {Name}Id(id)));
         model.addAttribute("{name}", {Name}PageViewModel.fromResult(result));
         model.addAttribute("form", {Name}Form.empty());
-        {Name}PageNotice.fromCode(notice).ifPresent(known -> model.addAttribute("notice", known));
+        {Name}PageNotice.fromCode((String) model.getAttribute("noticeCode"))
+                .ifPresent(known -> model.addAttribute("notice", known));
         return "{context}/{name}";
     }
 
@@ -67,7 +67,8 @@ public class {Name}PageController {
     public String {usecasename}(@PathVariable final UUID id,
                                 @Valid @ModelAttribute("form") final {Name}Form form,
                                 final BindingResult binding,
-                                final Model model) {
+                                final Model model,
+                                final RedirectAttributes redirect) {
         if (binding.hasErrors()) {
             // re-render the same page with the submitted form and its messages
             final var result = show{Name}.execute(new Show{Name}Query(new {Name}Id(id)));
@@ -81,8 +82,9 @@ public class {Name}PageController {
         // 2. drive the use case through its input port
         final {Name}Result result = {usecasename}.execute(command);
 
-        // 3. POST–redirect–GET: a refresh must not repeat the change; the notice travels as a code
-        return "redirect:/{context}/{name}s/" + id + "?notice=" + {Name}PageNotice.DONE.code();
+        // 3. POST–redirect–GET: a refresh must not repeat the change; the notice is a code for that page
+        redirect.addFlashAttribute("noticeCode", {Name}PageNotice.DONE.code());
+        return "redirect:/{context}/{name}s/" + id;
     }
 
     /** Domain exception → transport: a missing aggregate is a 404 page, not a stack trace. */
@@ -97,7 +99,7 @@ public class {Name}PageController {
 
 The two `show{Name}.execute(...)` calls are the read path — a re-render after a validation failure asks the same query the GET does. An `@GetMapping` never calls a command port: a link that creates, cancels or deletes is the [state-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) pitfall. Mapping and formatting is all the controller does; combining fields into a new business fact or checking an invariant here is [business logic in the adapter](/pitfall/business-logic-in-adapter.md).
 
-The notice after the redirect is a code in the URL, not a flash attribute: a flash attribute lives in the session of the instance that wrote it, and behind a load balancer the GET may reach another one — see [State kept in one instance](/pitfall/state-kept-in-one-instance.md).
+The notice after the redirect is a flash attribute that holds the code, never the sentence; a notice whose sentence names a number carries that number as a second flash attribute. Spring MVC binds a flash map to the redirect's target path, so only that page reads it, and reading removes it. By default it keeps the flash maps in the session of the instance that wrote them, and behind a load balancer the GET may reach another one — see [State kept in one instance](/pitfall/state-kept-in-one-instance.md). The project therefore registers a bean named `flashMapManager`, a subclass of `AbstractFlashMapManager` that keeps the flash maps in one cookie, encrypted and signed (for example AES-GCM) with a key from configuration that every instance shares. Where no cookie may be set, the code travels in the redirect address (`?notice=done`) instead: forgeable, and every redirect on the way must forward it.
 
 ## `{Name}PageNotice.java` — the codes a redirect may carry (web adapter)
 
@@ -108,7 +110,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * The notices a {Name} page shows after a redirect. The URL carries the code, never the
+ * The notices a {Name} page shows after a redirect. The redirect carries the code, never the
  * sentence; the page maps it here and shows nothing for a code it does not know.
  */
 public enum {Name}PageNotice {
@@ -137,7 +139,7 @@ public enum {Name}PageNotice {
 }
 ```
 
-One value per notice the pages of this controller show, each with its code and its text — here a message key the translations resolve. A code is part of a URL a person can bookmark or edit, so it names *which* notice, never data, and an unknown or stale one is ignored rather than rendered.
+One value per notice the pages of this controller show, each with its code and its text — here a message key the translations resolve. A code names *which* notice, never data, and an unknown or expired one is ignored rather than rendered.
 
 ## `{Name}Form.java` — form record with Bean Validation (web adapter)
 
