@@ -140,7 +140,6 @@ Annotations are matched by fully qualified name and grouped by *role*; the rule 
 | `transactionManager` | `org.springframework.transaction.PlatformTransactionManager`<br>`org.springframework.transaction.TransactionManager`<br>`org.springframework.transaction.ReactiveTransactionManager`<br>`jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | `jakarta.transaction.TransactionManager` | types a composition root declares or wires (transaction managers), matched as class dependencies rather than as annotations |
 | `transportStatus` | `org.springframework.web.bind.annotation.ResponseStatus` | — | — | `io.micronaut.http.annotation.Status` | annotations that fix the protocol answer of the type they sit on |
 | `getMapping` | `org.springframework.web.bind.annotation.GetMapping` | `jakarta.ws.rs.GET` | `jakarta.ws.rs.GET` | `io.micronaut.http.annotation.Get` | annotations that bind a handler method to the HTTP method GET |
-| `instanceLocalState` | `jakarta.servlet.http.HttpSession`<br>`org.springframework.web.servlet.mvc.support.RedirectAttributes.addFlashAttribute` | `jakarta.servlet.http.HttpSession` | — | `io.micronaut.session.Session` | types, and methods named `Type.method`, that keep request state in one instance, matched as calls rather than as annotations |
 
 ## Building-block types the rules select on (`DcaMarkers`)
 

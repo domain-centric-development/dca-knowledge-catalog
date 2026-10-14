@@ -220,21 +220,26 @@ def _cs_class_doc(source: str) -> str:
 
 def _cs_public_members(source: str) -> list[tuple[str, str]]:
     """``(signature, summary_md)`` for every public member of the top-level type
-    (4-space indent). Nested types' members (8 spaces) are skipped."""
+    (4-space indent). Nested types' members (8 spaces) are skipped, and so are members marked
+    ``[Obsolete]``: they stay only so old code compiles, and the catalog does not offer them."""
     members: list[tuple[str, str]] = []
     doc: list[str] = []
+    obsolete = False
     for line in source.splitlines():
         s = line.strip()
         if line.startswith("    ///"):
             doc.append(s[3:].lstrip(" "))
             continue
+        if line.startswith("    [Obsolete"):
+            obsolete = True
         m = _CS_PUBLIC_RE.match(line)
-        if m and line.startswith("    public") and not line.startswith("     "):
+        if m and line.startswith("    public") and not line.startswith("     ") and not obsolete:
             sig = m.group(1).strip()
             sig = re.sub(r"\s+", " ", sig)
             members.append((sig, _xml_to_markdown(doc)))
         if not line.startswith("    [") and s:
             doc = []
+            obsolete = False
     return members
 
 

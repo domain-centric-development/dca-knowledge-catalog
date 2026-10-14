@@ -7,7 +7,9 @@ owner: DCA catalog maintainers
 evidence: [/guide/rules/adapter-layer-rules.md, /guide/jwt-implementation-guide/8-csrf-protection.md]
 ---
 
-A request leaves something behind for the request after it: a message for the page after a redirect, a half-filled form, the step a visitor came from. The adapter puts it where the framework makes it easiest — the server session, a flash attribute, `TempData` — and every test passes, because every test runs against one instance. Then the application runs as several instances behind a load balancer without sticky sessions. The POST lands on one, the redirected GET on another, and the message is gone, or the form starts empty, or the request is refused.
+**When it applies:** when the application runs as several instances behind a load balancer without sticky sessions. Whether it runs that way is the project's operational decision, not a rule every application follows. With one instance, or with sticky sessions and the loss of state when an instance drains accepted, the server session is a valid place and this pitfall does not apply.
+
+A request leaves something behind for the request after it: a message for the page after a redirect, a half-filled form, the step a visitor came from. The adapter puts it where the framework makes it easiest — the server session, a flash attribute, `TempData` — and every test passes, because every test runs against one instance. Then it runs as several instances behind a load balancer without sticky sessions. The POST lands on one, the redirected GET on another, and the message is gone, or the form starts empty, or the request is refused.
 
 Nothing reports it. The second instance does not know that something was expected, so it renders the page as if nothing had happened. The symptom is a notice that appears on some clicks and not on others, which reads like a template bug and is a deployment fact.
 

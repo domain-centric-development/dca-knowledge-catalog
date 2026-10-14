@@ -24,6 +24,14 @@ Replacement: DCA-ADV-010
 
 Since: 0.5.0
 
+## DCA-HEX-015
+
+Keeping no state for a later request in one instance is an operational requirement - several instances without sticky sessions - that a project chooses, not architecture every application shares; the pattern stays guide and catalog guidance for applications that run that way
+
+Replacement: none
+
+Since: 0.9.0
+
 ## DCA-MAP-003
 
 Renderer disambiguates normalized external-system identifiers

@@ -67,6 +67,7 @@
   "rule/hexagonal/classes-from-the-domain-should-not-access-port-adapters.md": "rule/hexagonal/dca-hex-001.md",
   "rule/hexagonal/classes-named-repository-must-reside-in-the-outgoing-adapter-package.md": "rule/hexagonal/dca-hex-008.md",
   "rule/hexagonal/controllers-and-resources-must-never-access-repositories-directly.md": "rule/hexagonal/dca-hex-003.md",
+  "rule/hexagonal/dca-hex-015.md": "rule/retired.md#dca-hex-015",
   "rule/hexagonal/incoming-adapters-must-depend-on-input-port-interfaces-not-on-use-case-classes.md": "rule/hexagonal/dca-hex-011.md",
   "rule/hexagonal/incoming-adapters-must-not-depend-on-domain-services.md": "rule/hexagonal/dca-hex-012.md",
   "rule/hexagonal/incoming-adapters-must-only-access-their-own-bounded-context-except-event-consumers-and-open-host-services.md": "rule/hexagonal/dca-hex-007.md",

@@ -5,7 +5,7 @@
 - [cycles/](cycles/index.md) (5)
 - [dotnet/](dotnet/index.md) (6)
 - [errors/](errors/index.md) (7)
-- [hexagonal/](hexagonal/index.md) (16)
+- [hexagonal/](hexagonal/index.md) (15)
 - [layered/](layered/index.md) (5)
 - [naming/](naming/index.md) (13)
 - [onion/](onion/index.md) (3)
