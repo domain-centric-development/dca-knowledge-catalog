@@ -48,6 +48,7 @@ Domain Object"
 
 ## Related mentions in guides (heuristic)
 
+- [Building one: what actually holds](/guide/factory/building-one-what-actually-holds.md)
 - [Several factories on one backlog](/guide/factory/several-factories-on-one-backlog.md)
 - [The stages and their hand-over files](/guide/factory/the-stages-and-their-hand-over-files.md)
 - [Three parts](/guide/factory/three-parts.md)
