@@ -57,7 +57,7 @@ DcaRule.Check(
         "Non-interface, non-abstract types in <module>.Domain of every module root that"
             + " are assignable to IValue and whose runtime type is in the loaded assemblies.")
     .Checking(
-        "Struct values must carry the readonly modifier. Classes are governed by TAC-009/010/012; equality is checked by TAC-012. An IValue outside a domain namespace is not selected." )
+        "Struct values must carry the readonly modifier. Classes are governed by TAC-009/010/012; equality is checked by TAC-012. An IValue outside a domain namespace is not selected.")
 ```
 
 ## Configured by

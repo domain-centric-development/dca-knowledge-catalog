@@ -296,7 +296,7 @@ DcaRule.Check(
         "Non-interface types below the root namespace assignable to IValue - records, "
         + "structs, enums and hand-written classes alike.")
     .Checking(
-    "No instance state, including inherited state, arrays and nested generic arguments, involves IAggregateRoot or IEntity. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid." )
+    "No instance state, including inherited state, arrays and nested generic arguments, involves IAggregateRoot or IEntity. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.")
 ```
 
 ## Related mentions (heuristic)

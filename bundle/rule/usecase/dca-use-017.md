@@ -82,8 +82,12 @@ internal static class OperationPolicy
         foreach (var caller in arch.Types.Where(t => Operation(t, arch)))
         {
             var runtime = arch.RuntimeType(caller)!;
-            var own = runtime.GetInterfaces().SelectMany(t => new[] {t.FullName, t.IsGenericType ? t.GetGenericTypeDefinition().FullName : t.FullName}).ToHashSet();
-            for (var parent = runtime; parent is not null; parent = parent.BaseType) own.Add(parent.FullName);
+            var own = runtime.GetInterfaces().SelectMany(t => new[] { t.FullName, t.IsGenericType ? t.GetGenericTypeDefinition().FullName : t.FullName }).ToHashSet();
+            for (var parent = runtime; parent is not null; parent = parent.BaseType)
+            {
+                own.Add(parent.FullName);
+            }
+
             Walk(caller, caller, arch, own, new HashSet<IType>(), new List<string>(), violations);
         }
         DcaRule.Fail("Use cases must not invoke other use cases", violations.Distinct().ToList());
@@ -92,15 +96,27 @@ internal static class OperationPolicy
     private static void Walk(IType caller, IType current, DcaArchitecture arch, HashSet<string?> own,
         HashSet<IType> seen, List<string> via, List<string> violations)
     {
-        if (!seen.Add(current)) return;
+        if (!seen.Add(current))
+        {
+            return;
+        }
+
         foreach (var target in current.Dependencies.Select(d => d.Target).Distinct())
         {
-            if (own.Contains(target.FullName)) continue;
+            if (own.Contains(target.FullName))
+            {
+                continue;
+            }
+
             if (target.IsAssignableTo(arch.Layout.Markers.InputPort) || Operation(target, arch))
+            {
                 violations.Add($"{caller.FullName} -> {target.FullName}" + (via.Count == 0 ? "" : $" [via {string.Join(" -> ", via)}]"));
+            }
             else if (target is not Interface && Regex.IsMatch(target.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
                 && arch.ModuleRootOf(caller.Namespace.FullName) == arch.ModuleRootOf(target.Namespace?.FullName ?? ""))
+            {
                 Walk(caller, target, arch, own, seen, via.Concat(new[] { target.FullName }).ToList(), violations);
+            }
         }
     }
 
@@ -116,14 +132,25 @@ internal static class OperationPolicy
             {
                 if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(ValueType)
                     || method.GetBaseDefinition().DeclaringType == typeof(object)
-                    || method.IsDefined(typeof(CompilerGeneratedAttribute), false) || methods.Contains(method)) continue;
+                    || method.IsDefined(typeof(CompilerGeneratedAttribute), false) || methods.Contains(method))
+                {
+                    continue;
+                }
                 // Property accessors (auto or computed) are reported once, as their property, below.
-                if (method.IsSpecialName && (method.Name.StartsWith("get_", StringComparison.Ordinal) || method.Name.StartsWith("set_", StringComparison.Ordinal))) continue;
+                if (method.IsSpecialName && (method.Name.StartsWith("get_", StringComparison.Ordinal) || method.Name.StartsWith("set_", StringComparison.Ordinal)))
+                {
+                    continue;
+                }
+
                 violations.Add($"{type.FullName} exposes {method} outside its input port");
             }
             foreach (var property in runtime.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
                 foreach (var accessor in property.GetAccessors().Where(a => !methods.Contains(a)))
+                {
                     violations.Add($"{type.FullName} exposes property {property.Name} ({accessor.Name}) outside its input port");
+                }
+            }
         }
         DcaRule.Fail("Use cases expose no public operation outside their input port", violations.Distinct().ToList());
     }

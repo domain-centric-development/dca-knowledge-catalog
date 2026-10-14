@@ -22,22 +22,32 @@ DcaRule.Check("DCA-USE-012", "Use cases that save an aggregate or publish domain
         + " nothing in the class calls - no route down to the saving, deleting or publishing method may be free of an"
         + " attribute or a boundary; a covered caller does not cover another route to the same helper, and a boundary on"
         + " one route does not cover a second route",
-        arch => {
+        arch =>
+        {
             var violations = new List<string>();
-            foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch))) {
+            foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch)))
+            {
                 var runtime = arch.RuntimeType(type)!;
                 var graph = new IntraClassCalls(runtime);
-                foreach (var unit in graph.Units) {
+                foreach (var unit in graph.Units)
+                {
                     var effect = TransactionalEffectOf(unit, arch.Layout.Markers);
-                    if (effect is null) continue;
-                    foreach (var entry in graph.EntryPointsOf(unit)) {
+                    if (effect is null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var entry in graph.EntryPointsOf(unit))
+                    {
                         if (!Transactional(runtime, layout.FrameworkTypes.TransactionalAttribute)
                             && graph.ReachableThrough(entry, u => !Transactional(u, layout.FrameworkTypes.TransactionalAttribute) && !CallsBoundary(u, arch.Layout.Markers)).Contains(unit))
+                        {
                             violations.Add(
                                 $"{type.FullName}.{IntraClassCalls.PathName(entry, unit)} {effect} without "
                                 + DescribeTransactionalAttribute(layout.FrameworkTypes.TransactionalAttribute)
                                 + " on the class or on a method of that path, and without"
                                 + " ITransactionBoundary.InTransactionAsync(...) on it");
+                        }
                     }
                 }
             }

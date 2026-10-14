@@ -5,7 +5,7 @@ title: "Diagnostic: adapters that publish an enum by its member name"
 rule: A value an adapter publishes from an enum is spelled explicitly - a code per value on the enum or a mapping in the adapter - never derived from the member's name. Renaming a member is a refactoring inside the code and must not change what a client reads.
 constraint: "Diagnostic: adapters that publish an enum by its member name."
 selects: "Classes in <module>.adapter.. of every module root, incoming and outgoing, and their method calls whose target is an enum declared in <module>.domain.. or <module>.application.."
-checks: "Informational diagnostic only: lists every call of name() or toString() on such an enum, and never fails. A member name reached through string concatenation or formatting, or a serializer that writes the name on its own, is not visible in the import model and is not listed; whether the value leaves the process is not established either."
+checks: "Informational diagnostic only: lists every call of name() or toString() on such an enum - inside a string concatenation as well - and never fails. The enum value itself concatenated (\"text\" + value) or passed to a formatting or string-building call reaches the platform as an Object - the compiler erases its type from the call - so it is not visible and is not listed, nor is a serializer that writes the name on its own; whether the value leaves the process is not established either."
 enforced_by: "HexagonalRules#DCA-HEX-016"
 status: informational
 maturity: experimental
@@ -26,7 +26,7 @@ Classes in <module>.adapter.. of every module root, incoming and outgoing, and t
 
 ## Check
 
-Informational diagnostic only: lists every call of name() or toString() on such an enum, and never fails. A member name reached through string concatenation or formatting, or a serializer that writes the name on its own, is not visible in the import model and is not listed; whether the value leaves the process is not established either.
+Informational diagnostic only: lists every call of name() or toString() on such an enum - inside a string concatenation as well - and never fails. The enum value itself concatenated ("text" + value) or passed to a formatting or string-building call reaches the platform as an Object - the compiler erases its type from the call - so it is not visible and is not listed, nor is a serializer that writes the name on its own; whether the value leaves the process is not established either.
 
 ## .NET reading
 

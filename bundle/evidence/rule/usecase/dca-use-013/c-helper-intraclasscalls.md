@@ -83,8 +83,18 @@ internal sealed class IntraClassCalls
         while (pending.Count > 0)
         {
             var current = pending.Dequeue();
-            if (!allowed(current) || !reached.Add(current)) continue;
-            if (_callees.TryGetValue(current, out var next)) foreach (var unit in next) pending.Enqueue(unit);
+            if (!allowed(current) || !reached.Add(current))
+            {
+                continue;
+            }
+
+            if (_callees.TryGetValue(current, out var next))
+            {
+                foreach (var unit in next)
+                {
+                    pending.Enqueue(unit);
+                }
+            }
         }
         return reached;
     }

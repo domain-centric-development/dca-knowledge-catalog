@@ -31,7 +31,11 @@ DcaRule.Check(
                 .Append(DcaLayout.Below($"{Layout.SharedKernelNamespace}.{Layout.InfrastructureSegment}"))));
         var types = Layout.FrameworkTypes;
         var transactionApis = new HashSet<string>(types.TransactionApiTypes, StringComparer.Ordinal);
-        if (FrameworkTypes.IsSet(types.TransactionScope)) transactionApis.Add(types.TransactionScope);
+        if (FrameworkTypes.IsSet(types.TransactionScope))
+        {
+            transactionApis.Add(types.TransactionScope);
+        }
+
         var transactionManagers = new HashSet<string>(types.TransactionManagerTypes, StringComparer.Ordinal);
         bool IsBoundary(IType t) => t.FullName == BoundaryPort || t.ImplementsInterface(BoundaryPort);
         bool UsesApi(IType target) => transactionApis.Contains(target.FullName);

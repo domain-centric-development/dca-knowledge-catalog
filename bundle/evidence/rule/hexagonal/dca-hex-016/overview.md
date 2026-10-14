@@ -17,7 +17,7 @@ Classes in <module>.adapter.. of every module root, incoming and outgoing, and t
 
 ## Check
 
-Informational diagnostic only: lists every call of name() or toString() on such an enum, and never fails. A member name reached through string concatenation or formatting, or a serializer that writes the name on its own, is not visible in the import model and is not listed; whether the value leaves the process is not established either.
+Informational diagnostic only: lists every call of name() or toString() on such an enum - inside a string concatenation as well - and never fails. The enum value itself concatenated ("text" + value) or passed to a formatting or string-building call reaches the platform as an Object - the compiler erases its type from the call - so it is not visible and is not listed, nor is a serializer that writes the name on its own; whether the value leaves the process is not established either.
 
 ## .NET reading
 
@@ -76,10 +76,12 @@ DcaRule.informational(
             + " <module>.application..")
     .checking(
         "Informational diagnostic only: lists every call of name() or toString() on such an"
-            + " enum, and never fails. A member name reached through string concatenation or"
-            + " formatting, or a serializer that writes the name on its own, is not visible in"
-            + " the import model and is not listed; whether the value leaves the process is"
-            + " not established either.")
+            + " enum - inside a string concatenation as well - and never fails. The enum value"
+            + " itself concatenated (\"text\" + value) or passed to a formatting or"
+            + " string-building call reaches the platform as an Object - the compiler erases"
+            + " its type from the call - so it is not visible and is not listed, nor is a"
+            + " serializer that writes the name on its own; whether the value leaves the"
+            + " process is not established either.")
 ```
 
 ## Helpers

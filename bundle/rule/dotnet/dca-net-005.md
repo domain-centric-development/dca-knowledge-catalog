@@ -60,7 +60,7 @@ DcaRule.Check(
         "Non-interface, non-abstract types anywhere under the root namespace that are"
             + " assignable to IId and whose runtime type is in the loaded assemblies.")
     .Checking(
-        "The type must be a readonly record struct. Reference types, plain structs and mutable record structs fail." )
+        "The type must be a readonly record struct. Reference types, plain structs and mutable record structs fail.")
 ```
 
 ## Configured by

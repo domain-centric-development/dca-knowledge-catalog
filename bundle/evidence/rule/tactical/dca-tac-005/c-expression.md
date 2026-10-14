@@ -21,7 +21,11 @@ DcaRule.Check(
         foreach (var caller in arch.Types.Where(t => !t.IsCompilerGenerated))
         {
             var runtime = arch.RuntimeType(caller);
-            if (runtime is null) continue;
+            if (runtime is null)
+            {
+                continue;
+            }
+
             foreach (var target in new IntraClassCalls(runtime).Units.SelectMany(IntraClassCalls.IlCalls)
                 .OfType<ConstructorInfo>().Where(c => entities.Contains(c.DeclaringType)).Distinct())
             {
@@ -35,7 +39,9 @@ DcaRule.Check(
                     || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Entity)
                     || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Factory);
                 if (runtime != entity && !(sameDomain && role))
+                {
                     violations.Add($"{runtime.FullName} constructs entity {entity.FullName} outside its domain construction boundary");
+                }
             }
         }
         DcaRule.Fail("Entities are constructed by their own domain aggregate, entity or factory.", violations);

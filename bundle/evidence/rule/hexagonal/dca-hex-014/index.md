@@ -1,7 +1,9 @@
 # dca-hex-014
 
 - [GET handlers must not drive an input port that takes a command — `AnnotationRoles.annotatedWithAny`](annotationroles-annotatedwithany.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
-- [GET handlers must not drive an input port that takes a command — `AnnotationRoles.isMetaAnnotatedWithAny`](annotationroles-ismetaannotatedwithany.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [GET handlers must not drive an input port that takes a command — `AnnotationRoles.carries`](annotationroles-carries.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [GET handlers must not drive an input port that takes a command — `AnnotationRoles.holds`](annotationroles-holds.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [GET handlers must not drive an input port that takes a command — `AnnotationRoles.matchingEntry`](annotationroles-matchingentry.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [GET handlers must not drive an input port that takes a command — C# expression](c-expression.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [GET handlers must not drive an input port that takes a command — C# helper IntraClassCalls](c-helper-intraclasscalls.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [GET handlers must not drive an input port that takes a command — `driveNoCommandFromGet`](drivenocommandfromget.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

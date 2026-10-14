@@ -157,9 +157,21 @@ internal static class DomainMetadata
     internal static string Owner(DcaArchitecture arch, IType type)
     {
         var markers = arch.Layout.Markers;
-        if (type.IsAssignableTo(markers.DomainEvent)) return "DCA-ADV-004";
-        if (type.IsAssignableTo(markers.DomainService)) return "DCA-ADV-011";
-        if (type.IsAssignableTo(markers.Factory)) return "DCA-ADV-015";
+        if (type.IsAssignableTo(markers.DomainEvent))
+        {
+            return "DCA-ADV-004";
+        }
+
+        if (type.IsAssignableTo(markers.DomainService))
+        {
+            return "DCA-ADV-011";
+        }
+
+        if (type.IsAssignableTo(markers.Factory))
+        {
+            return "DCA-ADV-015";
+        }
+
         return AdvancedPatternRules.IsSpecificationRole(arch, type)
             || type.Name.EndsWith(arch.Layout.SpecificationSuffix, StringComparison.Ordinal)
             ? "DCA-ADV-018"
@@ -173,16 +185,39 @@ internal static class DomainMetadata
         foreach (var type in arch.Types.Where(t => t is not Interface && Owner(arch, t) == id
             && Regex.IsMatch(t.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainPatterns()))))
         {
-            if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns()))) continue;
+            if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns())))
+            {
+                continue;
+            }
+
             var runtime = arch.RuntimeType(type);
-            if (runtime is null) continue;
+            if (runtime is null)
+            {
+                continue;
+            }
+
             Inspect(runtime, violations, roles.PersistenceAttributeTypes, roles.ContainerAttributeNamespaces, roles.PersistenceAttributeNamespaces, roles.TransactionAttributeNamespaces);
             const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
-            foreach (var field in runtime.GetFields(flags)) Inspect(field, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
-            foreach (var property in runtime.GetProperties(flags)) Inspect(property, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
-            foreach (var method in runtime.GetMethods(flags)) Inspect(method, violations, Array.Empty<string>(), roles.TransactionAttributeNamespaces,
+            foreach (var field in runtime.GetFields(flags))
+            {
+                Inspect(field, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
+            }
+
+            foreach (var property in runtime.GetProperties(flags))
+            {
+                Inspect(property, violations, roles.PersistenceAttributeTypes, roles.InjectionAttributeNamespaces, roles.PersistenceAttributeNamespaces);
+            }
+
+            foreach (var method in runtime.GetMethods(flags))
+            {
+                Inspect(method, violations, Array.Empty<string>(), roles.TransactionAttributeNamespaces,
                 id == "DCA-ADV-004" ? Array.Empty<string>() : roles.InjectionAttributeNamespaces);
-            foreach (var ctor in runtime.GetConstructors(flags)) Inspect(ctor, violations, Array.Empty<string>(), roles.InjectionAttributeNamespaces);
+            }
+
+            foreach (var ctor in runtime.GetConstructors(flags))
+            {
+                Inspect(ctor, violations, Array.Empty<string>(), roles.InjectionAttributeNamespaces);
+            }
         }
         DcaRule.Fail(id + ": prohibited domain metadata", violations);
     }
@@ -193,7 +228,11 @@ internal static class DomainMetadata
         {
             for (var type = attribute.AttributeType; type is not null; type = type.BaseType)
             {
-                if (!typeNames.Contains(type.FullName ?? "") && !roles.SelectMany(r => r).Any(prefix => DcaLayout.IsBelow(type.Namespace ?? "", prefix))) continue;
+                if (!typeNames.Contains(type.FullName ?? "") && !roles.SelectMany(r => r).Any(prefix => DcaLayout.IsBelow(type.Namespace ?? "", prefix)))
+                {
+                    continue;
+                }
+
                 violations.Add($"{target.DeclaringType?.FullName ?? (target as Type)?.FullName}.{target.Name} carries prohibited metadata {attribute.AttributeType.FullName}");
                 break;
             }

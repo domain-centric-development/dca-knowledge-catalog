@@ -45,7 +45,11 @@ DcaRule.Check(
                 foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", arch.Layout.Markers.Repository)))
                 {
                     if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, arch.Layout.Markers.Repository))
-                        .All(m => EventFreeAggregate.Repository(m, arch))) continue;
+                        .All(m => EventFreeAggregate.Repository(m, arch)))
+                    {
+                        continue;
+                    }
+
                     foreach (var entry in calls.EntryPointsOf(unit))
                     {
                         var publishes = calls.ReachableFrom(entry)

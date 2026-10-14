@@ -54,13 +54,16 @@ DcaRule.Check(
     .Experimental()
     .Selecting(
         "Methods declared by classes in <module>.Adapter.Incoming of every module root that carry an"
-            + " attribute of the configured GET-mapping role (derived attributes included), or - on a"
+            + " attribute of the configured GET-mapping role (derived attributes included) - for an entry"
+            + " that names a property value, an attribute of that type whose property holds the value (a"
+            + " general verb attribute restricted to GET) - or - on a"
             + " class recognised as a controller or page model - whose name starts with a configured"
             + " GET-handler prefix. Both roles are empty in the None() preset, which then selects nothing.")
     .Checking(
         "No method reached from the handler through calls within the class - async state machines and"
             + " lambdas included - calls a method of a type assignable to IInputPort that takes a"
-            + " parameter whose type name ends in Command. A handler mapped by a routing call rather than"
+            + " parameter whose type name ends in Command. A general mapping without an HTTP method answers"
+            + " every method and is not selected. A handler mapped by a routing call rather than"
             + " by an attribute or a name is not seen, and a command reached through a second class is"
             + " not followed. An empty selection passes.")
 ```

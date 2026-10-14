@@ -1137,3 +1137,24 @@ def test_cited_draft_reports_only_unreviewed_nodes(bundle: Path, tmp_path):
     named = {rel for _severity, _kind, rel, _detail in findings}
     assert f'decision/{drafted.name}' in named
     assert f'decision/{reviewed.name}' not in named
+
+
+def test_qualified_preset_entries_reach_the_preset_tables():
+    """An entry of the form `<annotation>#<attribute>=<value>` is a preset entry like any other:
+    it is read from both libraries and rendered as the annotation with its attribute value."""
+    from dca_catalog.reference import _framework_annotations, _framework_types, _preset_cell, _preset_entry
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    java = root / "dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/FrameworkAnnotations.java"
+    _, presets = _framework_annotations(java.read_text())
+    assert "org.springframework.web.bind.annotation.RequestMapping#method=GET" in presets["spring"]["getMapping"]
+    cs = root / "dca-dotnet/src/DomainCentric.ArchRules/FrameworkTypes.cs"
+    defaults = {r: v for r, v, _ in _framework_types(cs.read_text())}
+    assert "Microsoft.AspNetCore.Mvc.AcceptVerbsAttribute#HttpMethods=GET" in defaults["GetMappingAttributeTypes"]
+    assert _preset_entry("a.B#method=GET") == "`a.B` with `method=GET`"
+    assert _preset_entry("a.B") == "`a.B`"
+    assert _preset_cell("a.B, a.C#p=v") == "`a.B`, `a.C` with `p=v`"
+    assert _preset_cell("(empty)") == "`(empty)`"
+    layout = (Path(__file__).resolve().parents[1] / "bundle/reference/layout.md").read_text(encoding="utf-8")
+    assert "`org.springframework.web.bind.annotation.RequestMapping` with `method=GET`" in layout
+    assert "`Microsoft.AspNetCore.Mvc.AcceptVerbsAttribute` with `HttpMethods=GET`" in layout

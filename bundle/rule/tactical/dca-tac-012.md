@@ -173,7 +173,7 @@ DcaRule.Check(
         })
         .Selecting("Non-interface types below the root namespace assignable to IValue; enums excluded.")
     .Checking(
-        "The runtime type or a base other than object or ValueType overrides Equals(object) and GetHashCode(). Record-generated equality counts; plain structs must supply both overrides." )
+        "The runtime type or a base other than object or ValueType overrides Equals(object) and GetHashCode(). Record-generated equality counts; plain structs must supply both overrides.")
 ```
 
 ## Related mentions (heuristic)

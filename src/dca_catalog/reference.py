@@ -144,6 +144,24 @@ def _java_pattern_methods(source: str) -> list[tuple[str, str]]:
     return result
 
 
+# A preset entry: a full type name, optionally qualified by the attribute value that selects it
+# (``<annotation>#<attribute>=<value>``, e.g. ``...RequestMapping#method=GET``).
+_PRESET_ENTRY = r'"([\w.]+(?:#\w+=[\w.]+)?)"'
+
+
+def _preset_entry(entry: str) -> str:
+    """One preset entry as inline markdown: ``a#p=v`` reads "`a` with `p=v`"."""
+    name, _, qualifier = entry.partition("#")
+    return f"`{name}` with `{qualifier}`" if qualifier else f"`{name}`"
+
+
+def _preset_cell(value: str) -> str:
+    """A comma-joined preset value as one table cell, every entry rendered by ``_preset_entry``."""
+    if value == "(empty)":
+        return f"`{value}`"
+    return ", ".join(_preset_entry(v) for v in value.split(", "))
+
+
 def _framework_annotations(source: str) -> tuple[list[tuple[str, str]], dict[str, dict[str, list[str]]]]:
     """``([(role, description)], {preset: {role: [fqn, ...]}})`` for every ``List<String>`` role of
     ``FrameworkAnnotations`` and every ``public static FrameworkAnnotations <preset>()`` literal."""
@@ -159,7 +177,7 @@ def _framework_annotations(source: str) -> tuple[list[tuple[str, str]], dict[str
         if len(groups) != len(roles):
             continue
         presets[m.group(1)] = {
-            role: re.findall(r"\"([\w.]+)\"", group) for role, group in zip(roles, groups)
+            role: re.findall(_PRESET_ENTRY, group) for role, group in zip(roles, groups)
         }
     return [(r, _unescape(descriptions.get(r, ""))) for r in roles], presets
 
@@ -296,7 +314,7 @@ def _framework_types(source: str) -> list[tuple[str, str, str]]:
             continue
         name = role.group(1)
         assignment = re.search(r"\b" + re.escape(name) + r"\s*=\s*Array.AsReadOnly\(new\[\]\s*\{([^}]+)\}", body)
-        prefixes = re.findall(r'"([\w.]+)"', assignment.group(1)) if assignment else []
+        prefixes = re.findall(_PRESET_ENTRY, assignment.group(1)) if assignment else []
         result.append((name, ", ".join(prefixes) or "(empty)", doc))
     return result
 
@@ -370,7 +388,7 @@ def _layout_body(java: str, annotations: str, cs: str, types: str, markers: str)
     for role, description in roles:
         rows.append(
             [f"`{role}`"]
-            + ["<br>".join(f"`{v}`" for v in presets[p].get(role, [])) or "—" for p in named]
+            + ["<br>".join(_preset_entry(v) for v in presets[p].get(role, [])) or "—" for p in named]
             + [description]
         )
     parts.append(
@@ -441,7 +459,7 @@ def _layout_body(java: str, annotations: str, cs: str, types: str, markers: str)
         "Types are matched by full name and grouped by role; `DcaLayout` defaults to the `AspNetCore()` preset, "
         "`None()` leaves every role empty (controllers are then recognised by suffix only), and a `with` expression "
         "adjusts single roles. The preset in use is part of the layout's `ToString()`.\n\n"
-        + _table(["Role", "`AspNetCore()`", "Used for"], [[f"`{c}`", f"`{v}`", d] for c, v, d in ft])
+        + _table(["Role", "`AspNetCore()`", "Used for"], [[f"`{c}`", _preset_cell(v), d] for c, v, d in ft])
         + "\n\n.NET has no injectable stereotype attribute; the Java rules that depend on one have no .NET reading and are listed as not applicable in the rule catalog."
     )
     return "\n\n".join(p for p in parts if p.strip())

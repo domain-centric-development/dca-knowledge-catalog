@@ -4,8 +4,8 @@ id: DCA-HEX-014
 title: GET handlers must not drive an input port that takes a command
 rule: "A state-changing use case is reached only by an unsafe HTTP method, never by GET. Links, prefetching, crawlers and cross-site navigation issue GET requests on their own; a GET that runs a command changes state nobody asked to change."
 constraint: GET handlers must not drive an input port that takes a command.
-selects: "Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role."
-checks: "No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A mapping that names its HTTP method in an attribute is not read. With an empty web-controller or GET-mapping role nothing is selected and the rule passes."
+selects: "Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role - or, for an entry that names an attribute value, an annotation of that type whose attribute holds the value (a general mapping annotation restricted to GET)."
+checks: "No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A general mapping without a method attribute answers every HTTP method and is not selected. With an empty web-controller or GET-mapping role nothing is selected and the rule passes."
 enforced_by: "HexagonalRules#DCA-HEX-014"
 status: enforced
 maturity: experimental
@@ -22,17 +22,17 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
 
 ## Selection
 
-Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role.
+Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role - or, for an entry that names an attribute value, an annotation of that type whose attribute holds the value (a general mapping annotation restricted to GET).
 
 ## Check
 
-No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A mapping that names its HTTP method in an attribute is not read. With an empty web-controller or GET-mapping role nothing is selected and the rule passes.
+No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A general mapping without a method attribute answers every HTTP method and is not selected. With an empty web-controller or GET-mapping role nothing is selected and the rule passes.
 
 ## .NET reading
 
-**Selection.** Methods declared by classes in <module>.Adapter.Incoming of every module root that carry an attribute of the configured GET-mapping role (derived attributes included), or - on a class recognised as a controller or page model - whose name starts with a configured GET-handler prefix. Both roles are empty in the None() preset, which then selects nothing.
+**Selection.** Methods declared by classes in <module>.Adapter.Incoming of every module root that carry an attribute of the configured GET-mapping role (derived attributes included) - for an entry that names a property value, an attribute of that type whose property holds the value (a general verb attribute restricted to GET) - or - on a class recognised as a controller or page model - whose name starts with a configured GET-handler prefix. Both roles are empty in the None() preset, which then selects nothing.
 
-**Check.** No method reached from the handler through calls within the class - async state machines and lambdas included - calls a method of a type assignable to IInputPort that takes a parameter whose type name ends in Command. A handler mapped by a routing call rather than by an attribute or a name is not seen, and a command reached through a second class is not followed. An empty selection passes.
+**Check.** No method reached from the handler through calls within the class - async state machines and lambdas included - calls a method of a type assignable to IInputPort that takes a parameter whose type name ends in Command. A general mapping without an HTTP method answers every method and is not selected. A handler mapped by a routing call rather than by an attribute or a name is not seen, and a command reached through a second class is not followed. An empty selection passes.
 
 ## Implementation
 
@@ -57,11 +57,13 @@ The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/r
 - [`driveNoCommandFromGet`](/evidence/rule/hexagonal/dca-hex-014/drivenocommandfromget.md)
 - [`AnnotationRoles.annotatedWithAny`](/evidence/rule/hexagonal/dca-hex-014/annotationroles-annotatedwithany.md)
 - [`takesCommand`](/evidence/rule/hexagonal/dca-hex-014/takescommand.md)
-- [`AnnotationRoles.isMetaAnnotatedWithAny`](/evidence/rule/hexagonal/dca-hex-014/annotationroles-ismetaannotatedwithany.md)
+- [`AnnotationRoles.matchingEntry`](/evidence/rule/hexagonal/dca-hex-014/annotationroles-matchingentry.md)
 - [`IntraClassCalls.reachableFrom`](/evidence/rule/hexagonal/dca-hex-014/intraclasscalls-reachablefrom.md)
 - [`TypeInspection.takesInputEndingWith`](/evidence/rule/hexagonal/dca-hex-014/typeinspection-takesinputendingwith.md)
+- [`AnnotationRoles.carries`](/evidence/rule/hexagonal/dca-hex-014/annotationroles-carries.md)
 - [`IntraClassCalls.closure`](/evidence/rule/hexagonal/dca-hex-014/intraclasscalls-closure.md)
 - [`TypeInspection.inputTypes`](/evidence/rule/hexagonal/dca-hex-014/typeinspection-inputtypes.md)
+- [`AnnotationRoles.holds`](/evidence/rule/hexagonal/dca-hex-014/annotationroles-holds.md)
 - [`TypeInspection.collectInputs`](/evidence/rule/hexagonal/dca-hex-014/typeinspection-collectinputs.md)
 - [`TypeInspection.involvedTypes`](/evidence/rule/hexagonal/dca-hex-014/typeinspection-involvedtypes.md)
 - [`TypeInspection.collect`](/evidence/rule/hexagonal/dca-hex-014/typeinspection-collect.md)

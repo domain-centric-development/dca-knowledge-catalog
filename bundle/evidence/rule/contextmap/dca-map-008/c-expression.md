@@ -40,7 +40,11 @@ DcaRule.Check(
                         var channelNs = targetNs + "." + ChannelName(arch, channel);
                         var translationSite = TypesBelow(arch, allowedAdapter).Any(t => DependsOnNamespace(t, channelNs)
                             && (DependsOnNamespace(t, ns + "." + Layout.DomainSegment) || DependsOnNamespace(t, ns + "." + Layout.ApplicationSegment)));
-                        if (demandsTranslationSite && !translationSite) violations.Add("Context '" + source + "' needs translation evidence towards '" + u.Context + "' (" + ChannelName(arch, channel) + ") in " + allowedAdapter);
+                        if (demandsTranslationSite && !translationSite)
+                        {
+                            violations.Add("Context '" + source + "' needs translation evidence towards '" + u.Context + "' (" + ChannelName(arch, channel) + ") in " + allowedAdapter);
+                        }
+
                         foreach (var type in TypesBelow(arch, ns).Where(t => !IsBelow(t, allowedAdapter)))
                         {
                             if (DependsOnNamespace(type, channelNs))

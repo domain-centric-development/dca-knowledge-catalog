@@ -19,21 +19,32 @@ DcaRule.Check("DCA-USE-013", "Declaratively transactional use cases must not cal
         + " IDomainEventPublisher, IIntegrationEventPublisher. Everything else is called before the transaction - draw"
         + " the boundary by hand with ITransactionBoundary.InTransactionAsync(...) - or after it, as a reaction to an"
         + " integration event",
-        arch => {
+        arch =>
+        {
             var attribute = layout.FrameworkTypes.TransactionalAttribute;
             var violations = new List<string>();
-            if (FrameworkTypes.IsSet(attribute)) {
-                foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch))) {
+            if (FrameworkTypes.IsSet(attribute))
+            {
+                foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch)))
+                {
                     var runtime = arch.RuntimeType(type)!;
                     var graph = new IntraClassCalls(runtime);
-                    foreach (var unit in graph.Units) {
+                    foreach (var unit in graph.Units)
+                    {
                         if (!Transactional(runtime, attribute)
                             && !graph.EntryPointsOf(unit).Any(entry =>
                                 Transactional(entry, attribute)
                                 || !graph.ReachableThrough(entry, u => !Transactional(u, attribute)).Contains(unit)))
+                        {
                             continue;
+                        }
+
                         var remotePorts = RemotePortsCalledBy(unit, arch).ToList();
-                        if (remotePorts.Count == 0) continue;
+                        if (remotePorts.Count == 0)
+                        {
+                            continue;
+                        }
+
                         violations.Add(
                             $"{type.FullName}.{IntraClassCalls.DisplayName(unit)} runs under {attribute} and calls "
                             + string.Join(", ", remotePorts)

@@ -17,7 +17,8 @@ private static ArchCondition<JavaClass> driveNoCommandFromGet(
     public void check(JavaClass item, ConditionEvents events) {
       IntraClassCalls calls = new IntraClassCalls(item);
       for (JavaCodeUnit handler : item.getCodeUnits()) {
-        if (!AnnotationRoles.isMetaAnnotatedWithAny(handler, getMapping)) {
+        String mapping = AnnotationRoles.matchingEntry(handler, getMapping);
+        if (mapping == null) {
           continue;
         }
         java.util.Set<String> commands = new java.util.TreeSet<>();
@@ -37,7 +38,7 @@ private static ArchCondition<JavaClass> driveNoCommandFromGet(
                       + "."
                       + handler.getName()
                       + " handles "
-                      + FrameworkAnnotations.describe(getMapping, "a GET request")
+                      + FrameworkAnnotations.describe(mapping)
                       + " and drives a command through "
                       + String.join(", ", commands)));
         }

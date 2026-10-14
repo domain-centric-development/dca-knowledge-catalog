@@ -25,16 +25,32 @@ internal static class EventFreeAggregate
     {
         var markers = arch.Layout.Markers;
         var owner = save.DeclaringType;
-        if (owner is null) return false;
+        if (owner is null)
+        {
+            return false;
+        }
+
         var repository = owner.GetInterfaces().Append(owner).FirstOrDefault(t => t.IsGenericType && DcaMarkers.IsRole(t.GetGenericTypeDefinition(), markers.Repository));
         var aggregate = repository?.GetGenericArguments()[0];
-        if (aggregate is null || aggregate.IsGenericParameter || aggregate.IsInterface) return false;
+        if (aggregate is null || aggregate.IsGenericParameter || aggregate.IsInterface)
+        {
+            return false;
+        }
+
         var scanned = arch.Types.Select(arch.RuntimeType).Where(t => t is not null).Cast<Type>().ToHashSet();
-        if (!scanned.Contains(aggregate)) return false;
+        if (!scanned.Contains(aggregate))
+        {
+            return false;
+        }
+
         var hierarchy = new HashSet<Type>();
         for (var current = aggregate; current is not null && !Platform(current, markers); current = current.BaseType)
         {
-            if (!scanned.Contains(current) || !NoRegistration(current, scanned, new HashSet<Type>(), markers)) return false;
+            if (!scanned.Contains(current) || !NoRegistration(current, scanned, new HashSet<Type>(), markers))
+            {
+                return false;
+            }
+
             hierarchy.Add(current);
         }
 
@@ -54,7 +70,11 @@ internal static class EventFreeAggregate
     {
         foreach (var type in scanned)
         {
-            if (hierarchy.Contains(type)) continue;
+            if (hierarchy.Contains(type))
+            {
+                continue;
+            }
+
             var registers = new IntraClassCalls(type).Units
                 .SelectMany(IntraClassCalls.IlCalls)
                 .Any(call => call.Name == "RegisterEvent"
@@ -101,14 +121,33 @@ internal static class EventFreeAggregate
 
     private static bool NoRegistration(Type type, HashSet<Type> scanned, HashSet<Type> visited, DcaMarkers markers)
     {
-        if (!visited.Add(type)) return true;
+        if (!visited.Add(type))
+        {
+            return true;
+        }
+
         foreach (var call in new IntraClassCalls(type).Units.SelectMany(IntraClassCalls.IlCalls))
         {
             var owner = call.DeclaringType;
-            if (owner is null) return false;
-            if (call.Name == "RegisterEvent" && DcaMarkers.CarriesRole(owner, markers.AggregateRoot)) return false;
-            if (Platform(owner, markers)) continue;
-            if (!scanned.Contains(owner) || !NoRegistration(owner, scanned, visited, markers)) return false;
+            if (owner is null)
+            {
+                return false;
+            }
+
+            if (call.Name == "RegisterEvent" && DcaMarkers.CarriesRole(owner, markers.AggregateRoot))
+            {
+                return false;
+            }
+
+            if (Platform(owner, markers))
+            {
+                continue;
+            }
+
+            if (!scanned.Contains(owner) || !NoRegistration(owner, scanned, visited, markers))
+            {
+                return false;
+            }
         }
         return true;
     }

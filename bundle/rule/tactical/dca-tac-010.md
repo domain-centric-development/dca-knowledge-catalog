@@ -150,7 +150,7 @@ DcaRule.Check(
         })
         .Selecting("Classes, record classes and structs below the root namespace assignable to IValue; enums excluded.")
     .Checking(
-        "Instance fields, inherited ones included, are readonly; auto-property backing fields are inspected through their get-only or init-only property. Static state, referenced objects and collection contents are not inspected." )
+        "Instance fields, inherited ones included, are readonly; auto-property backing fields are inspected through their get-only or init-only property. Static state, referenced objects and collection contents are not inspected.")
 ```
 
 ## Applies to markers

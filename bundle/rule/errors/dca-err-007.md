@@ -5,7 +5,7 @@ title: "Diagnostic: failures that carry display data or objects instead of ids a
 rule: "A failure carries ids and figures, never what a page shows. Its fields are the typed identities and the values the rule compared; a name or a description of the thing an id refers to is resolved by the translation site through the queries it already has. A failure that carries the name decides for every surface what it shows, and one that carries an aggregate or an entity hands the model out through the error path."
 constraint: "Diagnostic: failures that carry display data or objects instead of ids and figures."
 selects: "Concrete project classes assignable to DomainException or UseCaseException - the building blocks' own types excluded - and their instance fields, inherited ones declared in project classes included."
-checks: "Informational diagnostic only: lists every field that involves - through its raw type or a type argument - a plain string, an aggregate or entity, or any other type that is neither assignable to the id or value role, nor a number, a primitive, an enum or a date and time type of the platform, and never fails. Container types such as lists are looked through. The message the base type carries is not a field of the project's failure and is not listed."
+checks: "Informational diagnostic only: lists every field that involves - through its raw type or a type argument - a plain string, an aggregate or entity, or any other type that is neither assignable to the id or value role, nor a number, a primitive, an enum or a date and time type of the platform, and never fails. Container types such as lists are looked through. The message the base type carries is not a field of the project's failure and is not listed. A string that holds a code rather than display text is listed as well: the type does not tell the two apart, and the remedy is a typed value for the code."
 enforced_by: "ErrorHandlingRules#DCA-ERR-007"
 status: informational
 maturity: experimental
@@ -26,13 +26,13 @@ Concrete project classes assignable to DomainException or UseCaseException - the
 
 ## Check
 
-Informational diagnostic only: lists every field that involves - through its raw type or a type argument - a plain string, an aggregate or entity, or any other type that is neither assignable to the id or value role, nor a number, a primitive, an enum or a date and time type of the platform, and never fails. Container types such as lists are looked through. The message the base type carries is not a field of the project's failure and is not listed.
+Informational diagnostic only: lists every field that involves - through its raw type or a type argument - a plain string, an aggregate or entity, or any other type that is neither assignable to the id or value role, nor a number, a primitive, an enum or a date and time type of the platform, and never fails. Container types such as lists are looked through. The message the base type carries is not a field of the project's failure and is not listed. A string that holds a code rather than display text is listed as well: the type does not tell the two apart, and the remedy is a typed value for the code.
 
 ## .NET reading
 
 **Selection.** The project's own types below DomainException or UseCaseException, with their runtime type in the loaded assemblies, and the instance fields they and their project base types declare - the backing fields of auto-properties included.
 
-**Check.** Informational diagnostic only: lists a field whose type is a plain string, or is assignable to IAggregateRoot or IEntity - directly, as an array element or as a generic type argument - and never fails. Ids, values, numbers and every other type pass. A string that holds a code rather than display text is listed as well; whether it should be a value stays with review.
+**Check.** Informational diagnostic only: lists a field whose type is a plain string, or is assignable to IAggregateRoot or IEntity - directly, as an array element or as a generic type argument - and never fails. Ids, values, numbers and every other type pass. A string that holds a code rather than display text is listed as well: the type does not tell the two apart, and the remedy is a typed value for the code.
 
 ## Implementation
 
@@ -89,7 +89,9 @@ DcaRule.informational(
             + " that is neither assignable to the id or value role, nor a number, a primitive,"
             + " an enum or a date and time type of the platform, and never fails. Container"
             + " types such as lists are looked through. The message the base type carries is"
-            + " not a field of the project's failure and is not listed.")
+            + " not a field of the project's failure and is not listed. A string that holds a"
+            + " code rather than display text is listed as well: the type does not tell the"
+            + " two apart, and the remedy is a typed value for the code.")
 ```
 
 ## Helpers
@@ -302,7 +304,8 @@ DcaRule.Informational(
         "Informational diagnostic only: lists a field whose type is a plain string, or is assignable to"
         + " IAggregateRoot or IEntity - directly, as an array element or as a generic type argument -"
         + " and never fails. Ids, values, numbers and every other type pass. A string that holds a code"
-        + " rather than display text is listed as well; whether it should be a value stays with review.")
+        + " rather than display text is listed as well: the type does not tell the two apart, and the"
+        + " remedy is a typed value for the code.")
 ```
 
 ## Related mentions (heuristic)

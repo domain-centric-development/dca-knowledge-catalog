@@ -141,7 +141,7 @@ DcaRule.Check(
             + " IIntegrationEvent - directly or through a derived interface; classes, records and structs"
             + " alike, compiler-generated types excluded.")
     .Checking(
-        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected." )
+        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")
 ```
 
 ## Related mentions (heuristic)
