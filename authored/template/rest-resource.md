@@ -4,12 +4,16 @@ title: "REST resource skeleton (incoming adapter injecting input ports)"
 tags: [template, adapter, rest]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/quick-reference/port-placement.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/quick-reference/port-placement.md, /guide/rules/error-handling-rules.md]
 applies_to: [java]
 framework: [spring]
 ---
 
 Domain-free skeleton for a REST resource: a primary (incoming) adapter that exposes use cases over HTTP. It lives in `adapter/incoming/api/`, is named `{Name}Resource`, depends only on **input port interfaces** (never on repositories or the domain directly), and maps each use case `Result` to a `*Response` record at the adapter edge. Request/response DTOs stay in the adapter package. Replace `{Name}` / `{usecasename}` / `{context}` / `{basePackage}`.
+
+## Answering a failure
+
+The resource maps each failure the input port names to a status, and the status follows the failure and where its input came from. `404` belongs to the addressed resource: the path names nothing. A reference in the request body that parses but names nothing — an id posted to a resource that exists — answers `422 Unprocessable Content`, because a `404` would claim something false about the resource the path addresses. A reference that does not parse at all is a malformed call and answers `400` before the use case runs.
 
 ## Languages
 
@@ -24,3 +28,4 @@ further language is one more file rather than a second copy of this node.
 - Rules: [REST controllers must end with 'Resource'](/rule/naming/dca-nam-006.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [Incoming adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-004.md) · [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
 - Guide: [Port placement](/guide/quick-reference/port-placement.md)
 - Recipe: [Add an incoming REST adapter](/recipe/add-an-incoming-rest-adapter.md)
+- Pitfall: [A reference in the request body answered as not found](/pitfall/a-reference-in-the-body-answered-as-not-found.md)
