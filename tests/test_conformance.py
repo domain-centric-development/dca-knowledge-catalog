@@ -1153,8 +1153,12 @@ def test_qualified_preset_entries_reach_the_preset_tables():
     assert "Microsoft.AspNetCore.Mvc.AcceptVerbsAttribute#HttpMethods=GET" in defaults["GetMappingAttributeTypes"]
     assert _preset_entry("a.B#method=GET") == "`a.B` with `method=GET`"
     assert _preset_entry("a.B") == "`a.B`"
+    assert _preset_entry("a.B#method=") == "`a.B` without `method`"
+    assert "org.springframework.web.bind.annotation.RequestMapping#method=" in presets["spring"]["getMapping"]
+    assert "Microsoft.AspNetCore.Mvc.Routing.IActionHttpMethodProvider#HttpMethods=" in defaults["GetMappingAttributeTypes"]
     assert _preset_cell("a.B, a.C#p=v") == "`a.B`, `a.C` with `p=v`"
     assert _preset_cell("(empty)") == "`(empty)`"
     layout = (Path(__file__).resolve().parents[1] / "bundle/reference/layout.md").read_text(encoding="utf-8")
     assert "`org.springframework.web.bind.annotation.RequestMapping` with `method=GET`" in layout
     assert "`Microsoft.AspNetCore.Mvc.AcceptVerbsAttribute` with `HttpMethods=GET`" in layout
+    assert "`org.springframework.web.bind.annotation.RequestMapping` without `method`" in layout

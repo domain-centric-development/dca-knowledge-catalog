@@ -146,12 +146,14 @@ def _java_pattern_methods(source: str) -> list[tuple[str, str]]:
 
 # A preset entry: a full type name, optionally qualified by the attribute value that selects it
 # (``<annotation>#<attribute>=<value>``, e.g. ``...RequestMapping#method=GET``).
-_PRESET_ENTRY = r'"([\w.]+(?:#\w+=[\w.]+)?)"'
+_PRESET_ENTRY = r'"([\w.]+(?:#\w+=[\w.]*)?)"'
 
 
 def _preset_entry(entry: str) -> str:
-    """One preset entry as inline markdown: ``a#p=v`` reads "`a` with `p=v`"."""
+    """One preset entry as inline markdown: ``a#p=v`` reads "`a` with `p=v`", ``a#p=`` "`a` without `p`"."""
     name, _, qualifier = entry.partition("#")
+    if qualifier.endswith("="):
+        return f"`{name}` without `{qualifier[:-1]}`"
     return f"`{name}` with `{qualifier}`" if qualifier else f"`{name}`"
 
 
