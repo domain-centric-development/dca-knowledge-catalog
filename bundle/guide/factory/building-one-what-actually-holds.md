@@ -72,7 +72,8 @@ integrate gate can go red in a test the story did not write, change or name — 
 timeout under load, an order the suite depends on. The gate runs that test once more, on its own.
 Green there, the gate passes, notes the test as flaky and counts no round; red again, the suite is
 red as before. A test of the story's own is never run again: its red proof has to stay exact. A test
-noted flaky in two stories becomes a finding, so it is fixed rather than run again for ever.
+noted flaky in two stories becomes a finding of the project's own — it belongs to neither story — so it is fixed
+rather than run again for ever.
 
 **Resume where the files say, and check them before a stage reads them.** A run started on one story
 begins at the state its files record, not at the first stage by default: a delivered story runs

@@ -48,6 +48,7 @@ Domain Object"
 
 ## Related mentions in guides (heuristic)
 
+- [A foundation once, then the cycle](/guide/factory/a-foundation-once-then-the-cycle.md)
 - [Building one: what actually holds](/guide/factory/building-one-what-actually-holds.md)
 - [Several factories on one backlog](/guide/factory/several-factories-on-one-backlog.md)
 - [The stages and their hand-over files](/guide/factory/the-stages-and-their-hand-over-files.md)

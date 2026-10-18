@@ -33,4 +33,8 @@ that a person releases, and a new technical capability adds its line to the stac
 through the description skill or the step that owns the part, never through a build stage.
 
 Every step of the cycle leaves its state in files and answers a command — `status`, `decisions`, `discover
---list`, also as JSON. So any tool may draw the cycle; none has to.
+--list`, also as JSON. So any tool may draw the cycle; none has to. Every order a view shows is the factory's
+too — what comes next in the schedule's order, the backlog newest first by the `created:` each epic and story
+carries, the newest delivery first — so two views never sort the same backlog differently. The status a person
+asks for is short: what runs, what waits for them, what comes next and the totals; every story, one story or one
+epic only on request.
