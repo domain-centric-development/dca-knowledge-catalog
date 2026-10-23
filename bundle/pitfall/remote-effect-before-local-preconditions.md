@@ -46,7 +46,7 @@ return transactionBoundary.inTransaction(() -> { … });       // short transact
 
 Two implementations of the same flow will differ on exactly these three unless they are written down, because each is a local judgement inside one `catch`.
 
-- Related pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Event listener performs the external effect](/pitfall/event-listener-performs-the-external-effect.md)
+- Related pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Event listener performs the external effect](/pitfall/event-listener-performs-the-external-effect.md) · [A command decided on an earlier read](/pitfall/a-command-decided-on-an-earlier-read.md)
 
 ## Anchors
 

@@ -6,6 +6,12 @@ every regeneration.
 
 ## [Unreleased]
 
+- Added (WP-151): pitfall *A command decided on an earlier read* — a choice shown on one request and acted on by the
+  next without the command asking the aggregate again; linked from *Where authorization and validation live*
+  (discriminator 3 now says the invariant is asked again at the change) and *Remote effect before local preconditions*.
+  *Result shape and assembly* gains the outcome sentence: more than two outcomes are one named outcome value, not
+  flags and nullables a caller decodes.
+
 - Fixed: the Obsidian graph colors each node by its top-level directory, in the DCA brand palette. The groups matched
   their directory name anywhere in the path, so the 107 evidence nodes under `evidence/rule/` showed as rules and a
   decision named after a rule did too; `evidence/` had no group at all. Each export now rewrites the exporter's own
