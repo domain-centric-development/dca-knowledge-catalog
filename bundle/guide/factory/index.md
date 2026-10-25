@@ -18,3 +18,4 @@
 - [The stages and their hand-over files](the-stages-and-their-hand-over-files.md) — One story runs through six stages. Every stage is a **closed assignment**: it reads the story and
 - [Three parts](three-parts.md) — A factory that delivers stories has three parts, and each lives in its own place:
 - [What the project declares](what-the-project-declares.md) — Nothing above knows how your project builds. That knowledge lives in one file the project owns —
+- [Without a session: requests](without-a-session-requests.md) — A person acts on the factory in one of two ways. In a session they talk to an agent, which runs the skill at once

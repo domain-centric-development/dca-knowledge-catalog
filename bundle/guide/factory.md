@@ -33,6 +33,7 @@ detail that may change without the process changing.
 - [Journeys: a guard over what is delivered](/guide/factory/journeys-a-guard-over-what-is-delivered.md)
 - [Tasks: what keeps behaviour](/guide/factory/tasks-what-keeps-behaviour.md)
 - [Acceptance: a human looks before it counts](/guide/factory/acceptance-a-human-looks-before-it-counts.md)
+- [Without a session: requests](/guide/factory/without-a-session-requests.md)
 - [Several factories on one backlog](/guide/factory/several-factories-on-one-backlog.md)
 - [Building one: what actually holds](/guide/factory/building-one-what-actually-holds.md)
 - [Starting where you are](/guide/factory/starting-where-you-are.md)

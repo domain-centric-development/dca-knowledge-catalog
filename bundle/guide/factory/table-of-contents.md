@@ -21,6 +21,7 @@ tags: [guide, section]
 - [Journeys: a guard over what is delivered](#journeys-a-guard-over-what-is-delivered)
 - [Tasks: what keeps behaviour](#tasks-what-keeps-behaviour)
 - [Acceptance: a human looks before it counts](#acceptance-a-human-looks-before-it-counts)
+- [Without a session: requests](#without-a-session-requests)
 - [Several factories on one backlog](#several-factories-on-one-backlog)
 - [Building one: what actually holds](#building-one-what-actually-holds)
 - [Starting where you are](#starting-where-you-are)
