@@ -21,3 +21,4 @@ Integration Patterns.
 - [Factory for Cross-Context Assembly](/guide/integration-patterns/factory-for-cross-context-assembly.md)
 - [Optional events and reliable delivery](/guide/integration-patterns/optional-events-and-reliable-delivery.md)
 - [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md)
+- [A process that spans several transactions](/guide/integration-patterns/a-process-that-spans-several-transactions.md)

@@ -14,3 +14,5 @@ tags: [guide, section]
 - Infrastructure decisions can be delayed
 - Infrastructure can be swapped
 - No business logic in infrastructure
+- The composition root wires and never decides: it creates the adapters, hands each use case its ports and holds no
+  rule (see [The composition root](/guide/dependency-structure/the-composition-root.md))

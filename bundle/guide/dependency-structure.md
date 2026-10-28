@@ -18,4 +18,5 @@ Dependency Structure.
 - [Forbidden Dependencies](/guide/dependency-structure/forbidden-dependencies.md)
 - [What an adapter may inject](/guide/dependency-structure/what-an-adapter-may-inject.md)
 - [Infrastructure is not the same as framework](/guide/dependency-structure/infrastructure-is-not-the-same-as-framework.md)
+- [The composition root](/guide/dependency-structure/the-composition-root.md)
 - [Fixing a dependency that points the wrong way](/guide/dependency-structure/fixing-a-dependency-that-points-the-wrong-way.md)

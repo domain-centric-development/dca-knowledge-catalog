@@ -34,6 +34,9 @@ generating, and the template to fill in.
 | Expose a bounded context's API to other contexts | [Expose an open host service](/recipe/expose-an-open-host-service.md) |
 | Persist operational data that has no aggregate of its own | [Add a store](/recipe/add-a-store.md) |
 | Know who is calling — and keep ownership checks in the use case | [Add an identity port](/recipe/add-an-identity-port.md) |
+| Let a use case use what another use case does | [Hand a use case a second operation](/recipe/hand-a-use-case-a-second-operation.md) |
+| Run a worker, a job or a long command-line run | [Host a long-running process](/recipe/host-a-long-running-process.md) |
+| Build without a DI container or a DCA rule library | [Build DCA without a framework](/recipe/build-dca-without-a-framework.md) |
 
 ## Decide first (design forks)
 

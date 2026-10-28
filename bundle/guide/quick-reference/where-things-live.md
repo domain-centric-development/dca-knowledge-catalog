@@ -24,5 +24,7 @@ tags: [guide, section]
 | Persistence adapters, ORM entities | `adapter/outgoing` | `JpaOrderRepository`, `OrderEntity` |
 | Event publishers, API clients | `adapter/outgoing` | `KafkaEventPublisher`, `PaymentGatewayClient` |
 | Framework configuration | Infrastructure | `BeansConfiguration` |
+| Composition root — wiring, a port implemented by another use case | Infrastructure — `{context}/infrastructure/` | `PricingConfiguration` |
+| Process manager — executive and tracker | Application (use case) and Domain (tracker aggregate) | `BookTripUseCase`, `TripBooking` |
 | Universal value objects | `sharedkernel/domain/model` | `Money`, `Address` |
 | Shared application ports | `sharedkernel/application/shared` | `IdentityProvider` |

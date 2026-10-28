@@ -8,4 +8,5 @@
 - [Infrastructure is not the same as framework](infrastructure-is-not-the-same-as-framework.md) — An external framework is a library you depend on; your infrastructure layer is code you wrote to
 - [Layer Dependency Flow](layer-dependency-flow.md) — flowchart TD
 - [Request Flow with Dependency Inversion](request-flow-with-dependency-inversion.md) — sequenceDiagram
+- [The composition root](the-composition-root.md) — adapters, hands each use case its output ports, and then hands control to the entry point. Mark Seemann named it:
 - [What an adapter may inject](what-an-adapter-may-inject.md) — Allowed in either direction:

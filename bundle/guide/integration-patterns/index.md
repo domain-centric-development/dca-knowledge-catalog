@@ -1,6 +1,7 @@
 # integration-patterns
 
 - [A Bounded Context Is a Deep Module](a-bounded-context-is-a-deep-module.md) — A bounded context is a *deep module* in the sense of Ousterhout (*A Philosophy of Software
+- [A process that spans several transactions](a-process-that-spans-several-transactions.md) — Some flows outlive one transaction: they take several steps, wait for an answer, and pick the next step from what
 - [Composite Adapter Pattern](composite-adapter-pattern.md) — When a context needs data from **multiple** Open Host Services, use a **Composite Adapter** to aggregate the data in ...
 - [Declaring Context Relationships in Code](declaring-context-relationships-in-code.md) — Context-map relationships are declared on the bounded context's `package-info.java`, next to
 - [Different Bounded Contexts](different-bounded-contexts.md) — Different Bounded Contexts

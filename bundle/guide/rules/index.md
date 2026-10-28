@@ -5,7 +5,7 @@
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
 - [DOMAIN LAYER RULES](domain-layer-rules.md) — members are names and nothing more; a value object with one instance per member as soon as a member carries data
 - [ERROR HANDLING RULES](error-handling-rules.md) — Every failure carries its own type, and only the adapter turns it into an answer.
-- [INFRASTRUCTURE LAYER RULES](infrastructure-layer-rules.md) — INFRASTRUCTURE LAYER RULES
+- [INFRASTRUCTURE LAYER RULES](infrastructure-layer-rules.md) — rule (see The composition root)
 - [Operation boundaries and declared contracts](operation-boundaries-and-declared-contracts.md) — Ordinary use cases do not invoke other use cases, whether directly, through an
 - [PACKAGING RULES](packaging-rules.md) — features (see Grouping use cases into features)
 - [STRATEGIC DESIGN RULES](strategic-design-rules.md) — (`@Upstream`, `@ExternalUpstream`, `@Partnership`, see Declaring Context Relationships in Code)
