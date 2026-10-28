@@ -19,8 +19,12 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 2. **Define an output port** in your `application/shared/` in *your* terms (a `DomainGateway`-style interface); your use cases depend on this, not on the foreign types.
 3. **Implement the ACL in an outgoing adapter** in an `acl` package under `adapter/outgoing/` — it calls the foreign contract and maps the foreign model to your domain types (and your requests to theirs). All translation lives here.
 4. **For event-driven integration**, consume the other context's integration event in `adapter/incoming/messaging/`, translate it through the ACL, then invoke your own use case ([Publish a cross-context event](/recipe/publish-a-cross-context-event.md)).
-5. **Keep the boundary one-directional** — foreign types stay inside the ACL; nothing foreign appears in your domain or application layer.
-6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
+5. **Declare the relationship** — a new external system gets its declaration on the context: `@ExternalUpstream` on
+   `package-info.java` (C#: `[ExternalUpstream]` on the context's marker class) with the translation, the interaction and
+   the protocol, and a row in the designed context map. No rule notices a missing one — the suite only checks the
+   declarations that exist — so the context map stays silent about the system until it is declared.
+6. **Keep the boundary one-directional** — foreign types stay inside the ACL; nothing foreign appears in your domain or application layer.
+7. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
 
 ## Rules to satisfy (build-time checklist)
 
@@ -28,6 +32,7 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 - [Event listeners consuming integration events should use an anti-corruption layer](/rule/strategic/dca-str-010.md)
 - [Outgoing adapters accessing other modules must only use their published api/ and events/ packages](/rule/strategic/dca-str-006.md)
 - [Outgoing adapters must only use outbound ports, not infrastructure implementations](/rule/hexagonal/dca-hex-005.md)
+- [External system contract types must respect the declared translation and interaction](/rule/contextmap/dca-map-010.md)
 
 ## Anchors
 
