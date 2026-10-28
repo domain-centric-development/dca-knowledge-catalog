@@ -66,5 +66,6 @@ public record ProductCreated(
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
+- [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md)
 - [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

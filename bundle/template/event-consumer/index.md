@@ -1,3 +1,3 @@
 # event-consumer
 
-- [Event consumer skeleton (incoming adapter with @ApplicationModuleListener) — Java](java.md) — The Java code of Event consumer skeleton (incoming adapter with @ApplicationModuleListener). The prose, the evidence ...
+- [Event consumer skeleton (incoming adapter, transactional listener) — Java](java.md) — The Java code of Event consumer skeleton (incoming adapter, transactional listener). The prose, the evidence and what

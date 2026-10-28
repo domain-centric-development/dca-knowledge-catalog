@@ -17,6 +17,9 @@ Spring Modulith provides an **Event Publication Registry** that ensures reliable
 - **Resubmission, not automatic retry**: an incomplete publication stays in the registry and is replayed
   when you ask for it — on restart with `republish-outstanding-events-on-restart`, or through the 2.0
   resubmission API. Nothing retries on its own
+- **Staleness monitor, off by default**: a publication left in published or processing by a crash or a hung
+  listener stays there until `spring.modulith.events.staleness.*` marks it failed after a threshold. Without
+  that setting a resubmission that selects failed publications never sees it
 - **Idempotency Support**: Handlers can be idempotent via event IDs
 - **Observability**: Track event processing status and failures
 

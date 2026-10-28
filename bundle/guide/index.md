@@ -8,7 +8,7 @@
 - [e2e-testing/](e2e-testing/index.md) (11)
 - [elements/](elements/index.md) (5)
 - [factory/](factory/index.md) (19)
-- [integration-patterns/](integration-patterns/index.md) (10)
+- [integration-patterns/](integration-patterns/index.md) (11)
 - [jwt-implementation-guide/](jwt-implementation-guide/index.md) (19)
 - [language-mappings/](language-mappings/index.md) (11)
 - [package-structure/](package-structure/index.md) (7)

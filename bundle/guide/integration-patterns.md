@@ -20,3 +20,4 @@ Integration Patterns.
 - [Enriched Read Model Pattern](/guide/integration-patterns/enriched-read-model-pattern.md)
 - [Factory for Cross-Context Assembly](/guide/integration-patterns/factory-for-cross-context-assembly.md)
 - [Optional events and reliable delivery](/guide/integration-patterns/optional-events-and-reliable-delivery.md)
+- [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md)

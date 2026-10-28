@@ -9,4 +9,5 @@
 - [Factory for Cross-Context Assembly](factory-for-cross-context-assembly.md) — Use a **Factory** to assemble enriched domain objects from data fetched via ports.
 - [Open Host Service Pattern](open-host-service-pattern.md) — For synchronous cross-context queries, use the Open Host Service pattern.
 - [Optional events and reliable delivery](optional-events-and-reliable-delivery.md) — Events are optional: an aggregate that never registers a fact needs no publisher dependency. `DCA-USE-009`
+- [Reacting to an event](reacting-to-an-event.md) — A reaction to an event goes **adapter → command → use case**. That holds for a contract from another context
 - [Same Bounded Context](same-bounded-context.md) — Same Bounded Context

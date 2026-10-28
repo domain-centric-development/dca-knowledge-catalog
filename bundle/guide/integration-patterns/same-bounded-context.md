@@ -11,3 +11,4 @@ tags: [guide, section]
 - Domain events for cross-aggregate communication
 - Use case coordinates multiple aggregates
 - Eventual consistency between aggregates
+- A reaction to a domain event drives a use case after the commit — see [Reacting to an event](#reacting-to-an-event)

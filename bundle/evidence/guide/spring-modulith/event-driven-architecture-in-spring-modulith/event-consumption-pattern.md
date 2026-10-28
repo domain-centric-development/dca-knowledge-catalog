@@ -34,7 +34,11 @@ class InventoryEventListener {
 ```
 
 **Key Points:**
-- `@ApplicationModuleListener` enables async processing in new transaction
+- `@ApplicationModuleListener` enables async processing in new transaction — the transactional listener kind of
+  [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md). The same annotation serves a
+  reaction to this module's own domain event
 - `Propagation.REQUIRES_NEW` ensures independent transaction
+- A translator that captures an integration event stays a plain `@EventListener`: it runs inside the publishing
+  transaction and calls only an output port
 - A failure leaves the publication incomplete in the registry; replaying it is opt-in (see the registry section)
 - Anti-Corruption Layer protects consuming module's domain

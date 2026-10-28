@@ -109,6 +109,9 @@ Spring Modulith provides an **Event Publication Registry** that ensures reliable
 - **Resubmission, not automatic retry**: an incomplete publication stays in the registry and is replayed
   when you ask for it — on restart with `republish-outstanding-events-on-restart`, or through the 2.0
   resubmission API. Nothing retries on its own
+- **Staleness monitor, off by default**: a publication left in published or processing by a crash or a hung
+  listener stays there until `spring.modulith.events.staleness.*` marks it failed after a threshold. Without
+  that setting a resubmission that selects failed publications never sees it
 - **Idempotency Support**: Handlers can be idempotent via event IDs
 - **Observability**: Track event processing status and failures
 
@@ -206,8 +209,12 @@ class InventoryEventListener {
 ```
 
 **Key Points:**
-- `@ApplicationModuleListener` enables async processing in new transaction
+- `@ApplicationModuleListener` enables async processing in new transaction — the transactional listener kind of
+  [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md). The same annotation serves a
+  reaction to this module's own domain event
 - `Propagation.REQUIRES_NEW` ensures independent transaction
+- A translator that captures an integration event stays a plain `@EventListener`: it runs inside the publishing
+  transaction and calls only an output port
 - A failure leaves the publication incomplete in the registry; replaying it is opt-in (see the registry section)
 - Anti-Corruption Layer protects consuming module's domain
 

@@ -25,7 +25,7 @@ A single use case that loads two aggregate roots, mutates both, and saves both i
 
 ## Do instead
 
-Change one aggregate per transaction. Let it raise a domain event on commit; a handler (in-process listener, or another context's consumer) loads the second aggregate and changes it in its own transaction — eventual consistency. When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare [domain service](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md), but the default is one write per transaction.
+Change one aggregate per transaction. Let it raise a domain event; a transactional listener — delivered after the commit from the outbox, in its own transaction — drives the use case that changes the second aggregate. A synchronous listener would put the second change back into the first transaction ([A reaction in the raising transaction](/pitfall/reaction-in-the-raising-transaction.md)). When a genuinely atomic multi-aggregate calculation is unavoidable, isolate it in a rare [domain service](/guide/domain-services-with-data-dependencies/default-rule-pure-domain-services-90-of-cases.md), but the default is one write per transaction.
 
 `order.confirm()` → `OrderConfirmed` → handler → `inventory.reserve()` in a separate transaction.
 
