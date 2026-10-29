@@ -35,7 +35,7 @@ events)
 ## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
+- [Setup and Configuration](/guide/archunit-governance/setup-and-configuration.md)
 - [Cross-Bounded Context Communication](/guide/dependency-structure/cross-bounded-context-communication.md)
 - [Deployment Pattern Comparison](/guide/deployment-patterns/deployment-pattern-comparison.md)
 - [Service Decomposition](/guide/deployment-patterns/service-decomposition.md)
