@@ -36,3 +36,5 @@ An architecture test that passes every rule while the set of classes it selects 
 - Let the module that runs the architecture test depend on every module that holds production code, and import jars as well — in a multi-module build the other modules *are* jars on that class path. Narrow the import only where a third-party artifact ships the project's own base package, and say so at the call site.
 - Declare the contexts. A single-context application declares its base package; without a declaration the context-map rules have nothing to govern.
 - Where a code base deliberately declares no context, switch the rule off with a recorded reason. A recorded decision is visible in the report; a silent empty selection is not.
+
+The opposite failure — an import that found everything and a suite that reports thousands of lines because the code base names things its own way — is [Switching rules off because the project names things its own way](/pitfall/switching-rules-off-for-an-own-vocabulary.md).
