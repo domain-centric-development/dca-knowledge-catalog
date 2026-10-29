@@ -15,9 +15,9 @@ evidence_for: "/rule/usecase/dca-use-012.md#transactionaleffectof"
    * when the unit neither writes through a Repository nor publishes domain events.
    */
   private static String transactionalEffectOf(JavaCodeUnit unit, DcaMarkers markers) {
-    boolean saves = calls(unit, markers.repository(), "save");
-    boolean deletes = calls(unit, markers.repository(), "deleteById");
-    boolean publishes = calls(unit, markers.domainEventPublisher());
+    boolean saves = calls(unit, markers.is("repository"), "save");
+    boolean deletes = calls(unit, markers.is("repository"), "deleteById");
+    boolean publishes = calls(unit, markers.is("domainEventPublisher"));
     if (!saves && !deletes && !publishes) {
       return null;
     }

@@ -30,8 +30,8 @@ DcaRule.Check(
             var violations = new List<string>();
             var useCases = arch.Classes
                 .Where(c => c.Namespace is not null
-                    && Matches(c.Namespace.FullName, DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-                    && (IsAssignableTo(arch, c, arch.Layout.Markers.InputPort) || c.Name.Split('`')[0].EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)))
+                    && arch.InApplication(c)
+                    && (IsRole(arch, c, nameof(DcaMarkers.InputPort)) || c.Name.Split('`')[0].EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)))
                 .OrderBy(c => c.FullName, StringComparer.Ordinal);
             foreach (var useCase in useCases)
             {
@@ -42,9 +42,9 @@ DcaRule.Check(
                 }
 
                 var calls = new IntraClassCalls(runtime);
-                foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", arch.Layout.Markers.Repository)))
+                foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), t))))
                 {
-                    if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && DcaMarkers.IsAssignableToByName(m.DeclaringType, arch.Layout.Markers.Repository))
+                    if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), m.DeclaringType))
                         .All(m => EventFreeAggregate.Repository(m, arch)))
                     {
                         continue;
@@ -53,7 +53,7 @@ DcaRule.Check(
                     foreach (var entry in calls.EntryPointsOf(unit))
                     {
                         var publishes = calls.ReachableFrom(entry)
-                            .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", arch.Layout.Markers.DomainEventPublisher));
+                            .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainEventPublisher), t)));
                         if (!publishes)
                         {
                             violations.Add($"{useCase.FullName}.{IntraClassCalls.PathName(entry, unit)} saves an aggregate without"

@@ -24,7 +24,7 @@ evidence_for: "/rule/usecase/dca-use-009.md#eventfreeaggregatenoexternalregistra
         for (var call : unit.getCallsFromSelf()) {
           var owner = call.getTargetOwner();
           if (call.getTarget().getName().equals("registerEvent")
-              && owner.isAssignableTo(markers.aggregateRoot())
+              && markers.is("aggregateRoot").test(owner)
               && (hierarchy.contains(owner.getName()) || platform(owner.getName(), markers)))
             return false;
         }

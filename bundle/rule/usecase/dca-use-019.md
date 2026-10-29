@@ -4,7 +4,7 @@ id: DCA-USE-019
 title: Query use cases must not write or publish
 rule: "A read never creates. A query has no side effect: it does not create, save or publish, and when nothing exists it answers none. Find-or-create is a command, called where the caller is about to change state; a page or an answer that only shows what exists asks the query."
 constraint: Query use cases must not write or publish.
-selects: "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix, and whose input ends with Query - a parameter of a public method, or a type argument of the input port they implement."
+selects: "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix, and whose input the configured query role recognises (by default a simple name ending with Query) - a parameter of a public method, or a type argument of the input port they implement."
 checks: "No code unit of the class calls a write on the repository or store role - a method whose name is a write verb alone or followed by a capital (save, delete, remove, add, insert, update, upsert, put, store, write, create, append, archive, purge, clear, set, mark) - nor any method of the domain-event or integration-event publisher role. Calls made by another class the use case delegates to are not followed. An empty selection passes."
 enforced_by: "UseCaseRules#DCA-USE-019"
 status: enforced
@@ -22,7 +22,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 
 ## Selection
 
-Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix, and whose input ends with Query - a parameter of a public method, or a type argument of the input port they implement.
+Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix, and whose input the configured query role recognises (by default a simple name ending with Query) - a parameter of a public method, or a type argument of the input port they implement.
 
 ## Check
 
@@ -30,7 +30,7 @@ No code unit of the class calls a write on the repository or store role - a meth
 
 ## .NET reading
 
-**Selection.** Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types, whose input ends in Query: the input type argument of an implemented IUseCase<TInput, TOutput>, or a parameter of a method that implements an IInputPort interface.
+**Selection.** Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types, whose input the configured query role recognises (by default a simple name ending with Query): the input type argument of an implemented IUseCase<TInput, TOutput>, or a parameter of a method that implements an IInputPort interface.
 
 **Check.** No method of the class - async state machines and lambdas included - calls a repository write (IRepository.SaveAsync or DeleteByIdAsync, or a method of a repository or store port whose name starts with Save, Delete, Remove, Add, Insert, Update, Upsert, Put, Store, Write, Create, Append, Archive, Purge, Clear, Set or Mark), or any method of the domain-event or integration-event publisher. Only the class's own calls are read: a write reached through a helper class or a second port is not seen, and a store write under another verb passes. An empty selection passes.
 
@@ -40,7 +40,7 @@ The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/r
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 
 ## Related mentions (heuristic)
 
@@ -58,7 +58,7 @@ The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/r
 - [`useCases`](/evidence/rule/usecase/dca-use-019/usecases.md)
 - [`takingAQuery`](/evidence/rule/usecase/dca-use-019/takingaquery.md)
 - [`notWriteOrPublish`](/evidence/rule/usecase/dca-use-019/notwriteorpublish.md)
-- [`TypeInspection.takesInputEndingWith`](/evidence/rule/usecase/dca-use-019/typeinspection-takesinputendingwith.md)
+- [`TypeInspection.takesInput`](/evidence/rule/usecase/dca-use-019/typeinspection-takesinput.md)
 - [`sideEffectOf`](/evidence/rule/usecase/dca-use-019/sideeffectof.md)
 - [`TypeInspection.inputTypes`](/evidence/rule/usecase/dca-use-019/typeinspection-inputtypes.md)
 - [`TypeInspection.collectInputs`](/evidence/rule/usecase/dca-use-019/typeinspection-collectinputs.md)

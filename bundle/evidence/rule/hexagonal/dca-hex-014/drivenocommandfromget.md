@@ -25,7 +25,7 @@ private static ArchCondition<JavaClass> driveNoCommandFromGet(
         for (JavaCodeUnit unit : calls.reachableFrom(handler)) {
           for (JavaMethodCall call : unit.getMethodCallsFromSelf()) {
             JavaClass owner = call.getTargetOwner();
-            if (owner.isAssignableTo(markers.inputPort()) && takesCommand(call, markers)) {
+            if (markers.is("inputPort").test(owner) && takesCommand(call, markers)) {
               commands.add(owner.getSimpleName() + "." + call.getName());
             }
           }

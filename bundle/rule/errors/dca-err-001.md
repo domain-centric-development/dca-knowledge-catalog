@@ -43,12 +43,10 @@ DcaRule.of(
             + " either of them properly",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .that(arch.inDomain())
                 .and()
                 .areAssignableTo(Throwable.class)
-                .should()
-                .beAssignableTo(arch.layout().markers().domainException())
+                .should(LayerConditions.be(arch.layout().markers().is("domainException")))
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.domain.. of every module root that are assignable to Throwable -"
@@ -63,7 +61,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -75,10 +73,9 @@ DcaRule.Check(
         + " properly",
     arch =>
     {
-        var domain = new Regex(DcaLayout.AnyOf(arch.AllDomainPatterns()));
         var violations = ProjectExceptions(arch)
-            .Where(t => domain.IsMatch(t.Namespace?.FullName ?? ""))
-            .Where(t => !IsAssignableTo(t, arch.Layout.Markers.DomainException))
+            .Where(arch.InDomain)
+            .Where(t => !arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t))
             .Select(t => $"{t.FullName} does not extend DomainException")
             .ToList();
         DcaRule.Fail("A domain failure without the domain base type", violations);

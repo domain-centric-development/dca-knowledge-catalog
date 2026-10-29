@@ -143,15 +143,15 @@ static boolean operation(JavaClass type, DcaArchitecture arch) {
   return !type.isInterface()
       && !type.isNestedClass()
       && !type.getModifiers().contains(JavaModifier.ABSTRACT)
-      && JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns()).test(type)
-      && (type.isAssignableTo(arch.layout().markers().inputPort())
+      && arch.inApplication().test(type)
+      && (arch.layout().markers().is("inputPort").test(type)
           || type.getSimpleName().endsWith(arch.layout().useCaseSuffix()));
 }
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()`, `moduleRootOf()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inApplication()`, `layout()`, `moduleRootOf()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

@@ -43,14 +43,11 @@ DcaRule.of(
             + " map the same outcome onto a different one",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .and()
                 .areAssignableTo(Throwable.class)
-                .and()
-                .areNotAssignableTo(arch.layout().markers().domainException())
-                .should()
-                .beAssignableTo(arch.layout().markers().useCaseException())
+                .and(DescribedPredicate.not(arch.layout().markers().is("domainException")))
+                .should(LayerConditions.be(arch.layout().markers().is("useCaseException")))
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.application.. of every module root that are assignable to Throwable"
@@ -67,7 +64,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -79,14 +76,13 @@ DcaRule.Check(
         + " outcome onto a different one",
     arch =>
     {
-        var application = new Regex(DcaLayout.AnyOf(arch.AllApplicationPatterns()));
         var violations = ProjectExceptions(arch)
-            .Where(t => application.IsMatch(t.Namespace?.FullName ?? ""))
+            .Where(arch.InApplication)
             // A subtype of DomainException here is misplaced, not mis-based: DCA-ERR-002 owns it
             // and says to move it to the domain. This rule's remedy would turn a broken rule of
             // the model into a use-case failure.
-            .Where(t => !IsAssignableTo(t, arch.Layout.Markers.DomainException))
-            .Where(t => !IsAssignableTo(t, arch.Layout.Markers.UseCaseException))
+            .Where(t => !arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t))
+            .Where(t => !arch.Layout.Markers.Is(nameof(DcaMarkers.UseCaseException), t))
             .Select(t => $"{t.FullName} does not extend UseCaseException")
             .ToList();
         DcaRule.Fail("A use-case failure without the application base type", violations);

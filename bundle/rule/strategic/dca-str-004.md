@@ -50,8 +50,7 @@ DcaRule.check(
             }
             perModule.add(
                 noClasses()
-                    .that()
-                    .resideInAPackage(layout.domainPattern(source))
+                    .that(arch.inLayerOf(DcaLayout.Layer.DOMAIN, source))
                     .should()
                     .dependOnClassesThat()
                     .resideInAnyPackage(forbidden)
@@ -151,7 +150,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `inLayerOf()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -171,7 +170,7 @@ DcaRule.Check(
                 }
 
                 perModule.Add(
-                    Types().That().ResideInNamespaceMatching(Layout.DomainPatternOf(source))
+                    Types().That().FollowCustomPredicate(arch.InLayerOf(DcaLayout.Layer.Domain, source), "are in the domain layer of " + source)
                         .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(AnyOf(forbidden))
                         .Because("The domain layer of module '" + arch.ContextName(source)
                             + "' must depend on nothing outside its own module and the shared kernel"));

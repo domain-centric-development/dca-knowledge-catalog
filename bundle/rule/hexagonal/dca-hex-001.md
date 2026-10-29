@@ -41,11 +41,9 @@ DcaRule.of(
         "Domain should not depend on adapters (ports and adapters pattern)",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allDomainModelPatterns())
+                .that(arch.inDomainModel())
                 .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(arch.allAdapterPatterns())
+                .dependOnClassesThat(arch.inAdapter())
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.domain.model.. of every module root - the domain model"
@@ -58,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()`, `allDomainModelPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inAdapter()`, `inDomainModel()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -66,8 +64,8 @@ DcaRule.Of(
         "DCA-HEX-001",
         "Classes from the domain should not access port adapters",
         "Domain should not depend on adapters (ports and adapters pattern)",
-        arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainModelPatterns()))
-            .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllAdapterPatterns())))
+        arch => Types().That().FollowCustomPredicate(arch.InDomainModel, "are in the domain model")
+            .Should().NotDependOnAnyTypesThat().FollowCustomPredicate(arch.InAdapter, "are in an adapter"))
     .Selecting(
         "Types in <module>.Domain.Model of every module root - the domain model"
             + " namespace, not the whole domain layer.")

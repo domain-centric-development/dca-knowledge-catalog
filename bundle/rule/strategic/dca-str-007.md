@@ -41,8 +41,7 @@ DcaRule.of(
         "Integration contracts are published separately from translators and transport adapters",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().integrationEvent())
+                .that(arch.layout().markers().is("integrationEvent"))
                 .and()
                 .areNotInterfaces()
                 .should()
@@ -67,7 +66,7 @@ DcaRule.Of(
         "Integration event contracts reside in the configured Events segment",
         "Integration contracts are published separately from translators and transport adapters",
         arch =>
-            Types().That().FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.IntegrationEvent), "are integration events").And().AreNot(Interfaces())
+            Types().That().FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.IntegrationEvent), t), "are integration events").And().AreNot(Interfaces())
                 .Should().ResideInNamespaceMatching(AnySegment(Layout.EventsSegment)))
     .Selecting(
         "Non-interface types below the root namespace whose implemented interfaces include"

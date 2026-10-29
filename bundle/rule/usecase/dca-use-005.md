@@ -4,7 +4,7 @@ id: DCA-USE-005
 title: "Use Case Queries should be immutable (final or records)"
 rule: "Use case queries should be immutable (value objects)."
 constraint: "Use Case Queries should be immutable (final or records)."
-selects: "Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Query."
+selects: "Non-interface, non-enum classes, including records, in <module>.application.. that the configured query role recognises - by default a simple name ending with Query."
 checks: "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected."
 enforced_by: "UseCaseRules#DCA-USE-005"
 status: enforced
@@ -20,7 +20,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 
 ## Selection
 
-Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Query.
+Non-interface, non-enum classes, including records, in <module>.application.. that the configured query role recognises - by default a simple name ending with Query.
 
 ## Check
 
@@ -28,7 +28,7 @@ The type is final or a record with final inherited instance fields and no instan
 
 ## .NET reading
 
-**Selection.** Classes and structs in each module application namespace with the corresponding Command, Query or Result suffix, including record classes and record structs.
+**Selection.** Classes and structs, including record classes and record structs, in each module application namespace that the configured query role recognises - by default a simple name ending with Query.
 
 **Check.** Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.
 
@@ -39,9 +39,9 @@ DcaRule.of(
         "DCA-USE-005",
         "Use Case Queries should be immutable (final or records)",
         "Use case queries should be immutable (value objects)",
-        arch -> immutableApplicationModels(arch, "Query"))
+        arch -> immutableApplicationModels(arch, arch.layout().markers().is("query")))
     .selecting(
-        "Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Query.")
+        "Non-interface, non-enum classes, including records, in <module>.application.. that the configured query role recognises - by default a simple name ending with Query.")
     .checking(
         "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected.")
 ```
@@ -52,14 +52,12 @@ DcaRule.of(
 
 ```java
 private static com.tngtech.archunit.lang.ArchRule immutableApplicationModels(
-    DcaArchitecture arch, String suffix) {
+    DcaArchitecture arch, DescribedPredicate<JavaClass> model) {
   // An enum is immutable by construction; on recent platforms its inherited state carries a
   // non-final cache field, which the shape check would report.
   return classes()
-      .that()
-      .haveSimpleNameEndingWith(suffix)
-      .and()
-      .resideInAnyPackage(arch.allApplicationPatterns())
+      .that(model)
+      .and(arch.inApplication())
       .and()
       .areNotInterfaces()
       .and()
@@ -123,7 +121,7 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -131,8 +129,8 @@ DcaRule.Check(
         "DCA-USE-005",
         "Use Case Queries should be immutable (sealed or records)",
         "Use case queries should be immutable (value objects)",
-        arch => ImmutableApplicationModels(arch, "Query"))
-    .Selecting("Classes and structs in each module application namespace with the corresponding Command, Query or Result suffix, including record classes and record structs.")
+        arch => ImmutableApplicationModels(arch, "Query", t => arch.Layout.Markers.Is("Query", t)))
+    .Selecting("Classes and structs, including record classes and record structs, in each module application namespace that the configured query role recognises - by default a simple name ending with Query.")
     .Checking(
         "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")
 ```

@@ -14,7 +14,7 @@ private static List<JavaClass> repositoryInterfaces(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(arch.layout().markers().repository())
+          arch.layout().markers().is("repository").test(c)
               && c.isInterface()
               && !c.getSimpleName().equals(arch.layout().repositorySuffix()));
 }

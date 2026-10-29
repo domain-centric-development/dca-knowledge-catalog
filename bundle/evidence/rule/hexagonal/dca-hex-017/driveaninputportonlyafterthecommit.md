@@ -30,7 +30,7 @@ private static ArchCondition<JavaClass> driveAnInputPortOnlyAfterTheCommit(
         for (JavaCodeUnit unit : calls.reachableFrom(listener)) {
           for (JavaMethodCall call : unit.getMethodCallsFromSelf()) {
             JavaClass owner = call.getTargetOwner();
-            if (owner.isAssignableTo(markers.inputPort())) {
+            if (markers.is("inputPort").test(owner)) {
               ports.add(owner.getSimpleName() + "." + call.getName());
             }
           }

@@ -101,8 +101,7 @@ DcaRule.informational(
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
   private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
-    return (type.isAssignableTo(markers.domainException())
-            || type.isAssignableTo(markers.useCaseException()))
+    return (markers.is("domainException").test(type) || markers.is("useCaseException").test(type))
         && !markers.declaresTypesIn(type.getPackageName());
   }
 ```
@@ -114,7 +113,7 @@ DcaRule.informational(
   private static String fieldFinding(JavaClass type, DcaArchitecture arch) {
     DcaMarkers markers = arch.layout().markers();
     String name = type.getName();
-    if (type.isAssignableTo(markers.aggregateRoot()) || type.isAssignableTo(markers.entity())) {
+    if (markers.is("aggregateRoot").test(type) || markers.is("entity").test(type)) {
       return "an aggregate or entity";
     }
     if (type.isAssignableTo(CharSequence.class)) {
@@ -123,8 +122,8 @@ DcaRule.informational(
     if (type.isPrimitive()
         || type.isEnum()
         || type.isAssignableTo(Number.class)
-        || type.isAssignableTo(markers.id())
-        || type.isAssignableTo(markers.value())
+        || markers.is("id").test(type)
+        || markers.is("value").test(type)
         || name.equals("java.lang.Boolean")
         || name.equals("java.lang.Character")
         || type.getPackageName().equals("java.time")

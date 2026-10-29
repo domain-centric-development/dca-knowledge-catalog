@@ -45,8 +45,7 @@ DcaRule.of(
                 .that(
                     specifications(
                         arch.layout().markers(), arch.layout().specificationSuffix()))
-                .should()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .should(LayerConditions.be(arch.inDomain()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan that are assignable to the"
@@ -71,8 +70,7 @@ DcaRule.of(
    * the suffix without the marker.
    */
   private static DescribedPredicate<JavaClass> specifications(DcaMarkers markers, String suffix) {
-    DescribedPredicate<JavaClass> byRole =
-        JavaClass.Predicates.assignableTo(markers.specification());
+    DescribedPredicate<JavaClass> byRole = markers.is("specification");
     DescribedPredicate<JavaClass> byName = JavaClass.Predicates.simpleNameEndingWith(suffix);
     return byRole
         .or(byName)
@@ -88,7 +86,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -107,7 +105,7 @@ DcaRule.Of(
                     || t.Name.EndsWith(arch.Layout.SpecificationSuffix, StringComparison.Ordinal)),
             "are specifications")
         .Should()
-        .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
+        .FollowCustomCondition(LayerConditions.PlacedIn(arch.InDomain, "the domain layer"), "be in the domain layer"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to the configured "
         + "specification role or whose simple name ends with Specification, the role's own type "

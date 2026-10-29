@@ -43,10 +43,8 @@ DcaRule.of(
             classes()
                 .that()
                 .areNotInterfaces()
-                .and()
-                .areAssignableTo(arch.layout().markers().repository())
-                .should()
-                .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
+                .and(arch.layout().markers().is("repository"))
+                .should(LayerConditions.be(arch.inOutgoingAdapter()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere under scan assignable to Repository, abstract "
@@ -62,7 +60,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inOutgoingAdapter()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -71,8 +69,8 @@ DcaRule.Check(
     "Repository Implementations must reside in the Adapter.Outgoing namespace",
     "Repository implementations are outgoing adapters in bounded contexts",
     arch => RequireNamespace(
-        ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Repository),
-        DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns()), "Repository implementations", "the outgoing adapter namespace"))
+        ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.Repository)),
+        arch.InOutgoingAdapter, "Repository implementations", "the outgoing adapter namespace"))
     .Selecting(
         "Non-interface types below the root namespace assignable to IRepository, "
         + "abstract base classes included.")

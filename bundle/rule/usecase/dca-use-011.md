@@ -42,8 +42,7 @@ DcaRule.of(
             + " Architecture)",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .should()
                 .dependOnClassesThat()
                 .haveSimpleNameEndingWith("Dto")
@@ -55,7 +54,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -66,7 +65,7 @@ DcaRule.Of(
         arch =>
             Types()
                 .That()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns()))
+                .FollowCustomPredicate(arch.InApplication, "are in the application layer")
                 .Should()
                 .NotDependOnAnyTypesThat()
                 .HaveNameEndingWith("Dto"))

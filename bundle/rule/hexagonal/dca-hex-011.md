@@ -44,8 +44,7 @@ DcaRule.of(
             + " adapter untestable without the real use case and everything it depends on",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allIncomingAdapterPatterns())
+                .that(arch.inIncomingAdapter())
                 .should()
                 .dependOnClassesThat(useCaseImplementations(arch.layout().markers()))
                 .allowEmptyShould(true))
@@ -69,7 +68,7 @@ DcaRule.of(
     return new DescribedPredicate<>("are use case implementations rather than input ports") {
       @Override
       public boolean test(JavaClass javaClass) {
-        return !javaClass.isInterface() && javaClass.isAssignableTo(markers.inputPort());
+        return !javaClass.isInterface() && markers.is("inputPort").test(javaClass);
       }
     };
   }
@@ -77,7 +76,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inIncomingAdapter()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -91,7 +90,7 @@ DcaRule.Check(
         arch =>
         {
             var violations = arch.Classes
-                .Where(c => InNamespace(c, DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns())))
+                .Where(arch.InIncomingAdapter)
                 .SelectMany(c => c.Dependencies
                     .Select(d => d.Target)
                     .Where(t => IsUseCaseImplementation(arch, t))

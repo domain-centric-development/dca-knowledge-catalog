@@ -44,9 +44,7 @@ DcaRule.check(
           List<String> violations =
               violations(
                   arch,
-                  c ->
-                      c.isAssignableTo(arch.layout().markers().domainEvent())
-                          && !c.isInterface(),
+                  c -> arch.layout().markers().is("domainEvent").test(c) && !c.isInterface(),
                   c -> !hasTimestampField(c, arch.layout().timestampTypes()),
                   c -> c.getName() + " does not have a timestamp field");
           failIfAny(

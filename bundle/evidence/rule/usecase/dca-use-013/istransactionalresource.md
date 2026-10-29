@@ -14,9 +14,9 @@ evidence_for: "/rule/usecase/dca-use-013.md#istransactionalresource"
    * Output ports that live inside the transaction; every other output port may leave the process.
    */
   private static boolean isTransactionalResource(JavaClass owner, DcaMarkers markers) {
-    return owner.isAssignableTo(markers.repository())
-        || owner.isAssignableTo(markers.store())
-        || owner.isAssignableTo(markers.domainEventPublisher())
-        || owner.isAssignableTo(markers.integrationEventPublisher());
+    return markers.is("repository").test(owner)
+        || markers.is("store").test(owner)
+        || markers.is("domainEventPublisher").test(owner)
+        || markers.is("integrationEventPublisher").test(owner);
   }
 ```

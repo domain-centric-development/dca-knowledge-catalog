@@ -50,8 +50,7 @@ DcaRule.of(
                         layout.frameworkAnnotations().webController(),
                         layout.frameworkAnnotations().restController()))
                 .should()
-                .dependOnClassesThat()
-                .areAssignableTo(arch.layout().markers().repository())
+                .dependOnClassesThat(arch.layout().markers().is("repository"))
                 .allowEmptyShould(true))
     .selecting(
         "Classes anywhere on the classpath under scan whose simple name ends with the"
@@ -110,7 +109,7 @@ DcaRule.Of(
         "Controllers must go through use cases (input ports), never directly to repositories",
         arch => Classes().That().FollowCustomPredicate(c => IsController(c, Layout), "are controllers")
             .Should().NotDependOnAnyTypesThat()
-            .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.Repository), "are repositories"))
+            .FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), t), "are repositories"))
     .Selecting(
         "Controller classes anywhere in the loaded assemblies: a class whose name ends with"
             + " the configured controller suffix or the configured REST-controller suffix, one deriving"

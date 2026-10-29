@@ -18,12 +18,11 @@ DcaRule.Informational(
             + " refactoring inside the code and must not change what a client reads",
         arch =>
         {
-            var inner = new Regex(DcaLayout.AnyOf(arch.AllDomainPatterns().Concat(arch.AllApplicationPatterns())));
-            bool InnerEnum(Type? type) => type is { IsEnum: true, Namespace: { } ns } && inner.IsMatch(ns);
+            bool InnerEnum(Type? type) =>
+                type is { IsEnum: true } && (arch.InLayer(type, DcaLayout.Layer.Domain) || arch.InLayer(type, DcaLayout.Layer.Application));
 
-            var adapters = DcaLayout.AnyOf(arch.AllAdapterPatterns());
             var observed = new List<string>();
-            foreach (var adapter in arch.Types.Where(t => InNamespace(t, adapters)).OrderBy(t => t.FullName, StringComparer.Ordinal))
+            foreach (var adapter in arch.Types.Where(arch.InAdapter).OrderBy(t => t.FullName, StringComparer.Ordinal))
             {
                 var runtime = arch.RuntimeType(adapter);
                 if (runtime is null || runtime.IsNested)

@@ -23,4 +23,4 @@ evidence_for: "/rule/tactical/dca-tac-025.md#isenumvalueof"
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).

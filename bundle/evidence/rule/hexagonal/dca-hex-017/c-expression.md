@@ -41,7 +41,7 @@ DcaRule.Check(
 
                     var ports = new IntraClassCalls(runtime).Units
                         .SelectMany(IntraClassCalls.IlCalls)
-                        .Where(call => call.DeclaringType is not null && DcaMarkers.IsAssignableToByName(call.DeclaringType, arch.Layout.Markers.InputPort))
+                        .Where(call => call.DeclaringType is not null && arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), call.DeclaringType))
                         .Select(call => $"{call.DeclaringType!.Name.Split('`')[0]}.{call.Name}")
                         .Distinct()
                         .OrderBy(name => name, StringComparer.Ordinal)

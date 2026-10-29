@@ -43,12 +43,10 @@ DcaRule.of(
             classes()
                 .that()
                 .areInterfaces()
-                .and()
-                .areAssignableTo(arch.layout().markers().store())
+                .and(arch.layout().markers().is("store"))
                 .and()
                 .doNotHaveSimpleName(arch.layout().storeSuffix())
-                .should()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .should(LayerConditions.be(arch.inApplication()))
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces anywhere under scan assignable to Store, whatever their name, the "
@@ -61,7 +59,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -69,7 +67,7 @@ DcaRule.Check(
     "DCA-TAC-019",
     "Store interfaces must reside in the application layer (local to a use case or shared)",
     "Store interfaces are output ports in the application layer (Hexagonal Architecture)",
-    arch => RequireNamespace(StoreInterfaces(arch), DcaLayout.AnyOf(arch.AllApplicationPatterns()), "Store interfaces", "an application namespace of its module (use-case-local or Shared)"))
+    arch => RequireNamespace(StoreInterfaces(arch), arch.InApplication, "Store interfaces", "an application namespace of its module (use-case-local or Shared)"))
     .Selecting(
         "Interfaces below the root namespace assignable to IStore, whatever their "
         + "name; an interface named exactly Store excluded.")

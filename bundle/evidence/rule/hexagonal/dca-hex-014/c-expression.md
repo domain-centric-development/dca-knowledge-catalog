@@ -19,9 +19,8 @@ DcaRule.Check(
         arch =>
         {
             var roles = arch.Layout.FrameworkTypes;
-            var incoming = DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns());
             var violations = new List<string>();
-            foreach (var adapter in arch.Classes.Where(c => !c.IsCompilerGenerated && InNamespace(c, incoming)).OrderBy(c => c.FullName, StringComparer.Ordinal))
+            foreach (var adapter in arch.Classes.Where(c => !c.IsCompilerGenerated && arch.InIncomingAdapter(c)).OrderBy(c => c.FullName, StringComparer.Ordinal))
             {
                 var runtime = arch.RuntimeType(adapter);
                 if (runtime is null)
@@ -68,7 +67,8 @@ DcaRule.Check(
     .Checking(
         "No method reached from the handler through calls within the class - async state machines and"
             + " lambdas included - calls a method of a type assignable to IInputPort that takes a"
-            + " parameter whose type name ends in Command. A mapping that names no HTTP method is checked like"
+            + " command (the configured command role, by default a simple name ending with Command) as a"
+            + " parameter. A mapping that names no HTTP method is checked like"
             + " a GET handler. A handler mapped by a routing call rather than"
             + " by an attribute or a name is not seen, and a command reached through a second class is"
             + " not followed. An empty selection passes.")

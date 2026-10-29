@@ -6,7 +6,10 @@
 - [Domain types must not hold bare primitives, strings or time types — `classesMatching`](classesmatching.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — `fail`](fail.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — `implementsBuildingBlock`](implementsbuildingblock.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types — `instanceFieldCount`](instancefieldcount.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — `isEnumImplicit`](isenumimplicit.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — `isEnumValueOf`](isenumvalueof.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types — `isFailure`](isfailure.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — `isWrapperValue`](iswrappervalue.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types — `nestedInWrapperOrValue`](nestedinwrapperorvalue.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

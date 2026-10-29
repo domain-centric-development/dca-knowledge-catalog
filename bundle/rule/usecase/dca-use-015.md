@@ -66,12 +66,12 @@ private static void checkResultsCarryNoIdentities(DcaArchitecture arch) {
     if (result.isInterface()
         || result.isNestedClass()
         || !result.getSimpleName().endsWith("Result")
-        || result.isAssignableTo(arch.layout().markers().value())
-        || !residesInAny(result, arch.allApplicationPatterns())) {
+        || arch.layout().markers().is("value").test(result)
+        || !arch.inApplication().test(result)) {
       continue;
     }
     walkResult(
-        arch.allApplicationPatterns(),
+        arch.inApplication(),
         result,
         result.getSimpleName(),
         new ArrayDeque<>(),
@@ -82,19 +82,6 @@ private static void checkResultsCarryNoIdentities(DcaArchitecture arch) {
     throw new DcaRuleViolation(
         "Use Case Result Models must not expose aggregate roots or entities", violations);
   }
-}
-```
-
-### `residesInAny`
-
-```java
-private static boolean residesInAny(JavaClass javaClass, String[] packagePatterns) {
-  for (String pattern : packagePatterns) {
-    if (JavaClass.Predicates.resideInAPackage(pattern).test(javaClass)) {
-      return true;
-    }
-  }
-  return false;
 }
 ```
 
@@ -109,7 +96,7 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
    * reached through two fields is reported on both paths.
    */
   private static void walkResult(
-      String[] applicationPatterns,
+      DescribedPredicate<JavaClass> application,
       JavaClass current,
       String path,
       Deque<String> recordsOnPath,
@@ -125,9 +112,9 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
         String identity = identityKind(involved, markers);
         if (identity != null) {
           violations.add(fieldPath + " : " + involved.getSimpleName() + " (" + identity + ")");
-        } else if (isPartRecord(involved, applicationPatterns)) {
+        } else if (isPartRecord(involved, application)) {
           walkResult(
-              applicationPatterns,
+              application,
               involved,
               fieldPath + " -> " + involved.getSimpleName(),
               recordsOnPath,
@@ -145,10 +132,10 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
 ```java
 /** The marker a class carries into the result, or null when it is a value or plain type. */
   private static String identityKind(JavaClass javaClass, DcaMarkers markers) {
-    if (javaClass.isAssignableTo(markers.aggregateRoot())) {
+    if (markers.is("aggregateRoot").test(javaClass)) {
       return simpleName(markers.aggregateRoot());
     }
-    if (javaClass.isAssignableTo(markers.entity())) {
+    if (markers.is("entity").test(javaClass)) {
       return simpleName(markers.entity());
     }
     return null;
@@ -163,8 +150,9 @@ private static boolean residesInAny(JavaClass javaClass, String[] packagePattern
    * next to it, or shared in {@code application.shared}. Records from other layers (value objects,
    * read models) are values by contract and are not walked.
    */
-  private static boolean isPartRecord(JavaClass candidate, String[] applicationPatterns) {
-    return candidate.isRecord() && residesInAny(candidate, applicationPatterns);
+  private static boolean isPartRecord(
+      JavaClass candidate, DescribedPredicate<JavaClass> application) {
+    return candidate.isRecord() && application.test(candidate);
   }
 ```
 
@@ -300,7 +288,7 @@ private static void collect(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

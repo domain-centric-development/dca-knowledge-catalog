@@ -20,8 +20,7 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
             .filter(
                 c ->
                     c.getTarget().getName().equals("save")
-                        && c.getTargetOwner()
-                            .isAssignableTo(arch.layout().markers().repository()))
+                        && arch.layout().markers().is("repository").test(c.getTargetOwner()))
             .allMatch(c -> EventFreeAggregate.repository(c.getTargetOwner(), arch))) {
           continue;
         }
@@ -32,7 +31,7 @@ private static ArchCondition<JavaClass> publishAfterSaving(DcaArchitecture arch)
                       u ->
                           calls(
                               u,
-                              arch.layout().markers().domainEventPublisher(),
+                              arch.layout().markers().is("domainEventPublisher"),
                               "publishAndClearEvents"));
           if (!publishes) {
             events.add(

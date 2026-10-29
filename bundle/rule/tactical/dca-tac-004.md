@@ -42,13 +42,13 @@ DcaRule.check(
         arch -> {
           List<String> violations = new ArrayList<>();
           for (JavaClass entity :
-              concreteClassesAssignableTo(arch, arch.layout().markers().entity())) {
+              concreteClassesAssignableTo(arch, arch.layout().markers().is("entity"))) {
             if (entity.getModifiers().contains(JavaModifier.ABSTRACT)) {
               continue;
             }
             boolean hasIdField =
                 entity.getAllFields().stream()
-                    .anyMatch(f -> f.getRawType().isAssignableTo(arch.layout().markers().id()));
+                    .anyMatch(f -> arch.layout().markers().is("id").test(f.getRawType()));
             if (!hasIdField) {
               violations.add(
                   entity.getName()
@@ -74,8 +74,9 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
-  return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
+private static List<JavaClass> concreteClassesAssignableTo(
+    DcaArchitecture arch, DescribedPredicate<JavaClass> role) {
+  return classesMatching(arch, c -> role.test(c) && !c.isInterface());
 }
 ```
 
@@ -120,15 +121,15 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var entity in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Entity))
+        foreach (var entity in ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.Entity)))
         {
             if (entity is Class { IsAbstract: true })
             {
                 continue;
             }
 
-            var hasIdMember = DataMembers(arch, entity).Any(m => IsAssignableTo(arch, m.Type, arch.Layout.Markers.Id))
-                || RuntimeDataMemberTypes(arch, entity).Any(t => DcaMarkers.IsAssignableToByName(t, arch.Layout.Markers.Id));
+            var hasIdMember = DataMembers(arch, entity).Any(m => IsRole(arch, m.Type, nameof(DcaMarkers.Id)))
+                || RuntimeDataMemberTypes(arch, entity).Any(t => arch.Layout.Markers.Is(nameof(DcaMarkers.Id), t));
             if (!hasIdMember)
             {
                 violations.Add($"{entity.FullName} has no field or property whose type implements {nameof(IId)}");

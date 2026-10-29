@@ -32,12 +32,11 @@ DcaRule.Check(
         "A struct is copied by value but its fields stay assignable unless the struct is declared readonly, so a mutating method silently changes a copy and leaves the original behind. readonly makes the compiler enforce what a Value Object promises. Whether a value object is a record, a class or a struct is not prescribed here - DCA-TAC-012 accepts any immutable type with value equality",
         arch =>
         {
-            var domain = arch.AllDomainPatterns().Select(p => new Regex(p)).ToList();
             var violations = new List<string>();
-            foreach (var type in arch.Types.Where(t => domain.Any(r => r.IsMatch(t.Namespace.FullName))))
+            foreach (var type in arch.Types.Where(arch.InDomain))
             {
                 var runtime = arch.RuntimeType(type);
-                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Value))
+                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !arch.Layout.Markers.Is(nameof(DcaMarkers.Value), runtime))
                 {
                     continue;
                 }

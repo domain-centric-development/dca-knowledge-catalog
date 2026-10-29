@@ -23,7 +23,7 @@ DcaRule.Check(
             foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch)).OrderBy(t => t.FullName, StringComparer.Ordinal))
             {
                 var runtime = arch.RuntimeType(type)!;
-                if (!InputTypesOf(runtime, markers).Any(t => PlainName(t).EndsWith("Query", StringComparison.Ordinal)))
+                if (!InputTypesOf(runtime, markers).Any(t => markers.Is("Query", t)))
                 {
                     continue;
                 }
@@ -50,7 +50,8 @@ DcaRule.Check(
     .Experimental()
     .Selecting(
         "Concrete non-nested application operations selected by IInputPort marker or configured use-case"
-            + " suffix, with loadable runtime types, whose input ends in Query: the input type argument of an"
+            + " suffix, with loadable runtime types, whose input the configured query role recognises (by default a"
+            + " simple name ending with Query): the input type argument of an"
             + " implemented IUseCase<TInput, TOutput>, or a parameter of a method that implements an"
             + " IInputPort interface.")
     .Checking(

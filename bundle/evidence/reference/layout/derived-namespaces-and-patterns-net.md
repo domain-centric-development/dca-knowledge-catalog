@@ -13,6 +13,7 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 
 | Member | Yields |
 |---|---|
+| `static string RoleOf(Layer layer)` | The name the layout and the report use for a layer, e.g. `outgoingAdapter` — the same word as in `dca-archunit`. |
 | `string SharedKernelPattern` | Pattern for `Root.SharedKernel` and everything below. |
 | `string SharedKernelDomainPattern` | Pattern for `Root.SharedKernel.Domain` and below. |
 | `string SharedKernelDomainModelPattern` | Pattern for `Root.SharedKernel.Domain.Model` and below. |

@@ -36,15 +36,10 @@ DcaRule.informational(
             + " Renaming a member is a refactoring inside the code and must not change what a"
             + " client reads",
         arch -> {
-          String[] inner =
-              java.util.stream.Stream.concat(
-                      java.util.Arrays.stream(arch.allDomainPatterns()),
-                      java.util.Arrays.stream(arch.allApplicationPatterns()))
-                  .toArray(String[]::new);
+          var inner = arch.inDomain().or(arch.inApplication());
           java.util.Set<String> observed = new java.util.TreeSet<>();
           for (JavaClass adapter : arch.classes()) {
-            if (!JavaClass.Predicates.resideInAnyPackage(arch.allAdapterPatterns())
-                .test(adapter)) {
+            if (!arch.inAdapter().test(adapter)) {
               continue;
             }
             for (JavaMethodCall call : adapter.getMethodCallsFromSelf()) {
@@ -56,7 +51,7 @@ DcaRule.informational(
               if ((call.getName().equals("name") || call.getName().equals("toString"))
                   && call.getTarget().getRawParameterTypes().isEmpty()
                   && owner.isEnum()
-                  && JavaClass.Predicates.resideInAnyPackage(inner).test(owner)) {
+                  && inner.test(owner)) {
                 observed.add(
                     call.getOrigin().getFullName()
                         + " spells "

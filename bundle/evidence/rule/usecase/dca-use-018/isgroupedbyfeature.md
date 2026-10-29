@@ -18,7 +18,7 @@ evidence_for: "/rule/usecase/dca-use-018.md#isgroupedbyfeature"
       if (!DcaArchitecture.inPackageTree(pkg, application)
           || DcaArchitecture.inPackageTree(pkg, shared)
           || candidate.isNestedClass()
-          || !(candidate.isAssignableTo(layout.markers().inputPort())
+          || !(layout.markers().is("inputPort").test(candidate)
               || candidate.getSimpleName().endsWith(layout.useCaseSuffix()))) {
         continue;
       }

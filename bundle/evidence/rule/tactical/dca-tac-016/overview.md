@@ -46,7 +46,7 @@ DcaRule.check(
                 continue;
               }
               JavaClass aggregate = bound.get().toErasure();
-              if (!aggregate.isAssignableTo(arch.layout().markers().aggregateRoot())) {
+              if (!arch.layout().markers().is("aggregateRoot").test(aggregate)) {
                 violations.add(
                     repository.getName()
                         + " binds "
@@ -89,7 +89,7 @@ DcaRule.check(
               continue;
             }
             for (JavaClass candidate : candidates) {
-              if (!candidate.isAssignableTo(arch.layout().markers().aggregateRoot())) {
+              if (!arch.layout().markers().is("aggregateRoot").test(candidate)) {
                 violations.add(
                     repository.getName()
                         + " exists for "

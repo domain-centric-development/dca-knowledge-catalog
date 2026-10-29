@@ -49,14 +49,10 @@ DcaRule.of(
                 .doNotHaveSimpleName(arch.layout().storeSuffix())
                 .and()
                 .doNotHaveFullyQualifiedName(arch.layout().markers().store())
-                .and()
-                .resideOutsideOfPackages(arch.allAdapterPatterns())
-                .and()
-                .resideOutsideOfPackages(arch.allInfrastructurePatterns())
-                .should()
-                .beAssignableTo(arch.layout().markers().store())
-                .andShould()
-                .notBeAssignableTo(arch.layout().markers().repository())
+                .and(DescribedPredicate.not(arch.inAdapter()))
+                .and(DescribedPredicate.not(arch.inInfrastructure()))
+                .should(LayerConditions.be(arch.layout().markers().is("store")))
+                .andShould(LayerConditions.notBe(arch.layout().markers().is("repository")))
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces under scan whose simple name ends with Store, the marker Store itself"
@@ -71,7 +67,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()`, `allInfrastructurePatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inAdapter()`, `inInfrastructure()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -82,23 +78,22 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        var adapterOrInfrastructure = DcaLayout.AnyOf(arch.AllAdapterPatterns().Concat(arch.AllInfrastructurePatterns()));
         foreach (var candidate in arch.Interfaces)
         {
             if (!HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix)
                 || candidate.FullName == arch.Layout.Markers.Store
-                || (candidate.Namespace is not null
-                    && Regex.IsMatch(candidate.Namespace.FullName, adapterOrInfrastructure)))
+                || arch.InAdapter(candidate)
+                || arch.InInfrastructure(candidate))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, candidate, arch.Layout.Markers.Store))
+            if (!IsRole(arch, candidate, nameof(DcaMarkers.Store)))
             {
                 violations.Add($"{candidate.FullName} is named *Store but does not extend {nameof(IStore)}");
             }
 
-            if (IsAssignableTo(arch, candidate, arch.Layout.Markers.Repository))
+            if (IsRole(arch, candidate, nameof(DcaMarkers.Repository)))
             {
                 violations.Add($"{candidate.FullName} is named *Store but extends {nameof(IRepository)}");
             }

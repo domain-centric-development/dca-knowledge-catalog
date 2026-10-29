@@ -32,9 +32,8 @@ DcaRule.Check(
         "Async is an I/O concern of ports and adapters; a synchronous domain model stays testable, deterministic and free of sync-over-async hazards",
         arch =>
         {
-            var domain = arch.AllDomainPatterns().Select(p => new Regex(p)).ToList();
             var violations = new List<string>();
-            foreach (var type in arch.Types.Where(t => domain.Any(r => r.IsMatch(t.Namespace.FullName))))
+            foreach (var type in arch.Types.Where(arch.InDomain))
             {
                 var async = type.Dependencies
                     .Select(d => d.Target.FullName)

@@ -24,11 +24,13 @@ DcaRule.Check(
         // ITransactionBoundary port is wiring and plumbing as well: the composition root (the global
         // infrastructure namespace) and the shared kernel's infrastructure may do that too. The boundary's
         // implementations are exempt wherever they live.
-        var allowed = new Regex(DcaLayout.AnyOf(arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())));
-        var wiringAllowed = new Regex(DcaLayout.AnyOf(
-            arch.AllApplicationPatterns().Concat(arch.AllOutgoingAdapterPatterns())
-                .Append(Layout.InfrastructurePattern)
-                .Append(DcaLayout.Below($"{Layout.SharedKernelNamespace}.{Layout.InfrastructureSegment}"))));
+        bool Allowed(IType t) => arch.InApplication(t) || arch.InOutgoingAdapter(t);
+        var wiringNamespaces = new Regex(DcaLayout.AnyOf(new[]
+        {
+            Layout.InfrastructurePattern,
+            DcaLayout.Below($"{Layout.SharedKernelNamespace}.{Layout.InfrastructureSegment}"),
+        }));
+        bool WiringAllowed(IType t) => Allowed(t) || (t.Namespace is not null && wiringNamespaces.IsMatch(t.Namespace.FullName));
         var types = Layout.FrameworkTypes;
         var transactionApis = new HashSet<string>(types.TransactionApiTypes, StringComparer.Ordinal);
         if (FrameworkTypes.IsSet(types.TransactionScope))
@@ -37,16 +39,16 @@ DcaRule.Check(
         }
 
         var transactionManagers = new HashSet<string>(types.TransactionManagerTypes, StringComparer.Ordinal);
-        bool IsBoundary(IType t) => t.FullName == BoundaryPort || t.ImplementsInterface(BoundaryPort);
+        bool IsBoundary(IType t) => arch.Layout.Markers.Is(nameof(DcaMarkers.TransactionBoundary), t);
         bool UsesApi(IType target) => transactionApis.Contains(target.FullName);
         bool ManagerOrBoundary(IType target) => transactionManagers.Contains(target.FullName) || IsBoundary(target);
-        IEnumerable<string> Findings(Regex allowedHere, Func<IType, bool> programmatic) => arch.Types
-            .Where(t => t.Namespace is null || !allowedHere.IsMatch(t.Namespace.FullName))
+        IEnumerable<string> Findings(Func<IType, bool> allowedHere, Func<IType, bool> programmatic) => arch.Types
+            .Where(t => !allowedHere(t))
             .Where(t => !IsBoundary(t))
             .SelectMany(t => t.Dependencies.Select(d => d.Target).Where(programmatic).Select(target => target.FullName).Distinct()
                 .Select(target => $"{t.FullName} uses {target} outside the application layer"));
-        var violations = Findings(allowed, UsesApi).Concat(Findings(wiringAllowed, ManagerOrBoundary))
-            .Concat(DeclarativeFindings(arch, allowed, types.TransactionalAttribute))
+        var violations = Findings(Allowed, UsesApi).Concat(Findings(WiringAllowed, ManagerOrBoundary))
+            .Concat(DeclarativeFindings(arch, Allowed, types.TransactionalAttribute))
             .ToList();
         DcaRule.Fail($"Transaction boundaries belong to the application layer\nbecause {rationale}", violations);
     })

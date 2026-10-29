@@ -41,12 +41,10 @@ DcaRule.of(
         "Domain events are part of the domain layer (named in past tense)",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().domainEvent())
+                .that(arch.layout().markers().is("domainEvent"))
                 .and()
                 .areNotInterfaces()
-                .should()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .should(LayerConditions.be(arch.inDomain()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan that are assignable to DomainEvent.")
@@ -57,7 +55,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -67,11 +65,11 @@ DcaRule.Of(
     "Domain events are part of the domain layer (named in past tense)",
     arch => Types()
         .That()
-        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.DomainEvent), "are domain events")
+        .FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainEvent), t), "are domain events")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()
-        .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
+        .FollowCustomCondition(LayerConditions.PlacedIn(arch.InDomain, "the domain layer"), "be in the domain layer"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IDomainEvent.")
     .Checking(

@@ -42,12 +42,10 @@ DcaRule.of(
             + " in application/shared/, not domain/",
         arch ->
             noClasses()
-                .that()
-                .areAssignableTo(arch.layout().markers().outputPort())
+                .that(arch.layout().markers().is("outputPort"))
                 .and()
                 .areInterfaces()
-                .should()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .should(LayerConditions.be(arch.inDomain()))
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces anywhere on the classpath under scan that are assignable to"
@@ -60,7 +58,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -69,8 +67,9 @@ DcaRule.Of(
         "Output ports must not reside in the domain layer",
         "output ports (IRepository, IStore, IOutputPort) are an application-layer concern and must live"
             + " in Application/Shared/, not Domain/",
-        arch => Interfaces().That().FollowCustomPredicate(i => i.IsAssignableTo(arch.Layout.Markers.OutputPort), "are output ports")
-            .Should().NotResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
+        arch => Interfaces().That().FollowCustomPredicate(i => arch.Layout.Markers.Is(nameof(DcaMarkers.OutputPort), i), "are output ports")
+            .Should().FollowCustomCondition(
+                i => new ConditionResult(i, !arch.InDomain(i), "is in the domain layer"), "not be in the domain layer"))
     .Selecting(
         "Interfaces anywhere in the loaded assemblies that are assignable to"
             + " IOutputPort - the building-block port interfaces themselves included.")

@@ -36,7 +36,7 @@ DcaRule.Check(
             foreach (var port in arch.Interfaces)
             {
                 var runtime = arch.RuntimeType(port);
-                if (runtime is null || !(IsPort(runtime, arch.Layout.Markers.InputPort) || IsPort(runtime, arch.Layout.Markers.OutputPort)))
+                if (runtime is null || !(IsPort(runtime, arch.Layout.Markers, nameof(DcaMarkers.InputPort)) || IsPort(runtime, arch.Layout.Markers, nameof(DcaMarkers.OutputPort))))
                 {
                     continue;
                 }

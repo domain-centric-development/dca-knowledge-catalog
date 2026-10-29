@@ -54,8 +54,7 @@ DcaRule.check(
             // it.
             perModule.add(
                 noClasses()
-                    .that()
-                    .resideInAPackage(layout.applicationPattern(source))
+                    .that(arch.inLayerOf(DcaLayout.Layer.APPLICATION, source))
                     .should()
                     .dependOnClassesThat()
                     .resideInAnyPackage(forbidden)
@@ -156,7 +155,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `inLayerOf()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -178,7 +177,7 @@ DcaRule.Check(
                 // Dependencies, not accesses: a field, parameter or record component of a foreign
                 // type is a dependency even without a method call.
                 perModule.Add(
-                    Types().That().ResideInNamespaceMatching(Layout.ApplicationPatternOf(source))
+                    Types().That().FollowCustomPredicate(arch.InLayerOf(DcaLayout.Layer.Application, source), "are in the application layer of " + source)
                         .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(AnyOf(forbidden))
                         .Because("The application layer of module '" + arch.ContextName(source)
                             + "' must not access other modules directly - define output ports and use adapters instead"));

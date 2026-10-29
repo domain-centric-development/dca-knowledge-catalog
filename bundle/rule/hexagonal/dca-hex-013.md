@@ -44,11 +44,9 @@ DcaRule.of(
             + " the first one's outgoing edge",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
+                .that(arch.inOutgoingAdapter())
                 .should()
-                .dependOnClassesThat()
-                .areAssignableTo(arch.layout().markers().inputPort())
+                .dependOnClassesThat(arch.layout().markers().is("inputPort"))
                 .allowEmptyShould(true))
     .selecting("Classes in <module>.adapter.outgoing.. of every module root.")
     .checking(
@@ -62,7 +60,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inOutgoingAdapter()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -75,13 +73,12 @@ DcaRule.Check(
             + " the first one's outgoing edge",
         arch =>
         {
-            var outgoing = DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns());
             var violations = new List<string>();
-            foreach (var adapter in arch.Classes.Where(c => InNamespace(c, outgoing)))
+            foreach (var adapter in arch.Classes.Where(arch.InOutgoingAdapter))
             {
                 var ports = adapter.Dependencies
                     .Select(d => d.Target)
-                    .Where(t => !t.IsGenericParameter && IsAssignableTo(arch, t, arch.Layout.Markers.InputPort))
+                    .Where(t => !t.IsGenericParameter && IsRole(arch, t, nameof(DcaMarkers.InputPort)))
                     .Select(t => t.FullName);
                 var runtime = arch.RuntimeType(adapter);
                 if (runtime is not null)
@@ -90,7 +87,7 @@ DcaRule.Check(
                         .GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                         .SelectMany(c => c.GetParameters())
                         .Select(p => p.ParameterType)
-                        .Where(t => DcaMarkers.IsAssignableToByName(t, arch.Layout.Markers.InputPort))
+                        .Where(t => arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), t))
                         .Select(t => t.FullName!));
                 }
 

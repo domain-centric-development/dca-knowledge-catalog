@@ -79,7 +79,7 @@ internal static class EventFreeAggregate
                 .SelectMany(IntraClassCalls.IlCalls)
                 .Any(call => call.Name == "RegisterEvent"
                     && call.DeclaringType is { } owner
-                    && DcaMarkers.CarriesRole(owner, markers.AggregateRoot));
+                    && markers.Is(nameof(DcaMarkers.AggregateRoot), owner));
             if (registers && References(type, hierarchy))
             {
                 return false;
@@ -134,7 +134,7 @@ internal static class EventFreeAggregate
                 return false;
             }
 
-            if (call.Name == "RegisterEvent" && DcaMarkers.CarriesRole(owner, markers.AggregateRoot))
+            if (call.Name == "RegisterEvent" && markers.Is(nameof(DcaMarkers.AggregateRoot), owner))
             {
                 return false;
             }

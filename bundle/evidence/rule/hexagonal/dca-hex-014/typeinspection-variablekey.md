@@ -23,4 +23,4 @@ evidence_for: "/rule/hexagonal/dca-hex-014.md#typeinspectionvariablekey"
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inIncomingAdapter()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).

@@ -32,9 +32,8 @@ DcaRule.Check(
         "The transaction boundary of a use case is drawn by a decorator around IUseCase or by ITransactionBoundary (an application-layer execution abstraction implemented in infrastructure), never by DbContext, SaveChanges, TransactionScope or IDbTransaction in the use case itself. Framework types in the application layer bind use cases to one persistence technology and hide where the boundary is; the ITransactionBoundary implementation is the single place that knows how to open and commit a transaction",
         arch =>
         {
-            var application = arch.AllApplicationPatterns().Select(p => new Regex(p)).ToList();
             var violations = new List<string>();
-            foreach (var type in arch.Types.Where(t => application.Any(r => r.IsMatch(t.Namespace.FullName))))
+            foreach (var type in arch.Types.Where(arch.InApplication))
             {
                 var frameworks = type.Dependencies
                     .Select(d => d.Target.FullName)

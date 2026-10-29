@@ -77,7 +77,7 @@ private static void checkUseCaseDepth(DcaArchitecture arch, DcaLayout layout) {
           || candidate.getModifiers().contains(JavaModifier.ABSTRACT)
           || candidate.isNestedClass()
           || candidate.isAnonymousClass()
-          || !(candidate.isAssignableTo(arch.layout().markers().inputPort())
+          || !(arch.layout().markers().is("inputPort").test(candidate)
               || candidate.getSimpleName().endsWith(layout.useCaseSuffix()))) {
         continue;
       }

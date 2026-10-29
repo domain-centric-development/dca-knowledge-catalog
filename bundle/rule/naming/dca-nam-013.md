@@ -107,8 +107,8 @@ DcaRule.check(
     for (JavaClass type : arch.classes()) {
       if (!type.isNestedClass()
           && !type.isAnonymousClass()
-          && JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns()).test(type)
-          && (type.isAssignableTo(layout.markers().inputPort())
+          && arch.inApplication().test(type)
+          && (layout.markers().is("inputPort").test(type)
               || (!type.isInterface() && type.getSimpleName().endsWith(layout.useCaseSuffix())))) {
         operations.add(type);
       }
@@ -147,7 +147,7 @@ private static String[] publishedApiPatterns(DcaArchitecture arch) {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()`, `moduleRoots()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inApplication()`, `layout()`, `moduleRoots()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp

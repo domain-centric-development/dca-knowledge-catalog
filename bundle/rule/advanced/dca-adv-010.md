@@ -41,12 +41,10 @@ DcaRule.of(
         "Domain services are part of the domain layer, not application layer",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().domainService())
+                .that(arch.layout().markers().is("domainService"))
                 .and()
                 .areNotInterfaces()
-                .should()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .should(LayerConditions.be(arch.inDomain()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan that are assignable to"
@@ -58,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -68,11 +66,11 @@ DcaRule.Of(
     "Domain services are part of the domain layer, not application layer",
     arch => Types()
         .That()
-        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.DomainService), "are domain services")
+        .FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainService), t), "are domain services")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()
-        .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
+        .FollowCustomCondition(LayerConditions.PlacedIn(arch.InDomain, "the domain layer"), "be in the domain layer"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IDomainService.")
     .Checking(

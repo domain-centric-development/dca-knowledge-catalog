@@ -42,8 +42,7 @@ DcaRule.of(
             + " infrastructure implementation details",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allIncomingAdapterPatterns())
+                .that(arch.inIncomingAdapter())
                 .should()
                 .dependOnClassesThat(arch.infrastructureImplementation())
                 .allowEmptyShould(true))
@@ -58,7 +57,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `infrastructureImplementation()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inIncomingAdapter()`, `infrastructureImplementation()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -67,7 +66,7 @@ DcaRule.Of(
         "Incoming Adapters must only use outbound ports (not infrastructure implementations)",
         "Incoming adapters should only use outbound ports declared as interfaces (Ports.Out), not"
             + " infrastructure implementation details",
-        arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()))
+        arch => Types().That().FollowCustomPredicate(arch.InIncomingAdapter, "are in the incoming adapters")
             .Should().NotDependOnAnyTypesThat()
             .FollowCustomPredicate(arch.IsInfrastructureImplementation, "are infrastructure implementations"))
     .Selecting(

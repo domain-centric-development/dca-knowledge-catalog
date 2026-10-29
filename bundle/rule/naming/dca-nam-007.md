@@ -45,8 +45,7 @@ DcaRule.of(
                 .haveSimpleNameEndingWith("Dto")
                 .and()
                 .resideInAnyPackage(layout.basePackage() + "..")
-                .should()
-                .resideInAnyPackage(arch.allAdapterPatterns())
+                .should(LayerConditions.be(arch.inAdapter()))
                 .allowEmptyShould(true))
     .selecting("Classes under the base package whose simple name ends with Dto.")
     .checking(
@@ -57,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inAdapter()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -72,7 +71,7 @@ DcaRule.Of(
                 .And()
                 .ResideInNamespaceMatching(DcaLayout.Below(layout.RootNamespace))
                 .Should()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllAdapterPatterns())))
+                .FollowCustomCondition(LayerConditions.PlacedIn(arch.InAdapter, "an adapter"), "be in an adapter"))
     .Selecting(
         "Types under the root namespace whose name ends with Dto.")
     .Checking(

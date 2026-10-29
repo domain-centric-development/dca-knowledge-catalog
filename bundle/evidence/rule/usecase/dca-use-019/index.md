@@ -11,7 +11,7 @@
 - [Query use cases must not write or publish — `TypeInspection.collectInputs`](typeinspection-collectinputs.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Query use cases must not write or publish — `TypeInspection.inputTypes`](typeinspection-inputtypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Query use cases must not write or publish — `TypeInspection.involvedTypes`](typeinspection-involvedtypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
-- [Query use cases must not write or publish — `TypeInspection.takesInputEndingWith`](typeinspection-takesinputendingwith.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Query use cases must not write or publish — `TypeInspection.takesInput`](typeinspection-takesinput.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Query use cases must not write or publish — `TypeInspection.typeArgumentBindings`](typeinspection-typeargumentbindings.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Query use cases must not write or publish — `TypeInspection.variableKey`](typeinspection-variablekey.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Query use cases must not write or publish — `useCases`](usecases.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

@@ -1,10 +1,10 @@
 ---
 type: Rule
 id: DCA-USE-002
-title: "Types named *Command reside in the application layer"
+title: Commands reside in the application layer
 rule: "Use case commands should be in application layer (CQRS pattern)."
-constraint: "Types named *Command reside in the application layer."
-selects: Classes under the base package whose simple name ends with Command.
+constraint: Commands reside in the application layer.
+selects: Classes under the base package the configured command role recognises - by default a simple name ending with Command.
 checks: "Each resides in an application package of some module root (<module>.application..). A Command in a domain, adapter or infrastructure package is reported."
 enforced_by: "UseCaseRules#DCA-USE-002"
 status: enforced
@@ -16,11 +16,11 @@ tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 ---
 
-# Types named *Command reside in the application layer
+# Commands reside in the application layer
 
 ## Selection
 
-Classes under the base package whose simple name ends with Command.
+Classes under the base package the configured command role recognises - by default a simple name ending with Command.
 
 ## Check
 
@@ -28,7 +28,7 @@ Each resides in an application package of some module root (<module>.application
 
 ## .NET reading
 
-**Selection.** Types under the root namespace whose name ends with Command.
+**Selection.** Types under the root namespace the configured command role recognises - by default a simple name ending with Command.
 
 **Check.** Each resides in an application namespace of some module root (<module>.Application). A Command in a domain, adapter or infrastructure namespace is reported.
 
@@ -37,42 +37,43 @@ Each resides in an application package of some module root (<module>.application
 ```java
 DcaRule.of(
         "DCA-USE-002",
-        "Types named *Command reside in the application layer",
+        "Commands reside in the application layer",
         "Use case commands should be in application layer (CQRS pattern)",
         arch ->
             classes()
-                .that()
-                .haveSimpleNameEndingWith("Command")
+                .that(arch.layout().markers().is("command"))
                 .and()
                 .resideInAnyPackage(layout.basePackage() + "..")
-                .should()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .should(LayerConditions.be(arch.inApplication()))
                 .allowEmptyShould(true))
-    .selecting("Classes under the base package whose simple name ends with Command.")
+    .selecting(
+        "Classes under the base package the configured command role recognises - by default a"
+            + " simple name ending with Command.")
     .checking(
         "Each resides in an application package of some module root (<module>.application..). A Command in a domain, adapter or infrastructure package is reported.")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Of(
         "DCA-USE-002",
-        "Types named *Command reside in the application layer",
+        "Commands reside in the application layer",
         "Use case commands should be in application layer (CQRS pattern)",
         arch =>
             Types()
                 .That()
-                .HaveNameEndingWith("Command")
+                .FollowCustomPredicate(t => arch.Layout.Markers.Is("Command", t), "are commands")
                 .And()
                 .ResideInNamespaceMatching(DcaLayout.Below(layout.RootNamespace))
                 .Should()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns())))
+                .FollowCustomCondition(LayerConditions.PlacedIn(arch.InApplication, "the application layer"), "be in the application layer"))
     .Selecting(
-        "Types under the root namespace whose name ends with Command.")
+        "Types under the root namespace the configured command role recognises - by default a simple name"
+            + " ending with Command.")
     .Checking(
         "Each resides in an application namespace of some module root"
             + " (<module>.Application). A Command in a domain, adapter or infrastructure"

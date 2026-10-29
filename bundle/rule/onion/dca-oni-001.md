@@ -43,11 +43,9 @@ DcaRule.of(
             + " services",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .that(arch.inDomain())
                 .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .dependOnClassesThat(arch.inApplication())
                 .allowEmptyShould(true))
     .selecting("Classes in <module>.domain.. of every module root.")
     .checking(
@@ -58,7 +56,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `inDomain()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -66,8 +64,8 @@ DcaRule.Of(
     "DCA-ONI-001",
     "Domain must not access Application Services (Onion Architecture - Domain is innermost layer)",
     "Domain is the innermost layer in onion architecture and should not depend on application services",
-    arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns()))
-        .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns())))
+    arch => Types().That().FollowCustomPredicate(arch.InDomain, "are in the domain layer")
+        .Should().NotDependOnAnyTypesThat().FollowCustomPredicate(arch.InApplication, "are in the application layer"))
     .Selecting(
         "Types whose namespace lies under <Module>.Domain of every module root - "
         + "declared bounded contexts, the shared kernel when it owns a domain layer, "

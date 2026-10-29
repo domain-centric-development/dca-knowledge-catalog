@@ -45,12 +45,10 @@ DcaRule.of(
             classes()
                 .that()
                 .areInterfaces()
-                .and()
-                .areAssignableTo(arch.layout().markers().repository())
+                .and(arch.layout().markers().is("repository"))
                 .and()
                 .doNotHaveSimpleName(arch.layout().repositorySuffix())
-                .should()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .should(LayerConditions.be(arch.inApplication()))
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces anywhere under scan assignable to Repository, whatever their name, "
@@ -63,7 +61,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -71,7 +69,7 @@ DcaRule.Check(
     "DCA-TAC-014",
     "Repository interfaces must reside in the application layer (local to a use case or shared)",
     "Repository interfaces are output ports in the application layer (Hexagonal Architecture)",
-    arch => RequireNamespace(RepositoryInterfaces(arch), DcaLayout.AnyOf(arch.AllApplicationPatterns()), "Repository interfaces", "an application namespace of its module (use-case-local or Shared)"))
+    arch => RequireNamespace(RepositoryInterfaces(arch), arch.InApplication, "Repository interfaces", "an application namespace of its module (use-case-local or Shared)"))
     .Selecting(
         "Interfaces below the root namespace assignable to IRepository, whatever "
         + "their name; an interface named exactly Repository excluded.")

@@ -17,4 +17,4 @@ public String name() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()`, `allApplicationPatterns()`, `allDomainPatterns()`, `classes()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inAdapter()`, `inApplication()`, `inDomain()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).

@@ -43,7 +43,7 @@ DcaRule.check(
         arch -> {
           List<String> violations = new ArrayList<>();
           for (JavaClass valueObject :
-              concreteClassesAssignableTo(arch, arch.layout().markers().value())) {
+              concreteClassesAssignableTo(arch, arch.layout().markers().is("value"))) {
             for (JavaField field : TypeInspection.instanceFields(valueObject)) {
               for (JavaClass involved : TypeInspection.involvedTypes(field, valueObject)) {
                 if (isConcreteAggregateRoot(involved, arch.layout().markers())) {
@@ -74,8 +74,9 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
-  return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
+private static List<JavaClass> concreteClassesAssignableTo(
+    DcaArchitecture arch, DescribedPredicate<JavaClass> role) {
+  return classesMatching(arch, c -> role.test(c) && !c.isInterface());
 }
 ```
 
@@ -83,7 +84,7 @@ private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch,
 
 ```java
 private static boolean isConcreteAggregateRoot(JavaClass type, DcaMarkers markers) {
-  return type.isAssignableTo(markers.aggregateRoot());
+  return markers.is("aggregateRoot").test(type);
 }
 ```
 
@@ -104,7 +105,7 @@ private static boolean isConcreteAggregateRoot(JavaClass type, DcaMarkers marker
 
 ```java
 private static boolean isConcreteNonRootEntity(JavaClass type, DcaMarkers markers) {
-  return type.isAssignableTo(markers.entity()) && !type.isAssignableTo(markers.aggregateRoot());
+  return markers.is("entity").test(type) && !markers.is("aggregateRoot").test(type);
 }
 ```
 
@@ -261,7 +262,7 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var valueObject in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.Value))
+        foreach (var valueObject in ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.Value)))
         {
             foreach (var member in InstanceDataMembers(arch, valueObject))
             {

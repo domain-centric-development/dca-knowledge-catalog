@@ -17,7 +17,7 @@ evidence_for: "/rule/hexagonal/dca-hex-014.md#typeinspectioninputtypes"
    * PlaceOrderResult>} yields both). Called on an input port or on a class implementing one. Bridge
    * and synthetic methods are left out; an erased {@code Object} parameter is left out too.
    */
-  static Set<JavaClass> inputTypes(JavaClass type, String inputPortRole) {
+  static Set<JavaClass> inputTypes(JavaClass type, DescribedPredicate<JavaClass> inputPortRole) {
     Set<JavaClass> inputs = new LinkedHashSet<>();
     collectInputs(type, inputPortRole, inputs, new HashSet<>());
     inputs.removeIf(input -> input.getName().equals(OBJECT));

@@ -1,11 +1,11 @@
 ---
 type: Rule
 id: DCA-HEX-019
-title: Output port implementations must reside in an outgoing adapter package
-rule: "An output port is what the application needs from outside; whatever implements it is an outgoing adapter. An implementation in the infrastructure package, the application or the domain is outside the selection of every rule written for outgoing adapters, and infrastructure then holds behaviour instead of wiring alone."
-constraint: Output port implementations must reside in an outgoing adapter package.
+title: Output port implementations are placed in the outgoing adapters
+rule: "An output port is what the application needs from outside; whatever implements it is an outgoing adapter - the implemented port says so. An implementation placed in the infrastructure package, the application, the domain or in no layer at all is outside the selection of every rule written for outgoing adapters, and infrastructure then holds behaviour instead of wiring alone."
+constraint: Output port implementations are placed in the outgoing adapters.
 selects: "Non-interface classes anywhere under scan assignable to the output-port role - repositories, stores, event publishers and every other output port alike, abstract base classes and anonymous classes included. A lambda or a method reference is no class under scan and is not selected. Not selected: a class in an infrastructure package that depends on a type assignable to the input-port role - the bridge that hands an output port a second use case, which is wiring."
-checks: "Each resides in <module>.adapter.outgoing.. of some module root. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set."
+checks: "Each is placed in the outgoing adapter layer - by default <module>.adapter.outgoing.., or wherever the layout's outgoing-adapter marker places it; a class the layout places in no layer is reported as well. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set."
 enforced_by: "HexagonalRules#DCA-HEX-019"
 status: enforced
 maturity: experimental
@@ -16,7 +16,7 @@ tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
 ---
 
-# Output port implementations must reside in an outgoing adapter package
+# Output port implementations are placed in the outgoing adapters
 
 **Experimental.** This rule is binding only in a project that opted in to experimental rules - the architecture test calls `withExperimental()` (.NET: `WithExperimental()`) on its rule selection, or `dca-archunit.properties` sets `dca.rules.experimental = true`; without that opt-in the rule does not run and is information only, never a finding and never a reason to change code.
 
@@ -26,48 +26,62 @@ Non-interface classes anywhere under scan assignable to the output-port role - r
 
 ## Check
 
-Each resides in <module>.adapter.outgoing.. of some module root. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set.
+Each is placed in the outgoing adapter layer - by default <module>.adapter.outgoing.., or wherever the layout's outgoing-adapter marker places it; a class the layout places in no layer is reported as well. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set.
 
 ## .NET reading
 
 **Selection.** Classes of the scan assignable to IOutputPort - repositories, stores, event publishers and every other output port alike, abstract base classes included; compiler-generated classes are not selected. Not selected: a class in an infrastructure namespace that depends on a type assignable to IInputPort - the bridge that hands an output port a second use case, which is wiring.
 
-**Check.** Each resides in <Module>.Adapter.Outgoing of some module root. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set.
+**Check.** Each is placed in the outgoing adapter layer - by default <Module>.Adapter.Outgoing, or wherever the layout's outgoing-adapter marker places it - by a layer attribute on the class, on its namespace or its assembly, or by the namespace path; a class the layout places in no layer is reported as well. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set.
 
 ## Implementation
 
 ```java
 DcaRule.check(
         "DCA-HEX-019",
-        "Output port implementations must reside in an outgoing adapter package",
+        "Output port implementations are placed in the outgoing adapters",
         "An output port is what the application needs from outside; whatever implements it is an"
-            + " outgoing adapter. An implementation in the infrastructure package, the application"
-            + " or the domain is outside the selection of every rule written for outgoing"
-            + " adapters, and infrastructure then holds behaviour instead of wiring alone",
+            + " outgoing adapter - the implemented port says so. An implementation placed in the"
+            + " infrastructure package, the application, the domain or in no layer at all is"
+            + " outside the selection of every rule written for outgoing adapters, and"
+            + " infrastructure then holds behaviour instead of wiring alone",
         arch -> {
           CollectedViolations violations =
               CollectedViolations.withHeader(
-                  "Output port implementations must reside in an outgoing adapter package\nbecause"
+                  "Output port implementations are placed in the outgoing adapters\nbecause"
                       + " whatever implements an output port is an outgoing adapter");
-          var outgoing =
-              com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
-                  arch.allOutgoingAdapterPatterns());
-          var infrastructure =
-              com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
-                  arch.allInfrastructurePatterns());
-          String outputPort = arch.layout().markers().outputPort();
-          String inputPort = arch.layout().markers().inputPort();
+          var outputPort = arch.layout().markers().is("outputPort");
+          var inputPort = arch.layout().markers().is("inputPort");
           for (var type : arch.classes()) {
-            if (type.isInterface() || !type.isAssignableTo(outputPort) || outgoing.test(type)) {
+            if (type.isInterface() || !outputPort.test(type)) {
+              continue;
+            }
+            var placement = arch.placement(type);
+            if (placement.isEmpty()) {
+              violations.add(
+                  type.getName()
+                      + " implements an output port but sits in no layer - declare the layer"
+                      + " of its package (DCA-LAY-007 lists such classes), or switch the"
+                      + " hexagonal set off while the project has no layers");
+              continue;
+            }
+            if (placement.get().layer() == DcaLayout.Layer.OUTGOING_ADAPTER) {
               continue;
             }
             boolean bridge =
-                infrastructure.test(type)
+                placement.get().layer() == DcaLayout.Layer.INFRASTRUCTURE
                     && type.getDirectDependenciesFromSelf().stream()
-                        .anyMatch(d -> d.getTargetClass().isAssignableTo(inputPort));
+                        .anyMatch(d -> inputPort.test(d.getTargetClass()));
             if (!bridge) {
               violations.add(
-                  type.getName() + " implements an output port outside the outgoing adapters");
+                  type.getName()
+                      + " implements an output port but is placed in the "
+                      + placement.get().layer().role()
+                      + " layer ("
+                      + placement.get().source().name().toLowerCase(java.util.Locale.ROOT)
+                      + " "
+                      + placement.get().layerPackage()
+                      + ")");
             }
           }
           violations.throwIfAny();
@@ -81,9 +95,11 @@ DcaRule.check(
             + " an infrastructure package that depends on a type assignable to the input-port"
             + " role - the bridge that hands an output port a second use case, which is wiring.")
     .checking(
-        "Each resides in <module>.adapter.outgoing.. of some module root. DCA-TAC-015 and"
+        "Each is placed in the outgoing adapter layer - by default <module>.adapter.outgoing..,"
+            + " or wherever the layout's outgoing-adapter marker places it; a class the layout"
+            + " places in no layer is reported as well. DCA-TAC-015 and"
             + " DCA-TAC-020 hold repositories and stores the same way in the tactical set.",
-        "move the implementation into the outgoing adapter package of its module; the"
+        "move the implementation into the outgoing adapter layer of its module; the"
             + " configuration in infrastructure only wires it to its port")
 ```
 
@@ -107,6 +123,14 @@ DcaRule.check(
   static CollectedViolations withHeader(String header) {
     return new CollectedViolations(header);
   }
+```
+
+### `CollectedViolations.isEmpty`
+
+```java
+boolean isEmpty() {
+  return violations.isEmpty();
+}
 ```
 
 ### `CollectedViolations.add`
@@ -160,57 +184,65 @@ DcaRule.check(
   }
 ```
 
-### `CollectedViolations.isEmpty`
-
-```java
-boolean isEmpty() {
-  return violations.isEmpty();
-}
-```
-
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allInfrastructurePatterns()`, `allOutgoingAdapterPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `layout()`, `placement()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Check(
         "DCA-HEX-019",
-        "Output port implementations must reside in an outgoing adapter package",
+        "Output port implementations are placed in the outgoing adapters",
         "An output port is what the application needs from outside; whatever implements it is an outgoing"
-            + " adapter. An implementation in the infrastructure namespace, the application or the domain is"
-            + " outside the selection of every rule written for outgoing adapters, and infrastructure then"
-            + " holds behaviour instead of wiring alone",
+            + " adapter - the implemented port says so. An implementation placed in the infrastructure namespace,"
+            + " the application, the domain or in no layer at all is outside the selection of every rule written"
+            + " for outgoing adapters, and infrastructure then holds behaviour instead of wiring alone",
         arch =>
         {
-            var outgoing = DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns());
-            var infrastructure = DcaLayout.AnyOf(arch.AllInfrastructurePatterns());
             var violations = new List<string>();
-            foreach (var type in arch.Classes.Where(c => !c.IsCompilerGenerated
-                && IsAssignableTo(arch, c, arch.Layout.Markers.OutputPort) && !InNamespace(c, outgoing)))
+            foreach (var type in arch.Classes.Where(c => !c.IsCompilerGenerated && IsRole(arch, c, nameof(DcaMarkers.OutputPort))))
             {
-                if (InNamespace(type, infrastructure) && DependsOnAnInputPort(arch, type))
+                var placement = arch.PlacementOf(type);
+                if (placement is null)
+                {
+                    violations.Add($"{type.FullName} implements an output port but sits in no layer - declare the layer"
+                        + " of its namespace (DCA-LAY-007 lists such types), or switch the hexagonal set off while the"
+                        + " project has no layers");
+                    continue;
+                }
+
+                if (placement.Layer == DcaLayout.Layer.OutgoingAdapter)
                 {
                     continue;
                 }
 
-                violations.Add($"{type.FullName} implements an output port outside the outgoing adapters");
+                if (placement.Layer == DcaLayout.Layer.Infrastructure && DependsOnAnInputPort(arch, type))
+                {
+                    continue;
+                }
+
+                violations.Add($"{type.FullName} implements an output port but is placed in the {DcaLayout.RoleOf(placement.Layer)}"
+                    + $" layer ({placement.Source.ToString().ToLowerInvariant()} {placement.LayerNamespace})");
             }
 
             DcaRule.Fail(
-                "Output port implementations must reside in an outgoing adapter package",
+                "Output port implementations are placed in the outgoing adapters",
                 violations.OrderBy(v => v, StringComparer.Ordinal).ToList(),
-                "move the implementation into the outgoing adapter namespace of its module; the configuration in infrastructure only wires it to its port");
+                "move the implementation into the outgoing adapter layer of its module; the configuration in infrastructure only wires it to its port");
         })
     .Experimental()
     .Selecting(
         "Classes of the scan assignable to IOutputPort - repositories, stores, event publishers and every other"
             + " output port alike, abstract base classes included; compiler-generated classes are not selected."
-            + " Not selected: a class in an infrastructure namespace that depends on a type assignable to"
-            + " IInputPort - the bridge that hands an output port a second use case, which is wiring.")
+            + " Not selected: a class in"
+            + " an infrastructure namespace that depends on a type assignable to IInputPort - the bridge that"
+            + " hands an output port a second use case, which is wiring.")
     .Checking(
-        "Each resides in <Module>.Adapter.Outgoing of some module root. DCA-TAC-015 and DCA-TAC-020 hold"
-            + " repositories and stores the same way in the tactical set.")
+        "Each is placed in the outgoing adapter layer - by default <Module>.Adapter.Outgoing, or wherever the"
+            + " layout's outgoing-adapter marker places it - by a layer attribute on the class, on its namespace or"
+            + " its assembly, or by the namespace path; a class the layout places in no layer is reported as well."
+            + " DCA-TAC-015 and DCA-TAC-020 hold repositories and"
+            + " stores the same way in the tactical set.")
 ```
 
 ## Configured by

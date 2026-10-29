@@ -90,8 +90,7 @@ DcaRule.check(
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
   private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
-    return (type.isAssignableTo(markers.domainException())
-            || type.isAssignableTo(markers.useCaseException()))
+    return (markers.is("domainException").test(type) || markers.is("useCaseException").test(type))
         && !markers.declaresTypesIn(type.getPackageName());
   }
 ```

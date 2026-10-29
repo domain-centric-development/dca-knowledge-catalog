@@ -38,7 +38,7 @@ The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/r
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inApplication()`, `inOutgoingAdapter()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 
 ## Related mentions (heuristic)
 
@@ -53,10 +53,10 @@ The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/r
 
 - [Overview](/evidence/rule/layered/dca-lay-004/overview.md)
 - [`CollectedViolations.check`](/evidence/rule/layered/dca-lay-004/collectedviolations-check.md)
-- [`CollectedViolations.add`](/evidence/rule/layered/dca-lay-004/collectedviolations-add.md)
 - [`CollectedViolations.withoutHeader`](/evidence/rule/layered/dca-lay-004/collectedviolations-withoutheader.md)
 - [`CollectedViolations.addAll`](/evidence/rule/layered/dca-lay-004/collectedviolations-addall.md)
 - [`AnnotationRoles.annotatedWithAny`](/evidence/rule/layered/dca-lay-004/annotationroles-annotatedwithany.md)
 - [`CollectedViolations.throwIfAny`](/evidence/rule/layered/dca-lay-004/collectedviolations-throwifany.md)
+- [`CollectedViolations.add`](/evidence/rule/layered/dca-lay-004/collectedviolations-add.md)
 - [`CollectedViolations.isEmpty`](/evidence/rule/layered/dca-lay-004/collectedviolations-isempty.md)
 - [C# expression](/evidence/rule/layered/dca-lay-004/c-expression.md)

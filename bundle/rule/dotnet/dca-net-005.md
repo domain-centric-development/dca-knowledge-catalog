@@ -36,7 +36,7 @@ DcaRule.Check(
             foreach (var type in arch.Types)
             {
                 var runtime = arch.RuntimeType(type);
-                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Id))
+                if (runtime is null || runtime.IsInterface || runtime.IsAbstract || !arch.Layout.Markers.Is(nameof(DcaMarkers.Id), runtime))
                 {
                     continue;
                 }

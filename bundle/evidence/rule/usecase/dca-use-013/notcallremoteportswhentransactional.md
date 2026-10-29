@@ -23,7 +23,7 @@ private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
         List<String> remotePorts =
             unit.getMethodCallsFromSelf().stream()
                 .map(call -> call.getTargetOwner())
-                .filter(owner -> owner.isAssignableTo(markers.outputPort()))
+                .filter(owner -> markers.is("outputPort").test(owner))
                 .filter(owner -> !isTransactionalResource(owner, markers))
                 .filter(owner -> localOutputPorts.stream().noneMatch(owner::isAssignableTo))
                 .map(JavaClass::getSimpleName)

@@ -34,26 +34,29 @@ DcaRule.check(
           List<String> transactional = layout.frameworkAnnotations().transactional();
           List<String> transactionApi = layout.frameworkAnnotations().transactionApi();
           List<String> transactionManager = layout.frameworkAnnotations().transactionManager();
-          List<String> allowedPatterns =
-              new ArrayList<>(List.of(arch.allApplicationPatterns()));
-          allowedPatterns.add(
-              ".." + layout.adapterSubpackage() + "." + layout.outgoingSubpackage() + "..");
-          String[] allowed = allowedPatterns.toArray(String[]::new);
+          DescribedPredicate<JavaClass> allowed =
+              arch.inApplication()
+                  .or(arch.inOutgoingAdapter())
+                  .or(
+                      JavaClass.Predicates.resideInAnyPackage(
+                          ".."
+                              + layout.adapterSubpackage()
+                              + "."
+                              + layout.outgoingSubpackage()
+                              + ".."));
           CollectedViolations violations = CollectedViolations.withoutHeader();
           violations.addAll(
               methods()
                   .that(AnnotationRoles.annotatedWithAny(transactional))
                   .should()
-                  .beDeclaredInClassesThat()
-                  .resideInAnyPackage(allowed)
+                  .beDeclaredInClassesThat(allowed)
                   .allowEmptyShould(true),
               arch.classes(),
               rationale);
           violations.addAll(
               classes()
                   .that(AnnotationRoles.annotatedWithAny(transactional))
-                  .should()
-                  .resideInAnyPackage(allowed)
+                  .should(LayerConditions.be(allowed))
                   .allowEmptyShould(true),
               arch.classes(),
               rationale);
@@ -68,31 +71,33 @@ DcaRule.check(
                   "a configured transaction API", c -> transactionApi.contains(c.getName()));
           violations.addAll(
               noClasses()
-                  .that()
-                  .resideOutsideOfPackages(allowed)
-                  .and()
-                  .areNotAssignableTo(arch.layout().markers().transactionBoundary())
+                  .that(DescribedPredicate.not(allowed))
+                  .and(
+                      DescribedPredicate.not(arch.layout().markers().is("transactionBoundary")))
                   .should()
                   .dependOnClassesThat(usesTransactionApi)
                   .allowEmptyShould(true),
               arch.classes(),
               rationale);
-          List<String> wiringAllowed = new ArrayList<>(allowedPatterns);
-          wiringAllowed.add(layout.infrastructurePattern());
-          wiringAllowed.add(
-              layout.sharedKernelPackage() + "." + layout.infrastructureSubpackage() + "..");
+          DescribedPredicate<JavaClass> wiringAllowed =
+              allowed.or(
+                  JavaClass.Predicates.resideInAnyPackage(
+                      layout.infrastructurePattern(),
+                      layout.sharedKernelPackage()
+                          + "."
+                          + layout.infrastructureSubpackage()
+                          + ".."));
           DescribedPredicate<JavaClass> managerOrBoundary =
               DescribedPredicate.describe(
                   "a configured transaction manager or TransactionBoundary",
                   c ->
                       transactionManager.contains(c.getName())
-                          || c.isAssignableTo(arch.layout().markers().transactionBoundary()));
+                          || arch.layout().markers().is("transactionBoundary").test(c));
           violations.addAll(
               noClasses()
-                  .that()
-                  .resideOutsideOfPackages(wiringAllowed.toArray(String[]::new))
-                  .and()
-                  .areNotAssignableTo(arch.layout().markers().transactionBoundary())
+                  .that(DescribedPredicate.not(wiringAllowed))
+                  .and(
+                      DescribedPredicate.not(arch.layout().markers().is("transactionBoundary")))
                   .should()
                   .dependOnClassesThat(managerOrBoundary)
                   .allowEmptyShould(true),

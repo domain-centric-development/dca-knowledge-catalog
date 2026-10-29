@@ -110,10 +110,14 @@ DcaLayout.forBasePackage("com.company.project")
 
 It is then governed by the whole catalog, instead of switching off the rules that would have selected
 nothing. `withRole("aggregateRoot", "...")` sets a role by name where the code is generated rather
-than written. A role names exactly one type and must not be blank: an empty role would select nothing
+than written. A role names one type and must not be blank: an empty role would select nothing
 and report success, which is the failure mode these rules exist to prevent. Selection is by
-assignability, so the marker may be an interface or a base class. Two vocabularies at once are
-outside this — during a migration the role names the one the rules should follow. The test report
+assignability, so the marker may be an interface or a base class. A code base that marks its building
+blocks with annotations instead points the role at the annotation —
+`withValue(DcaMarker.ofAnnotation("com.company.platform.ddd.ValueObject"))` — or, while a migration has
+both, at either: `DcaMarker.anyOf(DcaMarker.ofType(...), DcaMarker.ofAnnotation(...))`. The annotation
+counts on the class and on its supertypes. A package never names a building block: it says where a
+type sits, not what it is, and the role refuses it. The test report
 names the vocabulary in use — `building block markers: dca (library default)`, or the name and the
 roles that differ — so a wrong vocabulary is visible instead of silently selecting nothing.
 
@@ -124,6 +128,35 @@ so `CLASS` retention is enough, and a member the rules need and the annotation l
 package and member. When no package declares a shared kernel, `{base}.sharedkernel` (the configured
 sub-package) is taken as one. The relationship annotations (`@Upstream`, `@ExternalUpstream`,
 `@Partnership`, `@OpenHostService`) stay the library's: the rules read their nested values.
+
+Commands and queries are roles too. The rules recognise them by name by default — a use case's input
+ending in `Command` or `Query` — and a code base that names every input `…Command`, the read-only
+ones included, would have its queries reported as commands. It points the roles at what tells them
+apart in its code: `DcaMarkers.dca().withCommand(DcaMarker.ofType("com.company.platform.Command"))`, or
+an annotation. Renaming the read-only inputs `…Query` is the other way out.
+
+The layers are found the same way. By default a layer is its package below a module root —
+`domain`, `application`, `adapter.incoming`, `adapter.outgoing`, `infrastructure`. A code base whose
+packages say it differently names the package, or the annotation it already uses for the layer:
+
+```java
+DcaLayout.forBasePackage("com.company.project")
+    .withOutgoingAdapter(DcaMarker.anyOf(
+        DcaMarker.ofPackage("adapter.out"),
+        DcaMarker.ofAnnotation("com.company.platform.arch.OutgoingAdapterLayer")));
+```
+
+An annotation on a `package-info` holds for the whole package tree below it; one on a single class
+places that class, wherever it sits. The annotation wins over the path, and the report lists every
+package where it overrides one, and every package that declares another layer than a package above
+it — one layer per subtree. In .NET the attribute sits on the type, as an assembly attribute that
+names a namespace (it holds for that namespace and the ones below), or on the whole assembly; the
+type's own wins, then the named namespace, then the assembly, then the path. The library ships no annotations of its own for layers or roles; it
+reads the ones a project has. Which kind fits which: a layer by package or annotation, a building
+block by supertype or annotation, a command and a query also by name. `DCA-LAY-007` (experimental)
+lists the classes of a module that sit in no layer — a mapper beside the adapter packages, a class
+whose layer is declared only on its neighbour — because every rule written for a layer passes over
+them.
 
 A few conventions are settings of the layout, so a code base that chose differently says so once
 instead of switching rules off:
@@ -293,3 +326,13 @@ per bounded context is fine — pass all assemblies. Differences worth knowing:
 - [@Partnership](/marker/strategic/partnership.md)
 - [@Upstream](/marker/strategic/upstream.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
+
+## Evidence slices
+
+- [Overview](/evidence/guide/archunit-governance/setup-and-configuration/overview.md)
+- [Gradle Dependency](/evidence/guide/archunit-governance/setup-and-configuration/gradle-dependency.md)
+- [Maven Dependency](/evidence/guide/archunit-governance/setup-and-configuration/maven-dependency.md)
+- [Basic Test Class Structure](/evidence/guide/archunit-governance/setup-and-configuration/basic-test-class-structure.md)
+- [What the Import Must See](/evidence/guide/archunit-governance/setup-and-configuration/what-the-import-must-see.md)
+- [Adding Project-Specific Rules](/evidence/guide/archunit-governance/setup-and-configuration/adding-project-specific-rules.md)
+- [.NET: ArchUnitNET](/evidence/guide/archunit-governance/setup-and-configuration/net-archunitnet.md)

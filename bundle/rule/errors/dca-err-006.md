@@ -51,8 +51,11 @@ DcaRule.informational(
                       type ->
                           !type.getName().equals(domainException)
                               && !type.getName().equals(useCaseException)
-                              && (type.isAssignableTo(domainException)
-                                  || type.isAssignableTo(useCaseException)));
+                              && (arch.layout().markers().is("domainException").test(type)
+                                  || arch.layout()
+                                      .markers()
+                                      .is("useCaseException")
+                                      .test(type)));
           if (!anyFailureType) {
             return List.of(
                 "no class of the scan is assignable to "
@@ -68,16 +71,16 @@ DcaRule.informational(
           Map<String, List<JavaClass>> drivingByPackage = new TreeMap<>();
           Set<String> packagesThatName = new HashSet<>();
           for (JavaClass type : arch.classes()) {
-            if (!JavaClass.Predicates.resideInAnyPackage(arch.allIncomingAdapterPatterns())
-                .test(type)) {
+            if (!arch.inIncomingAdapter().test(type)) {
               continue;
             }
-            if (dependsOnAssignableTo(type, arch.layout().markers().domainException())
-                || dependsOnAssignableTo(type, arch.layout().markers().useCaseException())) {
+            if (dependsOnAssignableTo(type, arch.layout().markers().is("domainException"))
+                || dependsOnAssignableTo(
+                    type, arch.layout().markers().is("useCaseException"))) {
               packagesThatName.add(type.getPackageName());
             }
             if (!type.isInterface()
-                && dependsOnAssignableTo(type, arch.layout().markers().inputPort())) {
+                && dependsOnAssignableTo(type, arch.layout().markers().is("inputPort"))) {
               drivingByPackage
                   .computeIfAbsent(type.getPackageName(), pkg -> new ArrayList<>())
                   .add(type);
@@ -118,15 +121,16 @@ DcaRule.informational(
 ### `dependsOnAssignableTo`
 
 ```java
-private static boolean dependsOnAssignableTo(JavaClass type, String target) {
+private static boolean dependsOnAssignableTo(
+    JavaClass type, DescribedPredicate<JavaClass> target) {
   return type.getDirectDependenciesFromSelf().stream()
-      .anyMatch(dependency -> dependency.getTargetClass().isAssignableTo(target));
+      .anyMatch(dependency -> target.test(dependency.getTargetClass()));
 }
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inIncomingAdapter()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -142,7 +146,7 @@ DcaRule.Informational(
         var useCaseException = arch.Layout.Markers.UseCaseException;
         var anyFailureType = arch.Types.Any(t =>
             t.FullName != domainException && t.FullName != useCaseException
-            && (IsAssignableTo(t, domainException) || IsAssignableTo(t, useCaseException)));
+            && (arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t) || arch.Layout.Markers.Is(nameof(DcaMarkers.UseCaseException), t)));
         if (!anyFailureType)
         {
             return new List<string>
@@ -155,24 +159,23 @@ DcaRule.Informational(
         }
 
         var observed = new List<string>();
-        var incoming = new Regex(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()));
         var driving = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
         var namespacesThatName = new HashSet<string>(StringComparer.Ordinal);
         foreach (var type in arch.Types)
         {
             var ns = type.Namespace?.FullName ?? "";
-            if (!incoming.IsMatch(ns))
+            if (!arch.InIncomingAdapter(type))
             {
                 continue;
             }
 
             var targets = type.Dependencies.Select(d => d.Target).ToList();
-            if (targets.Any(t => IsAssignableTo(t, arch.Layout.Markers.DomainException) || IsAssignableTo(t, arch.Layout.Markers.UseCaseException)))
+            if (targets.Any(t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t) || arch.Layout.Markers.Is(nameof(DcaMarkers.UseCaseException), t)))
             {
                 namespacesThatName.Add(ns);
             }
 
-            if (type is not Interface && targets.Any(t => IsAssignableTo(t, arch.Layout.Markers.InputPort)))
+            if (type is not Interface && targets.Any(t => arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), t)))
             {
                 if (!driving.TryGetValue(ns, out var names))
                 {

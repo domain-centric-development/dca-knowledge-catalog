@@ -48,18 +48,22 @@ DcaRule.of(
           // markers is not reported as depending on a foreign library inside its own domain.
           // Strategic annotations, the application-layer roles and input ports are
           // deliberately not on the list.
-          List<String> domainPackageList = new ArrayList<>(List.of(arch.allDomainPatterns()));
-          domainPackageList.addAll(
-              layout.markers().declaringPackagePatternsOf(DcaMarkers.DOMAIN_FACING_ROLES));
-          String[] domainPackages = domainPackageList.toArray(String[]::new);
-          List<String> allowed = new ArrayList<>(layout.thirdPartyPackagesAllowedInDomain());
-          allowed.addAll(List.of(domainPackages));
+          DescribedPredicate<JavaClass> domain =
+              arch.inDomain()
+                  .or(
+                      JavaClass.Predicates.resideInAnyPackage(
+                          layout
+                              .markers()
+                              .declaringPackagePatternsOf(DcaMarkers.DOMAIN_FACING_ROLES)
+                              .toArray(String[]::new)));
+          DescribedPredicate<JavaClass> allowed =
+              domain.or(
+                  JavaClass.Predicates.resideInAnyPackage(
+                      layout.thirdPartyPackagesAllowedInDomain().toArray(String[]::new)));
           return classes()
-              .that()
-              .resideInAnyPackage(domainPackages)
+              .that(domain)
               .should()
-              .onlyDependOnClassesThat()
-              .resideInAnyPackage(allowed.toArray(String[]::new))
+              .onlyDependOnClassesThat(allowed)
               .allowEmptyShould(true);
         })
     .selecting(
@@ -86,7 +90,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -96,7 +100,6 @@ DcaRule.Check(
     rationale,
     arch =>
     {
-        var domain = new Regex(DcaLayout.AnyOf(arch.AllDomainPatterns()));
         // The layout's allow-list may name the whole building-blocks namespace (the default does, so
         // that attribute rules accept every marker); for *dependencies* only the namespaces the
         // configured vocabulary declares its domain-facing roles in belong in the domain - the
@@ -107,14 +110,15 @@ DcaRule.Check(
             .Where(p => !DcaLayout.IsBelow(p, DcaLayout.BuildingBlocksNamespace))
             .Concat(Layout.Markers.DeclaringNamespacesOf(DcaMarkers.DomainFacingRoles))
             .ToList();
-        bool Allowed(string ns) => domain.IsMatch(ns) || allowedPrefixes.Any(p => DcaLayout.IsBelow(ns, p));
+        bool Allowed(IType target) =>
+            arch.InDomain(target) || allowedPrefixes.Any(p => DcaLayout.IsBelow(target.Namespace.FullName, p));
 
         var violations = arch.Types
-            .Where(t => t.Namespace is not null && domain.IsMatch(t.Namespace.FullName))
+            .Where(t => t.Namespace is not null && arch.InDomain(t))
             .SelectMany(t => t.Dependencies
                 .Select(d => d.Target)
                 .Where(target => target.Namespace is not null && !string.IsNullOrEmpty(target.Namespace.FullName))
-                .Where(target => !Allowed(target.Namespace.FullName))
+                .Where(target => !Allowed(target))
                 .Select(target => $"{t.FullName} depends on {target.FullName}"))
             .Distinct()
             .ToList();

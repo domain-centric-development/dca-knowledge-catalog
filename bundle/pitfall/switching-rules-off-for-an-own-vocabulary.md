@@ -4,7 +4,7 @@ title: Switching rules off because the project names things its own way
 tags: [pitfall, governance, archunit, archunitnet]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/guide/archunit-governance/setup-and-configuration.md, /guide/archunit-governance/tuning-the-rule-catalog.md, /rule/hexagonal/dca-hex-007.md, /rule/usecase/dca-use-001.md, /rule/usecase/dca-use-013.md, /rule/strategic/dca-str-011.md]
+evidence: [/guide/archunit-governance/setup-and-configuration.md, /guide/archunit-governance/tuning-the-rule-catalog.md, /rule/hexagonal/dca-hex-007.md, /rule/usecase/dca-use-001.md, /rule/usecase/dca-use-013.md, /rule/strategic/dca-str-011.md, /rule/layered/dca-lay-007.md, /rule/hexagonal/dca-hex-014.md, /decision/how-a-layer-is-found.md]
 ---
 
 An existing code base adopts the rule library. It already has its own marker interfaces, its own context
@@ -34,7 +34,15 @@ contexts with its own annotation.
 
 - **Own markers** — point the marker roles at the project's types (`DcaMarkers`: aggregate root, value, repository,
   output port, …). A role names one type, matched by assignability; where the project has two shapes, name their
-  common supertype.
+  common supertype. A project that marks its building blocks with annotations names the annotation instead, or both
+  during a migration; a building block is never recognised by its package.
+- **Own layer packages or annotations** — a layer the project keeps under another package name, or already declares
+  with an annotation, is named in the layout per layer; then `DCA-LAY-007` lists what still sits in no layer. See
+  [How a layer is found](/decision/how-a-layer-is-found.md).
+- **Commands and queries told apart otherwise** — the rules recognise them by name by default. A project that names
+  every input a command, reads included, points the two roles at what does tell them apart — a supertype or an
+  annotation, on both roles. Where nothing does, the read-only inputs are renamed: the GET-handler rule
+  (`DCA-HEX-014`) is right to report a read that the code calls a command.
 - **Own context annotations** — the context, shared-kernel and integration-event-type annotations are roles too; the
   rules read their members by name. The relationship annotations stay the library's.
 - **A start-up module named like a layer** — exclude it from the import; otherwise the base package becomes a module
@@ -50,4 +58,5 @@ After that, an `off` entry carries a reason about the code or a convention the p
 
 - Guide: [Setup and configuration](/guide/archunit-governance/setup-and-configuration.md) · [Tuning the rule catalog](/guide/archunit-governance/tuning-the-rule-catalog.md)
 - Pitfall: [An architecture suite that imported nothing](/pitfall/architecture-suite-that-imported-nothing.md)
-- Rules: [DCA-HEX-007](/rule/hexagonal/dca-hex-007.md) · [DCA-USE-001](/rule/usecase/dca-use-001.md) · [DCA-USE-013](/rule/usecase/dca-use-013.md) · [DCA-STR-011](/rule/strategic/dca-str-011.md)
+- Rules: [DCA-HEX-007](/rule/hexagonal/dca-hex-007.md) · [DCA-USE-001](/rule/usecase/dca-use-001.md) · [DCA-USE-013](/rule/usecase/dca-use-013.md) · [DCA-STR-011](/rule/strategic/dca-str-011.md) · [DCA-LAY-007](/rule/layered/dca-lay-007.md) · [DCA-HEX-014](/rule/hexagonal/dca-hex-014.md)
+- Decision: [How a layer is found](/decision/how-a-layer-is-found.md)

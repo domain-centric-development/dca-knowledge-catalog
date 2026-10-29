@@ -54,8 +54,7 @@ DcaRule.check(
             }
             perModule.add(
                 noClasses()
-                    .that()
-                    .resideInAPackage(layout.incomingAdapterPattern(module))
+                    .that(arch.inLayerOf(DcaLayout.Layer.INCOMING_ADAPTER, module))
                     .and()
                     .resideOutsideOfPackage(eventConsumerPattern())
                     .should()
@@ -172,7 +171,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `inLayerOf()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -192,7 +191,7 @@ DcaRule.Check(
             }
 
             perModule.Add(
-                Types().That().ResideInNamespaceMatching(Layout.IncomingAdapterPatternOf(module))
+                Types().That().FollowCustomPredicate(arch.InLayerOf(DcaLayout.Layer.IncomingAdapter, module), "are in the incoming adapters of " + module)
                     .And().DoNotResideInNamespaceMatching(EventConsumerPattern())
                     .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(AnyOf(otherModules))
                     .Because("Incoming adapters in module '" + arch.ContextName(module)

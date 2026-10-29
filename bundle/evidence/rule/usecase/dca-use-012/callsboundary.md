@@ -12,6 +12,6 @@ evidence_for: "/rule/usecase/dca-use-012.md#callsboundary"
 ```java
 private static boolean callsBoundary(JavaCodeUnit unit, DcaMarkers markers) {
   return unit.getMethodCallsFromSelf().stream()
-      .anyMatch(call -> call.getTargetOwner().isAssignableTo(markers.transactionBoundary()));
+      .anyMatch(call -> markers.is("transactionBoundary").test(call.getTargetOwner()));
 }
 ```

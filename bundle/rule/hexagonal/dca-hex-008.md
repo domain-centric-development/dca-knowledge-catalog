@@ -45,8 +45,7 @@ DcaRule.of(
                 .haveSimpleNameEndingWith("Repository")
                 .and()
                 .areNotInterfaces()
-                .should()
-                .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
+                .should(LayerConditions.be(arch.inOutgoingAdapter()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan whose simple name"
@@ -60,7 +59,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inOutgoingAdapter()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -69,7 +68,7 @@ DcaRule.Of(
         "Classes named *Repository must reside in the outgoing adapter namespace (name-based discovery of unmarked repositories)",
         "Repository implementations are secondary adapters (outgoing ports)",
         arch => Classes().That().HaveNameEndingWith("Repository")
-            .Should().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns())))
+            .Should().FollowCustomCondition(LayerConditions.PlacedIn(arch.InOutgoingAdapter, "the outgoing adapters"), "be in the outgoing adapters"))
     .Selecting(
         "Classes anywhere in the loaded assemblies whose name ends with Repository -"
             + " implementations and abstract base classes alike. The IRepository port interfaces"

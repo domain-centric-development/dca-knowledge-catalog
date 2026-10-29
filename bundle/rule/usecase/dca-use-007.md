@@ -39,7 +39,9 @@ DcaRule.of(
         "DCA-USE-007",
         "Use Case Result Models should be immutable (final or records)",
         "Use case result models should be immutable (value objects)",
-        arch -> immutableApplicationModels(arch, "Result"))
+        arch ->
+            immutableApplicationModels(
+                arch, JavaClass.Predicates.simpleNameEndingWith("Result")))
     .selecting(
         "Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Result.")
     .checking(
@@ -52,14 +54,12 @@ DcaRule.of(
 
 ```java
 private static com.tngtech.archunit.lang.ArchRule immutableApplicationModels(
-    DcaArchitecture arch, String suffix) {
+    DcaArchitecture arch, DescribedPredicate<JavaClass> model) {
   // An enum is immutable by construction; on recent platforms its inherited state carries a
   // non-final cache field, which the shape check would report.
   return classes()
-      .that()
-      .haveSimpleNameEndingWith(suffix)
-      .and()
-      .resideInAnyPackage(arch.allApplicationPatterns())
+      .that(model)
+      .and(arch.inApplication())
       .and()
       .areNotInterfaces()
       .and()
@@ -123,7 +123,7 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -131,7 +131,7 @@ DcaRule.Check(
         "DCA-USE-007",
         "Use Case Result Models should be immutable (sealed or records)",
         "Use case result models should be immutable (value objects)",
-        arch => ImmutableApplicationModels(arch, "Result"))
+        arch => ImmutableApplicationModels(arch, "Result", t => t.Name.EndsWith("Result", StringComparison.Ordinal)))
     .Selecting("Classes and structs in each module application namespace with the corresponding Command, Query or Result suffix, including record classes and record structs.")
     .Checking(
         "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")

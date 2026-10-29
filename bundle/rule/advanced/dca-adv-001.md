@@ -42,8 +42,7 @@ DcaRule.of(
             + " e.g., ProductCreated, CartCleared)",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().domainEvent())
+                .that(arch.layout().markers().is("domainEvent"))
                 .and()
                 .areNotInterfaces()
                 .should(TypeInspection.haveImmutableShape())

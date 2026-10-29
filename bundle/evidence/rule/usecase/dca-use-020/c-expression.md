@@ -19,10 +19,9 @@ DcaRule.Check(
             + " the use case never sees it",
         arch =>
         {
-            var application = DcaLayout.AnyOf(arch.AllApplicationPatterns());
             var violations = new List<string>();
             foreach (var type in arch.Types
-                .Where(t => t.Namespace is not null && Matches(t.Namespace.FullName, application))
+                .Where(t => t.Namespace is not null && arch.InApplication(t))
                 .OrderBy(t => t.FullName, StringComparer.Ordinal))
             {
                 var runtime = arch.RuntimeType(type);

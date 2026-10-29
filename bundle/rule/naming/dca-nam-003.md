@@ -41,12 +41,10 @@ DcaRule.of(
         "Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .and()
                 .areInterfaces()
-                .and()
-                .areAssignableTo(arch.layout().markers().inputPort())
+                .and(arch.layout().markers().is("inputPort"))
                 .and()
                 .doNotHaveFullyQualifiedName(arch.layout().markers().inputPort())
                 .and()
@@ -75,7 +73,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -88,8 +86,8 @@ DcaRule.Check(
             var suffix = arch.Layout.InputPortSuffix;
             var markers = arch.Layout.Markers;
             var violations = arch.Interfaces
-                .Where(i => InNamespace(i, DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-                    && IsAssignableTo(arch, i, markers.InputPort)
+                .Where(i => arch.InApplication(i)
+                    && IsRole(arch, i, nameof(DcaMarkers.InputPort))
                     && !IsBaseInputPortName(i.Name)
                     && !IsRoleType(i, markers.InputPort)
                     && !IsRoleType(i, markers.UseCase)

@@ -11,7 +11,10 @@ evidence_for: "/rule/hexagonal/dca-hex-014.md#typeinspectioncollectinputs"
 
 ```java
 private static void collectInputs(
-    JavaClass type, String inputPortRole, Set<JavaClass> inputs, Set<JavaClass> visited) {
+    JavaClass type,
+    DescribedPredicate<JavaClass> inputPortRole,
+    Set<JavaClass> inputs,
+    Set<JavaClass> visited) {
   if (!visited.add(type)) {
     return;
   }
@@ -26,7 +29,7 @@ private static void collectInputs(
   }
   for (JavaType candidate : type.getInterfaces()) {
     JavaClass erasure = candidate.toErasure();
-    if (!erasure.isAssignableTo(inputPortRole)) {
+    if (!inputPortRole.test(erasure)) {
       continue;
     }
     if (candidate instanceof JavaParameterizedType parameterized) {
@@ -37,7 +40,7 @@ private static void collectInputs(
     collectInputs(erasure, inputPortRole, inputs, visited);
   }
   type.getRawSuperclass()
-      .filter(superclass -> superclass.isAssignableTo(inputPortRole))
+      .filter(inputPortRole)
       .ifPresent(superclass -> collectInputs(superclass, inputPortRole, inputs, visited));
 }
 ```

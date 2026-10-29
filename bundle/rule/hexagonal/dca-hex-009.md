@@ -43,16 +43,14 @@ DcaRule.of(
             + " are part of their enclosing port's contract, not ports themselves",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allSharedOutputPortPatterns())
+                .that(arch.inSharedOutputPorts())
                 .and()
                 .areInterfaces()
                 .and()
                 .areTopLevelClasses()
                 .and()
                 .haveSimpleNameNotEndingWith("package-info")
-                .should()
-                .beAssignableTo(arch.layout().markers().outputPort())
+                .should(LayerConditions.be(arch.layout().markers().is("outputPort")))
                 .allowEmptyShould(true))
     .selecting(
         "Top-level interfaces in <module>.application.<shared>.. of every module root,"
@@ -71,7 +69,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allSharedOutputPortPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inSharedOutputPorts()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -81,10 +79,10 @@ DcaRule.Of(
         "Top-level interfaces in Application.Shared are output ports and must extend IOutputPort to"
             + " be part of the port hierarchy. Nested interfaces (e.g. IIdentityProvider.Identity)"
             + " are part of their enclosing port's contract, not ports themselves",
-        arch => Interfaces().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllSharedOutputPortPatterns()))
+        arch => Interfaces().That().FollowCustomPredicate(arch.InSharedOutputPorts, "are shared output ports")
             .And().FollowCustomPredicate(i => !i.IsNested, "are top-level interfaces")
             .Should().FollowCustomCondition(
-                i => new ConditionResult(i, i.IsAssignableTo(arch.Layout.Markers.OutputPort), $"{i.FullName} is not assignable to {arch.Layout.Markers.OutputPort}"),
+                i => new ConditionResult(i, arch.Layout.Markers.Is(nameof(DcaMarkers.OutputPort), i), $"is not assignable to {arch.Layout.Markers.OutputPort}"),
                 "be assignable to the configured output-port marker"))
     .Selecting(
         "Top-level interfaces in <module>.Application.Shared of every module root."

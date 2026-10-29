@@ -11,9 +11,8 @@ evidence_for: "/rule/hexagonal/dca-hex-014.md#takescommand"
 
 ```java
 private static boolean takesCommand(JavaMethodCall call, DcaMarkers markers) {
-  return call.getTarget().getRawParameterTypes().stream()
-          .anyMatch(parameter -> parameter.getSimpleName().endsWith("Command"))
-      || TypeInspection.takesInputEndingWith(
-          call.getTargetOwner(), markers.inputPort(), "Command");
+  return call.getTarget().getRawParameterTypes().stream().anyMatch(markers.is("command"))
+      || TypeInspection.takesInput(
+          call.getTargetOwner(), markers.is("inputPort"), markers.is("command"));
 }
 ```

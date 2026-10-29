@@ -43,8 +43,7 @@ DcaRule.of(
             + " envelope",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().integrationEvent())
+                .that(arch.layout().markers().is("integrationEvent"))
                 .and()
                 .areNotInterfaces()
                 .should()

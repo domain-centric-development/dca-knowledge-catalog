@@ -21,12 +21,10 @@ evidence_for: "/rule/usecase/dca-use-009.md#usecases"
    * the rule texts say nor what the .NET twin does.
    */
   private static DescribedPredicate<JavaClass> useCases(DcaArchitecture arch, DcaLayout layout) {
-    DescribedPredicate<JavaClass> inApplication =
-        JavaClass.Predicates.resideInAnyPackage(arch.allApplicationPatterns());
+    DescribedPredicate<JavaClass> inApplication = arch.inApplication();
     DescribedPredicate<JavaClass> named =
         JavaClass.Predicates.simpleNameEndingWith(layout.useCaseSuffix());
-    DescribedPredicate<JavaClass> port =
-        JavaClass.Predicates.assignableTo(arch.layout().markers().inputPort());
+    DescribedPredicate<JavaClass> port = arch.layout().markers().is("inputPort");
     return inApplication
         .and(named.or(port))
         .and(DescribedPredicate.not(JavaClass.Predicates.INTERFACES))

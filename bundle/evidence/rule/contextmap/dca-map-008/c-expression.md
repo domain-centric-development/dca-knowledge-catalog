@@ -37,15 +37,18 @@ DcaRule.Check(
                         var allowedAdapter = channel == Consumes.Api
                             ? OutgoingAdapterNamespace(ns)
                             : IncomingAdapterNamespace(ns);
+                        var inAllowedAdapter = arch.InLayerOf(channel == Consumes.Api ? DcaLayout.Layer.OutgoingAdapter : DcaLayout.Layer.IncomingAdapter, ns);
+                        var inOwnModel = arch.InLayerOf(DcaLayout.Layer.Domain, ns);
+                        var inOwnApplication = arch.InLayerOf(DcaLayout.Layer.Application, ns);
                         var channelNs = targetNs + "." + ChannelName(arch, channel);
-                        var translationSite = TypesBelow(arch, allowedAdapter).Any(t => DependsOnNamespace(t, channelNs)
-                            && (DependsOnNamespace(t, ns + "." + Layout.DomainSegment) || DependsOnNamespace(t, ns + "." + Layout.ApplicationSegment)));
+                        var translationSite = arch.Types.Where(inAllowedAdapter).Any(t => DependsOnNamespace(t, channelNs)
+                            && t.Dependencies.Any(d => !ReferenceEquals(d.Target, t) && (inOwnModel(d.Target) || inOwnApplication(d.Target))));
                         if (demandsTranslationSite && !translationSite)
                         {
                             violations.Add("Context '" + source + "' needs translation evidence towards '" + u.Context + "' (" + ChannelName(arch, channel) + ") in " + allowedAdapter);
                         }
 
-                        foreach (var type in TypesBelow(arch, ns).Where(t => !IsBelow(t, allowedAdapter)))
+                        foreach (var type in TypesBelow(arch, ns).Where(t => !inAllowedAdapter(t)))
                         {
                             if (DependsOnNamespace(type, channelNs))
                             {

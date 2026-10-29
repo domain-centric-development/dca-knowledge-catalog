@@ -47,25 +47,21 @@ DcaRule.check(
                   "An exception resides outside the layer its base type names");
           collected.addAll(
               classes()
-                  .that()
-                  .areAssignableTo(arch.layout().markers().domainException())
+                  .that(arch.layout().markers().is("domainException"))
                   .and()
                   .resideOutsideOfPackages(
                       arch.layout().markers().declaringPackagePatterns().toArray(String[]::new))
-                  .should()
-                  .resideInAnyPackage(arch.allDomainPatterns())
+                  .should(LayerConditions.be(arch.inDomain()))
                   .allowEmptyShould(true),
               arch.classes(),
               "a domain exception belongs to the domain layer");
           collected.addAll(
               classes()
-                  .that()
-                  .areAssignableTo(arch.layout().markers().useCaseException())
+                  .that(arch.layout().markers().is("useCaseException"))
                   .and()
                   .resideOutsideOfPackages(
                       arch.layout().markers().declaringPackagePatterns().toArray(String[]::new))
-                  .should()
-                  .resideInAnyPackage(arch.allApplicationPatterns())
+                  .should(LayerConditions.be(arch.inApplication()))
                   .allowEmptyShould(true),
               arch.classes(),
               "a use-case exception belongs to the application layer");
@@ -166,7 +162,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `allDomainPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inApplication()`, `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -178,18 +174,15 @@ DcaRule.Check(
         + " reports",
     arch =>
     {
-        var domain = new Regex(DcaLayout.AnyOf(arch.AllDomainPatterns()));
-        var application = new Regex(DcaLayout.AnyOf(arch.AllApplicationPatterns()));
         var violations = new List<string>();
         foreach (var type in ProjectExceptions(arch))
         {
-            var ns = type.Namespace?.FullName ?? "";
-            if (IsAssignableTo(type, arch.Layout.Markers.DomainException) && !domain.IsMatch(ns))
+            if (arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), type) && !arch.InDomain(type))
             {
                 violations.Add($"{type.FullName} is a domain exception outside the domain layer");
             }
 
-            if (IsAssignableTo(type, arch.Layout.Markers.UseCaseException) && !application.IsMatch(ns))
+            if (arch.Layout.Markers.Is(nameof(DcaMarkers.UseCaseException), type) && !arch.InApplication(type))
             {
                 violations.Add($"{type.FullName} is a use-case exception outside the application layer");
             }

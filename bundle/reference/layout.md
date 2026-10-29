@@ -69,6 +69,11 @@ Create the default layout with `DcaLayout.forBasePackage(String)`; every setting
 | `timestampTypes` | `DEFAULT_TIMESTAMP_TYPES` | `withTimestampTypes(...)` | Types a domain event may store its occurrence time in, by fully qualified name. Replaces the default list (`java.time.Instant`, `OffsetDateTime`, `ZonedDateTime`, `LocalDateTime`) - a project whose own event vocabulary wraps the timestamp in a value object names that type here instead of excluding `DCA-ADV-008`. At least one name is required: an empty list would report every event. |
 | `markers` | `DcaMarkers.dca()` | `withMarkers(...)` | The building-block types the rules select on, by role — `dca()` by default, or a vocabulary pointed at the project's own markers. The rules then select what carries those types instead of the library's, so a code base with an established vocabulary needs no rule exclusions. |
 | `frameworkCandidates` | `detection.candidates()` | constructor only |  |
+| `Domain` | see declaration | `withDomain(...)` | How the domain layer is recognised: `DcaMarker.ofPackage("domain")` (the default), a project's layer annotation (`ofAnnotation(String)`), or both (`anyOf(DcaMarker...)`). The package names one segment below a module root. |
+| `Application` | see declaration | `withApplication(...)` | How the application layer is recognised — see `withDomain(DcaMarker)`. |
+| `IncomingAdapter` | see declaration | `withIncomingAdapter(...)` | How the incoming adapters are recognised — see `withDomain(DcaMarker)`. The package is `.` below a module root, e.g. `"adapter.in"`; the adapter segment itself is `withAdapterSubpackage(String)`'s. |
+| `OutgoingAdapter` | see declaration | `withOutgoingAdapter(...)` | How the outgoing adapters are recognised — see `withIncomingAdapter(DcaMarker)`. |
+| `Infrastructure` | see declaration | `withInfrastructure(...)` | How the infrastructure is recognised — see `withDomain(DcaMarker)`. The package is one segment, below the base package and below each module root. |
 | `OperationContainers` | see declaration | `withOperationContainers(...)` | Organisational package segments ignored when measuring operation depth; empty by default. |
 | `ExcludedPackages` | see declaration | `withExcludedPackages(...)` | Packages below the base package whose classes are not part of the architecture under test - each package with everything below it. Meant for a module that only assembles the application (the entry point, the wiring) and is named like a layer: a boot module in `.application` would otherwise make the base package itself a module root, and every context would count as a neighbour of every other. `load(DcaLayout)` and `of(DcaLayout,` leave the classes out; a dependency on them is still a dependency. |
 | `LocalOutputPorts` | see declaration | `withLocalOutputPorts(...)` | Output ports that never leave the process - a hasher, a clock, an id source, a metrics counter. Each name is a type matched by assignability: a single port, or a project's own supertype that all its local ports extend. `DCA-USE-013` counts them with the transactional resources instead of reporting them as remote-capable. |
@@ -261,6 +266,7 @@ Patterns are .NET regular expressions over full namespace names for ArchUnitNET'
 
 | Member | Yields |
 |---|---|
+| `static string RoleOf(Layer layer)` | The name the layout and the report use for a layer, e.g. `outgoingAdapter` — the same word as in `dca-archunit`. |
 | `string SharedKernelPattern` | Pattern for `Root.SharedKernel` and everything below. |
 | `string SharedKernelDomainPattern` | Pattern for `Root.SharedKernel.Domain` and below. |
 | `string SharedKernelDomainModelPattern` | Pattern for `Root.SharedKernel.Domain.Model` and below. |

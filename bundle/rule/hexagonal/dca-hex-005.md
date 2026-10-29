@@ -45,10 +45,8 @@ DcaRule.check(
                   "Outgoing adapters must not use another module's infrastructure\nbecause"
                       + " technical infrastructure reuse preserves module isolation");
           for (var adapter : arch.classes()) {
-            if (!com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage(
-                    arch.allOutgoingAdapterPatterns())
-                .test(adapter)) continue;
-            String owner = arch.moduleRootOf(adapter.getPackageName());
+            if (!arch.inOutgoingAdapter().test(adapter)) continue;
+            String owner = arch.moduleRootOf(adapter);
             for (var dependency : adapter.getDirectDependenciesFromSelf()) {
               var target = dependency.getTargetClass();
               String targetOwner =
@@ -157,17 +155,17 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allOutgoingAdapterPatterns()`, `classes()`, `infrastructureImplementation()`, `isolatedModuleRoots()`, `moduleRootOf()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inOutgoingAdapter()`, `infrastructureImplementation()`, `isolatedModuleRoots()`, `moduleRootOf()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Check("DCA-HEX-005", "Outgoing adapters must not use another module's infrastructure",
         "Technical infrastructure reuse preserves module isolation",
         arch => DcaRule.Fail("Another module's infrastructure is forbidden",
-            arch.Types.Where(t => Regex.IsMatch(t.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns())))
+            arch.Types.Where(arch.InOutgoingAdapter)
                 .SelectMany(adapter => adapter.Dependencies.Select(d => d.Target)
                     .Where(target => arch.IsInfrastructureImplementation(target)
-                        && arch.IsolatedModuleRoots().Any(root => root != arch.ModuleRootOf(adapter.Namespace?.FullName ?? "")
+                        && arch.IsolatedModuleRoots().Any(root => root != arch.ModuleRootOf(adapter)
                             && DcaLayout.IsBelow(target.Namespace?.FullName ?? "", root + "." + Layout.InfrastructureSegment)))
                     .Select(target => $"{adapter.FullName} depends on {target.FullName}")).ToList()))
     .Selecting("Types in every module's outgoing adapter namespace.")

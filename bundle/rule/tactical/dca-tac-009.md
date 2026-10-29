@@ -41,10 +41,8 @@ DcaRule.of(
         "Value objects should be immutable (final classes) - Vernon's DDD recommendation",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allDomainModelPatterns())
-                .and()
-                .areAssignableTo(arch.layout().markers().value())
+                .that(arch.inDomainModel())
+                .and(arch.layout().markers().is("value"))
                 .and()
                 .areNotInterfaces()
                 .and()
@@ -67,7 +65,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomainModel()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -82,8 +80,8 @@ DcaRule.Check(
         foreach (var valueObject in arch.Classes)
         {
             if (valueObject.IsCompilerGenerated
-                || !ResidesInAny(valueObject, arch.AllDomainModelPatterns())
-                || !IsAssignableTo(arch, valueObject, arch.Layout.Markers.Value))
+                || !arch.InDomainModel(valueObject)
+                || !IsRole(arch, valueObject, nameof(DcaMarkers.Value)))
             {
                 continue;
             }

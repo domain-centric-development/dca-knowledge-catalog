@@ -73,8 +73,8 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(arch.layout().markers().entity())
-              && !c.isAssignableTo(arch.layout().markers().aggregateRoot())
+          arch.layout().markers().is("entity").test(c)
+              && !arch.layout().markers().is("aggregateRoot").test(c)
               && !c.isInterface());
 }
 ```
@@ -83,7 +83,7 @@ private static List<JavaClass> nonRootEntities(DcaArchitecture arch) {
 
 ```java
 private static boolean isConcreteAggregateRoot(JavaClass type, DcaMarkers markers) {
-  return type.isAssignableTo(markers.aggregateRoot());
+  return markers.is("aggregateRoot").test(type);
 }
 ```
 

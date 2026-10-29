@@ -41,16 +41,14 @@ DcaRule.of(
         "Classes named *AggregateRoot must implement AggregateRoot interface (DDD pattern)",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allDomainModelPatterns())
+                .that(arch.inDomainModel())
                 .and()
                 .haveSimpleNameEndingWith(layout.aggregateRootSuffix())
                 .and()
                 .areNotInterfaces()
                 .and()
                 .doNotHaveSimpleName(layout.aggregateRootSuffix())
-                .should()
-                .beAssignableTo(arch.layout().markers().aggregateRoot())
+                .should(LayerConditions.be(arch.layout().markers().is("aggregateRoot")))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.domain.model.. of every module root whose "
@@ -65,7 +63,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomainModel()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -80,12 +78,12 @@ DcaRule.Check(
         {
             if (!type.Name.EndsWith(arch.Layout.AggregateRootSuffix, StringComparison.Ordinal)
                 || type.Name == arch.Layout.AggregateRootSuffix
-                || !ResidesInAny(type, arch.AllDomainModelPatterns()))
+                || !arch.InDomainModel(type))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, type, arch.Layout.Markers.AggregateRoot))
+            if (!IsRole(arch, type, nameof(DcaMarkers.AggregateRoot)))
             {
                 violations.Add($"{type.FullName} is named *AggregateRoot but does not implement {nameof(IAggregateRoot)}");
             }

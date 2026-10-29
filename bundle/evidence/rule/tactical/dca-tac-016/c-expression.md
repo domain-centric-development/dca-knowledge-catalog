@@ -38,7 +38,7 @@ DcaRule.Check(
                 }
 
                 var boundType = arch.Types.FirstOrDefault(t => t.FullName == bound.FullName);
-                if (boundType is null || !IsAssignableTo(arch, boundType, arch.Layout.Markers.AggregateRoot))
+                if (boundType is null || !IsRole(arch, boundType, nameof(DcaMarkers.AggregateRoot)))
                 {
                     violations.Add($"{repository.FullName} binds {bound.FullName} which does not implement {nameof(IAggregateRoot)}");
                 }
@@ -68,7 +68,7 @@ DcaRule.Check(
 
             foreach (var candidate in candidates)
             {
-                if (!IsAssignableTo(arch, candidate, arch.Layout.Markers.AggregateRoot))
+                if (!IsRole(arch, candidate, nameof(DcaMarkers.AggregateRoot)))
                 {
                     violations.Add($"{repository.FullName} exists for {candidate.FullName} which does not implement {nameof(IAggregateRoot)}");
                 }

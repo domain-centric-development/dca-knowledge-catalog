@@ -43,11 +43,11 @@ DcaRule.check(
         arch -> {
           List<String> violations = new ArrayList<>();
           for (JavaClass aggregate :
-              concreteClassesAssignableTo(arch, arch.layout().markers().aggregateRoot())) {
+              concreteClassesAssignableTo(arch, arch.layout().markers().is("aggregateRoot"))) {
             for (JavaField field : aggregate.getAllFields()) {
               JavaClass fieldType = field.getRawType();
-              if (fieldType.isAssignableTo(arch.layout().markers().repository())
-                  || fieldType.isAssignableTo(arch.layout().markers().outputPort())) {
+              if (arch.layout().markers().is("repository").test(fieldType)
+                  || arch.layout().markers().is("outputPort").test(fieldType)) {
                 violations.add(
                     aggregate.getName()
                         + " has field '"
@@ -78,8 +78,9 @@ DcaRule.check(
 ### `concreteClassesAssignableTo`
 
 ```java
-private static List<JavaClass> concreteClassesAssignableTo(DcaArchitecture arch, String marker) {
-  return classesMatching(arch, c -> c.isAssignableTo(marker) && !c.isInterface());
+private static List<JavaClass> concreteClassesAssignableTo(
+    DcaArchitecture arch, DescribedPredicate<JavaClass> role) {
+  return classesMatching(arch, c -> role.test(c) && !c.isInterface());
 }
 ```
 
@@ -116,12 +117,12 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
-        foreach (var aggregate in ConcreteTypesAssignableTo(arch, arch.Layout.Markers.AggregateRoot))
+        foreach (var aggregate in ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.AggregateRoot)))
         {
             foreach (var member in DataMembers(arch, aggregate))
             {
                 var fieldType = member.Type;
-                if (IsAssignableTo(arch, fieldType, arch.Layout.Markers.Repository) || IsAssignableTo(arch, fieldType, arch.Layout.Markers.OutputPort))
+                if (IsRole(arch, fieldType, nameof(DcaMarkers.Repository)) || IsRole(arch, fieldType, nameof(DcaMarkers.OutputPort)))
                 {
                     violations.Add($"{FieldDescription(aggregate, member)} which is a repository/output port");
                 }

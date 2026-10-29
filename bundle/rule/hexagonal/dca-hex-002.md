@@ -41,11 +41,9 @@ DcaRule.of(
         "Application services should only depend on domain and outbound ports, not adapters",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(arch.allAdapterPatterns())
+                .dependOnClassesThat(arch.inAdapter())
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.application.. of every module root, application.shared"
@@ -57,7 +55,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()`, `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inAdapter()`, `inApplication()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -65,8 +63,8 @@ DcaRule.Of(
         "DCA-HEX-002",
         "Application Services should not access port adapters",
         "Application services should only depend on domain and outbound ports, not adapters",
-        arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-            .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllAdapterPatterns())))
+        arch => Types().That().FollowCustomPredicate(arch.InApplication, "are in the application layer")
+            .Should().NotDependOnAnyTypesThat().FollowCustomPredicate(arch.InAdapter, "are in an adapter"))
     .Selecting(
         "Types in <module>.Application of every module root, Application.Shared"
             + " included.")

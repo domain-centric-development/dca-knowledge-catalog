@@ -49,8 +49,7 @@ DcaRule.of(
                 .that()
                 .areNotInterfaces()
                 .and(AnnotationRoles.annotatedWithAny(webControllers, restControllers))
-                .should()
-                .resideInAnyPackage(arch.allIncomingAdapterPatterns())
+                .should(LayerConditions.be(arch.inIncomingAdapter()))
                 .allowEmptyShould(true))
     .experimental()
     .selecting(
@@ -101,7 +100,7 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inIncomingAdapter()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -114,13 +113,12 @@ DcaRule.Check(
         arch =>
         {
             var roles = arch.Layout.FrameworkTypes;
-            var incoming = new Regex(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()));
             var violations = arch.Classes
                 .Where(c => !c.IsCompilerGenerated && c.IsAbstract != true
                     && ((FrameworkTypes.IsSet(roles.ControllerBase) && c.IsAssignableTo(roles.ControllerBase))
                         || (FrameworkTypes.IsSet(roles.PageModelBase) && c.IsAssignableTo(roles.PageModelBase))
                         || (FrameworkTypes.IsSet(roles.ApiControllerAttribute) && c.Attributes.Any(a => a.FullName == roles.ApiControllerAttribute))))
-                .Where(c => !incoming.IsMatch(c.Namespace?.FullName ?? ""))
+                .Where(c => !arch.InIncomingAdapter(c))
                 .Select(c => $"{c.FullName} is a controller outside the incoming adapters")
                 .OrderBy(v => v, StringComparer.Ordinal)
                 .ToList();

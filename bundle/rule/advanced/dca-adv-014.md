@@ -41,12 +41,10 @@ DcaRule.of(
         "Factories are part of the domain layer (complex aggregate creation logic)",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().factory())
+                .that(arch.layout().markers().is("factory"))
                 .and()
                 .areNotInterfaces()
-                .should()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .should(LayerConditions.be(arch.inDomain()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan that are assignable to Factory.")
@@ -57,7 +55,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -67,11 +65,11 @@ DcaRule.Of(
     "Factories are part of the domain layer (complex aggregate creation logic)",
     arch => Types()
         .That()
-        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.Factory), "are factories")
+        .FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), t), "are factories")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()
-        .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns())))
+        .FollowCustomCondition(LayerConditions.PlacedIn(arch.InDomain, "the domain layer"), "be in the domain layer"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IFactory.")
     .Checking(

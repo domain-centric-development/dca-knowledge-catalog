@@ -54,8 +54,7 @@ DcaRule.check(
             String[] published = arch.publishedPackagePatternsExcluding(source);
             perModule.add(
                 noClasses()
-                    .that()
-                    .resideInAPackage(layout.outgoingAdapterPattern(source))
+                    .that(arch.inLayerOf(DcaLayout.Layer.OUTGOING_ADAPTER, source))
                     .should()
                     .dependOnClassesThat(
                         resideInAnyPackage(foreign).and(not(resideInAnyPackage(published))))
@@ -156,7 +155,7 @@ boolean isEmpty() {
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()`, `publishedPackagePatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `contextName()`, `inLayerOf()`, `isolatedModuleRoots()`, `moduleRootPatternsExcluding()`, `publishedPackagePatternsExcluding()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -178,7 +177,7 @@ DcaRule.Check(
                 // Foreign internals = anything in another module except its published Api/Events namespaces.
                 var internals = "(?!" + AnyOf(arch.PublishedPatternsExcluding(source)) + ")(?:" + AnyOf(foreign) + ")";
                 perModule.Add(
-                    Types().That().ResideInNamespaceMatching(Layout.OutgoingAdapterPatternOf(source))
+                    Types().That().FollowCustomPredicate(arch.InLayerOf(DcaLayout.Layer.OutgoingAdapter, source), "are in the outgoing adapters of " + source)
                         .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(internals)
                         .Because("Outgoing adapters in module '" + arch.ContextName(source)
                             + "' must not access another module's internals - use its api/ or events/ packages instead"));

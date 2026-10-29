@@ -17,13 +17,13 @@ Per module root whose input ports or use cases sit at the feature depth applicat
 
 ## Check
 
-The types assignable to the configured input-port role whose input ends with Command - a parameter of a public method, or a type argument of the input port they extend - that the class depends on directly, inside the same module, belong to at most one feature, the feature being the first segment below the application package. Input ports whose input ends with Query, or with neither suffix, are not counted, and neither is an input port of another module. Nested classes are counted on their own. An empty selection passes.
+The types assignable to the configured input-port role whose input is a command (the configured command role, by default a simple name ending with Command) - a parameter of a public method, or a type argument of the input port they extend - that the class depends on directly, inside the same module, belong to at most one feature, the feature being the first segment below the application package. Input ports whose input is a query, or neither, are not counted, and neither is an input port of another module. Nested classes are counted on their own. An empty selection passes.
 
 ## .NET reading
 
-**Selection.** Classes in <module>.Adapter.Incoming of every module root, compiler-generated classes excluded, with the command ports they depend on: types assignable to IInputPort in the same module's application namespace whose input ends in Command - the input type argument of IUseCase<TInput, TOutput> or a parameter of an input-port method. A port counts toward a feature when it sits at Application.<Feature>.<UseCase> after removing configured OperationContainers segments, the grouped depth of DCA-USE-014.
+**Selection.** Classes in <module>.Adapter.Incoming of every module root, compiler-generated classes excluded, with the command ports they depend on: types assignable to IInputPort in the same module's application namespace whose input is a command (the configured command role, by default a simple name ending with Command) - the input type argument of IUseCase<TInput, TOutput> or a parameter of an input-port method. A port counts toward a feature when it sits at Application.<Feature>.<UseCase> after removing configured OperationContainers segments, the grouped depth of DCA-USE-014.
 
-**Check.** The command ports an adapter depends on belong to one feature. A port whose input ends in Query, or ends in neither, is not counted - reading a neighbouring feature's query is allowed. A port in a flat use-case namespace (Application.<UseCase>), in Application.Shared or in another module counts toward no feature, so a module that is not grouped into features is never reported. Fields, constructor parameters and calls all count as a dependency; constructor parameters are read from the runtime type as well. An empty selection passes.
+**Check.** The command ports an adapter depends on belong to one feature. A port whose input is a query, or neither, is not counted - reading a neighbouring feature's query is allowed. A port in a flat use-case namespace (Application.<UseCase>), in Application.Shared or in another module counts toward no feature, so a module that is not grouped into features is never reported. Fields, constructor parameters and calls all count as a dependency; constructor parameters are read from the runtime type as well. An empty selection passes.
 
 ## Implementation
 
@@ -46,12 +46,13 @@ DcaRule.check(
             + " <module>.adapter.incoming.. of that module. Modules with flat use case packages"
             + " are not selected.")
     .checking(
-        "The types assignable to the configured input-port role whose input ends with"
-            + " Command - a parameter of a public method, or a type argument of the input port"
+        "The types assignable to the configured input-port role whose input is a command (the"
+            + " configured command role, by default a simple name ending with Command) - a"
+            + " parameter of a public method, or a type argument of the input port"
             + " they extend - that the class depends on directly, inside the same module, belong"
             + " to at most one feature, the feature being the first segment below the"
-            + " application package. Input ports whose input ends with Query, or with neither"
-            + " suffix, are not counted, and neither is an input port of another module. Nested classes are counted on their"
+            + " application package. Input ports whose input is a query, or neither, are not"
+            + " counted, and neither is an input port of another module. Nested classes are counted on their"
             + " own. An empty selection passes.",
         "cut the class along the features, one incoming adapter per feature, mirroring"
             + " application.<feature> below the protocol segment")

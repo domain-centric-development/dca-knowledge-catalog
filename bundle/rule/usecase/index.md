@@ -1,8 +1,8 @@
 # usecase
 
 - [The base InputPort contract is not redeclared in the project](dca-use-001.md) — Base InputPort interface defines the generic contract for all use cases (Hexagonal Architecture).
-- [Types named *Command reside in the application layer](dca-use-002.md) — Use case commands should be in application layer (CQRS pattern).
-- [Types named *Query reside in the application layer](dca-use-003.md) — Use case queries should be in application layer (CQRS pattern).
+- [Commands reside in the application layer](dca-use-002.md) — Use case commands should be in application layer (CQRS pattern).
+- [Queries reside in the application layer](dca-use-003.md) — Use case queries should be in application layer (CQRS pattern).
 - [Use Case Commands should be immutable (final or records)](dca-use-004.md) — Use case commands should be immutable (value objects).
 - [Use Case Queries should be immutable (final or records)](dca-use-005.md) — Use case queries should be immutable (value objects).
 - [Types named *Result reside in the application layer](dca-use-006.md) — Use case result models should be in application layer. Domain Value Objects with 'Result' in name are allowed in doma...

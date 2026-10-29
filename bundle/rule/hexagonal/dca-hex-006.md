@@ -43,13 +43,11 @@ DcaRule.of(
             + " consumers are the exception)",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allIncomingAdapterPatterns())
+                .that(arch.inIncomingAdapter())
                 .and()
                 .resideOutsideOfPackage(eventConsumerPattern())
                 .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage(arch.allOutgoingAdapterPatterns())
+                .dependOnClassesThat(arch.inOutgoingAdapter())
                 .allowEmptyShould(true))
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root, excluding those"
@@ -78,7 +76,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allIncomingAdapterPatterns()`, `allOutgoingAdapterPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inIncomingAdapter()`, `inOutgoingAdapter()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -88,9 +86,9 @@ DcaRule.Of(
             + " within the same context",
         "Port adapters should communicate through application services, not directly (event"
             + " consumers are the exception)",
-        arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()))
+        arch => Types().That().FollowCustomPredicate(arch.InIncomingAdapter, "are in the incoming adapters")
             .And().DoNotResideInNamespaceMatching(EventConsumerPattern())
-            .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllOutgoingAdapterPatterns())))
+            .Should().NotDependOnAnyTypesThat().FollowCustomPredicate(arch.InOutgoingAdapter, "are in the outgoing adapters"))
     .Selecting(
         "Types in <module>.Adapter.Incoming of every module root, excluding those"
             + " below the configured event-consumer segment (Adapter.Incoming.Event by default).")

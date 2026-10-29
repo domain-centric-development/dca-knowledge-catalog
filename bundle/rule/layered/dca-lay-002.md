@@ -41,12 +41,10 @@ DcaRule.of(
         "Domain should not depend on infrastructure concerns (Dependency Inversion Principle)",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .that(arch.inDomain())
                 .should()
-                .dependOnClassesThat()
                 // The global infrastructure package and every module's own one.
-                .resideInAnyPackage(arch.allInfrastructurePatterns())
+                .dependOnClassesThat(arch.inInfrastructure())
                 // A context may legitimately have no domain layer at all - a supporting or
                 // generic
                 // subdomain in transaction-script style. An absent domain is not a violation.
@@ -64,7 +62,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `allInfrastructurePatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `inInfrastructure()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -73,8 +71,8 @@ DcaRule.Of(
     "Domain must not have dependencies on Infrastructure",
     "Domain should not depend on infrastructure concerns (Dependency Inversion Principle)",
     // The global infrastructure namespace and every isolated module's own.
-    arch => Types().That().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns()))
-        .Should().NotDependOnAnyTypesThat().ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllInfrastructurePatterns())))
+    arch => Types().That().FollowCustomPredicate(arch.InDomain, "are in the domain layer")
+        .Should().NotDependOnAnyTypesThat().FollowCustomPredicate(arch.InInfrastructure, "are in the infrastructure"))
     .Selecting(
         "Types in <module>.Domain of every module root, the shared kernel's domain included.")
     .Checking(

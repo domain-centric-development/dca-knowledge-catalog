@@ -43,15 +43,11 @@ DcaRule.of(
             + " inside its own",
         arch ->
             noClasses()
-                .that()
-                .areAssignableTo(arch.layout().markers().aggregateRoot())
-                .or()
-                .areAssignableTo(arch.layout().markers().entity())
-                .or()
-                .areAssignableTo(arch.layout().markers().value())
+                .that(arch.layout().markers().is("aggregateRoot"))
+                .or(arch.layout().markers().is("entity"))
+                .or(arch.layout().markers().is("value"))
                 .should()
-                .accessClassesThat()
-                .areAssignableTo(arch.layout().markers().domainService())
+                .accessClassesThat(arch.layout().markers().is("domainService"))
                 .allowEmptyShould(true))
     .selecting(
         "Classes anywhere on the classpath under scan that carry the aggregate-root, entity or"
@@ -85,7 +81,7 @@ DcaRule.Check(
                 .Select(d => d.Target)
                 .Distinct())
             {
-                if (target.IsAssignableTo(arch.Layout.Markers.DomainService))
+                if (arch.Layout.Markers.Is(nameof(DcaMarkers.DomainService), target))
                 {
                     violations.Add($"{type.FullName} uses {target.FullName}");
                 }

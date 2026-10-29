@@ -42,8 +42,7 @@ DcaRule.of(
             + " technical role",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .that(arch.inDomain())
                 .should()
                 .haveSimpleNameEndingWith("Helper")
                 .orShould()
@@ -65,7 +64,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -76,7 +75,7 @@ DcaRule.Of(
         arch =>
             Types()
                 .That()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllDomainPatterns()))
+                .FollowCustomPredicate(arch.InDomain, "are in the domain layer")
                 .Should()
                 .NotHaveNameMatching("(Helper|Utils?|Impl|Implementation)$"))
     .Selecting(

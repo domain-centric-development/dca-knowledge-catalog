@@ -12,15 +12,9 @@ evidence_for: "/rule/tactical/dca-tac-025.md#iswrappervalue"
 ```java
 /** A value or an identifier of exactly one instance field: it wraps that field's primitive. */
   private static boolean isWrapperValue(JavaClass type, DcaMarkers markers) {
-    if (!type.isAssignableTo(markers.value()) && !type.isAssignableTo(markers.id())) {
+    if (!markers.is("value").test(type) && !markers.is("id").test(type)) {
       return false;
     }
-    return type.getFields().stream()
-            .filter(
-                f ->
-                    !f.getModifiers().contains(JavaModifier.STATIC)
-                        && !f.getModifiers().contains(JavaModifier.SYNTHETIC))
-            .count()
-        == 1;
+    return instanceFieldCount(type) == 1;
   }
 ```

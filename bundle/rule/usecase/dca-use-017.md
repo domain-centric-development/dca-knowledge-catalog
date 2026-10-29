@@ -73,8 +73,8 @@ internal static class OperationPolicy
 {
     internal static bool Operation(IType type, DcaArchitecture arch) => type is Class { IsAbstract: false }
         && arch.RuntimeType(type) is { IsNested: false }
-        && Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
-        && (type.IsAssignableTo(arch.Layout.Markers.InputPort) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
+        && arch.InApplication(type)
+        && (arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), type) || type.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal));
 
     internal static void Invocation(DcaArchitecture arch)
     {
@@ -108,11 +108,11 @@ internal static class OperationPolicy
                 continue;
             }
 
-            if (target.IsAssignableTo(arch.Layout.Markers.InputPort) || Operation(target, arch))
+            if (arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), target) || Operation(target, arch))
             {
                 violations.Add($"{caller.FullName} -> {target.FullName}" + (via.Count == 0 ? "" : $" [via {string.Join(" -> ", via)}]"));
             }
-            else if (target is not Interface && Regex.IsMatch(target.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllApplicationPatterns()))
+            else if (target is not Interface && arch.InApplication(target)
                 && arch.ModuleRootOf(caller.Namespace.FullName) == arch.ModuleRootOf(target.Namespace?.FullName ?? ""))
             {
                 Walk(caller, target, arch, own, seen, via.Concat(new[] { target.FullName }).ToList(), violations);
@@ -126,7 +126,7 @@ internal static class OperationPolicy
         foreach (var type in arch.Types.Where(t => Operation(t, arch)))
         {
             var runtime = arch.RuntimeType(type)!;
-            var methods = runtime.GetInterfaces().Where(i => DcaMarkers.IsAssignableToByName(i, arch.Layout.Markers.InputPort))
+            var methods = runtime.GetInterfaces().Where(i => arch.Layout.Markers.Is(nameof(DcaMarkers.InputPort), i))
                 .SelectMany(i => runtime.GetInterfaceMap(i).TargetMethods).ToHashSet();
             foreach (var method in runtime.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {

@@ -35,9 +35,9 @@ DcaRule.Check(
                 var ns = runtime.Namespace ?? "";
                 var sameDomain = root is not null && root == arch.ModuleRootOf(ns)
                     && (ns == domain || ns.StartsWith(domain + ".", StringComparison.Ordinal));
-                var role = DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.AggregateRoot)
-                    || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Entity)
-                    || DcaMarkers.IsAssignableToByName(runtime, arch.Layout.Markers.Factory);
+                var role = arch.Layout.Markers.Is(nameof(DcaMarkers.AggregateRoot), runtime)
+                    || arch.Layout.Markers.Is(nameof(DcaMarkers.Entity), runtime)
+                    || arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), runtime);
                 if (runtime != entity && !(sameDomain && role))
                 {
                     violations.Add($"{runtime.FullName} constructs entity {entity.FullName} outside its domain construction boundary");

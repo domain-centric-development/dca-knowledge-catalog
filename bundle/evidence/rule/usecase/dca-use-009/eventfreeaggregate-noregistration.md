@@ -17,7 +17,7 @@ private static boolean noRegistration(
     for (var call : unit.getCallsFromSelf()) {
       var owner = call.getTargetOwner();
       if (call.getTarget().getName().equals("registerEvent")
-          && owner.isAssignableTo(markers.aggregateRoot())) return false;
+          && markers.is("aggregateRoot").test(owner)) return false;
       if (platform(owner.getName(), markers)) continue;
       var target = scanned.get(owner.getName());
       if (target == null || !noRegistration(target, scanned, visited, markers)) return false;

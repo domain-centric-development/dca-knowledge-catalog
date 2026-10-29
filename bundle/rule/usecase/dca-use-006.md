@@ -46,11 +46,9 @@ DcaRule.of(
                 .haveSimpleNameEndingWith("Result")
                 .and()
                 .resideInAnyPackage(layout.basePackage() + "..")
-                .and()
-                .areNotAssignableTo(arch.layout().markers().value())
+                .and(DescribedPredicate.not(arch.layout().markers().is("value")))
                 .and(DescribedPredicate.not(sealedDomainOutcome(arch)))
-                .should()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .should(LayerConditions.be(arch.inApplication()))
                 .allowEmptyShould(true))
     .selecting(
         "Classes under the base package whose simple name ends with Result, that do not"
@@ -73,8 +71,7 @@ DcaRule.of(
    * whatever it is named.
    */
   private static DescribedPredicate<JavaClass> sealedDomainOutcome(DcaArchitecture arch) {
-    DescribedPredicate<JavaClass> inDomain =
-        JavaClass.Predicates.resideInAnyPackage(arch.allDomainPatterns());
+    DescribedPredicate<JavaClass> inDomain = arch.inDomain();
     return DescribedPredicate.describe(
         "a sealed domain outcome",
         type ->
@@ -87,7 +84,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -102,11 +99,11 @@ DcaRule.Of(
                 .And()
                 .ResideInNamespaceMatching(DcaLayout.Below(layout.RootNamespace))
                 .And()
-                .FollowCustomPredicate(t => !t.IsAssignableTo(arch.Layout.Markers.Value), "are not value objects")
+                .FollowCustomPredicate(t => !arch.Layout.Markers.Is(nameof(DcaMarkers.Value), t), "are not value objects")
                 .And()
                 .FollowCustomPredicate(t => !IsClosedDomainOutcome(arch, t), "are not a closed domain outcome")
                 .Should()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns())))
+                .FollowCustomCondition(LayerConditions.PlacedIn(arch.InApplication, "the application layer"), "be in the application layer"))
     .Selecting(
         "Types under the root namespace whose name ends with Result, that do not implement IValue and"
             + " that are not a closed domain outcome - in a domain namespace, an abstract class or record"

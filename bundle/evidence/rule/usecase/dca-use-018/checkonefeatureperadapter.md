@@ -28,9 +28,9 @@ private static void checkOneFeaturePerAdapter(DcaArchitecture arch, DcaLayout la
       for (var dependency : adapter.getDirectDependenciesFromSelf()) {
         JavaClass target = dependency.getTargetClass();
         String pkg = target.getPackageName();
-        if (!target.isAssignableTo(layout.markers().inputPort())
-            || !TypeInspection.takesInputEndingWith(
-                target, layout.markers().inputPort(), "Command")
+        if (!layout.markers().is("inputPort").test(target)
+            || !TypeInspection.takesInput(
+                target, layout.markers().is("inputPort"), layout.markers().is("command"))
             || !DcaArchitecture.inPackageTree(pkg, application)
             || DcaArchitecture.inPackageTree(pkg, shared)) {
           continue;

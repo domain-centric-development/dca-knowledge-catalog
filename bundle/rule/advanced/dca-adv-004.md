@@ -57,11 +57,8 @@ static void check(DcaArchitecture arch, String id) {
   for (JavaClass type : arch.classes()) {
     if (type.isInterface()
         || !owner(type, arch.layout().markers(), arch.layout().specificationSuffix()).equals(id)
-        || !JavaClass.Predicates.resideInAnyPackage(arch.allDomainPatterns()).test(type))
-      continue;
-    if (id.equals("DCA-ONI-003")
-        && !JavaClass.Predicates.resideInAnyPackage(arch.allDomainModelPatterns()).test(type))
-      continue;
+        || !arch.inDomain().test(type)) continue;
+    if (id.equals("DCA-ONI-003") && !arch.inDomainModel().test(type)) continue;
     inspect(
         type,
         type.getName(),
@@ -101,10 +98,10 @@ static void check(DcaArchitecture arch, String id) {
 
 ```java
 static String owner(JavaClass type, DcaMarkers markers, String specificationSuffix) {
-  if (type.isAssignableTo(markers.domainEvent())) return "DCA-ADV-004";
-  if (type.isAssignableTo(markers.domainService())) return "DCA-ADV-011";
-  if (type.isAssignableTo(markers.factory())) return "DCA-ADV-015";
-  if (type.isAssignableTo(markers.specification())
+  if (markers.is("domainEvent").test(type)) return "DCA-ADV-004";
+  if (markers.is("domainService").test(type)) return "DCA-ADV-011";
+  if (markers.is("factory").test(type)) return "DCA-ADV-015";
+  if (markers.is("specification").test(type)
       || type.getSimpleName().endsWith(specificationSuffix)) return "DCA-ADV-018";
   return "DCA-ONI-003";
 }
@@ -126,7 +123,7 @@ private static void inspect(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainModelPatterns()`, `allDomainPatterns()`, `classes()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `classes()`, `inDomain()`, `inDomainModel()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -157,17 +154,17 @@ internal static class DomainMetadata
     internal static string Owner(DcaArchitecture arch, IType type)
     {
         var markers = arch.Layout.Markers;
-        if (type.IsAssignableTo(markers.DomainEvent))
+        if (markers.Is(nameof(DcaMarkers.DomainEvent), type))
         {
             return "DCA-ADV-004";
         }
 
-        if (type.IsAssignableTo(markers.DomainService))
+        if (markers.Is(nameof(DcaMarkers.DomainService), type))
         {
             return "DCA-ADV-011";
         }
 
-        if (type.IsAssignableTo(markers.Factory))
+        if (markers.Is(nameof(DcaMarkers.Factory), type))
         {
             return "DCA-ADV-015";
         }
@@ -183,9 +180,9 @@ internal static class DomainMetadata
         var roles = arch.Layout.FrameworkTypes;
         var violations = new List<string>();
         foreach (var type in arch.Types.Where(t => t is not Interface && Owner(arch, t) == id
-            && Regex.IsMatch(t.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainPatterns()))))
+            && arch.InDomain(t)))
         {
-            if (id == "DCA-ONI-003" && !Regex.IsMatch(type.Namespace?.FullName ?? "", DcaLayout.AnyOf(arch.AllDomainModelPatterns())))
+            if (id == "DCA-ONI-003" && !arch.InDomainModel(type))
             {
                 continue;
             }

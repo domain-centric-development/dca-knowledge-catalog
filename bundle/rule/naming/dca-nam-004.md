@@ -41,8 +41,7 @@ DcaRule.of(
         "Repository interfaces should follow consistent naming conventions (DDD pattern)",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .and()
                 .areInterfaces()
                 .and()
@@ -65,7 +64,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -76,7 +75,7 @@ DcaRule.Check(
         arch =>
         {
             var violations = arch.Interfaces
-                .Where(i => InNamespace(i, DcaLayout.AnyOf(arch.AllApplicationPatterns()))
+                .Where(i => arch.InApplication(i)
                     && i.Name.Contains("Repository", StringComparison.Ordinal)
                     && i.Name != "Repository"
                     && i.Name != "IRepository"

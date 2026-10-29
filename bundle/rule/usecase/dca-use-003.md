@@ -1,10 +1,10 @@
 ---
 type: Rule
 id: DCA-USE-003
-title: "Types named *Query reside in the application layer"
+title: Queries reside in the application layer
 rule: "Use case queries should be in application layer (CQRS pattern)."
-constraint: "Types named *Query reside in the application layer."
-selects: Classes under the base package whose simple name ends with Query.
+constraint: Queries reside in the application layer.
+selects: Classes under the base package the configured query role recognises - by default a simple name ending with Query.
 checks: "Each resides in an application package of some module root (<module>.application..)."
 enforced_by: "UseCaseRules#DCA-USE-003"
 status: enforced
@@ -16,11 +16,11 @@ tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 ---
 
-# Types named *Query reside in the application layer
+# Queries reside in the application layer
 
 ## Selection
 
-Classes under the base package whose simple name ends with Query.
+Classes under the base package the configured query role recognises - by default a simple name ending with Query.
 
 ## Check
 
@@ -28,7 +28,7 @@ Each resides in an application package of some module root (<module>.application
 
 ## .NET reading
 
-**Selection.** Types under the root namespace whose name ends with Query.
+**Selection.** Types under the root namespace the configured query role recognises - by default a simple name ending with Query.
 
 **Check.** Each resides in an application namespace of some module root (<module>.Application).
 
@@ -37,42 +37,43 @@ Each resides in an application package of some module root (<module>.application
 ```java
 DcaRule.of(
         "DCA-USE-003",
-        "Types named *Query reside in the application layer",
+        "Queries reside in the application layer",
         "Use case queries should be in application layer (CQRS pattern)",
         arch ->
             classes()
-                .that()
-                .haveSimpleNameEndingWith("Query")
+                .that(arch.layout().markers().is("query"))
                 .and()
                 .resideInAnyPackage(layout.basePackage() + "..")
-                .should()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .should(LayerConditions.be(arch.inApplication()))
                 .allowEmptyShould(true))
-    .selecting("Classes under the base package whose simple name ends with Query.")
+    .selecting(
+        "Classes under the base package the configured query role recognises - by default a"
+            + " simple name ending with Query.")
     .checking(
         "Each resides in an application package of some module root (<module>.application..).")
 ```
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
 DcaRule.Of(
         "DCA-USE-003",
-        "Types named *Query reside in the application layer",
+        "Queries reside in the application layer",
         "Use case queries should be in application layer (CQRS pattern)",
         arch =>
             Types()
                 .That()
-                .HaveNameEndingWith("Query")
+                .FollowCustomPredicate(t => arch.Layout.Markers.Is("Query", t), "are queries")
                 .And()
                 .ResideInNamespaceMatching(DcaLayout.Below(layout.RootNamespace))
                 .Should()
-                .ResideInNamespaceMatching(DcaLayout.AnyOf(arch.AllApplicationPatterns())))
+                .FollowCustomCondition(LayerConditions.PlacedIn(arch.InApplication, "the application layer"), "be in the application layer"))
     .Selecting(
-        "Types under the root namespace whose name ends with Query.")
+        "Types under the root namespace the configured query role recognises - by default a simple name"
+            + " ending with Query.")
     .Checking(
         "Each resides in an application namespace of some module root"
             + " (<module>.Application).")

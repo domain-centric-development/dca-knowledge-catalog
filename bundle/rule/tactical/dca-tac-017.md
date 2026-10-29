@@ -45,8 +45,8 @@ DcaRule.check(
           for (JavaClass repository : repositoryInterfaces(arch)) {
             for (JavaMethod method : repository.getMethods()) {
               for (JavaClass type : TypeInspection.involvedTypes(method.getReturnType())) {
-                if (type.isAssignableTo(arch.layout().markers().entity())
-                    && !type.isAssignableTo(arch.layout().markers().aggregateRoot())) {
+                if (arch.layout().markers().is("entity").test(type)
+                    && !arch.layout().markers().is("aggregateRoot").test(type)) {
                   violations.add(
                       repository.getName()
                           + "."
@@ -83,7 +83,7 @@ private static List<JavaClass> repositoryInterfaces(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(arch.layout().markers().repository())
+          arch.layout().markers().is("repository").test(c)
               && c.isInterface()
               && !c.getSimpleName().equals(arch.layout().repositorySuffix()));
 }
@@ -234,7 +234,7 @@ DcaRule.Check(
             {
                 foreach (var type in TypesInvolvedIn(method.ReturnTypeInstance))
                 {
-                    if (IsConcreteNonRootEntity(arch, type) || (IsAssignableTo(arch, type, arch.Layout.Markers.Entity) && !IsAssignableTo(arch, type, arch.Layout.Markers.AggregateRoot)))
+                    if (IsConcreteNonRootEntity(arch, type) || (IsRole(arch, type, nameof(DcaMarkers.Entity)) && !IsRole(arch, type, nameof(DcaMarkers.AggregateRoot))))
                     {
                         violations.Add($"{repository.FullName}.{SimpleName(method)} exposes {type.FullName}, an Entity that is not an Aggregate Root");
                     }

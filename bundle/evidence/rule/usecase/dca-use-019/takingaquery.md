@@ -12,7 +12,9 @@ evidence_for: "/rule/usecase/dca-use-019.md#takingaquery"
 ```java
 private static DescribedPredicate<JavaClass> takingAQuery(DcaLayout layout) {
   return DescribedPredicate.describe(
-      "take an input ending with Query",
-      type -> TypeInspection.takesInputEndingWith(type, layout.markers().inputPort(), "Query"));
+      "take a query as input",
+      type ->
+          TypeInspection.takesInput(
+              type, layout.markers().is("inputPort"), layout.markers().is("query")));
 }
 ```

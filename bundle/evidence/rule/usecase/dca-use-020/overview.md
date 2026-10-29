@@ -37,8 +37,7 @@ DcaRule.of(
             + " adapter answers itself; the use case never sees it",
         arch ->
             noClasses()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .should()
                 .callMethod(java.util.UUID.class, "fromString", String.class)
                 .allowEmptyShould(true))
@@ -54,4 +53,4 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).

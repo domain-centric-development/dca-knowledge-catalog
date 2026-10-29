@@ -41,16 +41,14 @@ DcaRule.of(
         "Repository interfaces should extend Repository marker interface",
         arch ->
             classes()
-                .that()
-                .resideInAnyPackage(arch.allApplicationPatterns())
+                .that(arch.inApplication())
                 .and()
                 .areInterfaces()
                 .and()
                 .haveSimpleNameEndingWith(arch.layout().repositorySuffix())
                 .and()
                 .doNotHaveSimpleName(arch.layout().repositorySuffix())
-                .should()
-                .beAssignableTo(arch.layout().markers().repository())
+                .should(LayerConditions.be(arch.layout().markers().is("repository")))
                 .allowEmptyShould(true))
     .selecting(
         "Interfaces in <module>.application.. of every module root whose simple name "
@@ -62,7 +60,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allApplicationPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inApplication()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -75,13 +73,13 @@ DcaRule.Check(
         var violations = new List<string>();
         foreach (var candidate in arch.Interfaces)
         {
-            if (!ResidesInAny(candidate, arch.AllApplicationPatterns())
+            if (!arch.InApplication(candidate)
                 || !HasSuffixButIsNotMarker(candidate, arch.Layout.RepositorySuffix))
             {
                 continue;
             }
 
-            if (!IsAssignableTo(arch, candidate, arch.Layout.Markers.Repository))
+            if (!IsRole(arch, candidate, nameof(DcaMarkers.Repository)))
             {
                 violations.Add($"{candidate.FullName} is named *Repository but does not extend {nameof(IRepository)}");
             }

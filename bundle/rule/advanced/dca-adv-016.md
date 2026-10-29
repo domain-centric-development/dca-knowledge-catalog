@@ -41,12 +41,10 @@ DcaRule.of(
         "Factories should be stateless (only final fields for dependencies)",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().factory())
+                .that(arch.layout().markers().is("factory"))
                 .and()
                 .areNotInterfaces()
-                .and()
-                .resideInAnyPackage(arch.allDomainPatterns())
+                .and(arch.inDomain())
                 .should(haveOnlyFinalFieldsIncludingInherited())
                 .allowEmptyShould(true))
     .selecting(
@@ -92,7 +90,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allDomainPatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `inDomain()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -104,7 +102,7 @@ DcaRule.Check(
         "Factories must have only readonly fields:",
         NonReadonlyFieldViolations(
             arch,
-            t => t is not Interface && InDomain(arch, t) && t.IsAssignableTo(arch.Layout.Markers.Factory))))
+            t => t is not Interface && InDomain(arch, t) && arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), t))))
     .Selecting(
         "Non-interface types in <module>.Domain of every module root that are assignable to "
         + "IFactory.")

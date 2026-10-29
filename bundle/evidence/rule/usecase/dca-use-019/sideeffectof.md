@@ -15,12 +15,12 @@ evidence_for: "/rule/usecase/dca-use-019.md#sideeffectof"
       JavaClass owner,
       com.tngtech.archunit.core.domain.AccessTarget.MethodCallTarget target,
       DcaMarkers markers) {
-    if (owner.isAssignableTo(markers.domainEventPublisher())
-        || owner.isAssignableTo(markers.integrationEventPublisher())) {
+    if (markers.is("domainEventPublisher").test(owner)
+        || markers.is("integrationEventPublisher").test(owner)) {
       return "publishes";
     }
-    boolean repository = owner.isAssignableTo(markers.repository());
-    if (!repository && !owner.isAssignableTo(markers.store())) {
+    boolean repository = markers.is("repository").test(owner);
+    if (!repository && !markers.is("store").test(owner)) {
       return null;
     }
     boolean writes = WRITE_VERB.matcher(target.getName()).matches();

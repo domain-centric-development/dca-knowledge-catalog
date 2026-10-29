@@ -83,7 +83,7 @@ private static List<JavaClass> storeInterfaces(DcaArchitecture arch) {
   return classesMatching(
       arch,
       c ->
-          c.isAssignableTo(arch.layout().markers().store())
+          arch.layout().markers().is("store").test(c)
               && c.isInterface()
               && !c.getSimpleName().equals(arch.layout().storeSuffix()));
 }

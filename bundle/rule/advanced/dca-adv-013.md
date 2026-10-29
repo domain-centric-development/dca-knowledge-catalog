@@ -43,8 +43,7 @@ DcaRule.of(
             + " search",
         arch ->
             classes()
-                .that()
-                .areAssignableTo(arch.layout().markers().factory())
+                .that(arch.layout().markers().is("factory"))
                 .and()
                 .areNotInterfaces()
                 .should()
@@ -69,7 +68,7 @@ DcaRule.Of(
         + " not called one makes the creation site hard to find in review and in a search",
     arch => Types()
         .That()
-        .FollowCustomPredicate(t => t.IsAssignableTo(arch.Layout.Markers.Factory), "are factories")
+        .FollowCustomPredicate(t => arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), t), "are factories")
         .And()
         .FollowCustomPredicate(t => t is not Interface, "are not interfaces")
         .Should()

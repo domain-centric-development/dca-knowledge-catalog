@@ -188,6 +188,61 @@ The layer sub-package names of this layout: `domain`, `application`, `adapter`.
 The module root of a package, or `null` when the package carries no layer segment — the
 global infrastructure package, for instance, or a plain support package.
 
+### Layer placement — annotation on the class, then on its package tree, then the path
+
+#### `Optional<Placement> placement(JavaClass javaClass)`
+
+The layer a class sits in, or empty. A layer annotation the layout names on the class wins;
+then one on the `package-info` of its package or the nearest package above it (a
+declaration holds for its whole subtree); then the path below its module root. Without layer
+annotations in the layout this is the path alone, exactly the packages the `all…Patterns`
+name.
+
+#### `String moduleRootOf(JavaClass javaClass)`
+
+The module root a class belongs to — by its placement, else by its path; null for neither.
+
+#### `DescribedPredicate<JavaClass> inLayer(DcaLayout.Layer layer)`
+
+Classes the layout places in the given layer.
+
+#### `DescribedPredicate<JavaClass> inLayerOf(DcaLayout.Layer layer, String moduleRoot)`
+
+Classes the layout places in the given layer of the given module root.
+
+#### `DescribedPredicate<JavaClass> inLayerSegment(DcaLayout.Layer layer, String segment)`
+
+Classes in a sub-package of their layer's package — `...`.
+
+#### `DescribedPredicate<JavaClass> inDomain()`
+
+#### `DescribedPredicate<JavaClass> inDomainModel()`
+
+The domain model: `...`.
+
+#### `DescribedPredicate<JavaClass> inApplication()`
+
+#### `DescribedPredicate<JavaClass> inSharedOutputPorts()`
+
+The output ports shared by one context's use cases: `...`.
+
+#### `DescribedPredicate<JavaClass> inIncomingAdapter()`
+
+#### `DescribedPredicate<JavaClass> inOutgoingAdapter()`
+
+#### `DescribedPredicate<JavaClass> inAdapter()`
+
+Classes in either adapter layer, or below a module root's adapter package outside both — the
+`.adapter..` the path rules have always meant.
+
+#### `DescribedPredicate<JavaClass> inInfrastructure()`
+
+#### `List<String> layerNotices()`
+
+Findings about the layout's layer declarations: a package whose annotation names another layer
+than its path, and a package that declares another layer than a package above it. Notices in
+the report, not failures — a migration keeps path and annotation side by side.
+
 ### Pattern helpers: context* over declared bounded contexts, all* over module roots
 
 #### `String[] contextDomainPatterns()`
@@ -279,12 +334,15 @@ attribute serves like the library's.
 
 | Member | Summary |
 |---|---|
+| `sealed record Placement(DcaLayout.Layer Layer, string LayerNamespace, PlacementSource Source)` | Where a type sits: its layer, the namespace that placed it there — the namespace an assembly attribute names, the type's own namespace for an attribute on the type, the namespace the assembly's types share for an attribute on the assembly, `<root>.<segment>` for the path — and how. |
+| `enum PlacementSource` | How a `Placement` was found, in precedence order. |
 | `static DcaArchitecture Load(DcaLayout layout, params Assembly[] assemblies)` | Imports every type of the given assemblies that resides in the layout's root namespace (or below). Pass the production assemblies of the application, e.g. `typeof(Program).Assembly` or one assembly per bounded context.  **Run architecture tests against Debug builds.** In a Release build the C# compiler emits async state machines as structs, and ArchUnitNET drops those compiler-generated value types — every dependency that occurs only inside an `async` method body becomes invisible to dependency rules. In a Debug build the state machine is a class whose dependencies ArchUnitNET attributes to the declaring type. This method therefore refuses JIT-optimized assemblies; use `Load(DcaLayout, bool, Assembly[])` with `allowOptimizedAssemblies: true` to accept the blind spot knowingly. |
 | `static DcaArchitecture Load(DcaLayout layout, bool allowOptimizedAssemblies, params Assembly[] assemblies)` | Like `Load(DcaLayout, Assembly[])`; with `allowOptimizedAssemblies` set, Release-built assemblies are accepted although dependencies inside `async` method bodies are then not analysed. |
 | `static DcaArchitecture Of(DcaLayout layout, Architecture architecture, params Assembly[] assemblies)` | Wraps an already built ArchUnitNET architecture — for tests and custom loaders. |
 | `DcaLayout Layout` |  |
 | `Architecture Architecture` | The ArchUnitNET model of the imported types. |
 | `IEnumerable<IType> Types` | Imported types below the root namespace (ArchUnitNET model, referenced types excluded). |
+| `IType? TypeNamed(string? fullName)` | The imported type of that full name below the root namespace, or `null` — to place a reflected type. |
 | `IEnumerable<Class> Classes` | Imported classes below the root namespace. |
 | `IEnumerable<Interface> Interfaces` | Imported interfaces below the root namespace. |
 | `IReadOnlyDictionary<string, BoundedContextAttribute> BoundedContexts` | All namespaces at or below the root namespace that carry a `[BoundedContext]` marker class, keyed by namespace, in encounter order. A context may sit at any depth (`Acme.Shop.Cart`, `Acme.Shop.Sales.Order`, or the root namespace itself); the declaration is the attribute, not the position in the namespace tree. |
@@ -301,6 +359,22 @@ attribute serves like the library's.
 | `IReadOnlyList<string> IsolatedModuleRoots()` | The module roots the isolation rules govern: every module root except the shared kernel. The shared kernel is a module root too (it may own `Domain`, `Application` and `Adapter` namespaces), but everyone may depend on it, and what *it* may depend on is `DCA-STR-002`'s business. |
 | `string[] ModuleRootPatternsExcluding(string moduleRoot)` | Patterns of every isolated module root except the given one — `root` and below, each. Built from `IsolatedModuleRoots`, so an undeclared module is a forbidden target like any other, not only a governed source. |
 | `string[] PublishedPatternsExcluding(string moduleRoot)` | The published namespaces of every isolated module root except the given one: `root.Api` (synchronous, in-process) and `root.Events` (asynchronous) and below, with the segment names taken from `PublishedSegments`. DCA's in-process contract convention — namespace names, a convention of the architecture and not of any framework — and the only part of a foreign module an adapter may depend on. |
+| `Placement? PlacementOf(IType type)` | The layer a type sits in, or `null`. A layer attribute the layout names on the type wins; then an assembly attribute of that type whose first constructor argument names the type's namespace or the nearest namespace above it (a declaration holds for its whole subtree); then the attribute on the type's own assembly; then the path below its module root. Without layer attributes in the layout this is the path alone, exactly the namespaces the `All…Patterns` name. |
+| `Placement? PlacementOf(Type type)` | The placement of a reflected type — the same answer as `PlacementOf(IType)`, for a rule that walks runtime types (a result's members, an enum an adapter formats). |
+| `string? ModuleRootOf(IType type)` | The module root a type belongs to — by its placement, else by its namespace; `null` for neither. |
+| `bool InLayer(IType type, DcaLayout.Layer layer)` | Whether the layout places the type in the given layer. |
+| `bool InLayer(Type type, DcaLayout.Layer layer)` | Whether the layout places the reflected type in the given layer. |
+| `Func<IType, bool> InLayerOf(DcaLayout.Layer layer, string moduleRoot)` | Types the layout places in the given layer of the given module root. |
+| `bool InLayerSegment(IType type, DcaLayout.Layer layer, string segment)` | Types in a sub-namespace of their layer's namespace — `<layer namespace>.<segment>` and below. |
+| `bool InDomain(IType type)` | Whether the layout places the type in the domain layer. |
+| `bool InDomainModel(IType type)` | The domain model: `<domain layer namespace>.<Model>` and below. |
+| `bool InApplication(IType type)` | Whether the layout places the type in the application layer. |
+| `bool InSharedOutputPorts(IType type)` | The output ports shared by one context's use cases: `<application>.<Shared>` and below. |
+| `bool InIncomingAdapter(IType type)` | Whether the layout places the type in the incoming adapters. |
+| `bool InOutgoingAdapter(IType type)` | Whether the layout places the type in the outgoing adapters. |
+| `bool InAdapter(IType type)` | Types in either adapter layer, or below a module root's adapter namespace outside both — the `<root>.Adapter` and below the path rules have always meant. |
+| `bool InInfrastructure(IType type)` | Whether the layout places the type in the infrastructure. |
+| `IReadOnlyList<string> LayerNotices()` | Findings about the layout's layer declarations: a namespace whose attribute names another layer than its path, and a namespace that declares another layer than a namespace above it or than its assembly. Notices in the report, not failures — a migration keeps path and attribute side by side. |
 | `T? NamespaceAttribute<T>(string ns)` | The single attribute of type  declared on a marker class residing exactly in `ns`, or `null`. |
 | `IReadOnlyList<T> NamespaceAttributes<T>(string ns)` | All attributes of type  declared on classes residing exactly in `ns` (repeatable attributes such as `[Upstream]`).  For `BoundedContextAttribute` and `SharedKernelAttribute` the attribute looked for is the one the layout's marker role names (`BoundedContext`, `SharedKernel`), matched by full type name; a project's own attribute is then answered as the library type, its members read by name (`NamespaceDeclarations`). |
 | `IReadOnlyList<Type> RuntimeTypes()` | The runtime `Type`s of the loaded assemblies below the root namespace. |
@@ -333,5 +407,6 @@ attribute serves like the library's.
 - [Bounded-context discovery](/evidence/reference/architecture/bounded-context-discovery.md)
 - [package-info annotations](/evidence/reference/architecture/package-info-annotations.md)
 - [Module discovery — structural, unlike context discovery](/evidence/reference/architecture/module-discovery-structural-unlike-context-discovery.md)
+- [Layer placement — annotation on the class, then on its package tree, then the path](/evidence/reference/architecture/layer-placement-annotation-on-the-class-then-on-its-package-tree-then-the-path.md)
 - [Pattern helpers: context* over declared bounded contexts, all* over module roots](/evidence/reference/architecture/pattern-helpers-context-over-declared-bounded-contexts-all-over-module-roots.md)
 - [.NET API](/evidence/reference/architecture/net-api.md)

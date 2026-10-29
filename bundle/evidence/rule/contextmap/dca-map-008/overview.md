@@ -52,14 +52,16 @@ DcaRule.check(
                     channel == Upstream.Consumes.API
                         ? layout.outgoingAdapterPattern(pkg)
                         : layout.incomingAdapterPattern(pkg);
+                DescribedPredicate<JavaClass> inAllowedAdapter =
+                    arch.inLayerOf(
+                        channel == Upstream.Consumes.API
+                            ? DcaLayout.Layer.OUTGOING_ADAPTER
+                            : DcaLayout.Layer.INCOMING_ADAPTER,
+                        pkg);
                 String contractPattern = targetPkg + "." + channelName(arch, channel) + "..";
                 boolean translationSite =
                     arch.classes().stream()
-                        .filter(
-                            c ->
-                                com.tngtech.archunit.core.domain.JavaClass.Predicates
-                                    .resideInAPackage(allowedAdapter)
-                                    .test(c))
+                        .filter(c -> inAllowedAdapter.test(c))
                         .anyMatch(
                             c ->
                                 c.getDirectDependenciesFromSelf().stream()
@@ -72,10 +74,10 @@ DcaRule.check(
                                     && c.getDirectDependenciesFromSelf().stream()
                                         .anyMatch(
                                             d ->
-                                                com.tngtech.archunit.core.domain.JavaClass
-                                                    .Predicates.resideInAnyPackage(
-                                                        layout.domainPattern(pkg),
-                                                        layout.applicationPattern(pkg))
+                                                arch.inLayerOf(DcaLayout.Layer.DOMAIN, pkg)
+                                                    .or(
+                                                        arch.inLayerOf(
+                                                            DcaLayout.Layer.APPLICATION, pkg))
                                                     .test(d.getTargetClass())));
                 violations.require(
                     translationSite || !demandsTranslationSite,
@@ -91,8 +93,7 @@ DcaRule.check(
                     noClasses()
                         .that()
                         .resideInAPackage(pkg + "..")
-                        .and()
-                        .resideOutsideOfPackage(allowedAdapter)
+                        .and(DescribedPredicate.not(inAllowedAdapter))
                         .should()
                         .dependOnClassesThat()
                         .resideInAPackage(targetPkg + "." + channelName(arch, channel) + "..")

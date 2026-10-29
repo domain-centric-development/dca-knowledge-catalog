@@ -44,15 +44,15 @@ DcaRule.check(
           CollectedViolations collected =
               CollectedViolations.withHeader(
                   "A domain service operation takes at least one aggregate or entity");
-          String aggregateRoot = arch.layout().markers().aggregateRoot();
-          String entity = arch.layout().markers().entity();
+          var aggregateRoot = arch.layout().markers().is("aggregateRoot");
+          var entity = arch.layout().markers().is("entity");
           for (JavaClass type :
               arch.classes()
                   .that(
                       DescribedPredicate.describe(
                           "domain services",
                           candidate ->
-                              candidate.isAssignableTo(arch.layout().markers().domainService())
+                              arch.layout().markers().is("domainService").test(candidate)
                                   && !candidate.isInterface()))) {
             for (JavaMethod method : type.getMethods()) {
               if (!method.getModifiers().contains(JavaModifier.PUBLIC)
@@ -64,9 +64,7 @@ DcaRule.check(
               boolean takesModelObject =
                   method.getRawParameterTypes().stream()
                       .anyMatch(
-                          parameter ->
-                              parameter.isAssignableTo(aggregateRoot)
-                                  || parameter.isAssignableTo(entity));
+                          parameter -> aggregateRoot.test(parameter) || entity.test(parameter));
               collected.require(
                   takesModelObject,
                   type.getName()
@@ -196,7 +194,7 @@ DcaRule.Check(
     {
         var violations = new List<string>();
         foreach (var service in arch.Types.Where(t =>
-            t is not Interface && t.IsAssignableTo(arch.Layout.Markers.DomainService)))
+            t is not Interface && arch.Layout.Markers.Is(nameof(DcaMarkers.DomainService), t)))
         {
             foreach (var method in service.GetMethodMembers()
                 .Where(m => m.MethodForm == MethodForm.Normal && m.Visibility == Visibility.Public))
@@ -207,8 +205,8 @@ DcaRule.Check(
                 }
 
                 var takesModelObject = method.Parameters.Any(parameter =>
-                    parameter.IsAssignableTo(arch.Layout.Markers.AggregateRoot)
-                    || parameter.IsAssignableTo(arch.Layout.Markers.Entity));
+                    arch.Layout.Markers.Is(nameof(DcaMarkers.AggregateRoot), parameter)
+                    || arch.Layout.Markers.Is(nameof(DcaMarkers.Entity), parameter));
                 if (!takesModelObject)
                 {
                     violations.Add($"{service.FullName}.{SimpleName(method)} takes no aggregate and no entity");
