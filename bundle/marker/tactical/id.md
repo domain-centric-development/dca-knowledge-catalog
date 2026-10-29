@@ -48,5 +48,5 @@ public record ProductId(UUID value) implements Id {
 - [Open Host Service Pattern](/guide/integration-patterns/open-host-service-pattern.md)
 - [6. JWT Claims Design](/guide/jwt-implementation-guide/6-jwt-claims-design.md)
 - [Building Blocks](/guide/language-mappings/building-blocks.md)
-- [Separate domain and persistence model](/guide/repository-vs-store/separate-domain-and-persistence-model.md)
+- [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
