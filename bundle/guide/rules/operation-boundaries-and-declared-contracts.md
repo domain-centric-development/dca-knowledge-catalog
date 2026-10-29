@@ -83,7 +83,9 @@ command and decides nothing. With `@Transactional` on both, the inner call joins
 the fiftieth line rolls back the whole list.
 
 The lambda lives in `infrastructure/`, never in `adapter/outgoing/`: an outgoing adapter must not depend on an input
-port (`DCA-HEX-013`). An incoming adapter that calls two use cases in a row is no alternative either. It makes the
+port (`DCA-HEX-013`). C# cannot implement an interface with a lambda; there the bridge is a small class in the
+context's `Infrastructure/` that only forwards to the input port. It is the one implementation of an output port
+outside the outgoing adapters — every other one lives there (`DCA-HEX-019`, experimental). An incoming adapter that calls two use cases in a row is no alternative either. It makes the
 order of the steps a decision of the adapter, and no use-case test sees it.
 
 The input port describes the complete effective public instance surface (`DCA-USE-017`).

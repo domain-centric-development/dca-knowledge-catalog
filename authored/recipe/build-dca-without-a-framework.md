@@ -36,8 +36,9 @@ Python package as its worked case; the steps hold for any language.
    imports enforces the same direction (domain imports nothing of the application or adapters; the application
    nothing of adapters or infrastructure; an incoming adapter no infrastructure) and reports under the libraries'
    rule ids, so a finding reads the same in every language. Structural ports add one check the type checker does not
-   make: **every output port has exactly one implementation, in an outgoing adapter or the composition root, and none
-   elsewhere** — `mypy` only sees a fit where an adapter is assigned to the port type.
+   make: **every output port has an implementation, and it lives in an outgoing adapter** — the composition root
+   holds only the bridge that hands a port a second use case. `mypy` only sees a fit where an adapter is assigned to
+   the port type.
 6. **Let the type checker carry the rest.** `mypy --strict` (or the language's strict mode) holds the ports'
    signatures, the frozen values and the typed ids; run it with the layer check in the same build step.
 7. **Verify** — the layer check, the type checker and the tests in one command, red on the first finding.

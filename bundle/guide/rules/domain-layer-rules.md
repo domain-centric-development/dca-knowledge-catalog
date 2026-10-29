@@ -34,6 +34,13 @@ tags: [guide, section]
   different checks — validated and derived on the way in, taken as given on the way back — and each has its own
   named factory (`fromInput(...)`, `fromStored(...)`). A neutral `of(...)` beside them leaves the caller to guess
   which checks run. A value with one origin keeps its one factory
+- **A string, a number, a flag or a moment that means something is a value object.** A postal code, a quantity, a
+  status, an opening date each carry rules of their own — a format, a range, a meaning — and held as a bare
+  `String`, `int`, `boolean` or `Instant` those rules are repeated at every use, or missing. A value of several
+  components holds values too: an address holds a `Street`, a `PostalCode` and a `City`, not three strings. Only a
+  wrapper — a value of exactly one component — holds the primitive it wraps. A flag kept in a field is an enum or a
+  value; a `boolean` *returned* is a question to the object and fine, though an aggregate is told what to do rather
+  than asked and then decided about from outside (`DCA-TAC-025`, experimental)
 
 ### Aggregate Rules
 - Access external objects only through Aggregate Root

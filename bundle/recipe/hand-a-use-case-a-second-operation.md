@@ -38,7 +38,9 @@ put together, in the composition root.
    ```
 
    It translates and decides nothing: no `if` over a business value, no loop. A condition that wants in is a decision
-   of the first use case.
+   of the first use case. In C#, which implements no interface with a lambda, the bridge is a small class in the
+   context's `Infrastructure/` that only forwards to the input port — the one implementation of an output port that
+   lives outside the outgoing adapters.
 5. **Check the transaction.** In-process, the second use case's boundary joins the first's (`@Transactional`
    `REQUIRED`; an ambient transaction in .NET). The first use case draws the boundary; a failure in any step rolls
    back all of them. If that is wrong for the domain, step 1 picked the wrong branch.

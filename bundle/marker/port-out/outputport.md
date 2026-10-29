@@ -53,7 +53,6 @@ interface), and the infrastructure provides concrete implementations.
 ## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Key Differences](/guide/clean-architecture-comparison/key-differences.md)
 - [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
 - [14. Architecture Placement (DCA Pattern)](/guide/jwt-implementation-guide/14-architecture-placement-dca-pattern.md)
@@ -61,4 +60,5 @@ interface), and the infrastructure provides concrete implementations.
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
+- [Operation boundaries and declared contracts](/guide/rules/operation-boundaries-and-declared-contracts.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
