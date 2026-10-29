@@ -12,21 +12,23 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [port-in, marker]
 ---
 
-Marker interface for Input Ports (Hexagonal Architecture) / Use Cases (Clean Architecture).
+The most common kind of `t`: one operation that takes a command or query and
+answers with a result - a Use Case in Clean Architecture terms.
 
-An input port represents an entry point to the application layer, defining a single use case
-or application feature. In Hexagonal Architecture, input ports are called by primary/driving
-adapters (e.g., REST controllers, event consumers, CLI handlers).
+Every use case is an input port; not every input port is a use case. An input port that only
+receives an incoming event or serves operations without a result model extends `t`
+directly. A use case is called by primary/driving adapters (e.g., REST controllers, event
+consumers, CLI handlers).
 
-**Characteristics of Input Ports:**
+**Characteristics of a Use Case:**
 
-- Represent a single user action or system operation
-- Define the interface that use cases implement
-- Accept Input models (Commands or Queries) as parameters
-- Return Output models, not domain entities
+- Represents a single user action or system operation
+- Is the interface the application-layer implementation implements
+- Accepts an Input model (Command or Query) as its parameter
+- Returns an Output model, not a domain entity
 - Technology-agnostic (no framework dependencies)
 
-**Input/Output Pattern:** Input ports accept Input models and return Output models to
+**Input/Output Pattern:** A use case accepts an Input model and returns an Output model to
 decouple the application layer from presentation and infrastructure concerns.
 
 **Example:**

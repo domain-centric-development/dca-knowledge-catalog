@@ -11,7 +11,7 @@ evidence_for: "/rule/usecase/dca-use-013.md#notcallremoteportswhentransactional"
 
 ```java
 private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
-    List<String> transactional, DcaMarkers markers) {
+    List<String> transactional, DcaMarkers markers, List<String> localOutputPorts) {
   return new ArchCondition<>("not call remote-capable output ports while transactional") {
     @Override
     public void check(JavaClass item, ConditionEvents events) {
@@ -25,6 +25,7 @@ private static ArchCondition<JavaClass> notCallRemotePortsWhenTransactional(
                 .map(call -> call.getTargetOwner())
                 .filter(owner -> owner.isAssignableTo(markers.outputPort()))
                 .filter(owner -> !isTransactionalResource(owner, markers))
+                .filter(owner -> localOutputPorts.stream().noneMatch(owner::isAssignableTo))
                 .map(JavaClass::getSimpleName)
                 .distinct()
                 .sorted()

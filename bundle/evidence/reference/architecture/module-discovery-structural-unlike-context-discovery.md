@@ -32,6 +32,13 @@ roots as well (`isolatedModuleRoots()`), so a module that declares nothing can n
 reach into a neighbour's internals nor have its own internals reached into. Declaring a module
 a bounded context decides its place on the context map, nothing more.
 
+#### `Optional<String> baseModuleRootNotice()`
+
+A finding about the layout itself, or empty: the base package resolves as a module root next to
+other module roots. That happens when a package directly below the base package is named like a
+layer - a boot module in `.application`, say - and it makes every module a
+neighbour of every other, because each one lies inside `..`. `withExcludedPackages(String...)` leaves such a module out.
+
 #### `List<String> isolatedModuleRoots()`
 
 The module roots the isolation rules govern: every module root except the shared kernel. The

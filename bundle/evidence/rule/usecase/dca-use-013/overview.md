@@ -15,13 +15,13 @@ Non-interface classes in <module>.application.. that implement InputPort or whos
 
 ## Check
 
-Every method that runs under one of the configured transactional annotations - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher or IntegrationEventPublisher. A use case without such an annotation (explicit TransactionBoundary or none) is selected but never reported; with an empty role nothing is ever reported.
+Every method that runs under one of the configured transactional annotations - on the class, on itself, or on a method that reaches it within the class - calls no OutputPort other than Repository, Store, DomainEventPublisher, IntegrationEventPublisher or a port the layout declares local (a hasher, a clock, an id source - DcaLayout.withLocalOutputPorts). A use case without such an annotation (explicit TransactionBoundary or none) is selected but never reported; with an empty role nothing is ever reported.
 
 ## .NET reading
 
 **Selection.** Concrete application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types. Nothing at all while no transactional attribute is configured, which is the default: neither .NET preset names one, because ASP.NET Core has no ambient transaction attribute.
 
-**Check.** Every code unit that runs under the configured transactional attribute - on the class, on itself, or on an entry point that reaches it within the class - calls no output port other than IRepository, IStore, IDomainEventPublisher or IIntegrationEventPublisher. A use case without such an attribute (an explicit ITransactionBoundary, or none) is selected but never reported, and with no attribute configured nothing is ever reported - the rule then carries the id without checking anything, as the Java twin does where no framework annotation is on the class path. What happens inside an InTransactionAsync block is not inspected; the explicit boundary is the developer's own and its extent is visible at the call site.
+**Check.** Every code unit that runs under the configured transactional attribute - on the class, on itself, or on an entry point that reaches it within the class - calls no output port other than IRepository, IStore, IDomainEventPublisher, IIntegrationEventPublisher or a port the layout declares local (a hasher, a clock, an id source - DcaLayout.WithLocalOutputPorts). A use case without such an attribute (an explicit ITransactionBoundary, or none) is selected but never reported, and with no attribute configured nothing is ever reported - the rule then carries the id without checking anything, as the Java twin does where no framework annotation is on the class path. What happens inside an InTransactionAsync block is not inspected; the explicit boundary is the developer's own and its extent is visible at the call site.
 
 ## Implementation
 
@@ -43,15 +43,18 @@ DcaRule.of(
                 .that(useCases(arch, layout))
                 .should(
                     notCallRemotePortsWhenTransactional(
-                        layout.frameworkAnnotations().transactional(), layout.markers()))
+                        layout.frameworkAnnotations().transactional(),
+                        layout.markers(),
+                        layout.localOutputPorts()))
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes in <module>.application.. that implement InputPort or whose simple name ends with the configured use-case suffix.")
     .checking(
         "Every method that runs under one of the configured transactional annotations - on the"
             + " class, on itself, or on a method that reaches it within the class - calls no"
-            + " OutputPort other than Repository, Store, DomainEventPublisher or"
-            + " IntegrationEventPublisher. A use case without such an annotation (explicit"
+            + " OutputPort other than Repository, Store, DomainEventPublisher,"
+            + " IntegrationEventPublisher or a port the layout declares local (a hasher, a"
+            + " clock, an id source - DcaLayout.withLocalOutputPorts). A use case without such an annotation (explicit"
             + " TransactionBoundary or none) is selected but never reported; with an empty role"
             + " nothing is ever reported.")
 ```

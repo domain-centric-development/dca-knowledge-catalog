@@ -1,0 +1,13 @@
+# dca-hex-017
+
+- [Event listeners that drive an input port must run after the commit in their own transaction — `AnnotationRoles.addValues`](annotationroles-addvalues.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `AnnotationRoles.collect`](annotationroles-collect.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `AnnotationRoles.isMetaAnnotatedWithAny`](annotationroles-ismetaannotatedwithany.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `AnnotationRoles.listenerEntry`](annotationroles-listenerentry.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `AnnotationRoles.matchingEntry`](annotationroles-matchingentry.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — C# expression](c-expression.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — C# helper IntraClassCalls](c-helper-intraclasscalls.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `driveAnInputPortOnlyAfterTheCommit`](driveaninputportonlyafterthecommit.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `IntraClassCalls.closure`](intraclasscalls-closure.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — `IntraClassCalls.reachableFrom`](intraclasscalls-reachablefrom.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Event listeners that drive an input port must run after the commit in their own transaction — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

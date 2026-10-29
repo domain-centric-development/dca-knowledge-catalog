@@ -89,4 +89,7 @@ context discovery are cached.
 Context-level declarations (`[BoundedContext]`, `[SharedKernel]`, `[Upstream]`, …)
 are read with reflection from a *marker class* that resides directly in the context's root
 namespace — the .NET stand-in for Java's `package-info`. Therefore the assemblies passed to
-`Load(DcaLayout, Assembly[])` must be the loaded runtime assemblies.
+`Load(DcaLayout, Assembly[])` must be the loaded runtime assemblies. The context and
+shared-kernel attributes are matched by the full type name their marker role names
+(`BoundedContext`, `SharedKernel`), so a project's own
+attribute serves like the library's.

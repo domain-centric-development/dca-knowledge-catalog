@@ -5,7 +5,7 @@ title: "Diagnostic: incoming adapter packages that drive a use case without tran
 rule: A package that drives the application and knows neither failure type either lets everything escape to a generic handler or catches a generic type and answers every outcome the same way; whether it does is not visible in the import model.
 constraint: "Diagnostic: incoming adapter packages that drive a use case without translating its failures."
 selects: "Incoming adapter packages of every module root (<module>.adapter.incoming..) that hold at least one non-interface class depending on a class assignable to InputPort - the packages that drive the application."
-checks: "Informational diagnostic only: lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing."
+checks: "Informational diagnostic only: when no class of the scan is assignable to DomainException or UseCaseException, it lists no package and says once that it cannot see the failures; otherwise it lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing."
 enforced_by: "ErrorHandlingRules#DCA-ERR-006"
 status: informational
 maturity: released
@@ -24,13 +24,13 @@ Incoming adapter packages of every module root (<module>.adapter.incoming..) tha
 
 ## Check
 
-Informational diagnostic only: lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing.
+Informational diagnostic only: when no class of the scan is assignable to DomainException or UseCaseException, it lists no package and says once that it cannot see the failures; otherwise it lists a package when no class in it - a central exception handler beside the adapters included - depends on a class assignable to DomainException or UseCaseException, and never fails. A handler in a different package of the same module is not seen, and a caught type is not visible to the import model, so this does not establish that a package translates nothing.
 
 ## .NET reading
 
 **Selection.** Incoming adapter namespaces of every module root (<Module>.Adapter.Incoming) that hold at least one non-interface type depending on a type assignable to IInputPort - the namespaces that drive the application.
 
-**Check.** Informational diagnostic only: lists a namespace when no type in it - a central exception handler beside the adapters included - depends on a type assignable to DomainException or UseCaseException, and never fails. A handler in a different namespace of the same module is not seen, and a caught type is not visible to the type model, so this does not establish that a namespace translates nothing.
+**Check.** Informational diagnostic only: when no type of the scan is assignable to DomainException or UseCaseException, it lists no namespace and says once that it cannot see the failures; otherwise it lists a namespace when no type in it - a central exception handler beside the adapters included - depends on a type assignable to DomainException or UseCaseException, and never fails. A handler in a different namespace of the same module is not seen, and a caught type is not visible to the type model, so this does not establish that a namespace translates nothing.
 
 ## Implementation
 
@@ -43,6 +43,27 @@ DcaRule.informational(
             + " everything escape to a generic handler or catches a generic type and answers"
             + " every outcome the same way; whether it does is not visible in the import model",
         arch -> {
+          String domainException = arch.layout().markers().domainException();
+          String useCaseException = arch.layout().markers().useCaseException();
+          boolean anyFailureType =
+              arch.classes().stream()
+                  .anyMatch(
+                      type ->
+                          !type.getName().equals(domainException)
+                              && !type.getName().equals(useCaseException)
+                              && (type.isAssignableTo(domainException)
+                                  || type.isAssignableTo(useCaseException)));
+          if (!anyFailureType) {
+            return List.of(
+                "no class of the scan is assignable to "
+                    + domainException
+                    + " or "
+                    + useCaseException
+                    + ", so no package can be seen to name a failure - nothing is listed."
+                    + " Where the project has failure types of its own, point the"
+                    + " domainException and useCaseException roles at their base types"
+                    + " (DcaMarkers.withDomainException / withUseCaseException).");
+          }
           List<String> observed = new ArrayList<>();
           Map<String, List<JavaClass>> drivingByPackage = new TreeMap<>();
           Set<String> packagesThatName = new HashSet<>();
@@ -81,7 +102,10 @@ DcaRule.informational(
             + " at least one non-interface class depending on a class assignable to InputPort -"
             + " the packages that drive the application.")
     .checking(
-        "Informational diagnostic only: lists a package when no class in it - a central"
+        "Informational diagnostic only: when no class of the scan is assignable to"
+            + " DomainException or UseCaseException, it lists no package and says once that it"
+            + " cannot see the failures; otherwise it lists a package when no class in it - a"
+            + " central"
             + " exception handler beside the adapters included - depends on a class assignable"
             + " to DomainException or UseCaseException, and never fails. A handler in a"
             + " different package of the same module is not seen, and a caught type is not"
@@ -114,6 +138,22 @@ DcaRule.Informational(
         + " way; whether it does is not visible in the type model",
     arch =>
     {
+        var domainException = arch.Layout.Markers.DomainException;
+        var useCaseException = arch.Layout.Markers.UseCaseException;
+        var anyFailureType = arch.Types.Any(t =>
+            t.FullName != domainException && t.FullName != useCaseException
+            && (IsAssignableTo(t, domainException) || IsAssignableTo(t, useCaseException)));
+        if (!anyFailureType)
+        {
+            return new List<string>
+            {
+                $"no class of the scan is assignable to {domainException} or {useCaseException}, so no namespace "
+                + "can be seen to name a failure - nothing is listed. Where the project has failure types of its "
+                + "own, point the DomainException and UseCaseException roles at their base types "
+                + "(DcaMarkers with-expression).",
+            };
+        }
+
         var observed = new List<string>();
         var incoming = new Regex(DcaLayout.AnyOf(arch.AllIncomingAdapterPatterns()));
         var driving = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
@@ -163,7 +203,9 @@ DcaRule.Informational(
         + "least one non-interface type depending on a type assignable to IInputPort - the "
         + "namespaces that drive the application.")
     .Checking(
-        "Informational diagnostic only: lists a namespace when no type in it - a central exception "
+        "Informational diagnostic only: when no type of the scan is assignable to DomainException or "
+        + "UseCaseException, it lists no namespace and says once that it cannot see the failures; otherwise it "
+        + "lists a namespace when no type in it - a central exception "
         + "handler beside the adapters included - depends on a type assignable to DomainException or "
         + "UseCaseException, and never fails. A handler in a different namespace of the same module is "
         + "not seen, and a caught type is not visible to the type model, so this does not establish "

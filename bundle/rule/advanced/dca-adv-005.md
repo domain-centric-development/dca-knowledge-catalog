@@ -5,7 +5,7 @@ title: Integration Events must be annotated with IntegrationEventType
 rule: "@IntegrationEventType(name, version) is the contract identity of every integration event — the serializer keys (name, version) to the class and stamps both onto the wire envelope."
 constraint: Integration Events must be annotated with IntegrationEventType.
 selects: "Non-interface classes anywhere on the classpath under scan that are assignable to IntegrationEvent - records, enums and abstract classes included."
-checks: "The class itself is annotated with @IntegrationEventType. An annotation on a supertype does not count; the annotation's name and version values are not checked. An empty selection passes."
+checks: "The class itself is annotated with @IntegrationEventType - or with the annotation the integrationEventType marker role names. An annotation on a supertype does not count; the annotation's name and version values are not checked. An empty selection passes."
 enforced_by: "AdvancedPatternRules#DCA-ADV-005"
 status: enforced
 maturity: released
@@ -24,13 +24,13 @@ Non-interface classes anywhere on the classpath under scan that are assignable t
 
 ## Check
 
-The class itself is annotated with @IntegrationEventType. An annotation on a supertype does not count; the annotation's name and version values are not checked. An empty selection passes.
+The class itself is annotated with @IntegrationEventType - or with the annotation the integrationEventType marker role names. An annotation on a supertype does not count; the annotation's name and version values are not checked. An empty selection passes.
 
 ## .NET reading
 
 **Selection.** Non-interface types anywhere under scan that are assignable to IIntegrationEvent - records, structs and abstract classes included.
 
-**Check.** The type itself carries [IntegrationEventType]. An attribute on a supertype does not count; the attribute's name and version values are not checked. An empty selection passes.
+**Check.** The type itself carries [IntegrationEventType] - or the attribute the IntegrationEventType marker role names. An attribute on a supertype does not count; the attribute's name and version values are not checked. An empty selection passes.
 
 ## Implementation
 
@@ -48,13 +48,14 @@ DcaRule.of(
                 .and()
                 .areNotInterfaces()
                 .should()
-                .beAnnotatedWith(IntegrationEventType.class)
+                .beAnnotatedWith(arch.layout().markers().integrationEventType())
                 .allowEmptyShould(true))
     .selecting(
         "Non-interface classes anywhere on the classpath under scan that are assignable to"
             + " IntegrationEvent - records, enums and abstract classes included.")
     .checking(
-        "The class itself is annotated with @IntegrationEventType. An annotation on a supertype does not"
+        "The class itself is annotated with @IntegrationEventType - or with the annotation the"
+            + " integrationEventType marker role names. An annotation on a supertype does not"
             + " count; the annotation's name and version values are not checked. An empty selection passes.")
 ```
 
@@ -75,14 +76,14 @@ DcaRule.Check(
         Violations(
             arch,
             t => t is not Interface && IsIntegrationEvent(t, arch.Layout.Markers),
-            t => !t.HasAttribute(typeof(IntegrationEventTypeAttribute).FullName!),
+            t => !t.HasAttribute(arch.Layout.Markers.IntegrationEventType),
             t => $"{t.FullName} is not annotated with [IntegrationEventType]")))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IIntegrationEvent - "
         + "records, structs and abstract classes included.")
     .Checking(
-        "The type itself carries [IntegrationEventType]. An attribute on a supertype does not "
-        + "count; the attribute's name and version values are not checked. An empty selection "
+        "The type itself carries [IntegrationEventType] - or the attribute the IntegrationEventType "
+        + "marker role names. An attribute on a supertype does not count; the attribute's name and version values are not checked. An empty selection "
         + "passes.")
 ```
 

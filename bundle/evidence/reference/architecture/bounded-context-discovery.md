@@ -29,8 +29,10 @@ Bounded-context patterns without the given context package.
 
 #### `Optional<String> sharedKernelPackage()`
 
-The package annotated with `l`, at whatever depth below the base package it
-sits.
+The package annotated with `l` — or with the annotation the `sharedKernel` marker role names — at whatever depth below the base package it sits. Where no
+package carries it, the conventional package `.` is the
+shared kernel when it holds classes: a project that has not declared its kernel yet still gets
+the kernel's exemption from module isolation.
 
 #### `String rootContextPackage(String fullPackageName)`
 

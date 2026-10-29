@@ -35,3 +35,4 @@ Create the default layout with `DcaLayout.ForRootNamespace(string)`.
 | `StoreSuffix` | `Store` | `WithStoreSuffix(...)` |
 | `FactorySuffix` | `Factory` | `WithFactorySuffix(...)` |
 | `SpecificationSuffix` | `Specification` | `WithSpecificationSuffix(...)` |
+| `InputPortSuffix` | `InputPort` | `WithInputPortSuffix(...)` |

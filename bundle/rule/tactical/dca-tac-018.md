@@ -4,7 +4,7 @@ id: DCA-TAC-018
 title: "Store interfaces must extend the Store marker, not Repository"
 rule: Stores extend the Store marker; Repository is reserved for Aggregate Roots.
 constraint: "Store interfaces must extend the Store marker, not Repository."
-selects: "Interfaces anywhere under scan whose simple name ends with Store, the marker Store itself excluded."
+selects: "Interfaces under scan whose simple name ends with Store, the marker Store itself and the type the store role names excluded, outside every adapter and infrastructure package - an interface there is an adapter's own abstraction, never a port."
 checks: "The interface is assignable to the Store marker and not assignable to Repository; both must hold. An interface not named *Store is never reported; an empty selection passes."
 enforced_by: "TacticalPatternRules#DCA-TAC-018"
 status: enforced
@@ -20,7 +20,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRul
 
 ## Selection
 
-Interfaces anywhere under scan whose simple name ends with Store, the marker Store itself excluded.
+Interfaces under scan whose simple name ends with Store, the marker Store itself and the type the store role names excluded, outside every adapter and infrastructure package - an interface there is an adapter's own abstraction, never a port.
 
 ## Check
 
@@ -28,7 +28,7 @@ The interface is assignable to the Store marker and not assignable to Repository
 
 ## .NET reading
 
-**Selection.** Interfaces below the root namespace whose name ends with Store; interfaces named exactly Store or IStore excluded.
+**Selection.** Interfaces below the root namespace whose name ends with Store, those named exactly Store or IStore and the type the Store role names excluded, outside every adapter and infrastructure namespace - an interface there is an adapter's own abstraction, never a port.
 
 **Check.** The interface is assignable to the IStore marker and not assignable to IRepository; both must hold, and each failing alone is reported. An interface not named *Store is never reported; an empty selection passes.
 
@@ -47,14 +47,22 @@ DcaRule.of(
                 .haveSimpleNameEndingWith(arch.layout().storeSuffix())
                 .and()
                 .doNotHaveSimpleName(arch.layout().storeSuffix())
+                .and()
+                .doNotHaveFullyQualifiedName(arch.layout().markers().store())
+                .and()
+                .resideOutsideOfPackages(arch.allAdapterPatterns())
+                .and()
+                .resideOutsideOfPackages(arch.allInfrastructurePatterns())
                 .should()
                 .beAssignableTo(arch.layout().markers().store())
                 .andShould()
                 .notBeAssignableTo(arch.layout().markers().repository())
                 .allowEmptyShould(true))
     .selecting(
-        "Interfaces anywhere under scan whose simple name ends with Store, the marker "
-            + "Store itself excluded.")
+        "Interfaces under scan whose simple name ends with Store, the marker Store itself"
+            + " and the type the store role names excluded, outside every adapter and"
+            + " infrastructure package - an interface there is an adapter's own abstraction,"
+            + " never a port.")
     .checking(
         "The interface is assignable to the Store marker and not assignable to "
             + "Repository; both must hold. An interface not named *Store is never reported; "
@@ -63,7 +71,7 @@ DcaRule.of(
 
 ## Architecture queries
 
-[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
+[DcaArchitecture](/reference/architecture.md) methods the rule relies on: `allAdapterPatterns()`, `allInfrastructurePatterns()`, `layout()` - how they resolve packages is described there and in [DcaLayout](/reference/layout.md).
 ### C# expression
 
 ```csharp
@@ -74,9 +82,13 @@ DcaRule.Check(
     arch =>
     {
         var violations = new List<string>();
+        var adapterOrInfrastructure = DcaLayout.AnyOf(arch.AllAdapterPatterns().Concat(arch.AllInfrastructurePatterns()));
         foreach (var candidate in arch.Interfaces)
         {
-            if (!HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix))
+            if (!HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix)
+                || candidate.FullName == arch.Layout.Markers.Store
+                || (candidate.Namespace is not null
+                    && Regex.IsMatch(candidate.Namespace.FullName, adapterOrInfrastructure)))
             {
                 continue;
             }
@@ -95,8 +107,10 @@ DcaRule.Check(
         DcaRule.Fail("Store interfaces must extend IStore and must not extend IRepository.", violations);
     })
     .Selecting(
-        "Interfaces below the root namespace whose name ends with Store; interfaces "
-        + "named exactly Store or IStore excluded.")
+        "Interfaces below the root namespace whose name ends with Store, those named exactly Store or"
+        + " IStore and the type the Store role names excluded, outside every adapter and"
+        + " infrastructure namespace - an interface there is an adapter's own abstraction, never a"
+        + " port.")
     .Checking(
         "The interface is assignable to the IStore marker and not assignable to "
         + "IRepository; both must hold, and each failing alone is reported. An "

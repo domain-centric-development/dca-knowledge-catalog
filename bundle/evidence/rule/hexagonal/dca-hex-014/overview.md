@@ -13,11 +13,11 @@ evidence_for: /rule/hexagonal/dca-hex-014.md
 
 ## Selection
 
-Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role - or, for an entry that names an attribute value, an annotation of that type whose attribute holds the value (a general mapping annotation restricted to GET), and for an entry that names an attribute without a value, an annotation of that type whose attribute holds none (a general mapping that names no HTTP method). The values of the same annotation on the declaring class count as well; a class-level mapping alone makes no method a handler. A mapping that names no HTTP method answers every method, GET included, and counts as a GET handler.
+Classes in <module>.adapter.incoming.. of every module root that are directly annotated with one of the configured web-controller or REST-controller stereotypes; within them, the methods carrying, directly or as a meta-annotation, an annotation of the configured GET-mapping role - or, for an entry that names an attribute value, an annotation of that type whose attribute holds the value (a general mapping annotation restricted to GET), and for an entry that names an attribute without a value, an annotation of that type whose attribute holds none (a general mapping that names no HTTP method). The values of the same annotation on the declaring class count as well; a class-level mapping alone makes no method a handler. A mapping that names no HTTP method answers every method, GET included, and counts as a GET handler.
 
 ## Check
 
-No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A mapping that names no HTTP method is checked like a GET handler. With an empty web-controller or GET-mapping role nothing is selected and the rule passes.
+No such method - or a method of the same class it reaches through calls within the class - calls a type assignable to the configured input-port role whose input ends with Command: a parameter of the called method, of a public method of the port, or a type argument of the input port it extends. A mapping that names no HTTP method is checked like a GET handler. With empty web-controller and REST-controller roles, or an empty GET-mapping role, nothing is selected and the rule passes.
 
 ## .NET reading
 
@@ -39,13 +39,14 @@ DcaRule.of(
             classes()
                 .that()
                 .resideInAnyPackage(arch.allIncomingAdapterPatterns())
-                .and(AnnotationRoles.annotatedWithAny(controllers))
+                .and(AnnotationRoles.annotatedWithAny(webControllers, restControllers))
                 .should(driveNoCommandFromGet(getMapping, layout.markers()))
                 .allowEmptyShould(true))
     .experimental()
     .selecting(
         "Classes in <module>.adapter.incoming.. of every module root that are directly"
-            + " annotated with one of the configured web-controller stereotypes; within them,"
+            + " annotated with one of the configured web-controller or REST-controller"
+            + " stereotypes; within them,"
             + " the methods carrying, directly or as a meta-annotation, an annotation of the"
             + " configured GET-mapping role - or, for an entry that names an attribute value, an"
             + " annotation of that type whose attribute holds the value (a general mapping"
@@ -60,8 +61,9 @@ DcaRule.of(
             + " class - calls a type assignable to the configured input-port role whose input"
             + " ends with Command: a parameter of the called method, of a public method of the"
             + " port, or a type argument of the input port it extends. A mapping that names no"
-            + " HTTP method is checked like a GET handler. With an empty web-controller or"
-            + " GET-mapping role nothing is selected and the rule passes.",
+            + " HTTP method is checked like a GET handler. With empty web-controller and"
+            + " REST-controller roles, or an empty GET-mapping role, nothing is selected and the"
+            + " rule passes.",
         "map the handler to POST, PUT or DELETE, or let the GET handler ask a query")
 ```
 

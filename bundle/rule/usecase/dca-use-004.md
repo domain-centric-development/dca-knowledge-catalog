@@ -4,7 +4,7 @@ id: DCA-USE-004
 title: "Use Case Commands should be immutable (final or records)"
 rule: "Use case commands should be immutable (value objects)."
 constraint: "Use Case Commands should be immutable (final or records)."
-selects: "Non-interface classes, including records, in <module>.application.. whose simple name ends with Command."
+selects: "Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Command."
 checks: "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected."
 enforced_by: "UseCaseRules#DCA-USE-004"
 status: enforced
@@ -20,7 +20,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 
 ## Selection
 
-Non-interface classes, including records, in <module>.application.. whose simple name ends with Command.
+Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Command.
 
 ## Check
 
@@ -41,7 +41,7 @@ DcaRule.of(
         "Use case commands should be immutable (value objects)",
         arch -> immutableApplicationModels(arch, "Command"))
     .selecting(
-        "Non-interface classes, including records, in <module>.application.. whose simple name ends with Command.")
+        "Non-interface, non-enum classes, including records, in <module>.application.. whose simple name ends with Command.")
     .checking(
         "The type is final or a record with final inherited instance fields and no instance setter methods - a name heuristic: set followed by an upper-case letter, with parameters, returning void (settle(x) is not a setter). Referenced objects and collection contents are not inspected.")
 ```
@@ -53,6 +53,8 @@ DcaRule.of(
 ```java
 private static com.tngtech.archunit.lang.ArchRule immutableApplicationModels(
     DcaArchitecture arch, String suffix) {
+  // An enum is immutable by construction; on recent platforms its inherited state carries a
+  // non-final cache field, which the shape check would report.
   return classes()
       .that()
       .haveSimpleNameEndingWith(suffix)
@@ -60,6 +62,8 @@ private static com.tngtech.archunit.lang.ArchRule immutableApplicationModels(
       .resideInAnyPackage(arch.allApplicationPatterns())
       .and()
       .areNotInterfaces()
+      .and()
+      .areNotEnums()
       .should(TypeInspection.haveImmutableShape())
       .allowEmptyShould(true);
 }

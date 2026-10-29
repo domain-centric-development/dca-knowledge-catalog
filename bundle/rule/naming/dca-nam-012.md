@@ -96,10 +96,13 @@ DcaRule.informational(
 ### `operationName`
 
 ```java
-/** The simple name without the use-case suffix or {@code InputPort}. */
+/** The simple name without the use-case suffix, the input-port suffix or {@code InputPort}. */
   private static String operationName(JavaClass type, DcaLayout layout) {
     String name = type.getSimpleName();
-    for (String suffix : List.of(layout.useCaseSuffix(), "InputPort")) {
+    for (String suffix :
+        List.of(layout.useCaseSuffix(), layout.inputPortSuffix(), "InputPort").stream()
+            .distinct()
+            .toList()) {
       if (name.endsWith(suffix) && name.length() > suffix.length()) {
         return name.substring(0, name.length() - suffix.length());
       }
