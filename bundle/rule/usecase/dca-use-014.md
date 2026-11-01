@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-014"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ After removing configured operationContainers segments, all of them sit at one d
 **Selection.** Per module root: non-abstract, non-nested classes below <module>.Application that implement IInputPort or whose name ends with the configured use-case suffix, excluding Application.Shared and everything below it.
 
 **Check.** After removing configured OperationContainers segments, all of them sit at one depth: Application.<UseCase> (flat) or Application.<Feature>.<UseCase> (grouped). Reported are a use case directly in the application namespace, one nested deeper than a feature, and a module mixing both depths. What a feature means is not checked.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement an input port in every application crate, the shared module excluded.
+
+**Check.** All sit at one module depth: application::<use_case> or application::<feature>::<use_case>.
 
 ## Implementation
 

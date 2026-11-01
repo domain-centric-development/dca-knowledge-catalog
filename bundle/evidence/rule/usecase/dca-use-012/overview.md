@@ -23,6 +23,14 @@ For every method that calls Repository.save, Repository.deleteById or a DomainEv
 
 **Check.** Every entry path to a unit calling IRepository.SaveAsync, IRepository.DeleteByIdAsync or an IDomainEventPublisher crosses a unit calling ITransactionBoundary.InTransactionAsync (including its extension overloads) or carrying the configured TransactionalAttribute; a type-level attribute covers all paths. The declarative path is empty by default in .NET - AspNetCore() and None() both leave TransactionalAttribute unset, because ASP.NET Core has no ambient transaction attribute - so out of the box only the explicit boundary satisfies the rule, while the Java twin also accepts the framework's transactional annotation. A use case that neither saves, deletes nor publishes (a query, a Store write) is selected but has nothing to check and passes. Static limit: a boundary call in the same unit passes even when the save or publication follows an empty boundary block. Runtime rollback containment must be tested separately. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.
 
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Functions of types that implement an input port.
+
+**Check.** A function that calls save or delete on a repository or a DomainEventPublisher does so inside the closure it passes to TransactionBoundary (or a function of the same type that does). Rust has no transactional attribute; the explicit boundary is the only form.
+
 ## Implementation
 
 ```java

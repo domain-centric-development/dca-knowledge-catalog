@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-015"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ No instance field - inherited ones included, walked through raw type and generic
 **Selection.** Top-level classes and structs in each module application namespace ending in Result, excluding IValue types.
 
 **Check.** No instance result member of any visibility - the walk binds public and non-public members - transitively through application part records and generic wrappers exposes IAggregateRoot or IEntity; classes and structs are checked. Domain values and read models are not traversed. A type the loader cannot resolve is not walked.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (visibility, source-test).
+
+**Selection.** Structs in application crates whose name ends with Result.
+
+**Check.** No field type, through generic arguments and into other application structs, implements AggregateRoot or Entity.
 
 ## Implementation
 

@@ -32,6 +32,14 @@ Diagnostic - reports each discovered context's name, package and description and
 
 **Check.** Diagnostic - reports each discovered context's name, namespace and description and the shared kernel namespace in the rule's own outcome. It asserts nothing and never fails.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (graph-test).
+
+**Selection.** Every crate whose [package.metadata.dca] carries a context.
+
+**Check.** Informational - lists each context with its crates and the shared kernel, and never fails.
+
 ## Implementation
 
 ```java

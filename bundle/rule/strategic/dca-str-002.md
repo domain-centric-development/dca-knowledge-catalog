@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-002"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ No selected class depends on a class in a package carrying @BoundedContext or be
 **Selection.** Types in the namespace whose marker class carries [SharedKernel] and all its sub-namespaces. When no shared kernel is declared nothing is selected and the rule passes.
 
 **Check.** No selected type depends on a type in a namespace carrying [BoundedContext] or below it, checked once per declared context and reported together. A module that owns layers without declaring [BoundedContext] is not a forbidden target here. Dependencies on the root namespace outside any context, on infrastructure and on third-party code are not checked.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** The crate with layer = shared-kernel.
+
+**Check.** Its Cargo dependencies name no crate that carries a context.
 
 ## Implementation
 

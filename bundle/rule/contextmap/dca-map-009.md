@@ -10,7 +10,7 @@ enforced_by: "ContextMapRules#DCA-MAP-009"
 status: enforced
 maturity: released
 rule_set: contextmap
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ContextMapRules.java
 tags: [contextmap, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ContextMapRules.cs
@@ -31,6 +31,14 @@ No class in the declaring context's domain layer (<context>.domain..) depends on
 **Selection.** Every [Upstream] declaration with Translation Conformist on the marker class of every namespace carrying [BoundedContext] whose Context names an existing bounded context, reading Via. Status is not consulted: this is a placement check on code that exists, so a Planned declaration is checked too - one without any dependent code passes; declarations towards an unknown context are skipped.
 
 **Check.** No type in the declaring context's domain layer (<context>.Domain and below) depends on a type in the target context's channel namespace (Api or Events per the layout) or below. Whether an implementation exists is DCA-MAP-007's question, not this rule's. Application and adapter types may use the upstream's contract types.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every upstreams entry with translation = conformist.
+
+**Check.** The context's domain crate does not depend on the target's api crate.
 
 ## Implementation
 

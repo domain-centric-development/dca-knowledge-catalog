@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-023"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No constructor declared by the class itself is public. Private, package-private 
 **Selection.** Concrete, non-record classes below the root namespace assignable to IAggregateRoot. Abstract base classes are not selected - their constructors are reachable only from a subclass. Records are not selected: a positional record's primary constructor is public by the language, so a record root guards its invariants in that constructor instead. Structs are not selected either - a struct's parameterless constructor is always public.
 
 **Check.** No instance constructor declared by the class itself is public. Private, internal, protected and private protected constructors pass - a persistence framework that needs a parameterless constructor gets a non-public one. Static constructors are not constructors in this sense. Who calls the factory methods is not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (visibility, source-test).
+
+**Selection.** Types that implement AggregateRoot.
+
+**Check.** No field is pub. Rust has no constructor; the struct literal is the constructor, and private fields keep it inside the aggregate's module. The root's associated functions (create, place, ...) are its factories and check invariants.
 
 ## Implementation
 

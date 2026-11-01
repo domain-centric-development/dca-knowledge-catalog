@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-005"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ Each resides in a package whose path contains the configured api segment (..api.
 **Selection.** Types - classes or interfaces - carrying [OpenHostService] anywhere below the root namespace, in any module or none.
 
 **Check.** Each resides in a namespace whose path contains the configured Api segment or the configured incoming-adapter segments (Adapter.Incoming), at any depth and in any sub-namespace. One attributed in a Domain, Application or outgoing-adapter namespace is reported. Which module publishes it, and whether anyone consumes it, is not checked.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement the OpenHostService marker.
+
+**Check.** Each sits in an api crate or in the incoming module of an adapters crate.
 
 ## Implementation
 

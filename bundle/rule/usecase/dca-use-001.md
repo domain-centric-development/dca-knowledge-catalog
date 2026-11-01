@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-001"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ The interface resides in the building-blocks package hexagonal.port.in or in the
 **Selection.** Interfaces named InputPort or IInputPort anywhere in the loaded assemblies - except the type the InputPort role names.
 
 **Check.** The interface resides in the building-blocks namespace Hexagonal.Ports.In or in the namespace of the configured InputPort role - the generic contract is declared once, by the vocabulary in use, and not redeclared elsewhere in the project.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits named InputPort anywhere in the workspace.
+
+**Check.** None outside the building blocks.
 
 ## Implementation
 

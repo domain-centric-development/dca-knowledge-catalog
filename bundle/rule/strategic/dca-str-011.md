@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-011"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ At least one such package exists. The rule says nothing about how many contexts 
 **Selection.** The declared bounded contexts of the imported types — every namespace carrying a [BoundedContext] marker class, at any depth below the root namespace. No individual type is reported.
 
 **Check.** At least one such namespace exists. The rule says nothing about how many contexts there should be, about their boundaries, or about modules that own a layer without declaring a context — those are governed structurally and are not a substitute for the declaration.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (graph-test).
+
+**Selection.** The workspace members.
+
+**Check.** At least one crate carries a context in [package.metadata.dca].
 
 ## Implementation
 

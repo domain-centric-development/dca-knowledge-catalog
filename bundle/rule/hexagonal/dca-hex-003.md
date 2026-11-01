@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-003"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a class assignable to Repository - the port interface or an imp
 **Selection.** Controller classes anywhere in the loaded assemblies: a class whose name ends with the configured controller suffix or the configured REST-controller suffix, one deriving from the configured controller or page-model base class, or one carrying the configured API-controller attribute. Not restricted to adapter namespaces.
 
 **Check.** No dependency on a type assignable to IRepository - the port interface or an implementation. Other output ports (IStore, event publishers) are not checked; a controller that reaches a repository through another class is not reported. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the incoming module of every adapters crate.
+
+**Check.** No item names a trait that carries the repository role or a type that implements one. Other output ports are not checked.
 
 ## Implementation
 

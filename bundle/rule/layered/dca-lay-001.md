@@ -32,6 +32,14 @@ Informational - selects nothing and never fails; it carries doctrine only. The d
 
 **Check.** Informational - selects nothing and never fails; it carries doctrine only. The dependency direction is enforced by the hexagonal rules.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test.
+
+**Selection.** Informational - selects nothing.
+
+**Check.** Informational - carries doctrine only. The dependency direction is held by the crate graph and the hexagonal rules.
+
 ## Implementation
 
 ```java

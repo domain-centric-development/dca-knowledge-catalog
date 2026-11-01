@@ -32,6 +32,14 @@ Informational - reports every declared edge in the rule's own outcome and never 
 
 **Check.** Informational - reports every declared edge in the rule's own outcome and never fails; it carries no assertion. Status is not printed, so a Planned edge is listed like an implemented one.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (graph-test).
+
+**Selection.** Every upstreams, external-upstreams and partnerships entry.
+
+**Check.** Informational - lists every declared edge and never fails.
+
 ## Implementation
 
 ```java

@@ -25,6 +25,14 @@ Informational diagnostic only: lists every call of name() or toString() on such 
 
 **Check.** Informational diagnostic only: lists a method that turns such an enum into its member name as the IL shows it - ToString in any overload, called through a constrained call or on the boxed value; the boxed value passed straight into a string-building call (concatenation, formatting, joining, appending); an interpolation hole of the enum type; Enum.GetName or Enum.GetNames over it - and never fails. Compiler-generated methods, such as a record's generated PrintMembers and ToString, are not read. A boxed value stored first and formatted later, a serializer that writes names, and a name read through a generic helper are not seen; whether the text reaches a client stays with review.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Format calls in every adapters crate.
+
+**Check.** Informational - lists every {:?} or to_string() applied to an enum declared in a domain or application crate, and never fails. A serializer that writes the variant name is not seen.
+
 ## Implementation
 
 ```java

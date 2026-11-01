@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-004"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ At least one field - inherited ones included - has a raw type assignable to the 
 **Selection.** Non-interface, non-abstract types below the root namespace assignable to IEntity - aggregate roots included, since IAggregateRoot extends IEntity.
 
 **Check.** At least one field or property - inherited ones included, private fields of base classes seen through reflection - has a type assignable to the IId marker. A string or Guid identity does not count, and the member's name plays no role.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (trait-bound, source-test).
+
+**Selection.** Types that implement Entity, aggregate roots included.
+
+**Check.** The trait's associated type Id is bound to the Id marker, so the compiler holds the typed identity. The source test checks that a field of that type exists, so the id is state, not computed.
 
 ## Implementation
 

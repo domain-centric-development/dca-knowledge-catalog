@@ -10,7 +10,7 @@ enforced_by: "ErrorHandlingRules#DCA-ERR-003"
 status: enforced
 maturity: released
 rule_set: errors
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java
 tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
@@ -31,6 +31,14 @@ Each extends UseCaseException, directly or through an intermediate base class. A
 **Selection.** Types under <Module>.Application of every module root that are assignable to Exception and not to DomainException - the exception types the application layer declares itself. The base type UseCaseException lives in the building blocks and is not selected. A subtype of DomainException declared in an application namespace is not selected either: it is misplaced rather than mis-based, and DCA-ERR-002 owns that case with the remedy that fits it - move the failure to the domain, do not change its base type.
 
 **Check.** Each derives from UseCaseException, directly or through an intermediate base class. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types in every application crate that implement std::error::Error and not DomainFailure.
+
+**Check.** Each implements UseCaseFailure.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-012"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a class assignable to DomainService - the building-block marker
 **Selection.** Classes in <module>.Adapter.Incoming of every module root, event consumers included. Outgoing adapters are not selected.
 
 **Check.** No dependency on a type assignable to IDomainService - the building-block marker interface, any sub-interface of it and every class implementing one. A domain class without the marker is not a domain service by this rule. Injecting it, calling it or naming it in a signature all count as a dependency; constructor parameters are read from the runtime type as well, so a service injected into an adapter whose members are all async is still found. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the incoming module of every adapters crate.
+
+**Check.** No item names a type that carries the domain-service role.
 
 ## Implementation
 

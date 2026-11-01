@@ -10,7 +10,7 @@ enforced_by: "OnionRules#DCA-ONI-002"
 status: enforced
 maturity: released
 rule_set: onion
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/OnionRules.java
 tags: [onion, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/OnionRules.cs
@@ -31,6 +31,14 @@ Every dependency targets a class in one of those same packages or in an allowed 
 **Selection.** Types below the root namespace whose namespace lies under <Module>.Domain of every module root; the building-blocks types themselves are not selected.
 
 **Check.** Every dependency whose target has a namespace points into one of those same domain namespaces or below an allowed prefix: the layout's third-party allow-list (by default System only - a logging, validation or utility library is a project decision, added with WithThirdPartyNamespacesAllowedInDomain) and the namespaces the configured marker vocabulary declares its domain-facing roles in - the tactical roles and the outgoing ports, which for the default vocabulary are Ddd.Tactical and Hexagonal.Ports.Out. The vocabulary's own namespaces are on the list because they are derived from the roles, so pointing a role at another library's type does not make that library a reported dependency. A building-blocks entry in the allow-list is ignored here, so the strategic attributes, the application-layer roles and the input ports are not allowed in the domain. The shared kernel is not on the list either, unless it is a module root with a Domain layer of its own. A dependency on any other namespace is reported, each distinct pair once.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, graph-test, deny).
+
+**Selection.** Every crate with layer = domain, the shared kernel's included.
+
+**Check.** Its normal dependencies are the building blocks, the shared kernel and the configured allowed crates only (by default none). Dev-dependencies are not counted. cargo-deny can refuse known framework crates workspace-wide; the graph test is the per-crate check.
 
 ## Implementation
 

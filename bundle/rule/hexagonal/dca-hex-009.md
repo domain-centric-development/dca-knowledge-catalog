@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-009"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ The interface is assignable to OutputPort, directly or through Repository, Store
 **Selection.** Top-level interfaces in <module>.Application.Shared of every module root. Nested interfaces are not selected - they belong to their enclosing port's contract.
 
 **Check.** The interface is assignable to IOutputPort, directly or through IRepository, IStore, IDomainEventPublisher, IIntegrationEventPublisher or another IOutputPort sub-interface. Classes, records and enums in Application.Shared are not checked. An empty selection passes. The rule presumes the vocabulary has a common port root: OutputPort must be set whenever any port role is, because every port of the project is measured against it. A vocabulary that has no such root has nothing this rule can assert - switch the id off rather than pointing the role at an unrelated type.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits in the shared module of every application crate.
+
+**Check.** Each carries the output-port role, through OutputPort or one of its sub-traits (Repository, Store, the event publishers).
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "CycleRules#DCA-CYC-005"
 status: enforced
 maturity: released
 rule_set: cycles
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/CycleRules.cs
@@ -31,6 +31,14 @@ The slices form no dependency cycle: two features or two use cases that depend o
 **Selection.** One slice per operation-root namespace selected by marker or suffix, configured containers stripped; supporting sub-namespaces join their nearest operation root. Classes directly in a feature namespace form its feature slice. Shared and direct application types are ignored.
 
 **Check.** The slices form no dependency cycle: two features or two use cases that depend on each other, directly or through further slices, are reported. Dependencies on Application.Shared, the domain or an adapter do not count. Slices of all modules are checked together, so a cycle through another module's use-case namespace is reported here as well.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** One slice per use-case or feature module of every application crate, the shared module excluded.
+
+**Check.** The slices form no dependency cycle through use paths. Modules within one crate may depend on each other in both directions; the compiler allows it.
 
 ## Implementation
 

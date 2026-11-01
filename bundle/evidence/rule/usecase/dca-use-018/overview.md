@@ -25,6 +25,14 @@ The types assignable to the configured input-port role whose input is a command 
 
 **Check.** The command ports an adapter depends on belong to one feature. A port whose input is a query, or neither, is not counted - reading a neighbouring feature's query is allowed. A port in a flat use-case namespace (Application.<UseCase>), in Application.Shared or in another module counts toward no feature, so a module that is not grouped into features is never reported. Fields, constructor parameters and calls all count as a dependency; constructor parameters are read from the runtime type as well. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the incoming module of an adapters crate whose application groups use cases by feature.
+
+**Check.** The input ports taking a command that an item names belong to at most one feature.
+
 ## Implementation
 
 ```java

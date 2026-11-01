@@ -10,7 +10,7 @@ enforced_by: "ErrorHandlingRules#DCA-ERR-004"
 status: enforced
 maturity: released
 rule_set: errors
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java
 tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
@@ -31,6 +31,14 @@ The type carries none of the configured injectable, persistence-entity, transact
 **Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
 **Check.** The type carries no attribute the layout classifies into the container, persistence, transaction, transport-status, web-controller, REST-controller or event-listener role, neither directly nor through a base attribute type - the same seven roles the Java twin forbids. Four of them are empty in every preset: the platform has no container stereotype, no controller attribute a failure could carry and no event-listener attribute, and it answers a failure through a mapper type rather than through an attribute on it. They exist so the id has one contract in both languages and a project whose framework does have such an attribute names it. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is not inspected; it is counted and named in the rule's own outcome rather than passing silently. With the roles empty the rule selects no metadata and passes.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Types that implement DomainFailure or UseCaseFailure.
+
+**Check.** None implements a web framework's response trait (for example axum's IntoResponse): the domain and application crates do not depend on the framework, and the orphan rule refuses the impl in the adapters crate, where both trait and type are foreign. The adapter translates through its own type.
 
 ## Implementation
 

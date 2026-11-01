@@ -25,6 +25,14 @@ No such method - or a method of the same class it reaches through calls within t
 
 **Check.** No method reached from the handler through calls within the class - async state machines and lambdas included - calls a method of a type assignable to IInputPort that takes a command (the configured command role, by default a simple name ending with Command) as a parameter. A mapping that names no HTTP method is checked like a GET handler. A handler mapped by a routing call rather than by an attribute or a name is not seen, and a command reached through a second class is not followed. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Handler functions in the incoming module that the configured router preset registers for GET (for example axum's get(...) or an actix #[get] attribute).
+
+**Check.** No such function calls an input port whose input type is a command (by default a name ending with Command). Without a router preset nothing is selected.
+
 ## Implementation
 
 ```java

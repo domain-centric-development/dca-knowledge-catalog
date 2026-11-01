@@ -14,6 +14,7 @@ implementations: [java]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 not_applicable_dotnet: ".NET has no injectable stereotype attribute — use cases are registered in the DI container by code, there is no attribute to check"
+not_applicable_rust: "Rust has no injectable stereotype attribute; bootstrap constructs use cases in code, so there is nothing to list."
 ---
 
 # Diagnostic: use cases without injectable stereotypes

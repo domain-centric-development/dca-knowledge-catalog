@@ -10,7 +10,7 @@ enforced_by: "CycleRules#DCA-CYC-004"
 status: enforced
 maturity: released
 rule_set: cycles
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/CycleRules.cs
@@ -31,6 +31,14 @@ The slices form no dependency cycle between modules' incoming adapters. Slices a
 **Selection.** One slice per module root, holding the types in <module>.Adapter.Incoming of that module and below; everything else is ignored.
 
 **Check.** The slices form no dependency cycle between modules' incoming adapters. Slices are per module root, so a cycle inside one module's incoming adapters is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the adapters within a module.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace).
+
+**Selection.** The adapters crates of all contexts.
+
+**Check.** Cargo refuses a dependency cycle between crates. Incoming and outgoing adapters of one context share a crate; a cycle between them is DCA-HEX-006's.
 
 ## Implementation
 

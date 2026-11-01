@@ -10,7 +10,7 @@ enforced_by: "CycleRules#DCA-CYC-001"
 status: enforced
 maturity: released
 rule_set: cycles
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/CycleRules.cs
@@ -31,6 +31,14 @@ The slices form no dependency cycle - no two modules' domain models depend on ea
 **Selection.** One slice per module root, holding the types in <module>.Domain.Model of that module and below (segment names from the layout). A module root is the shortest namespace prefix whose next segment is a layer segment, so modules are found at any depth; types outside every module or outside the domain-model namespace are ignored.
 
 **Check.** The slices form no dependency cycle - no two modules' domain models depend on each other, directly or via further modules' domain models. Slices are per module root, so a cycle between types inside one module's domain model is not detected here, and dependencies into other layers do not count. DCA-CYC-005 covers the application layer per operation; no rule slices the domain model within a module. Fewer than two slices pass.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace).
+
+**Selection.** The domain crates of all contexts.
+
+**Check.** Cargo refuses a dependency cycle between crates, and DCA-STR-004 refuses any edge between two contexts' domains.
 
 ## Implementation
 

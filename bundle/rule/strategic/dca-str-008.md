@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-008"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ The class is final or a record with final inherited instance fields and no insta
 **Selection.** Non-interface types below the root namespace whose implemented interfaces include IIntegrationEvent - directly or through a derived interface; classes, records and structs alike, compiler-generated types excluded.
 
 **Check.** Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement IntegrationEvent.
+
+**Check.** No method takes &mut self and no field type is an interior-mutability type.
 
 ## Implementation
 

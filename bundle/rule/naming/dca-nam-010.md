@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-010"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ No simple name ends with Helper, Util, Utils, Impl or Implementation. Only these
 **Selection.** Types in <module>.Domain of every module root.
 
 **Check.** No name ends with Helper, Util, Utils, Impl or Implementation. Only these five suffixes are checked, only in domain namespaces - a *Service or *Factory in the domain is not reported, and an Impl in an adapter namespace is not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types in every domain crate.
+
+**Check.** No name ends with Helper, Util, Utils, Impl or Implementation.
 
 ## Implementation
 

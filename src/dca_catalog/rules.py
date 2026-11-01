@@ -38,6 +38,16 @@ DOTNET_REL = "dca-dotnet"
 DOTNET_RULES_JSON_REL = f"{DOTNET_REL}/rules.json"
 DOTNET_RULES_SRC_REL = f"{DOTNET_REL}/src/DomainCentric.ArchRules/Rules"
 RULES_SRC_REL = f"{JAVA_REL}/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules"
+RUST_REL = "dca-rust"
+RUST_RULES_JSON_REL = f"{RUST_REL}/dca-rules/rules.json"
+RUST_MANIFEST_REL = f"{RUST_REL}/Cargo.toml"
+
+#: How the Rust suite holds a rule, as `rules.json` of dca-rust names its category and levels.
+_RUST_CATEGORY = {
+    "compiler": "the compiler",
+    "lint-test": "a lint or a test",
+    "reformulated": "a test, reformulated for Rust",
+}
 
 # rule set name (as in rules.json / DcaRuleSet.name()) -> implementing class
 _RULE_SET_CLASS = {
@@ -229,7 +239,32 @@ def _helpers(expression: str, class_source: str, shared: dict[str, str]) -> tupl
     return found, sorted(arch_methods)
 
 
-def _body(code: str, selects: str, checks: str, helpers, arch_methods, dotnet: dict | None) -> str:
+def _rust_holds(entry: dict | None) -> bool:
+    """Whether the Rust suite holds the rule today: a test implements it, or the compiler holds it outright."""
+    return bool(entry) and entry.get("status") != "n/a" and (
+        bool(entry.get("implemented")) or entry.get("category") == "compiler")
+
+
+def _rust_reading(entry: dict | None) -> str:
+    """The Rust suite's reading of a rule: what holds it, what it selects and checks, whether it is built yet."""
+    if not entry or entry.get("status") == "n/a":
+        return ""
+    held = _RUST_CATEGORY.get(entry.get("category", ""), entry.get("category", ""))
+    levels = ", ".join(entry.get("enforcement", []))
+    state = ("the suite implements it" if entry.get("implemented")
+             else "held without a test of the suite" if entry.get("category") == "compiler"
+             else "planned, not yet implemented")
+    return (
+        "## Rust reading\n\n"
+        f"Unpublished (dca-rust); {state}. **Held by** {held}"
+        + (f" ({levels})" if levels else "")
+        + ".\n\n**Selection.** " + entry.get("selects", "")
+        + "\n\n**Check.** " + entry.get("checks", "")
+    )
+
+
+def _body(code: str, selects: str, checks: str, helpers, arch_methods, dotnet: dict | None,
+          rust: dict | None = None) -> str:
     parts = [f"## Selection\n\n{selects}", f"## Check\n\n{checks}"]
     if (
         dotnet
@@ -243,6 +278,9 @@ def _body(code: str, selects: str, checks: str, helpers, arch_methods, dotnet: d
             + "\n\n**Check.** "
             + dotnet.get("checks", "")
         )
+    reading = _rust_reading(rust)
+    if reading:
+        parts.append(reading)
     if code:
         parts.append(f"## Implementation\n\n```java\n{code}\n```")
     if helpers:
@@ -355,6 +393,22 @@ def _dotnet_catalog(repo_root: Path) -> tuple[dict[str, dict], dict[str, str]]:
     return ported, not_applicable
 
 
+def _rust_catalog(repo_root: Path) -> tuple[dict[str, dict], bool]:
+    """``(entries by id, published)`` from dca-rust's ``rules.json``; empty when the checkout is absent.
+
+    `published` is false while the workspace says `publish = false`: the Rust readings of the shared ids are
+    written, but the ids only Rust has (``DCA-RS-…``) get no node of their own — no released library has them,
+    and a node would let an agent cite a rule nobody can install."""
+    path = repo_root / RUST_RULES_JSON_REL
+    if not path.exists():
+        print(f"WARNING: {path} not found — rule nodes carry no Rust reading.", file=sys.stderr)
+        return {}, False
+    entries = {entry["id"]: entry for entry in _catalog(path)[0]}
+    manifest = repo_root / RUST_MANIFEST_REL
+    published = manifest.exists() and not re.search(r"^publish\s*=\s*false", manifest.read_text(encoding="utf-8"), re.M)
+    return entries, published
+
+
 def _dotnet_class(rule_set: str) -> str:
     return _RULE_SET_CLASS.get(rule_set, "DotnetRules")
 
@@ -378,6 +432,7 @@ def _cs_evidence(repo_root: Path, rule_set: str, rule_id: str) -> str:
 
 def extract(repo_root: Path) -> list[Node]:
     dotnet_ported, dotnet_na = _dotnet_catalog(repo_root)
+    rust, rust_published = _rust_catalog(repo_root)
     catalog_path = repo_root / RULES_JSON_REL
     if not catalog_path.exists():
         raise SystemExit(
@@ -429,7 +484,9 @@ def extract(repo_root: Path) -> list[Node]:
             code = ""
         else:
             code = _dedent(expression)
-        implementations = ["java"] + (["dotnet"] if rule_id in dotnet_ported else [])
+        rust_entry = rust.pop(rule_id, None)
+        implementations = (["java"] + (["dotnet"] if rule_id in dotnet_ported else [])
+                           + (["rust"] if _rust_holds(rust_entry) else []))
         helpers, arch_methods = _helpers(code, sources[class_name], shared_sources) if code else ([], [])
         maturity = _maturity(entry, dotnet_ported.get(rule_id))
         fm = {
@@ -450,8 +507,10 @@ def extract(repo_root: Path) -> list[Node]:
         }
         if rule_id in dotnet_na:
             fm["not_applicable_dotnet"] = dotnet_na[rule_id]
+        if rust_entry and rust_entry.get("status") == "n/a":
+            fm["not_applicable_rust"] = rust_entry["reason"]
         dotnet_entry = dotnet_ported.pop(rule_id, None)
-        body = _body(code, selects, checks, helpers, arch_methods, dotnet_entry)
+        body = _body(code, selects, checks, helpers, arch_methods, dotnet_entry, rust_entry)
         if dotnet_entry:
             if "## .NET reading" not in body:
                 body += "\n\n## .NET reading\n"
@@ -496,6 +555,37 @@ def extract(repo_root: Path) -> list[Node]:
                     else ""
                 )),
                 meta={"name": title, "kind": "rule", "scan_text": ""},
+            )
+        )
+    # Rules that exist only in the Rust suite (rule set ``rust``, ids DCA-RS-…): a node each once the suite is
+    # published; until then they stay in dca-rust's own rules.json.
+    rust_only = sorted(rule_id for rule_id in rust if rule_id.startswith("DCA-RS-"))
+    if rust_only and not rust_published:
+        print(f"note: {len(rust_only)} Rust-only rule(s) get no node while dca-rust is unpublished: "
+              + ", ".join(rust_only), file=sys.stderr)
+    for rule_id in (rust_only if rust_published else []):
+        entry = rust[rule_id]
+        maturity = _maturity(entry)
+        nodes.append(
+            Node(
+                path=f"rule/rust/{rule_id.lower()}.md",
+                frontmatter={
+                    "type": "Rule",
+                    "id": rule_id,
+                    "title": entry["title"],
+                    "rule": entry["rationale"].rstrip(".") + ".",
+                    "constraint": _constraint(entry["title"]),
+                    "selects": entry.get("selects", ""),
+                    "checks": entry.get("checks", ""),
+                    "enforced_by": f"dca-rules#{rule_id}",
+                    "status": entry.get("status", "enforced"),
+                    "maturity": maturity,
+                    "rule_set": "rust",
+                    "implementations": ["rust"],
+                    "tags": ["rust", "dca-rules"],
+                },
+                body=_with_notice(maturity, f"## Selection\n\n{entry['selects']}\n\n## Check\n\n{entry['checks']}"),
+                meta={"name": entry["title"], "kind": "rule", "scan_text": ""},
             )
         )
     if retired_by_id:

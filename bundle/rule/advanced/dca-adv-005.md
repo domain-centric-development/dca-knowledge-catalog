@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-005"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ The class itself is annotated with @IntegrationEventType - or with the annotatio
 **Selection.** Non-interface types anywhere under scan that are assignable to IIntegrationEvent - records, structs and abstract classes included.
 
 **Check.** The type itself carries [IntegrationEventType] - or the attribute the IntegrationEventType marker role names. An attribute on a supertype does not count; the attribute's name and version values are not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (trait-bound).
+
+**Selection.** Types that implement IntegrationEvent.
+
+**Check.** The trait requires the associated constants TYPE and VERSION, so the compiler refuses an integration event without its type metadata. Rust has no annotations; the constants are the metadata.
 
 ## Implementation
 

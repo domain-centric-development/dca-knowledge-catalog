@@ -25,6 +25,14 @@ For every entry, at least one class anywhere below the declaring context's packa
 
 **Check.** For every entry - 'module', 'module :: *' or 'module :: named-interface', whitespace around '::' normalized - at least one type below the context namespace has a direct dependency on a type in the named module's namespace (a bounded context by its name, any other module root by its last segment) or, for a named interface, in that segment below it, compared ignoring case. Dependencies within the context itself do not count. Whether an undeclared dependency exists is DCA-MAP-006's and the isolation rules' business, not this rule's.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (clippy, graph-test).
+
+**Selection.** Every Cargo dependency of a context's crate on another context's crate.
+
+**Check.** Some source file of the crate names the dependency. The rustc lint unused_crate_dependencies holds the same per crate.
+
 ## Implementation
 
 ```java

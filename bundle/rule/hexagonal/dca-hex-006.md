@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-006"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a class in <module>.adapter.outgoing.. of any module root. The 
 **Selection.** Types in <module>.Adapter.Incoming of every module root, excluding those below the configured event-consumer segment (Adapter.Incoming.Event by default).
 
 **Check.** No dependency on a type in <module>.Adapter.Outgoing of any module root. The reverse direction (an outgoing adapter using an incoming one) and dependencies between two incoming or two outgoing adapters are not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the incoming module of every adapters crate, the configured event-consumer submodule excluded.
+
+**Check.** No item names a path into the outgoing module of the same crate. The compiler cannot hold this: both modules are one crate.
 
 ## Implementation
 

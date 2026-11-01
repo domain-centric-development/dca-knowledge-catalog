@@ -10,7 +10,7 @@ enforced_by: "OnionRules#DCA-ONI-003"
 status: enforced
 maturity: released
 rule_set: onion
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/OnionRules.java
 tags: [onion, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/OnionRules.cs
@@ -31,6 +31,14 @@ Direct or meta-annotations: types prohibit injectable, persistenceEntity and tra
 **Selection.** Domain.Model types except events, services, factories and specifications, which have exclusive ADV ownership.
 
 **Check.** Configured attribute namespaces (and the explicit persistence attribute type names) classify an attribute or any base attribute type. Types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and injection; constructors prohibit injection. Unclassified metadata is allowed by this check, not proven harmless: the default preset classifies its configured persistence namespaces, the key/timestamp/concurrency attribute types and keyed-service injection; mappings of other persistence libraries need a preset extension. The container role is empty in both shipped presets: .NET registers services in code, not through an attribute, so the half of this rule that does the most work in Java - a container stereotype on a domain type - selects nothing here until a project names its own. Missing runtime types are skipped; wiring is not established.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, source-test).
+
+**Selection.** Types in a domain crate: structs, enums and their fields.
+
+**Check.** No derive and no attribute from the configured framework crates (persistence, web, injection) on the type or its fields. A domain crate that does not depend on such a crate cannot name the derive at all (DCA-ONI-002); the source test holds the case where the project allows the crate in the domain.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-017"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ Every effective public instance method, declared or inherited, matches a method 
 **Selection.** Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types.
 
 **Check.** The effective public instance surface maps through the implemented IInputPort interface maps. Inherited and explicit implementations pass; unrelated-interface methods and public properties outside the contract fail (a property is reported once). Constructors, object/ValueType methods and compiler-generated members are exempt; special-name property accessors alone are not exempt. A use case selected by suffix only, without an input-port interface, has no permitted operation and is reported in full — implement the input port.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement an input port.
+
+**Check.** No pub inherent method other than an associated function that returns Self (the constructor bootstrap calls). The operation lives in the input-port impl.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-001"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ The class is final or a record with final inherited instance fields and no insta
 **Selection.** Non-interface types anywhere under scan that are assignable to IDomainEvent - directly or through a supertype.
 
 **Check.** Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (trait-bound, source-test).
+
+**Selection.** Types that implement DomainEvent.
+
+**Check.** No method takes &mut self and no field type is an interior-mutability type. Implementing the trait is the selection itself.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-013"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a type assignable to InputPort - the input port interfaces and 
 **Selection.** Classes in <module>.Adapter.Outgoing of every module root.
 
 **Check.** No dependency on a type assignable to IInputPort - the input port interfaces and the use case classes implementing them, of any module. Calling another module's published api is not a dependency on an input port, even where that api delegates to one - only direct dependencies are read; constructor parameters are read from the runtime type as well, so a port injected into an adapter whose members are all async is still found. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the outgoing module of every adapters crate.
+
+**Check.** No item names a trait that carries the input-port role or a type that implements one.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-003"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ The simple name ends with the configured input-port suffix (InputPort by default
 **Selection.** Interfaces in <module>.Application of every module root that are assignable to IInputPort, except the types the InputPort and UseCase roles name and those named exactly InputPort, IInputPort, UseCase or IUseCase.
 
 **Check.** The name starts with I and ends with the configured input-port suffix (InputPort, by default InputPort: IPlaceOrderInputPort). The I prefix is the platform convention and is checked here only: the Java twin requires the suffix and nothing else, because Java interfaces carry no prefix. Classes and records are not selected, and an interface extending IInputPort outside an application namespace is not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits in application crates that carry the input-port role, InputPort itself excluded.
+
+**Check.** The name ends with InputPort.
 
 ## Implementation
 

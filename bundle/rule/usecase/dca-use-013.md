@@ -13,6 +13,7 @@ rule_set: usecase
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
+not_applicable_rust: "Rust has no declarative transaction attribute; the boundary is the explicit TransactionBoundary port, which DCA-USE-012 reads, and the rule selects only declaratively transactional use cases."
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
 ---
 

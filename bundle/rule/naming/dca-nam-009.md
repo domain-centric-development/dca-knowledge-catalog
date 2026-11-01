@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-009"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ No class resides in a package whose name contains a segment entities, valueobjec
 **Selection.** Every type under the root namespace.
 
 **Check.** No type resides in a namespace with a segment Entities, ValueObjects, Helpers, Util or Utils, in any casing and at any depth. Only these five segments are checked; other technical names such as Model, Service or Impl are not reported. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Every module in the workspace's context crates.
+
+**Check.** No module is named entities, value_objects, helpers, util or utils.
 
 ## Implementation
 

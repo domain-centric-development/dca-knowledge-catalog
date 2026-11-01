@@ -10,7 +10,7 @@ enforced_by: "ErrorHandlingRules#DCA-ERR-005"
 status: enforced
 maturity: released
 rule_set: errors
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java
 tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
@@ -31,6 +31,14 @@ The simple name ends with none of Error, Fault, Failure and contains none of Htt
 **Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
 **Check.** The type name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement DomainFailure or UseCaseFailure.
+
+**Check.** The name contains none of Http, StatusCode, ResponseStatus, Response. The suffix part of the Java rule does not apply: Rust names a failure ...Error by convention.
 
 ## Implementation
 

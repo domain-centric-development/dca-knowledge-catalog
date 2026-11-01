@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-006"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ No selected class depends on a class in another isolated module root (<other>..)
 **Selection.** Types in <module>.Adapter.Outgoing and below of every isolated module root - every namespace below the root namespace that owns a Domain, Application or Adapter namespace, declared as a bounded context or not, the shared kernel excluded. A module that is the only isolated root has no foreign target and is skipped.
 
 **Check.** No selected type depends on a type in another isolated module root (<other> and below) unless that type lives in the other module's published namespaces <other>.Api or <other>.Events and below (segment names from the layout). The other module's Domain, Application, Adapter and Infrastructure namespaces are internal and reported. The allow-list is the namespace convention alone - no framework attribute is read. Dependencies on the shared kernel and on third-party code are not checked.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every crate with layer = adapters.
+
+**Check.** Its Cargo dependencies on another context name that context's api crate only. A foreign domain, application or adapters crate is refused by the graph test; anything the api crate does not export is refused by the compiler.
 
 ## Implementation
 

@@ -23,6 +23,14 @@ The set of declared edges 'context :: channel' equals the set of allowedDependen
 
 **Check.** The set of declared edges 'context :: channel' equals the set of AllowedDependencies entries of the form 'module :: named-interface' whose module is a bounded context, whitespace around '::' normalized. Entries without '::' and entries naming a non-context module are ignored. A context that declares [Upstream] edges but whose marker class carries none of the configured module declaration attributes is reported once, as a missing module declaration with unknown allowed dependencies - its edges are not compared; a context without [Upstream] declarations and without a module declaration has nothing to compare and passes.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every context with upstreams entries.
+
+**Check.** The declared edges equal the Cargo dependencies of the context's crates on another context's api crate. Cargo.toml is the module declaration in Rust; there is no second one to compare.
+
 ## Implementation
 
 ```java

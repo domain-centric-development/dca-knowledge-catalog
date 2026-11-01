@@ -32,6 +32,14 @@ No class below the source context's package depends on a class in the target con
 
 **Check.** No type below the source context's namespace depends on a type in the target context's channel namespace or below. Dependencies on a foreign context's other namespaces (Domain, Application, Adapter) are not reported by this rule.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every Cargo dependency of a context's crate on another context's api crate.
+
+**Check.** The source context declares an upstreams entry for that context and channel.
+
 ## Implementation
 
 ```java

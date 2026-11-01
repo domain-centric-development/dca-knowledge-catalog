@@ -32,6 +32,14 @@ context() names an existing bounded context - a package carrying @BoundedContext
 
 **Check.** Context names an existing bounded context - a namespace whose marker class carries [BoundedContext], identified by its name relative to the root namespace - and is not the declaring context itself. Whether any code depends on the target is not established here.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every upstreams entry.
+
+**Check.** context names an existing context and not the declaring one.
+
 ## Implementation
 
 ```java

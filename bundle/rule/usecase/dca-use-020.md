@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-020"
 status: enforced
 maturity: experimental
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -33,6 +33,14 @@ No code unit calls the platform's parse API for a universally unique identifier 
 **Selection.** Non-nested types in <module>.Application of every module root with their runtime type in the loaded assemblies - use cases, helpers and application services alike - together with their nested, async state-machine and closure types.
 
 **Check.** No method calls the platform's parse API for a unique identifier: System.Guid.Parse, TryParse, ParseExact or TryParseExact, in any overload. Parsing a project's own id type, or an id held as a number or another text format, is not seen; the value type's own factory in the domain is outside the selection and may parse. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (clippy).
+
+**Selection.** Every application crate.
+
+**Check.** clippy.toml lists uuid::Uuid::parse_str and uuid::Uuid::from_str under disallowed-methods. Parsing happens in the adapter or in the id's own constructor.
 
 ## Implementation
 

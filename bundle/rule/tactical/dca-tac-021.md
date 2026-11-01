@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-021"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No method declared on the interface itself is named save, deleteById, delete or 
 **Selection.** Interfaces below the root namespace assignable to IStore; an interface named exactly Store excluded.
 
 **Check.** No method declared on the interface itself is named Save, DeleteById, Delete or one of their asynchronous forms SaveAsync, DeleteByIdAsync, DeleteAsync - matched by name alone, parameters and return type disregarded and case ignored, so both languages match the same six names. Inherited methods are not inspected, and no particular vocabulary (Record, Count, Exists) is required. The six names are fixed and are not part of the marker roles: a vocabulary that writes under another name is selected and then found to declare no write.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits that carry the store role.
+
+**Check.** No method declared on the trait itself is named save, delete or delete_by_id.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-003"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No instance field - inherited ones included, static ones excluded - involves Agg
 **Selection.** Non-interface types below the root namespace assignable to IAggregateRoot, abstract ones included.
 
 **Check.** No instance field or property - inherited ones included, static ones excluded - involves IAggregateRoot through its type, arrays or nested generic arguments. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement AggregateRoot.
+
+**Check.** No field type, through Vec, Option, Box and other generic arguments, is a type that implements AggregateRoot. References by id pass.
 
 ## Implementation
 

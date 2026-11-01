@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-008"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ At least one field - declared by the class or inherited from a supertype, static
 **Selection.** Non-interface types anywhere under scan that are assignable to IDomainEvent. IIntegrationEvent does not extend IDomainEvent, so an integration event is selected only when it also implements IDomainEvent.
 
 **Check.** At least one field - declared by the type or inherited from a base type, static or not, of any name - has one of the configured timestamp types, by default System.DateTimeOffset or System.DateTime; an auto-property or positional record parameter of one of these types counts through its backing field. DateOnly, TimeSpan, long or string fields do not satisfy it, and a computed property without a backing field does not either - which is what the rule is for, because the marker already forces the accessor; a project whose own event vocabulary wraps the timestamp in a value type names that type with WithTimestampTypes. A type the loader cannot resolve is read through the ArchUnitNET member model instead, which does not carry the backing fields of auto-properties. Every offender is reported in one violation; an empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (trait-bound, source-test).
+
+**Selection.** Types that implement DomainEvent.
+
+**Check.** The trait requires occurred_at(); the source test checks that a field of one of the configured timestamp types (by default the building blocks' Timestamp) backs it.
 
 ## Implementation
 

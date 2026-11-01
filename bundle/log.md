@@ -10,7 +10,7 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 - Markers: 31
 - Rules: 145
 - Process: 1
-- Reference: 229
+- Reference: 238
 
 ### Extensible zone (authored, preserved across regeneration)
 - Recipe: 25

@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-016"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ Every field - declared or inherited from a superclass, static fields included - 
 **Selection.** Non-interface types in <module>.Domain of every module root that are assignable to IFactory.
 
 **Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field. Field types are not inspected. A type the loader cannot resolve is read through the ArchUnitNET member model instead, and a field whose writability neither model states is not reported. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement Factory.
+
+**Check.** No method takes &mut self and no field type is an interior-mutability type.
 
 ## Implementation
 

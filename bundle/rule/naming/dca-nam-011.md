@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-011"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ Each resides in <module>.adapter.incoming.<web>.. of some module root - all thre
 **Selection.** Types under the root namespace whose name ends with ViewModel.
 
 **Check.** Each resides in <module>.Adapter.Incoming.<Web> of some module root - all three segments are the configured ones (WithWebSegment changes the last). A ViewModel in a domain or application namespace, or in an incoming adapter other than the configured web one, such as Adapter.Incoming.Mcp, is reported. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Structs whose name ends with ViewModel.
+
+**Check.** Each sits in the incoming module of an adapters crate, in its configured web submodule.
 
 ## Implementation
 

@@ -1,6 +1,7 @@
 # rule
 
 - [contextmap/](contextmap/index.md) (43)
+- [errors/](errors/index.md) (9)
 - [hexagonal/](hexagonal/index.md) (33)
 - [layered/](layered/index.md) (9)
 - [tactical/](tactical/index.md) (25)

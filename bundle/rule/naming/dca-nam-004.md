@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-004"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ The simple name ends with Repository (RepositoryPort or ProductRepositoryAdapter
 **Selection.** Interfaces in <module>.Application of every module root whose name contains Repository, except one named exactly Repository or IRepository.
 
 **Check.** The name ends with Repository (IRepositoryPort or IProductRepositoryAdapter is reported). Selection is by name only - whether the interface extends the IRepository marker is not checked, and classes are not selected. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits in application crates whose name contains Repository.
+
+**Check.** The name ends with Repository.
 
 ## Implementation
 

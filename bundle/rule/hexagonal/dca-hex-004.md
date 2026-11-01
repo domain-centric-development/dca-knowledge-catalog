@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-004"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a class in an infrastructure package: the global base.infrastru
 **Selection.** Types in <module>.Adapter.Incoming of every module root.
 
 **Check.** No dependency on a type in an infrastructure namespace: the global Root.Infrastructure or an isolated module's own <module>.Infrastructure, the namespace itself or any sub-namespace with an exact segment boundary. The shared kernel's infrastructure namespace does not count as an infrastructure implementation. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, graph-test, source-test).
+
+**Selection.** The incoming module of every adapters crate.
+
+**Check.** No item names a path into a crate with layer = infrastructure or bootstrap. The graph test refuses the dependency where the whole adapters crate must not have it; the source test refuses the use in the incoming module where the outgoing module may.
 
 ## Implementation
 

@@ -32,6 +32,14 @@ context() names an existing bounded context and is not the declaring context its
 
 **Check.** Context names an existing bounded context and is not the declaring context itself, and the target context's marker class carries a [Partnership] whose Context names the declaring context in turn. A partnership grants no dependency permission - whether any code dependency exists between the two contexts is not checked.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every partnerships entry.
+
+**Check.** It names an existing context, not itself, and the target declares the partnership back.
+
 ## Implementation
 
 ```java

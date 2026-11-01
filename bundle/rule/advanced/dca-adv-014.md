@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-014"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ Each resides in a domain package of some module root (<module>.domain..). An emp
 **Selection.** Non-interface types anywhere under scan that are assignable to IFactory.
 
 **Check.** Each resides in a domain namespace of some module root (<module>.Domain or below). An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement Factory.
+
+**Check.** Each sits in a domain crate.
 
 ## Implementation
 

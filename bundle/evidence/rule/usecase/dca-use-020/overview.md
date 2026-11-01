@@ -25,6 +25,14 @@ No code unit calls the platform's parse API for a universally unique identifier 
 
 **Check.** No method calls the platform's parse API for a unique identifier: System.Guid.Parse, TryParse, ParseExact or TryParseExact, in any overload. Parsing a project's own id type, or an id held as a number or another text format, is not seen; the value type's own factory in the domain is outside the selection and may parse. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (clippy).
+
+**Selection.** Every application crate.
+
+**Check.** clippy.toml lists uuid::Uuid::parse_str and uuid::Uuid::from_str under disallowed-methods. Parsing happens in the adapter or in the id's own constructor.
+
 ## Implementation
 
 ```java

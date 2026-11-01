@@ -10,7 +10,7 @@ enforced_by: "ErrorHandlingRules#DCA-ERR-001"
 status: enforced
 maturity: released
 rule_set: errors
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java
 tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
@@ -31,6 +31,14 @@ Each extends DomainException, directly or through an intermediate base class. Wh
 **Selection.** Types under <Module>.Domain of every module root that are assignable to Exception - the exception types the domain layer declares itself. The base type DomainException lives in the building blocks and is not selected.
 
 **Check.** Each derives from DomainException, directly or through an intermediate base class. Where the exception is thrown is not checked - a throw site is not part of the type model - so a guard that raises the platform's argument exception is outside this rule. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types in every domain crate that implement std::error::Error.
+
+**Check.** Each implements DomainFailure. Rust has no exceptions; a failure is a type returned in Err.
 
 ## Implementation
 

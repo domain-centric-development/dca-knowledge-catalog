@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-008"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ Each resides in an adapter package of some module root (<module>.adapter..), the
 **Selection.** Types under the root namespace whose name ends with Response.
 
 **Check.** Each resides in an adapter namespace (incoming or outgoing) of some module root (<module>.Adapter or below), the shared kernel's included.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Structs and enums whose name ends with Response.
+
+**Check.** Each sits in an adapters crate.
 
 ## Implementation
 

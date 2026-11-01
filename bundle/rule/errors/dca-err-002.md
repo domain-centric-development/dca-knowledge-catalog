@@ -10,7 +10,7 @@ enforced_by: "ErrorHandlingRules#DCA-ERR-002"
 status: enforced
 maturity: released
 rule_set: errors
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/ErrorHandlingRules.java
 tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
@@ -31,6 +31,14 @@ A subtype of DomainException resides in <module>.domain.. of some module root, a
 **Selection.** Types anywhere under the root namespace that are assignable to DomainException or to UseCaseException, except the two base types themselves and anything else in the building-blocks namespace.
 
 **Check.** A subtype of DomainException resides under <Module>.Domain of some module root, a subtype of UseCaseException under <Module>.Application. Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement DomainFailure or UseCaseFailure.
+
+**Check.** A DomainFailure sits in a domain crate, a UseCaseFailure in an application crate.
 
 ## Implementation
 

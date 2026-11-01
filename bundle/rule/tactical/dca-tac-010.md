@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-010"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ Every field - inherited ones included - is final or static. A non-final instance
 **Selection.** Classes, record classes and structs below the root namespace assignable to IValue; enums excluded.
 
 **Check.** Instance fields, inherited ones included, are readonly; auto-property backing fields are inspected through their get-only or init-only property. Static state, referenced objects and collection contents are not inspected.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement Value.
+
+**Check.** No method takes &mut self, no field is pub, and no field type is an interior-mutability type (Cell, RefCell, Mutex, RwLock, atomics). Rust has no final field; immutability is the absence of a mutating API.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-007"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on any class in another isolated module root (<other>..), its publ
 **Selection.** Per isolated module root - every module root except the shared kernel, declared a bounded context or not: types in <module>.Adapter.Incoming, excluding those below the configured event-consumer segment (Adapter.Incoming.Event by default), which are the exemption. A module that is the only isolated module is skipped.
 
 **Check.** No dependency on any type in another isolated module root (<other> and below), its published Api and Events namespaces included - the allow-list DCA-STR-006 grants outgoing adapters does not apply on the incoming side. Event consumers are not selected and so may depend on the events they subscribe to. Dependencies on the shared kernel and on namespaces outside every module root are not checked. Findings of all modules are collected and reported together; a module without incoming adapters passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, graph-test, source-test).
+
+**Selection.** Every crate with layer = adapters and the items of its incoming module.
+
+**Check.** The crate depends on no crate of another context except that context's api crate; within the crate, the incoming module names no path into another context's crate, the configured event-consumer submodule excepted.
 
 ## Implementation
 

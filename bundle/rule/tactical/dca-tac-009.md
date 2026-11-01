@@ -13,6 +13,7 @@ rule_set: tactical
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
+not_applicable_rust: "Rust has no inheritance; a struct cannot be extended, so a value object is final by construction."
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
 ---
 

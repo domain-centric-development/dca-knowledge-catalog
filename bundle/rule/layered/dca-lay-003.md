@@ -10,7 +10,7 @@ enforced_by: "LayeredRules#DCA-LAY-003"
 status: enforced
 maturity: released
 rule_set: layered
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/LayeredRules.java
 tags: [layered, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/LayeredRules.cs
@@ -31,6 +31,14 @@ No dependency on a class residing in the global infrastructure package or in any
 **Selection.** Types in <module>.Application of every module root.
 
 **Check.** No dependency on a type residing in the global infrastructure namespace or in any isolated module's own infrastructure namespace, sub-namespaces included, with an exact segment boundary. Dependencies on outgoing adapters are not checked here - only infrastructure namespaces count.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every crate with layer = application.
+
+**Check.** Its Cargo dependencies name no crate with layer = infrastructure or bootstrap, its own context's included.
 
 ## Implementation
 

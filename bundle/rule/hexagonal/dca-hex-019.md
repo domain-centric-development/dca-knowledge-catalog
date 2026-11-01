@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-019"
 status: enforced
 maturity: experimental
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -33,6 +33,14 @@ Each is placed in the outgoing adapter layer - by default <module>.adapter.outgo
 **Selection.** Classes of the scan assignable to IOutputPort - repositories, stores, event publishers and every other output port alike, abstract base classes included; compiler-generated classes are not selected. Not selected: a class in an infrastructure namespace that depends on a type assignable to IInputPort - the bridge that hands an output port a second use case, which is wiring.
 
 **Check.** Each is placed in the outgoing adapter layer - by default <Module>.Adapter.Outgoing, or wherever the layout's outgoing-adapter marker places it - by a layer attribute on the class, on its namespace or its assembly, or by the namespace path; a class the layout places in no layer is reported as well. DCA-TAC-015 and DCA-TAC-020 hold repositories and stores the same way in the tactical set.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (trait-bound, source-test).
+
+**Selection.** Every impl of a trait that carries the output-port role.
+
+**Check.** The implementing type sits in the outgoing module of an adapters crate. The orphan rule already keeps the impl out of the domain crate, which cannot see the application's port; a test double in the application crate is reported.
 
 ## Implementation
 

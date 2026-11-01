@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-013"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ The interface is assignable to IntegrationEvent, directly or through another int
 **Selection.** Top-level interfaces in <module>.Events and below (segment name from the layout) of every module root, the shared kernel's included. Nested interfaces are not selected - a nested interface belongs to its enclosing contract.
 
 **Check.** The interface is assignable to IIntegrationEvent, directly or through another interface. Which classes implement it and whether they live in another module are not checked; DCA-ADV-005 and DCA-STR-008 cover the implementing class. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits in the events module of every api crate.
+
+**Check.** Each carries the IntegrationEvent role.
 
 ## Implementation
 

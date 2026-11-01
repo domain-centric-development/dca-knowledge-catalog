@@ -34,6 +34,14 @@ Each resides in <module>.adapter.incoming.. of some module root. Where in the in
 
 **Check.** Each resides in <Module>.Adapter.Incoming of some module root. Where in the incoming adapters it sits - which protocol segment - is not checked.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Handler functions the configured router preset recognises, anywhere in the workspace.
+
+**Check.** Each sits in the incoming module of an adapters crate. Rust handlers are functions, not classes.
+
 ## Implementation
 
 ```java

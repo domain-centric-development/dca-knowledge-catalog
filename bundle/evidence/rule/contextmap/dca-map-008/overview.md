@@ -23,6 +23,14 @@ Placement, whatever the status: no class below the declaring context's package o
 
 **Check.** Placement, whatever the status: no type below the declaring context's namespace outside the matching adapter depends on a type in the target context's channel namespace or below - the outgoing adapter (<context>.Adapter.Outgoing) for the Api channel, the incoming adapter (<context>.Adapter.Incoming) for the Events channel. Presence, only for Status Implemented (as in DCA-MAP-007): each declared interaction needs a type in that adapter depending on both that upstream channel and its own Domain/Application; a Planned declaration without any such code passes. Multiple upstream translators may share the namespace. Structure establishes a translation site, not translation quality.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (workspace, graph-test, source-test).
+
+**Selection.** Every upstreams entry with translation = acl.
+
+**Check.** Only the context's adapters crate depends on the target's api crate; within it, the api channel is named only in the outgoing module and the events channel only in the incoming module.
+
 ## Implementation
 
 ```java

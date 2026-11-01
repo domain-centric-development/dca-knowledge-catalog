@@ -32,6 +32,14 @@ With ANTI_CORRUPTION_LAYER, no class below the declaring context's package outsi
 
 **Check.** With AntiCorruptionLayer, no type below the declaring context's namespace outside the matching adapter - <context>.Adapter.Outgoing for Outbound, <context>.Adapter.Incoming for Inbound - depends on a type in any of the contract namespaces or below. With any other translation (Conformist), no type in <context>.Domain does. That the adapter actually translates the contract is not established.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (workspace, graph-test, source-test).
+
+**Selection.** Every external-upstreams entry that names contract crates.
+
+**Check.** With acl, only the adapters crate depends on a contract crate and only the matching module (outgoing for outbound, incoming for inbound) names it; with conformist, the domain crate does not depend on one.
+
 ## Implementation
 
 ```java

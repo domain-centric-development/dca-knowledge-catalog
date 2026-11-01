@@ -23,6 +23,14 @@ The caller is the entity itself or an AggregateRoot, Entity or Factory in the sa
 
 **Check.** The caller is the entity itself or an IAggregateRoot, IEntity or IFactory in the same context domain layer. Same aggregate ownership is not decidable: another aggregate in that context passes and needs review. Reconstitution goes through an aggregate or factory; reflection is not inspected.
 
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (visibility, source-test).
+
+**Selection.** Types that implement Entity but not AggregateRoot.
+
+**Check.** The type has no pub field and no pub associated function that returns Self; pub(crate) and private ones pass. With private fields no code outside the aggregate's module can build one by struct literal - the compiler holds that part.
+
 ## Implementation
 
 ```java

@@ -34,6 +34,14 @@ Informational - lists every selected class and never fails. Place each in a laye
 
 **Check.** Informational - lists every selected type and never fails. Place each in a layer: move it into the layer namespace it belongs to, or declare its namespace's layer.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (source-test).
+
+**Selection.** In a crate that carries a context but no layer (the two-crate form), every top-level module.
+
+**Check.** Informational - lists every top-level module that is none of domain, application, adapters, api, events and infrastructure, and never fails. In the crate-per-layer form every item sits in a layer by its crate and nothing is listed.
+
 ## Implementation
 
 ```java

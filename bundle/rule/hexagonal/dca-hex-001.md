@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-001"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a class in <module>.adapter.. of any module root, incoming or o
 **Selection.** Types in <module>.Domain.Model of every module root - the domain model namespace, not the whole domain layer.
 
 **Check.** No dependency on a type in <module>.Adapter of any module root, incoming or outgoing. Domain types outside the model namespace (domain services, events) are not selected. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every crate with layer = domain.
+
+**Check.** Its Cargo dependencies name no crate with layer = adapters, of any context.
 
 ## Implementation
 

@@ -32,6 +32,14 @@ The package declares no @Upstream, @ExternalUpstream or @Partnership. A declarat
 
 **Check.** No class residing exactly in the namespace declares [Upstream], [ExternalUpstream] or [Partnership]. A declaration on a nested namespace (a use-case, feature or grouping namespace) is reported; whether a declaration is well-formed is left to the other rules.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every crate's [package.metadata.dca].
+
+**Check.** upstreams, external-upstreams and partnerships appear only in the metadata of the crate that declares the context (by default its domain crate).
+
 ## Implementation
 
 ```java

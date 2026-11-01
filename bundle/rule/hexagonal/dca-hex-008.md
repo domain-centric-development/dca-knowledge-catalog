@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-008"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ Each resides in <module>.adapter.outgoing.. of some module root. Whether the cla
 **Selection.** Classes anywhere in the loaded assemblies whose name ends with Repository - implementations and abstract base classes alike. The IRepository port interfaces themselves are not selected.
 
 **Check.** Each resides in <module>.Adapter.Outgoing of some module root. Whether the class implements an IRepository port is not checked - only the name is. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Structs and enums in every crate whose name ends with Repository.
+
+**Check.** Each sits in the outgoing module of an adapters crate.
 
 ## Implementation
 

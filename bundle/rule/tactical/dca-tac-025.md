@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-025"
 status: enforced
 maturity: experimental
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -33,6 +33,14 @@ No selected field, return type or parameter type involves String, a primitive or
 **Selection.** Classes, records, structs, enums and interfaces in <Module>.Domain of every module root, the shared kernel's domain included, with their runtime type in the loaded assemblies - their declared instance fields and properties and their declared methods, private ones included; constructors are not selected, the members they fill are. Not selected: a wrapper value - a type assignable to IValue or IId with exactly one instance field - with everything it declares; a type declared inside a value or an id, such as the value's own error shapes, which carry the input it refused; a failure - a type of the domain-exception or use-case-exception role; compiler- generated members (a property's backing field, a record's EqualityContract, Deconstruct, PrintMembers); property accessors and operators; Equals, GetHashCode, ToString and CompareTo; an enum's members; a member that implements a building block's, such as a domain event's OccurredOn and EventId. A bool return is a question to the object - a predicate - and passes; a bool field, property or parameter does not.
 
 **Check.** No selected field, property, return type or parameter type involves string, bool, a numeric primitive or char, a point in time (DateTime, DateTimeOffset, DateOnly, TimeOnly), or a bare Guid - an identifier says whose it is through a typed id - nullable and generic arguments and arrays included, so IReadOnlyList<string> counts. decimal, TimeSpan and the project's own types pass. A value object with several components is checked like any other type: each component is a value object itself. A reported type with exactly one instance field that is no value or id is told to carry the value or id role to count as a wrapper. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types, fields and pub signatures in every domain crate, the shared kernel's included. Not selected: a single-field newtype that implements Value or Id, failures, and trait methods of a building block.
+
+**Check.** No field, parameter or return type, through generic arguments, is String, &str, a primitive other than bool as a return, a time type (std::time::SystemTime, chrono, time) or a bare Uuid.
 
 ## Implementation
 

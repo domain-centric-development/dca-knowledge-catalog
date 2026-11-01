@@ -23,6 +23,14 @@ Annotations and transaction use: the method is declared in, or the class resides
 
 **Check.** Declarative: the type resides in an application namespace of some module root or in an outgoing adapter namespace of some module root - the same places the transaction API is allowed, as in the Java twin. With no transactional attribute configured this selection is empty and the rule checks the other two only. Transaction use: the type resides in an application namespace of some module root (<module>.Application or below) or in an outgoing adapter namespace of some module root (<module>.Adapter.Outgoing or below) - a domain, incoming-adapter or infrastructure namespace is reported, the global one included. Wiring: additionally allowed in the global infrastructure namespace (<Root>.Infrastructure, the composition root that declares the manager) and in the shared kernel's infrastructure namespace (<Root>.SharedKernel.Infrastructure, plumbing that hooks into the boundary); a domain, incoming-adapter or module-infrastructure namespace is reported. One finding per type and transaction type, all collected into one violation. The check is per type, not per method. Where manager and boundary dependencies are allowed the rule cannot tell wiring from a call: a type in the global or shared-kernel infrastructure namespace that obtains the manager and begins a transaction itself passes. Which transaction a boundary opens is not checked.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types and functions in every crate that name the building-block trait TransactionBoundary or one of the configured transaction types (for example a database transaction type).
+
+**Check.** Each sits in an application crate or in the outgoing module of an adapters crate; wiring is also allowed in a bootstrap or infrastructure crate. A domain crate or an incoming adapter that names one is reported. Rust has no declarative transaction attribute, so there is no annotation selection.
+
 ## Implementation
 
 ```java

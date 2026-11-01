@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-012"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ The class, or a superclass other than Object, overrides both boolean equals(Obje
 **Selection.** Non-interface types below the root namespace assignable to IValue; enums excluded.
 
 **Check.** The runtime type or a base other than object or ValueType overrides Equals(object) and GetHashCode(). Record-generated equality counts; plain structs must supply both overrides.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (trait-bound).
+
+**Selection.** Types that implement Value.
+
+**Check.** The building-block trait Value has PartialEq as supertrait, so the compiler refuses a value object without equality. Whether the equality compares every attribute is not decidable; a derive is the expected form.
 
 ## Implementation
 

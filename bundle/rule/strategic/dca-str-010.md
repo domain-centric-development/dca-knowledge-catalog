@@ -26,6 +26,14 @@ Informational - selects nothing and never fails; it carries doctrine only.
 
 Nothing is asserted. Whether a consumed integration event is translated into the consuming context's own language before it reaches the domain is a code-review check.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test.
+
+**Selection.** Informational - selects nothing.
+
+**Check.** Nothing is asserted. Whether a consumed integration event is translated before it reaches the domain is a review check.
+
 ## Implementation
 
 ```java

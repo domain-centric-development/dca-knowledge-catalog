@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-005"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ Dependencies on global infrastructure and the adapter's own module infrastructur
 **Selection.** Types in every module's outgoing adapter namespace.
 
 **Check.** Global and own-module infrastructure dependencies pass; another module's infrastructure fails. Boundaries use exact namespace segments.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every crate with layer = adapters.
+
+**Check.** Its Cargo dependencies name no crate with layer = infrastructure of another context.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-016"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ The aggregate is read from the type argument the interface binds: the first argu
 **Selection.** Interfaces below the root namespace assignable to IRepository whose name ends with Repository; an interface named exactly Repository excluded.
 
 **Check.** The aggregate is read from the type argument the interface binds: the first argument of the generic repository role it implements. That type must be assignable to IAggregateRoot, and the interface's name - minus a leading I followed by an upper-case letter - must be that type's name plus 'Repository', so a repository bound to one aggregate and named after another is reported. An unresolved type argument is skipped: a generic intermediate port such as IAuditedRepository<TAggregate, TId> binds no aggregate of its own. When the role is not generic, is used raw, or the runtime type cannot be resolved, the aggregate is resolved by name instead: among all non-interface types below the root with the interface's name minus 'Repository' and in the same context - the nearest enclosing namespace carrying a [BoundedContext] or [SharedKernel] marker class, falling back to the first segment below the root namespace - at least one must exist and every one must be assignable to IAggregateRoot. The interface's methods play no role.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (trait-bound, source-test).
+
+**Selection.** Traits with the repository role whose name ends with Repository.
+
+**Check.** The bound Repository<T: AggregateRoot> makes a repository for anything but a root unkompilable. The source test checks the name: the trait is named after the type it binds plus Repository.
 
 ## Implementation
 

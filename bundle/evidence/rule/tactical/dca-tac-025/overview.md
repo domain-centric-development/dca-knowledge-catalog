@@ -25,6 +25,14 @@ No selected field, return type or parameter type involves String, a primitive or
 
 **Check.** No selected field, property, return type or parameter type involves string, bool, a numeric primitive or char, a point in time (DateTime, DateTimeOffset, DateOnly, TimeOnly), or a bare Guid - an identifier says whose it is through a typed id - nullable and generic arguments and arrays included, so IReadOnlyList<string> counts. decimal, TimeSpan and the project's own types pass. A value object with several components is checked like any other type: each component is a value object itself. A reported type with exactly one instance field that is no value or id is told to carry the value or id role to count as a wrapper. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types, fields and pub signatures in every domain crate, the shared kernel's included. Not selected: a single-field newtype that implements Value or Id, failures, and trait methods of a building block.
+
+**Check.** No field, parameter or return type, through generic arguments, is String, &str, a primitive other than bool as a return, a time type (std::time::SystemTime, chrono, time) or a bare Uuid.
+
 ## Implementation
 
 ```java

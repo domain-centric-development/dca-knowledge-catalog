@@ -32,6 +32,14 @@ via() holds at least one channel, and the pair (context, channel) - the channel 
 
 **Check.** Via holds at least one channel, and the pair (context, channel) - the channel resolved to the layout's Api or Events segment name - occurs at most once among the declarations of one context. Two declarations towards the same context on different channels are allowed; the same context and channel declared twice, even with different translations, is reported.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every upstreams entry.
+
+**Check.** via holds at least one channel (api, events), and (context, channel) occurs at most once per context.
+
 ## Implementation
 
 ```java

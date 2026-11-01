@@ -25,6 +25,14 @@ No code unit of the class calls a write on the repository or store role - a meth
 
 **Check.** No method of the class - async state machines and lambdas included - calls a repository write (IRepository.SaveAsync or DeleteByIdAsync, or a method of a repository or store port whose name starts with Save, Delete, Remove, Add, Insert, Update, Upsert, Put, Store, Write, Create, Append, Archive, Purge, Clear, Set or Mark), or any method of the domain-event or integration-event publisher. Only the class's own calls are read: a write reached through a helper class or a second port is not seen, and a store write under another verb passes. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement an input port whose input is a query.
+
+**Check.** No function calls a write (save, delete, remove, add, insert, update, ...) on a repository or store, nor an event publisher.
+
 ## Implementation
 
 ```java

@@ -140,6 +140,7 @@ def write_manifest(repo_root: Path, bundle: Path, counts: dict[str, int]) -> Non
         "dca-guide": ["**/*.md"],
         "dca-java": ["dca-building-blocks/src/main/**/*.java", "dca-archunit/src/main/**/*.java", "rules.json", "gradle.properties"],
         "dca-dotnet": ["src/DomainCentric.ArchRules/**/*.cs", "src/*/*.csproj", "rules.json"],
+        "dca-rust": ["dca-rules/rules.json", "Cargo.toml"],
         "dca-knowledge-catalog": ["src/**/*.py", "authored/**/*.md"],
     }
     for name, patterns in inputs.items():

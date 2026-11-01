@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-012"
 status: informational
 maturity: experimental
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -33,6 +33,14 @@ Informational diagnostic only: lists a type when its simple name, with the use-c
 **Selection.** Interfaces in <module>.Application of every module root assignable to IInputPort, and concrete application operations selected by IInputPort assignability or the configured use-case suffix. The name is read without the interface's I prefix, the generic arity, and the InputPort and use-case suffixes.
 
 **Check.** Informational diagnostic only: lists a type whose name holds On, After, When, Upon or Before at the start or after a lower-case letter or digit, followed by an upper-case letter, and never fails. A word that only looks like a trigger is listed as well; whether the name describes a trigger stays with review.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Input-port traits and use-case types in application crates.
+
+**Check.** Informational - lists names that contain a trigger word (On, After, When, Upon, Before followed by a capital) and never fails.
 
 ## Implementation
 

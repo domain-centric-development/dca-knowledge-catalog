@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-013"
 status: enforced
 maturity: experimental
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -33,6 +33,14 @@ No selected type name - with the use-case suffix or InputPort removed - and no s
 **Selection.** Interfaces in <module>.Application of every module root assignable to IInputPort, concrete application operations selected by IInputPort assignability or the configured use-case suffix, and the public methods declared by types in <module>.Api and below of every module root. Type names are read without the interface's I prefix and the generic arity.
 
 **Check.** No selected name starts with Set or Update followed by an upper-case letter. Property accessors and other compiler-named methods are not methods in this sense, and a name such as Settle or Updated passes. Whether another verb names a field is not checked. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Input-port traits and use-case types in application crates, and pub functions of api crates.
+
+**Check.** No type name starts with Set or Update followed by a capital, and no function name starts with set_ or update_.
 
 ## Implementation
 

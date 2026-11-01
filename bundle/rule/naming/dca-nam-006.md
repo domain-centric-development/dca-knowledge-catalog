@@ -13,6 +13,7 @@ rule_set: naming
 implementations: [java, dotnet]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
+not_applicable_rust: "Rust web handlers are free functions, not resource classes; the module that holds them carries the name, and DCA-HEX-018 places it."
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
 ---
 

@@ -32,6 +32,14 @@ For every channel in via(), at least one class anywhere below the declaring cont
 
 **Check.** For every channel in Via, at least one type anywhere below the declaring context's namespace has a direct dependency on a type in the target context's channel namespace (Api or Events per the layout) or below. Which layer holds the dependency is not checked here.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test, source-test).
+
+**Selection.** Every implemented upstreams entry.
+
+**Check.** For each channel, some source file of the declaring context names a path into the target's api crate (api or events module).
+
 ## Implementation
 
 ```java

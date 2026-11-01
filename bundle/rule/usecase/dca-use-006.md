@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-006"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ Each resides in an application package of some module root (<module>.application
 **Selection.** Types under the root namespace whose name ends with Result, that do not implement IValue and that are not a closed domain outcome - in a domain namespace, an abstract class or record whose constructors are all private or private protected, so that no other assembly can derive from it, or a direct case of one.
 
 **Check.** Each resides in an application namespace of some module root (<module>.Application). A domain value object named *Result is exempt because it implements IValue, and a closed outcome type of the domain - a sum type whose cases the domain returns, the C# reading of a Java sealed type - is exempt because it is part of the model.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Structs and enums whose name ends with Result and that do not implement Value. std's Result is not a declaration and is never selected.
+
+**Check.** Each sits in an application crate. An enum in a domain crate that a domain operation returns is a domain outcome and is exempt.
 
 ## Implementation
 

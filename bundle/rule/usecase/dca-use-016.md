@@ -10,7 +10,7 @@ enforced_by: "UseCaseRules#DCA-USE-016"
 status: enforced
 maturity: released
 rule_set: usecase
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/UseCaseRules.java
 tags: [usecase, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/UseCaseRules.cs
@@ -31,6 +31,14 @@ Reports dependencies on another input port or operation, directly or transitivel
 **Selection.** Concrete non-nested application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types.
 
 **Check.** Reports dependencies on another input port or operation, directly or through same-module application helpers. Own interfaces/base classes are excluded. Messages start Caller -> Target [via Helper], permitting an anchored caller-side coordinator ignore without permitting calls to the coordinator. Reflection, container lookups and unrelated interfaces are not resolved. CYC-005 still checks cycles.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement an input port.
+
+**Check.** No field, parameter or generic bound names another input-port trait or a type that implements one.
 
 ## Implementation
 

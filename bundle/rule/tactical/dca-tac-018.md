@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-018"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ The interface is assignable to the Store marker and not assignable to Repository
 **Selection.** Interfaces below the root namespace whose name ends with Store, those named exactly Store or IStore and the type the Store role names excluded, outside every adapter and infrastructure namespace - an interface there is an adapter's own abstraction, never a port.
 
 **Check.** The interface is assignable to the IStore marker and not assignable to IRepository; both must hold, and each failing alone is reported. An interface not named *Store is never reported; an empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Traits outside adapters and infrastructure crates whose name ends with Store.
+
+**Check.** The trait carries the store role and not the repository role.
 
 ## Implementation
 

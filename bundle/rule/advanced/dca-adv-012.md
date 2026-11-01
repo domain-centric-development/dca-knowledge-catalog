@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-012"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ Every field - declared or inherited from a superclass, static fields included - 
 **Selection.** Non-interface types in <module>.Domain of every module root that are assignable to IDomainService.
 
 **Check.** Every field - declared by the type or inherited from a base type, static fields included - is readonly or const. A settable auto-property is reported through its backing field; a get-only one passes. Field types are not inspected, so a readonly field holding mutable state passes. A type the loader cannot resolve is read through the ArchUnitNET member model instead, and a field whose writability neither model states is not reported. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Types that implement DomainService.
+
+**Check.** No method takes &mut self and no field type is an interior-mutability type. Rust has no final field; statelessness is the absence of mutation.
 
 ## Implementation
 

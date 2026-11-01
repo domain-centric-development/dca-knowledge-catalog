@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-006"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No method - inherited ones included - is a public setter: a name starting with s
 **Selection.** Non-interface types below the root namespace assignable to IEntity - aggregate roots included.
 
 **Check.** No member - inherited ones included - is a public setter: a property with a public, writable set accessor (an init accessor does not count), or a public method named Set followed by an upper-case letter with exactly one parameter and return type void. A non-public setter, a fluent setter returning the instance, or a Set-prefixed method with zero or two parameters does not count.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement Entity, aggregate roots included.
+
+**Check.** No pub method named set_<name> takes &mut self and exactly one further parameter and returns ().
 
 ## Implementation
 

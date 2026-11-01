@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-008"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No instance state, including inherited state, arrays and nested generic argument
 **Selection.** Non-interface types below the root namespace assignable to IValue - records, structs, enums and hand-written classes alike.
 
 **Check.** No instance state, including inherited state, arrays and nested generic arguments, involves IAggregateRoot or IEntity. Same-type references and interfaces extending the marker are included. Interfaces that do not extend the marker are invisible; references by id are valid.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement Value.
+
+**Check.** No field type, through generic arguments, is a type that implements Entity or AggregateRoot.
 
 ## Implementation
 

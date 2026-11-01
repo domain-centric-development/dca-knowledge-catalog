@@ -34,6 +34,14 @@ A selected method that - itself or a method of the same class it reaches through
 
 **Check.** No method of such a class - async state machines and lambdas included - calls a method of a type assignable to IInputPort. The rule reads the listener's kind, not whether an outbox backs it; an input port reached through a second class is not followed. An empty selection passes.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (source-test).
+
+**Selection.** Functions in every crate registered as event listener by the configured listener preset.
+
+**Check.** A listener that calls an input port runs after the commit in its own transaction, as the preset expresses it. Rust has no common listener attribute; without a preset nothing is selected.
+
 ## Implementation
 
 The verbatim ArchUnit expression is in the evidence slice [Overview](/evidence/rule/hexagonal/dca-hex-017/overview.md); every helper it calls has a slice of its own, listed under *Evidence slices* below.

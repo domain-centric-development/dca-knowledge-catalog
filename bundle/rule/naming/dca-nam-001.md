@@ -10,7 +10,7 @@ enforced_by: "NamingRules#DCA-NAM-001"
 status: enforced
 maturity: released
 rule_set: naming
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/NamingRules.java
 tags: [naming, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/NamingRules.cs
@@ -31,6 +31,14 @@ The simple name ends with the configured use-case suffix. Interfaces and records
 **Selection.** Non-record classes in <module>.Application of every module root that implement IUseCase<TInput, TOutput> - directly or through an I*InputPort interface that extends it.
 
 **Check.** The name ends with the configured use-case suffix. Interfaces and records are not selected; a class implementing only IInputPort without IUseCase is not selected either. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types in application crates that implement an input port.
+
+**Check.** The name ends with UseCase.
 
 ## Implementation
 

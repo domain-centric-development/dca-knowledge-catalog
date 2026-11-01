@@ -32,6 +32,14 @@ Informational diagnostic only: when no class of the scan is assignable to Domain
 
 **Check.** Informational diagnostic only: when no type of the scan is assignable to DomainException or UseCaseException, it lists no namespace and says once that it cannot see the failures; otherwise it lists a namespace when no type in it - a central exception handler beside the adapters included - depends on a type assignable to DomainException or UseCaseException, and never fails. A handler in a different namespace of the same module is not seen, and a caught type is not visible to the type model, so this does not establish that a namespace translates nothing.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a lint or a test (source-test).
+
+**Selection.** Modules in the incoming part of every adapters crate that call an input port.
+
+**Check.** Informational - lists a module when no item in it names a DomainFailure or UseCaseFailure type, and never fails.
+
 ## Implementation
 
 ```java

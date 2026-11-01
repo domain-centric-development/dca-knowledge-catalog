@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-003"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ No selected class depends on any class in another isolated module root or below 
 **Selection.** Types in <module>.Application and below of every isolated module root - every namespace below the root namespace that owns a Domain, Application or Adapter namespace, declared as a bounded context or not, the shared kernel excluded. A module that is the only isolated root has no foreign target and is skipped.
 
 **Check.** No selected type depends on any type in another isolated module root or below it (<other> and below), the other module's Api and Events namespaces included. A dependency is any reference - field, parameter, return type, record component, type argument or call - not only a method call. Dependencies on the shared kernel, on infrastructure and on third-party code are not checked. Violations are collected per module and reported together.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** the compiler (workspace, graph-test).
+
+**Selection.** Every crate with layer = application.
+
+**Check.** Its Cargo dependencies name no crate of another context, that context's api crate included.
 
 ## Implementation
 

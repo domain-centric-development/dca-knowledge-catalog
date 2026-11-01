@@ -10,7 +10,7 @@ enforced_by: "HexagonalRules#DCA-HEX-011"
 status: enforced
 maturity: released
 rule_set: hexagonal
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/HexagonalRules.java
 tags: [hexagonal, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/HexagonalRules.cs
@@ -31,6 +31,14 @@ No dependency on a use case implementation: a non-interface class assignable to 
 **Selection.** Classes in <module>.Adapter.Incoming of every module root, event consumers included.
 
 **Check.** No dependency on a use case implementation: a class assignable to IInputPort, directly or through an I*InputPort interface - abstract base classes included. Depending on the input port interfaces themselves is what the rule expects. An empty selection passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Items in the incoming module of every adapters crate, event consumers included.
+
+**Check.** No item names a type that implements an input port; naming the input-port trait is what the rule expects. The use case type stays pub because bootstrap constructs it, so visibility cannot hold this.
 
 ## Implementation
 

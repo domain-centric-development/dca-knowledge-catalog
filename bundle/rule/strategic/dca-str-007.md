@@ -10,7 +10,7 @@ enforced_by: "StrategicPatternRules#DCA-STR-007"
 status: enforced
 maturity: released
 rule_set: strategic
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/StrategicPatternRules.java
 tags: [strategic, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/StrategicPatternRules.cs
@@ -31,6 +31,14 @@ Every integration-event contract resides in a package containing the configured 
 **Selection.** Non-interface types below the root namespace whose implemented interfaces include IIntegrationEvent - directly or through a derived interface; records and record structs included, interfaces extending IIntegrationEvent not.
 
 **Check.** Every integration-event contract resides in a namespace containing the configured Events segment. Adapter.Outgoing.Event is not an alternative; move contracts to Events or exclude STR-007 during migration. Translators and transport adapters stay separate.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement IntegrationEvent.
+
+**Check.** Each sits in the events module of an api crate.
 
 ## Implementation
 

@@ -10,7 +10,7 @@ enforced_by: "CycleRules#DCA-CYC-002"
 status: enforced
 maturity: released
 rule_set: cycles
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/CycleRules.java
 tags: [cycles, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/CycleRules.cs
@@ -31,6 +31,14 @@ The slices form no dependency cycle between modules' application layers. Slices 
 **Selection.** One slice per module root, holding the types in <module>.Application of that module and below (Application.Shared included); types outside every module or outside the application layer are ignored.
 
 **Check.** The slices form no dependency cycle between modules' application layers. Slices are per module root, so a cycle between use cases or features inside one module is not detected here - DCA-CYC-005 covers the application layer per operation - and dependencies into domain or adapter types do not count.
+
+## Rust reading
+
+Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace).
+
+**Selection.** The application crates of all contexts.
+
+**Check.** Cargo refuses a dependency cycle between crates.
 
 ## Implementation
 

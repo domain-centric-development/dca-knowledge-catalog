@@ -32,6 +32,14 @@ name() is not blank and is not the name of an internal bounded context (a contex
 
 **Check.** Name is not blank and is not the name of an internal bounded context (a context's namespace relative to the root namespace), and the pair (name, interaction) occurs at most once per declaring context. The same external system declared by two different contexts is not reported; Translation and ContractNamespaces are not checked here.
 
+## Rust reading
+
+Unpublished (dca-rust); planned, not yet implemented. **Held by** a test, reformulated for Rust (graph-test).
+
+**Selection.** Every external-upstreams entry.
+
+**Check.** name is not blank and not the name of a context, and (name, interaction) occurs at most once per context.
+
 ## Implementation
 
 ```java

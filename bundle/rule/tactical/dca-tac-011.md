@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-011"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No method - inherited ones included - is a setter: a name starting with set foll
 **Selection.** Non-interface types below the root namespace assignable to IValue - records, structs and enums included.
 
 **Check.** No member - inherited ones included - is a setter, regardless of visibility: a property with a writable (non-init) set accessor, or a method named Set followed by an upper-case letter with exactly one parameter and return type void. A wither that returns a new instance is not a setter; a record's init-only properties pass.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
+
+**Selection.** Types that implement Value.
+
+**Check.** No method is named set_<name>, whatever its receiver.
 
 ## Implementation
 

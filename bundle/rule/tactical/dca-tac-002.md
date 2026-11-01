@@ -10,7 +10,7 @@ enforced_by: "TacticalPatternRules#DCA-TAC-002"
 status: enforced
 maturity: released
 rule_set: tactical
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/TacticalPatternRules.java
 tags: [tactical, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/TacticalPatternRules.cs
@@ -31,6 +31,14 @@ No field of the class - inherited and static ones included, a static port breaks
 **Selection.** Non-interface types below the root namespace assignable to IAggregateRoot, abstract ones included.
 
 **Check.** No field or property of the type - inherited and static ones included, a static port breaks persistence ignorance just the same; record plumbing skipped - has a type assignable to IRepository or to any other IOutputPort. Only the member's own type is inspected; a port hidden in a generic type argument is not seen. A port passed as a method parameter is not a member and passes.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, source-test).
+
+**Selection.** Types that implement AggregateRoot.
+
+**Check.** No field type, generic arguments and Box<dyn ...> included, names a trait with the output-port role. The project's own ports live in the application crate, which the domain crate cannot see; the source test holds the building blocks' own port traits.
 
 ## Implementation
 

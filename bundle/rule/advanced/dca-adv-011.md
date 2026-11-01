@@ -10,7 +10,7 @@ enforced_by: "AdvancedPatternRules#DCA-ADV-011"
 status: enforced
 maturity: released
 rule_set: advanced
-implementations: [java, dotnet]
+implementations: [java, dotnet, rust]
 resource: dca-java/dca-archunit/src/main/java/dev/domaincentric/dca/archunit/rules/AdvancedPatternRules.java
 tags: [advanced, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/AdvancedPatternRules.cs
@@ -31,6 +31,14 @@ Direct or meta-annotations: types prohibit injectable, persistenceEntity and tra
 **Selection.** Non-interface domain services in domain namespaces. Exclusive ownership: events, services, factories, specifications, then domain-model types.
 
 **Check.** Configured attribute namespaces classify the attribute type or any base type: types prohibit container, persistence and transaction roles; fields and properties prohibit injection and persistence; methods prohibit transaction and, except on events, injection; constructors prohibit injection. There is no default event-listener attribute role. Unclassified attributes are allowed; runtime types that cannot load are skipped.
+
+## Rust reading
+
+Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (workspace, source-test).
+
+**Selection.** Types that implement DomainService in a domain crate.
+
+**Check.** No derive and no attribute from the configured framework crates (persistence, web, injection) on the type or its fields. A domain crate that does not depend on such a crate cannot name the derive at all (DCA-ONI-002); the source test holds the case where the project allows the crate in the domain.
 
 ## Implementation
 
