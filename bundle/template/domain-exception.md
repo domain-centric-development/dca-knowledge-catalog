@@ -11,7 +11,7 @@ framework: [spring]
 
 Domain-free skeleton for the two failures an inner layer raises, each with the base class its layer owns. `{Rule}Violated` extends `DomainException` and lives in the domain package: the aggregate (or a domain service) raises it when a behaviour method would break an invariant, and it carries the facts the rule compared. `{Name}NotFound` extends `UseCaseException` and lives beside the use case: the request addressed something that is not there, which is a statement about the request, not about the model. Only the incoming adapter catches either, and it alone decides the answer — a 404 view, a `ProblemDetail`, a rejected message. Replace `{Name}` / `{Rule}` / `{name}` / `{operation}` / `{context}` / `{basePackage}`. Neither type carries a framework annotation, a status code or a message shape.
 
-An argument guard is none of this: a null check or a range check in a constructor states a contract for the caller, and the platform's own argument exception stays correct there. The test for a domain exception is the name — if a domain expert has a word for the failure, it is one.
+An argument guard is none of this: a null check or a range check on a value only code passes states a contract for the caller, and the platform's own argument exception stays correct there. A value built from input refuses null and its bounds with the rule's named failure instead — the origin of the value decides. The test for a domain exception is the name — if a domain expert has a word for the failure, it is one.
 
 ## Languages
 

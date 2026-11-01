@@ -22,6 +22,12 @@ tags: [guide, section]
 - Replace entire Value Object instead of modifying
 - Value Objects can be shared freely
 - Value Objects validate themselves; state the numeric range and rounding of every monetary value object. Reconstitution, deserialisation and default struct construction must not bypass invalid-state checks.
+- **A rule is checked once — in the value object.** A value object built from input refuses everything its rule
+  refuses, null included, with the rule's named failure. The incoming adapter hands it the raw value and does not
+  check the rule again: no annotation that repeats it, no default that turns an absent value into an empty one.
+  A second copy at the edge drifts from the first, and when the rule changes — null becomes valid, the limit grows —
+  two places change instead of one. Bean Validation or DataAnnotations belong only where no value object carries the
+  rule
 - Side-effect-free methods only
 - A value from a fixed set — a role, a status, a kind — is a type whose instances are the set. An enum when the
   members are names and nothing more; a value object with one instance per member as soon as a member carries data

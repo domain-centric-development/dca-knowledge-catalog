@@ -81,7 +81,7 @@ public class {Name}NotFound extends UseCaseException {
 
 ## Where each layer stands
 
-- **Domain** raises `DomainException` subtypes and nothing else of its own. The exception is part of the model: named after the rule that was broken, typed fields for the facts it compared. No framework annotation, no transport concern. An argument guard keeps the platform's argument exception — it states a caller contract, not a rule of the model.
+- **Domain** raises `DomainException` subtypes and nothing else of its own. The exception is part of the model: named after the rule that was broken, typed fields for the facts it compared. No framework annotation, no transport concern. An argument guard keeps the platform's argument exception — it states a caller contract on a value only code passes, not a rule of the model. A value object built from input refuses null with its rule's named failure.
 - **Application** raises `UseCaseException` subtypes: not found, not owned by this caller, a precondition on a second aggregate. It lets a domain exception propagate; it catches one only when it needs to *change behaviour* — try an alternative, compensate — never to translate it.
 - **Adapter** catches — all of it. `@ExceptionHandler` in a page controller renders the 404 view; a `@RestControllerAdvice` maps each type to a `ProblemDetail` with a status (`404` for not found, `422` for a violated rule); an event consumer rejects or parks the message. The transport decision lives here and nowhere further in. The [page controller](/template/page-controller.md) and [REST resource](/template/rest-resource.md) templates show the handlers.
 

@@ -13,7 +13,7 @@ You have a check to place that guards an operation, and "check" hides three diff
 
 Ask what the check actually depends on:
 
-1. **Does it depend only on the shape of the request — required fields present, formats valid, sizes in range, no obviously hostile content?** Then it is **structural validation** at the **adapter edge**. Bean Validation (`@Valid`), format checks, and input sanitisation run before anything is mapped to a command. It needs no domain state and no identity.
+1. **Does it depend only on the shape of the request — the body parses, a number or an id parses, a path segment is there, no obviously hostile content?** Then it is **structural validation** at the **adapter edge**. Parsing and input sanitisation run before anything is mapped to a command. It needs no domain state and no identity. A length, a blank check or a range a domain expert could change is not shape: the value object built from the field carries it, a missing value included, and the adapter does not repeat it — see [A rule checked at the edge and again in the value object](/pitfall/a-rule-checked-at-the-edge-and-in-the-value-object.md). Bean Validation (`@Valid`) is for what no value object carries.
 2. **Does it depend on *who is calling* — their identity, roles, or ownership of the resource?** Then it is **authorization**, and it belongs in the **use case (application layer)**. The caller is resolved through an identity output port (an [OutputPort](/marker/port-out/outputport.md)) and arrives as part of the command or query; the use case decides "may this identity run this operation on this resource" *after* loading the aggregate and *before* invoking its behaviour. The one exception is drawn below.
 3. **Does it depend on the aggregate's own state and express a rule of the business — a legal state transition, a quantity limit, a consistency guarantee?** Then it is an **invariant**, enforced **inside the aggregate**, with no knowledge of the caller. `order.cancel()` refuses a shipped order regardless of who asks — and asks again at the change, never trusting what an earlier read showed the caller.
 
@@ -39,13 +39,13 @@ Split authorization once more, by whether the check needs the **resource**:
 | | Structural validation | Authorization | Business invariant |
 |---|---|---|---|
 | Question it answers | Is the input well-formed? | May this caller do this? | Is this legal for the state? |
-| Lives in | adapter (incoming) | application (use case); a claims-only gate may stay in the adapter | domain (aggregate/VO) |
+| Lives in | adapter (incoming) | application (use case); a claims-only gate may stay in the adapter | domain (aggregate, or the value object built from input) |
 | Depends on | request shape only | caller identity, usually + the resource | aggregate state only |
-| Reaches for | `@Valid`, sanitiser | identity output port, authorization policy | the aggregate's own fields |
+| Reaches for | parser, sanitiser; `@Valid` where no value object carries the rule | identity output port, authorization policy | the aggregate's and its value objects' own fields |
 | Knows the caller? | no | yes | **never** |
 | On failure | 400 / rejected request | access denied | domain exception |
 
-**Defense in depth, not duplication.** The layers are complementary, not redundant: the adapter rejects garbage so the use case never sees it; the use case rejects unauthorized callers so the aggregate is only ever invoked on behalf of someone allowed; the aggregate protects its invariants so no use case — authorized or not — can corrupt it. Each guards a distinct failure, so none is a substitute for another.
+**Defense in depth, not duplication.** The layers are complementary, not redundant: the adapter rejects what does not parse so the use case never sees it; the use case rejects unauthorized callers so the aggregate is only ever invoked on behalf of someone allowed; the aggregate protects its invariants so no use case — authorized or not — can corrupt it. Each guards a distinct failure, so none is a substitute for another.
 
 ## Consequences
 
@@ -54,7 +54,7 @@ Split authorization once more, by whether the check needs the **resource**:
 - **Identity is an output port, never a domain type.** Only the application and adapter layers may resolve the current caller, and only through an identity output port — the interface in `application/shared/` (of the owning context, or of the shared kernel when several contexts need it), the implementation (JWT/session/API key) in an adapter.
 - **A command that names a resource without naming whose it is, is incomplete.** "Check out cart X" does not say on whose behalf, so every adapter that builds it has to supply the missing guard, and one of them eventually will not. Look for the asymmetry: if some of a context's use cases already take the caller as input and others take only an id, the second group is where the holes are.
 - **An Open Host Service inherits the same duty.** If another context may ask for a cart by id, it has to name the customer it is acting for; otherwise the ownership rule holds in the owning context but not across the boundary, and the consuming context re-implements it — or forgets to.
-- **Structural validation is not a business invariant.** "Quantity is a positive integer within request bounds" can be an adapter check; "this order may hold at most 100 lines" is a domain invariant the aggregate must enforce even if a malicious client bypasses the edge.
+- **Structural validation is not a business invariant.** "Quantity is a number" is an adapter check; "quantity is between 1 and 99" is the rule of the `Quantity` value object, and "this order may hold at most 100 lines" a domain invariant the aggregate must enforce even if a malicious client bypasses the edge. Neither is repeated at the edge.
 
 ## Anchors
 

@@ -15,6 +15,11 @@ tags: [guide, section]
 - The adapter turns raw input into the types the input port takes: an id arrives in the command as the id's
   value type, parsed at the edge (or by the value type's own factory), never as text the use case parses. Text
   that does not parse is a malformed call the adapter answers itself; the use case never sees it
+- The adapter checks the shape of the input, never a rule a value object carries. Shape is what the protocol
+  decides: is the body JSON, does a number or an id parse, is a path segment there. A rule is what a domain expert
+  could change: length, blank, range, a format with a meaning. A field the request leaves out reaches the value
+  object as absent — `@RequestParam(required = false)` without a `defaultValue`, a nullable property — and is refused
+  there; the adapter answers that refusal at the context's translation site like any other
 - Controller delegates to use case
 - Controller is thin, no business logic
 - Controller handles framework-specific concerns

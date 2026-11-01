@@ -17,8 +17,16 @@ Every failure carries its own type, and only the adapter turns it into an answer
   the use case that raises it: `OrderNotFoundException`, `DuplicateSkuException`,
   `PaymentProviderUnavailableException`. Not found, not the caller's, a precondition on a second aggregate,
   a uniqueness rule only the store can see.
-- **A malformed call** stays the platform's own argument exception. A null check or a range check in a value
-  object states what a caller must never pass. That is a programming-error contract, not a business rule.
+- **A malformed call** stays the platform's own argument exception. A null check or a range check on a value
+  one piece of code hands another states what a caller must never pass. That is a programming-error contract,
+  not a business rule.
+
+**The origin decides.** The same check means two things depending on where the value comes from. A value that
+only code passes — an amount computed inside the model, a reference the use case holds — fails by a defect in
+the caller, and an argument exception says so. A value built from input — a title typed into a form, a quantity
+in a request — fails by an ordinary request, and its bounds are the rule the product names (a title of 1 to 200
+characters). Such a value object refuses everything the rule refuses with the rule's named failure, a missing
+value included: an absent title is refused like an empty one, not with an NPE and not with a `requireNonNull`.
 
 Both base types come from the building blocks (`ddd.tactical.DomainException`,
 `application.UseCaseException`) and are abstract with a message and a cause. Neither carries a code, a status
@@ -26,7 +34,8 @@ or an annotation.
 
 **The cut: would a domain expert have a word for this failure?** `InsufficientStock`, `CartAlreadyCompleted`,
 `PasswordTooWeak` — yes, so each is a domain exception with that word in its name. "Must not be null", "must
-be positive", "must not exceed 255 characters" — no, so those stay `IllegalArgumentException`.
+be positive", "must not exceed 255 characters" on a value only code passes — no, so those stay
+`IllegalArgumentException`. On a value built from input the expert has the word: the title is invalid.
 
 **The name is the broken rule, in the domain's words; the suffix is the project's.** `InsufficientStock`
 says what the domain refuses; `InvalidInput` or `ValidationError` says only that something failed. The

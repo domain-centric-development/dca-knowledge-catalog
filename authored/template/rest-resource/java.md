@@ -21,7 +21,6 @@ package {basePackage}.{context}.adapter.incoming.api;
 import {basePackage}.{context}.application.{usecasename}.{Name}Command;
 import {basePackage}.{context}.application.{usecasename}.{Name}InputPort;
 import {basePackage}.{context}.application.{usecasename}.{Name}Result;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +41,7 @@ public class {Name}Resource {
 
     @PostMapping
     public ResponseEntity<{Name}Response> {usecasename}(
-            @Valid @RequestBody final {Name}Request request) {
+            @RequestBody final {Name}Request request) {
 
         // 1. map inbound DTO → application command
         final {Name}Command command = new {Name}Command(/* request.field(), ... */);
@@ -61,8 +60,8 @@ public class {Name}Resource {
 ```java
 package {basePackage}.{context}.adapter.incoming.api;
 
-/** Inbound DTO — shape of the HTTP request body. */
-public record {Name}Request(/* client-facing fields + validation annotations */) {}
+/** Inbound DTO — shape of the HTTP request body; the value objects built from it carry the rules. */
+public record {Name}Request(/* client-facing fields, no annotation repeating a value object's rule */) {}
 
 /** Outbound DTO — shape of the HTTP response. Maps from the use-case Result. */
 public record {Name}Response(/* client-facing fields */) {

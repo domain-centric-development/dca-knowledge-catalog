@@ -52,10 +52,10 @@ Identifiers are Value Objects too, but carry their own marker: `d`.
 ## Related mentions in guides (heuristic)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
-- [Approach 1: DomainGateway Pattern](/guide/domain-services-with-data-dependencies/approach-1-domaingateway-pattern.md)
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
-- [The backlog contract](/guide/factory/the-backlog-contract.md)
 - [Enriched Read Model Pattern](/guide/integration-patterns/enriched-read-model-pattern.md)
+- [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
+- [ADAPTER LAYER RULES](/guide/rules/adapter-layer-rules.md)
 - [DOMAIN LAYER RULES](/guide/rules/domain-layer-rules.md)
 - [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
 - [Event-Driven Architecture in Spring Modulith](/guide/spring-modulith/event-driven-architecture-in-spring-modulith.md)

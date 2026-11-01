@@ -25,7 +25,6 @@ import {basePackage}.{context}.application.show{name}.Show{Name}InputPort;
 import {basePackage}.{context}.application.show{name}.Show{Name}Query;
 import {basePackage}.{context}.domain.model.{Name}Id;
 import {basePackage}.{context}.domain.model.{Name}NotFound;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,12 +64,12 @@ public class {Name}PageController {
     /** Write: only an unsafe method reaches a command use case. */
     @PostMapping("/{id}/{usecasename}")
     public String {usecasename}(@PathVariable final UUID id,
-                                @Valid @ModelAttribute("form") final {Name}Form form,
+                                @ModelAttribute("form") final {Name}Form form,
                                 final BindingResult binding,
                                 final Model model,
                                 final RedirectAttributes redirect) {
         if (binding.hasErrors()) {
-            // re-render the same page with the submitted form and its messages
+            // a field that did not parse (text in a number field): re-render the page with the form
             final var result = show{Name}.execute(new Show{Name}Query(new {Name}Id(id)));
             model.addAttribute("{name}", {Name}PageViewModel.fromResult(result));
             return "{context}/{name}";
@@ -141,19 +140,15 @@ public enum {Name}PageNotice {
 
 One value per notice the pages of this controller show, each with its code and its text — here a message key the translations resolve. A code names *which* notice, never data, and an unknown or expired one is ignored rather than rendered.
 
-## `{Name}Form.java` — form record with Bean Validation (web adapter)
+## `{Name}Form.java` — form record (web adapter)
 
 ```java
 package {basePackage}.{context}.adapter.incoming.web;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
-/** Shape of the HTML form. Syntactic validation only — business rules stay in the domain. */
+/** Shape of the HTML form: the fields as submitted. What they may hold is the value objects' rule. */
 public record {Name}Form(
-        @NotBlank @Size(max = 120) String label,
-        @Min(1) int quantity) {
+        String label,
+        Integer quantity) {
 
     public static {Name}Form empty() {
         return new {Name}Form("", 1);
@@ -161,7 +156,7 @@ public record {Name}Form(
 }
 ```
 
-Bean Validation on the form checks *shape*: required, length, range, format. It does not check whether the change is allowed — that invariant belongs to the aggregate, which throws a domain exception the controller maps below. The form record is an edge DTO and stays in `adapter/incoming/web/`, next to the ViewModel; neither belongs in `application/` or `domain/`.
+The form carries no Bean Validation. What a label or a quantity may be — required, its length, its range — is the rule of the value objects the command is built from, and they refuse a missing value as well; a second copy on the form drifts from them (see [A rule checked at the edge and again in the value object](/pitfall/a-rule-checked-at-the-edge-and-in-the-value-object.md)). Binding still refuses what does not parse — text in a number field — and the `BindingResult` re-renders the page for that. A field left empty reaches the value object as submitted, `null` included; its named failure is answered at the controller's one translation site like every other refusal. Whether the change is allowed is the aggregate's invariant, which throws a domain exception the controller maps below. The form record is an edge DTO and stays in `adapter/incoming/web/`, next to the ViewModel; neither belongs in `application/` or `domain/`.
 
 ## The template — form, CSRF token, messages
 

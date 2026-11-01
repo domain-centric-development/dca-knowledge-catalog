@@ -19,7 +19,7 @@ Ask, in order:
 2. **Can the caller act on it?** A caller that can retry differently, offer an alternative or show a specific message needs the distinction in its hands. A caller that can only pass the failure upwards gains nothing from being forced to unpack it — and every intermediate frame pays for the unpacking.
 3. **Who raises it — the model or the operation?** A behaviour method on an aggregate enforces an invariant while it mutates state. Making it return an outcome instead forces every call site to unpack a variant for a case that a correct call never produces, and turns mutators into functions that must be threaded through. The model is the strongest case for the exception channel. The use case, which already returns something, is the strongest case for variants.
 4. **How far does it travel?** An outcome that passes through several layers unchanged is cheaper as an exception: one raise, one catch, nothing in between. An outcome consumed one frame up is cheaper as a variant.
-5. **Is it a caller contract rather than a failure at all?** A null check or a range check states what a caller must never pass. That is neither channel — it stays the platform's own argument exception, and no rule of this catalog selects it.
+5. **Is it a caller contract rather than a failure at all?** A null check or a range check on a value only code passes states what a caller must never pass. (On a value built from input the same check is the rule the product names, and refuses with its named failure.) That is neither channel — it stays the platform's own argument exception, and no rule of this catalog selects it.
 
 ## Options
 

@@ -27,7 +27,7 @@ A broken rule of the model leaves the domain as the platform's own argument or s
 
 Give each outcome a type in the layer that owns it: a `DomainException` subtype for a rule of the model, a `UseCaseException` subtype for a failure of the request (not found, not owned by this caller, a precondition elsewhere). Let the incoming adapter map type to answer in one place, and let everything it does not know become a server fault with no message.
 
-Argument guards stay as they are. A null check or a range check in a constructor is a contract for the caller, not a rule of the model, and the platform's argument exception is the right answer there. The test is the name: if a domain expert has a word for the failure, it is a domain exception with that word in its name.
+Argument guards stay as they are. A null check or a range check on a value only code passes is a contract for the caller, not a rule of the model, and the platform's argument exception is the right answer there. A value built from input is the other case: its bounds are the rule the product names, and the value object refuses a missing value with that rule's failure — see [A rule checked at the edge and again in the value object](/pitfall/a-rule-checked-at-the-edge-and-in-the-value-object.md). The test is the name: if a domain expert has a word for the failure, it is a domain exception with that word in its name.
 
 ## Anchors
 
