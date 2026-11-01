@@ -1,11 +1,11 @@
 {
-  "bundle_sha256": "a08565db3eea5b3bec6cdc20c07d0f9c60b2af407327aae510361b593d767f93",
+  "bundle_sha256": "cbdea27ef76db1ac33f20bcdebc2f6c4c7444468a9ce658f5c48e5aa5749bedf",
   "counts": {
     "Decision": 34,
     "Guide": 21,
     "Marker": 31,
     "Note": 1,
-    "Pitfall": 49,
+    "Pitfall": 50,
     "Process": 1,
     "Recipe": 25,
     "Reference": 229,
@@ -44,7 +44,7 @@
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "1d9870da90c3e6bb80125ff5b7f26a06d773f7580766d2e157486680b4fdf27d"
+      "source_sha256": "e2ee3ec8d41cd28dddd4cd711eb264c8630ad481b692dd208d506152a035b40e"
     }
   }
 }
