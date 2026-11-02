@@ -1,5 +1,5 @@
 {
-  "bundle_sha256": "9788770a6cc9e1deb59b0ccb2ffa51f2affa5f8bda8d71bacdb4141494f9fdce",
+  "bundle_sha256": "c794ad2b65fc6d21fb22a64711958b02967bb0c9947866f9fc1fd7cd1449916e",
   "counts": {
     "Decision": 34,
     "Guide": 21,
@@ -34,8 +34,8 @@
       "source_sha256": "b1a2acfc84d6dfecfef3b3f5cba0ce46a401293d1b4ea0dbe499218f9a74f82f"
     },
     "dca-guide": {
-      "revision": "4635c41db2cc33773aff670690fc40f95f9ebdef",
-      "source_sha256": "8f95c06f186ae22cf2b1b295f03ed0a17fac2d98c4d5bc7f4067a1b9c853dee2"
+      "revision": "a851ea51033d22dbc381cc017f6f352d32bd06a1",
+      "source_sha256": "12755c2450bb8e79a792b639a036eeed79f4e52ad19f3831ba69c0b2fecad4cc"
     },
     "dca-java": {
       "revision": "a8959c589c8ba0f2026ad6f503adacec45da4e75",
@@ -47,8 +47,8 @@
       "source_sha256": "30e7e1d48f0d639acb2bbe45a675ce49b003764d9927b26726567a1350b6f51c"
     },
     "dca-rust": {
-      "revision": "aad1377c9e36aca22ddb82cbb19b1664f5e1ccf5",
-      "source_sha256": "0febf9bdc5b72d638b77c0588f14e653692183986f3d7160158271df8e91006e"
+      "revision": "864de914f478ec1823f4df6e899578a97aa9bab4",
+      "source_sha256": "fcfcc20da7b7f5b5c60e070f3e2783e6368b414172e1e839e63d10b107adca47"
     }
   }
 }
