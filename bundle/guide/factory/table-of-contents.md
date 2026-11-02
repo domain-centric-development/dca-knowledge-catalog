@@ -8,7 +8,7 @@ tags: [guide, section]
 ---
 
 - [Three parts](#three-parts)
-- [A foundation once, then the cycle](#a-foundation-once-then-the-cycle)
+- [A foundation, an inflow, the cycle](#a-foundation-an-inflow-the-cycle)
 - [The project description](#the-project-description)
 - [The backlog contract](#the-backlog-contract)
 - [The living spec: stories are changes](#the-living-spec-stories-are-changes)
