@@ -10,8 +10,11 @@ evidence_for: "/guide/archunit-governance/core-rule-categories.md#9-error-handli
 ### 9. Error Handling Rules
 
 A failure of an inner layer has its own type, and the type says which layer owns the failure: a broken rule of
-the model extends `DomainException`, a request the application cannot serve extends `UseCaseException`. Both
-base types come from the building blocks, so a rule can select on them.
+the model extends `DomainException`, a failure a use case throws extends `UseCaseException`, a failure an output
+port declares extends `OutputPortException`. The base types come from the building blocks, so a rule can select
+on them. An expected refusal returned as a case
+of a sealed result is no exception, and these rules do not select it; the compiler checks that every switch
+answers it.
 
 ```java
 // Every exception the domain layer declares extends the model's base type. Catalog: DCA-ERR-001.
@@ -54,11 +57,16 @@ The catalog states these as `DCA-ERR-001` … `DCA-ERR-005`, plus `DCA-ERR-003` 
 base type: an exception declared in an application package extends `UseCaseException`, and a `DomainException`
 subtype declared there is reported too, because a failure of the model belongs to the model.
 
-`DCA-ERR-006` is the one diagnostic in the set. It lists incoming adapter packages that drive an input port and
+`DCA-ERR-006` is one of the set's diagnostics. It lists incoming adapter packages that drive an input port and
 name neither base type, and it never fails the build. That is as far as static analysis reaches: **a `throw` and
 a `catch` are not part of the import model.** Whether a specific refusal should have been a domain exception,
 and whether an adapter catches `Exception` around a use-case call, no rule can decide. A package on the
 diagnostic's list is not a finding by itself — an event consumer whose failed reaction belongs to the delivery
-machinery's retry is a good answer — but each entry should have one.
+machinery's retry is a good answer — but each entry should have one. An adapter that answers every refusal by a
+switch over a sealed result names neither base type either, and appears on the list; its answer is the switch.
+
+`DCA-ERR-008` is a diagnostic for the same reason: it lists every sealed result with no case marked `Refusal`.
+A sealed result of successes alone — `Sent | AlreadySent` — is correct and stays on the list with that answer;
+one whose refusing case is unmarked would commit where a thrown refusal rolled back, and its answer is the marker.
 
 ---

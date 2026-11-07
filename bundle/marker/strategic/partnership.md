@@ -14,7 +14,7 @@ Declares a Partnership between two bounded contexts: both teams coordinate the e
 shared contract and succeed or fail together on it.
 
 A partnership is a *governance* relationship, not a technical one. It grants no
-dependency permission — every actual directed dependency still requires its own `m`
+dependency permission — every actual directed dependency still requires its own `Upstream`
 declaration on the downstream side. A typical example is a consumer-defined trigger interface:
 the consumer owns the contract, the producer implements it, and both must evolve it together.
 
@@ -28,7 +28,7 @@ package com.acme.shop.cart;
 
 **Architectural rules** (enforced by `ContextMapArchUnitTest`):
 
-- Only packages annotated with `t` may
+- Only packages annotated with `BoundedContext` may
 declare `@Partnership`
 - The target context must exist and must not be the declaring context itself
 - The declaration must be mirrored by the target context (symmetry)

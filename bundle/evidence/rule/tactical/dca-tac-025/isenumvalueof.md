@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Domain types must not hold bare primitives, strings or time types — `isEnumValueOf`"
+title: "Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isEnumValueOf`"
 tags: [reference]
 evidence_for: "/rule/tactical/dca-tac-025.md#isenumvalueof"
 ---

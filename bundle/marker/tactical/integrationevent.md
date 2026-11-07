@@ -13,7 +13,7 @@ tags: [tactical, marker]
 Marker interface for Integration Events — adapter-layer DTOs published across bounded contexts.
 
 Integration Events are **not** domain events. They are adapter-layer data transfer objects
-created when an outgoing event adapter consumes an internal `t` and publishes a
+created when an outgoing event adapter consumes an internal `DomainEvent` and publishes a
 cross-context representation. This separation acts as an Anti-Corruption Layer (ACL) between the
 publishing context's domain model and external consumers.
 
@@ -22,7 +22,7 @@ publishing context's domain model and external consumers.
 - **Layer:** Adapter layer (`adapter.outgoing.event`), not domain layer
 - **Purpose:** Cross bounded context communication (domain events are internal)
 - **Versioning:** Strict backward compatibility required (domain events can change
-freely). The schema version is a **class property**, declared via `e`, never a data field on the event instance.
+freely). The schema version is a **class property**, declared via `IntegrationEventType`, never a data field on the event instance.
 - **Naming:** Suffixed with `Event` (e.g., `CartCheckedOutEvent`), while
 domain events have no suffix (e.g., `CartCheckedOut`)
 - **Creation:** Created by outgoing event adapters via `from(DomainEvent)` factory

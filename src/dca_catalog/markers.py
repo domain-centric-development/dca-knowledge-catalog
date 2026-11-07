@@ -261,7 +261,7 @@ def _unescape(text: str) -> str:
         text,
     )
     text = re.sub(r"\{@literal\s+([^}]*)\}", lambda m: m.group(1).strip(), text)
-    text = re.sub(r"\{@link\s+(?:[\w.]+)?#?([^}\s]+)[^}]*\}", r"`\1`", text)
+    text = re.sub(r"\{@link\s+(?:[\w.]*#|(?:[a-z]\w*\.)+)?([^}\s]+)[^}]*\}", r"`\1`", text)
     return _html_unescape(text)
 
 

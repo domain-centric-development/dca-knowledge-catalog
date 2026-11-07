@@ -1,53 +1,90 @@
 ---
 type: Decision
-title: "Failure channel: exception or a closed set of result variants"
-tags: [decision, error-handling, domain, application, use-case]
+title: "Failure channel: exception or a case of the use case's result"
+tags: [decision, error-handling, domain, application, use-case, persistence]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/tactical/domainexception.md, /marker/application/usecaseexception.md, /rule/errors/dca-err-001.md, /rule/errors/dca-err-002.md, /rule/errors/dca-err-003.md, /rule/errors/dca-err-006.md, /decision/result-shape-and-assembly.md, /pitfall/business-rule-reported-as-an-argument-error.md]
+evidence: [/guide/rules/error-handling-rules.md, /guide/rules/transaction-rules.md, /guide/testing-levels/the-use-case-once-each-adapter-its-translation.md, /marker/tactical/domainexception.md, /marker/application/usecaseexception.md, /marker/application/portexception.md, /marker/application/inputportexception.md, /marker/application/outputportexception.md, /marker/application/refusal.md, /marker/application/transactionboundary.md, /rule/errors/dca-err-001.md, /rule/errors/dca-err-002.md, /rule/errors/dca-err-003.md, /rule/errors/dca-err-006.md, /rule/errors/dca-err-008.md, /decision/result-shape-and-assembly.md, /pitfall/business-rule-reported-as-an-argument-error.md, /pitfall/a-refusal-returned-after-a-write.md]
 ---
 
-Something did not work out, and the layer that noticed has to tell the layer that asked. Two channels carry that message: an **exception** that travels past every frame until someone catches it, or a **closed set of result variants** the operation returns, one per outcome, which the caller takes apart at the call site. The building blocks name the exception channel, and the error-handling rules govern it; this node says when the other channel is the better answer, and what it costs to use it.
+Something did not work out, and the layer that noticed has to tell the layer that asked. Two channels carry that message: an **exception** that travels past every frame until someone catches it, or a **case of the result** the use case returns, which the caller takes apart in an exhaustive switch. For an expected refusal both are complete and neither is the default; **the choice is made once per bounded context**, and the project records it. Every other failure is thrown in both.
 
-The question is not "which is cleaner". It is **who must be forced to deal with the outcome, and can that layer do anything about it**.
+## The kinds of failure
 
-## The discriminator
+```text
+RuntimeException
+├── DomainException              # a rule of the model (domain)
+└── PortException                # abstract: a failure a port's contract declares (application)
+    ├── InputPortException       # abstract: declared by an input port, caught by its caller
+    │   └── UseCaseException     # thrown only by a use case; concrete failures extend this
+    └── OutputPortException      # abstract: declared by an output port, thrown by its adapter, caught by the use case
+```
+
+Plus, in a context that returns its refusals, the cases of a sealed result, each refusal case marked `Refusal`. A concrete use-case failure extends `UseCaseException`, never `InputPortException` directly. An incoming adapter never catches `PortException` or `InputPortException` generically.
+
+| Kind of failure | Context that throws | Context that returns | Raised by | Example |
+|---|---|---|---|---|
+| A broken rule of the model | `DomainException`, passed to the handler | `DomainException`, caught by its concrete type in the use case and returned as its case | aggregate, entity, value object, domain service | `{Rule}ViolatedException` / case `{Rule}Violated` |
+| An expected refusal the use case finds itself: not found, not the caller's, input it refuses, a precondition on a second aggregate | a `UseCaseException` subtype | a case of the use case's result | the use case | `{Name}NotFoundException` / case `{Name}NotFound` |
+| A failure an output port's contract declares (a uniqueness only the store sees) | an `OutputPortException` subtype the adapter throws; the use case catches it and throws its own `UseCaseException` | the same, caught by the use case and returned as its case | the outgoing adapter | `Duplicate{Name}Exception` |
+| A foreign system behind an output port — an external system on the context map — refuses, times out or cannot be reached | an `OutputPortException` subtype the port declares and the adapter throws; the use case catches it and throws its own `UseCaseException` | the same, caught by the use case and returned as its case, marked `Refusal` | the outgoing adapter | `{System}UnavailableException` / case `{System}Unavailable` |
+| A failure of the system's own infrastructure (its database, its broker), a defect | the platform's exception, to the handler as the unexpected — never an `OutputPortException` | the same | anyone | a lost connection to the own database, a broker timeout |
+| No match for a "which one, if any" query | no failure: an empty value in the plain result | the same | the use case | the caller's active session, if any |
+| A malformed call | the platform's argument exception | the same | anyone | a null where code must pass a value |
+| A stop: cancellation, interruption | passes through untranslated, never a case | the same | the platform | `OperationCanceledException`, `InterruptedException` |
 
 Ask, in order:
 
-1. **Is the outcome part of what the operation promises?** If the caller was always going to have to render one of several answers — accepted, refused for this reason, refused for that one — the outcome set belongs in the signature, where the compiler can check the caller handled all of it. That is the result-variant channel. If the outcome means the call itself was wrong given the state, it is not a promise, it is a refusal.
-2. **Can the caller act on it?** A caller that can retry differently, offer an alternative or show a specific message needs the distinction in its hands. A caller that can only pass the failure upwards gains nothing from being forced to unpack it — and every intermediate frame pays for the unpacking.
-3. **Who raises it — the model or the operation?** A behaviour method on an aggregate enforces an invariant while it mutates state. Making it return an outcome instead forces every call site to unpack a variant for a case that a correct call never produces, and turns mutators into functions that must be threaded through. The model is the strongest case for the exception channel. The use case, which already returns something, is the strongest case for variants.
-4. **How far does it travel?** An outcome that passes through several layers unchanged is cheaper as an exception: one raise, one catch, nothing in between. An outcome consumed one frame up is cheaper as a variant.
-5. **Is it a caller contract rather than a failure at all?** A null check or a range check on a value only code passes states what a caller must never pass. (On a value built from input the same check is the rule the product names, and refuses with its named failure.) That is neither channel — it stays the platform's own argument exception, and no rule of this catalog selects it.
+1. **Would a caller answer it?** A refusal the caller shows, retries differently or offers an alternative for is expected; the context's choice decides whether it is thrown or returned. A failure nobody between the raise and the adapter's handler can do anything about is not; it is thrown in both.
+2. **Own infrastructure or a foreign system?** The system's own database and broker have to be there; their failure is unexpected and thrown in both styles. A foreign system — one the context map declares as an external system — refusing, timing out or being unreachable is expected behaviour of the integration: the output port declares it, and a caller answers it. Which system is foreign is read from the context map, not judged per failure. A foreign failure the port does not declare stays unexpected.
+3. **Who found it — the model, an output port's adapter, or the use case?** The model throws, always: a value object's constructor can only throw, and an aggregate's behaviour method that returned an outcome would make every caller unpack a case a correct call never produces. An output port's adapter throws the `OutputPortException` its port declares. A refusal the use case finds itself is the application's; **a use case never constructs a domain exception**. Where the context returns, the use case catches the concrete domain and output-port exceptions it can raise — never a base type, which would also catch a defect — and returns their cases. A domain exception it does not name is unexpected: the handler answers it generically.
+4. **Is absence a normal answer?** A query that asks whether there is one ("which one, if any") answers *none* with an empty value, never a refusal. "Not found" is a refusal only where the caller names a specific thing — by its id.
+5. **Is it a caller contract rather than a failure?** An argument guard on a value only code passes stays the platform's argument exception. On a value built from input the same check is the rule the product names, and its refusal is expected.
 
-## Options
+## Per bounded context, not per use case
 
-| | Exception (`DomainException` / `UseCaseException`) | Closed set of result variants |
+**Every use case of a context carries its refusals the same way. No context mixes a returned refusal with a thrown one.** The context's adapters then have one style at the call site, a review checks one shape, and a rule could check it. Deciding per use case gives every adapter two styles for the same kind of failure and leaves the next reader guessing which one a new use case takes. Two contexts of one project may choose differently.
+
+| | Thrown | Returned |
 |---|---|---|
-| Use when | an invariant refuses the call; the caller can only pass it on; the outcome crosses several frames | the outcome set is part of the promise; the caller must handle each case; one frame consumes it |
-| Visible in the signature | no | yes |
-| Caller forced to handle | no — silence compiles | yes, where the language checks the variants are exhausted |
-| Cost at the call site | none until something goes wrong | every caller unpacks, including those that only forward |
-| Aggregate behaviour methods | natural | awkward: mutators grow return values |
-| Governed by rules here | yes — base type, layer, metadata, naming | **no** |
+| The input port's signature | names the success only | names every way the operation can end |
+| A new refusal | compiles everywhere; a test or a review holds that the handler answers it | a compile error at every call site that must answer it |
+| The use case | throws its own refusals, lets the model's pass | returns its own, catches the model's and the output ports' once |
+| The adapter | one exception handler per context, one entry per refusal | a switch at each call site without `default`, the answers in one class per context; the handler stays for the rest |
+| The seam between port test and adapter test | the failure type the stub throws | the result type; the compiler holds it |
+| The cost | a refusal nobody maps reaches the caller as a server error | every caller reads the result; an ignored result swallows a refusal |
 
-**Default: the model refuses with an exception; the operation answers with whatever its result type is.** A broken invariant inside an aggregate is a `DomainException`. An outcome the use case promises its caller — this identifier is unknown, this request is not permitted for this actor, this precondition elsewhere does not hold — is a legitimate result variant *or* a `UseCaseException`, and that is the real fork. Choose variants when the caller must handle each case and one frame consumes them; choose the exception when the caller can only forward it.
+## The transaction
 
-Mixing both in one code base is not a defect as long as the split is by question, not by mood: keep the model's refusals in the exception channel and decide the use-case boundary once, per project, and write the decision down.
+- **Decide, then write.** A use case writes only once it can no longer refuse: every refusal, thrown or returned, comes before the first `save`. A refusal that can only come after a write is a wrong cut — two aggregates changed in one transaction.
+- **A returned refusal rolls back like a thrown exception.** Every refusal case implements the marker `Refusal` (`IRefusal` in .NET, a trait in Rust). The transaction boundary rolls back when the work returns one, and the interceptor around a declarative `@Transactional` use case marks the transaction rollback-only on it. A refusal rolls back wherever it arises. The net catches a violation of "decide, then write"; it does not make it good code.
+- **An output-port exception may be caught inside the transaction.** The use case returns or throws its refusal; the boundary rolls back either way.
+- **A step after the commit only reads.** A rollback no longer reaches it.
+- **A remote effect keeps its compensation.** A remote effect made before the local write was never undone by a thrown exception either; a refusal after it, thrown or returned, calls the compensation.
 
-## Consequences
+## The shape of a returned result
 
-- **The two are not symmetric in governance.** The exception channel has base types a rule can select on, so the layer, the metadata and the naming of every failure type are checked. The result-variant channel has none of that: a project that answers all use-case outcomes with variants leaves that area ungoverned — the error-handling rules select nothing there and report success. That is not the rules being satisfied, it is them being silent.
-- **An incoming adapter still decides the answer**, in both channels. Whether it unpacks a variant or catches a type, the mapping from outcome to protocol lives there and nowhere further in. A result variant that carries a status code has made the same mistake a domain exception with a status annotation makes.
-- **The diagnostic that lists untranslating adapters reads the exception channel only.** In a code base that answers with variants, it lists every incoming adapter, because none of them names a failure type. The listing is noise there, and it never fails a build — but it is worth knowing before reading the output.
-- **A variant channel does not remove the exception channel**, it narrows it. Programming errors and infrastructure faults keep travelling as exceptions, so the adapter still needs the last resort that turns anything unrecognised into a server fault with no message.
-- **One type per outcome holds in both.** The reason a caller can answer differently is that the outcomes are distinguishable types, not one type carrying a string.
+- The input port returns `{Operation}Result`. With an expected refusal it is sealed: a success case named for what happened (`Created`, `Cancelled`, `Found`) and one case per refusal named after the refusal, nested in the result, carrying ids and figures, implementing `Refusal` — no `Exception` suffix, no file of its own. Not every outcome is a refusal: an operation that ends in several successes (`Sent`, `AlreadySent`) may seal its result for those alone, with no case marked. An operation with one outcome keeps a plain result record.
+- **Java:** `sealed interface` + nested `record` cases; the adapter's `switch` has **no `default`**, so a new case is a compile error at every call site.
+- **C#:** a closed union. Until C# `union` types are released, a library such as OneOf (`OneOfBase<…>`, `Match` with one function per case). `Match` is exhaustive by arity, not by name — functions are positional, two of the same shape can be swapped. A closed class hierarchy without either gives no exhaustiveness.
+- **Rust:** an `enum` and a `match` without a `_` arm; `#[must_use]` on the enum warns about an ignored result.
+
+## Consequences where a context returns
+
+- **A new refusal breaks the build where it must be answered.** The port's signature says how the operation can end.
+- **The answer to each case is written once per context**, in an adapter class every switch calls; the switch itself is per call site.
+- **The thrown path stays.** Every adapter keeps one exception handler for malformed input and the unexpected — a domain exception the use case does not name included. Results narrow the exception channel; they do not remove it.
+- **An ignored result swallows a refusal.** Java and C# have no must-use check; a caller, and first of all a test helper that arranges state, that drops the result treats every refusal as success. Test helpers assert the success case.
+- **A caller with nobody to answer throws on purpose.** An event consumer, or an open host service whose contract has no such case, turns the case back into an exception so the delivery's retry or the calling context sees it. A foreign system that did not answer is the typical case: thrown back, the delivery is tried again later.
+- **Case names repeat across results** (`{Name}NotFound` in several); a switch that meets two qualifies them by their result type.
+- **Governance moves to the compiler.** The error-handling rules select exception types; a case is none. The diagnostic that lists adapters translating no failure type lists an adapter that answers only by switching; its answer is the switch.
 
 ## Anchors
 
-- Markers: [DomainException](/marker/tactical/domainexception.md) · [UseCaseException](/marker/application/usecaseexception.md)
-- Rules: [Exceptions declared in the domain layer must extend DomainException](/rule/errors/dca-err-001.md) · [Domain and use-case exceptions reside in the layer whose failure they name](/rule/errors/dca-err-002.md) · [Exceptions declared in the application layer must extend UseCaseException](/rule/errors/dca-err-003.md) · [Diagnostic: incoming adapters that drive a use case without translating its failures](/rule/errors/dca-err-006.md)
-- Template: [Domain exception skeleton](/template/domain-exception.md)
-- Pitfall: [A business rule reported as an argument error](/pitfall/business-rule-reported-as-an-argument-error.md)
+- Guide: [Error handling rules](/guide/rules/error-handling-rules.md) · [Transaction rules](/guide/rules/transaction-rules.md) · [The use case once, each adapter its translation](/guide/testing-levels/the-use-case-once-each-adapter-its-translation.md)
+- Markers: [DomainException](/marker/tactical/domainexception.md) · [PortException](/marker/application/portexception.md) · [InputPortException](/marker/application/inputportexception.md) · [OutputPortException](/marker/application/outputportexception.md) · [UseCaseException](/marker/application/usecaseexception.md) · [Refusal](/marker/application/refusal.md) · [TransactionBoundary](/marker/application/transactionboundary.md)
+- Rules: [Exceptions declared in the domain layer must extend DomainException](/rule/errors/dca-err-001.md) · [Domain and port exceptions reside in the layer whose failure they name](/rule/errors/dca-err-002.md) · [Exceptions declared in the application layer must extend UseCaseException or OutputPortException](/rule/errors/dca-err-003.md) · [Diagnostic: incoming adapter packages that drive a use case without translating its failures](/rule/errors/dca-err-006.md) · [Diagnostic: closed use-case results without a case marked as a refusal](/rule/errors/dca-err-008.md)
+- Recipe: [Return expected refusals as a sealed result](/recipe/return-expected-refusals-as-a-sealed-result.md)
+- Template: [Domain exception skeleton](/template/domain-exception.md) · [Use case skeleton](/template/use-case.md)
+- Pitfall: [A business rule reported as an argument error](/pitfall/business-rule-reported-as-an-argument-error.md) · [A refusal returned after a write](/pitfall/a-refusal-returned-after-a-write.md)
 - Related decision: [Result shape and assembly](/decision/result-shape-and-assembly.md) · [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)

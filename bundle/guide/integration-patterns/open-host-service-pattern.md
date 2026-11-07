@@ -122,8 +122,10 @@ public class AddItemToCartUseCase {
     private final ProductDataPort productDataPort;  // NOT ProductCatalogService or RestTemplate
 
     public AddItemToCartResult execute(AddItemToCartCommand cmd) {
-        ProductData data = productDataPort.getProductData(cmd.productId(), cmd.qty())
-            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        Optional<ProductData> data = productDataPort.getProductData(cmd.productId(), cmd.qty());
+        if (data.isEmpty()) {
+            return new AddItemToCartResult.ProductNotAvailable(cmd.productId());  // a case here; thrown where the context throws
+        }
         // ...
     }
 }

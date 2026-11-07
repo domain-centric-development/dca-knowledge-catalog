@@ -79,8 +79,9 @@ checkout/
 4. **`application/shared` stays context-wide.** Repository and Store interfaces continue to live there
    (`DCA-TAC-014`, `DCA-TAC-019`); there is no `application/{feature}/shared`. A port used by one use case stays
    with that use case, a port used by several belongs in `application/shared`. The same applies to a use-case
-   exception: it stays with its use case, and moves to `application/shared` when several use cases raise it or
-   a port declares it.
+   exception: it stays with its use case, and moves to `application/shared` when several use cases raise it. An
+   output-port exception sits beside the port that declares it. In a context that returns its refusals, an expected refusal has no file of its own: it is a
+   case nested in its use case's result.
 5. **The domain is organised by concept, not mirrored by feature.** Aggregates and value objects belong to the
    bounded context and may serve several features — a feature owns no aggregate.
 6. **Incoming adapters mirror the features *below* their protocol:** `adapter/incoming/web/{feature}`,

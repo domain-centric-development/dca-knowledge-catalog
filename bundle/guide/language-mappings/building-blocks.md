@@ -23,7 +23,10 @@ The tactical markers, one to one. Java package `ddd.tactical`, .NET namespace `D
 | Factory | `Factory` | `IFactory` |
 | Specification | `Specification<T>` (`isSatisfiedBy`) | `ISpecification<T>` (`IsSatisfiedBy`) |
 | Domain failure | `DomainException` (`ddd.tactical`) | `DomainException` (`Ddd.Tactical`) |
-| Use-case failure | `UseCaseException` (`application`) | `UseCaseException` (`Application`) |
+| Port failure (abstract) | `PortException`, `InputPortException` (`application`) | `PortException`, `InputPortException` (`Application`) |
+| Use-case failure | `UseCaseException` (`application`), under `InputPortException` | `UseCaseException` (`Application`), under `InputPortException` |
+| Output-port failure | `OutputPortException` (`application`) | `OutputPortException` (`Application`) |
+| Refusal case marker | `Refusal` | `IRefusal` |
 | Timestamps, ids | `java.time.Instant`, `java.util.UUID` | `DateTimeOffset`, `Guid` |
 | Absence | `Optional<T>` | nullable reference `T?` |
 
@@ -42,6 +45,9 @@ public sealed class Order : AggregateRootBase<Order, OrderId> { … }
 
 ## Related mentions (heuristic)
 
+- [InputPortException](/marker/application/inputportexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
 - [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md)

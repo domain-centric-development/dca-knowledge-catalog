@@ -26,7 +26,8 @@ DcaRule.Informational(
         {
             var runtime = arch.RuntimeType(exception);
             for (var type = runtime; type is not null && !DcaMarkers.IsRole(type, markers.DomainException)
-                && !DcaMarkers.IsRole(type, markers.UseCaseException) && type != typeof(Exception); type = type.BaseType)
+                && !DcaMarkers.IsRole(type, markers.UseCaseException) && !DcaMarkers.IsRole(type, markers.OutputPortException)
+                && !DcaMarkers.IsRole(type, markers.PortException) && type != typeof(Exception); type = type.BaseType)
             {
                 foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
@@ -43,7 +44,7 @@ DcaRule.Informational(
     })
     .Experimental()
     .Selecting(
-        "The project's own types below DomainException or UseCaseException, with their runtime type in"
+        "The project's own types below DomainException or PortException, with their runtime type in"
         + " the loaded assemblies, and the instance fields they and their project base types declare -"
         + " the backing fields of auto-properties included.")
     .Checking(

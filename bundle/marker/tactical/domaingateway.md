@@ -26,7 +26,7 @@ changes.
 
 **How it differs from related concepts:**
 
-- **vs Domain Service** — A `e` contains pure domain logic; both
+- **vs Domain Service** — A `DomainService` contains pure domain logic; both
 interface and implementation live in the domain layer (framework-free). A Domain Gateway is
 a *port* to the outside world; only the interface is in the domain.
 - **vs Output Port** — An Output Port (see `OutputPort`) lives in the application

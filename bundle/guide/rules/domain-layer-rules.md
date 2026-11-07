@@ -40,16 +40,31 @@ tags: [guide, section]
   different checks — validated and derived on the way in, taken as given on the way back — and each has its own
   named factory (`fromInput(...)`, `fromStored(...)`). A neutral `of(...)` beside them leaves the caller to guess
   which checks run. A value with one origin keeps its one factory
-- **A string, a number, a flag or a moment that means something is a value object.** A postal code, a quantity, a
-  status, an opening date each carry rules of their own — a format, a range, a meaning — and held as a bare
-  `String`, `int`, `boolean` or `Instant` those rules are repeated at every use, or missing. A value of several
-  components holds values too: an address holds a `Street`, a `PostalCode` and a `City`, not three strings. Only a
-  wrapper — a value of exactly one component — holds the primitive it wraps. An identifier is a typed id, never a
-  bare `UUID`: the type says whose it is. A flag kept in a field is an enum or a value; a `boolean` *returned* is a
-  question to the object and fine, though an aggregate is told what to do rather than asked and then decided about
-  from outside. What a building block prescribes keeps its type: a domain event's `occurredOn()` and `eventId()`
-  describe the event, not the domain, and carry no rules of their own — a business moment such as an opening date or
-  a date of birth does, and is a value (`DCA-TAC-025`, experimental)
+- **A string, a number or a moment that means something is a value object.** A postal code, a quantity, an
+  opening date each carry rules of their own — a format, a range, a meaning — and held as a bare `String`, `int` or
+  `Instant` those rules are repeated at every use, or missing. A value of several components holds values too: an
+  address holds a `Street`, a `PostalCode` and a `City`, not three strings. Only a wrapper — a value of exactly one
+  component — holds the primitive it wraps. An identifier is a typed id, never a bare `UUID`: the type says whose it
+  is. What a building block prescribes keeps its type: a domain event's `occurredOn()` and `eventId()` describe the
+  event, not the domain, and carry no rules of their own — a business moment such as an opening date or a date of
+  birth does, and is a value (`DCA-TAC-025`, experimental)
+- **A single yes/no fact is a `boolean` field; a `boolean` parameter is a flag argument.** The aggregate keeps the
+  fact to itself, is told to change it and answers when asked:
+
+  ```java
+  private boolean completed;
+
+  public void complete() { this.completed = true; }
+
+  public boolean isCompleted() { return completed; }
+  ```
+
+  `setCompleted(true)` would let the caller set the state instead of triggering the behaviour, so no domain method
+  takes a `boolean`, and nothing outside sets the field. A `boolean` returned is a question to the object and fine,
+  though an aggregate is told what to do rather than asked and then decided about from outside. Three or more
+  states, or transitions with rules of their own, are an enum or a value. Facts that hold independently — completed,
+  archived, deleted — are separate fields, never one status. A project's glossary may decide otherwise; then the
+  glossary applies (`DCA-TAC-025`)
 
 ### Aggregate Rules
 - Access external objects only through Aggregate Root

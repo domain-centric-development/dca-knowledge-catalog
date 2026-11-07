@@ -52,6 +52,18 @@ exception: the outermost `inTransaction` then rolls back and throws instead of c
 half of the work. Implementations must preserve this; an in-memory implementation emulates it
 with a rollback-only flag.
 
+**A returned refusal rolls back.** When the work returns a value that is a `Refusal`
+- a case of a closed use-case result that refuses the request - the boundary rolls the
+transaction back and returns that value unchanged; it does not throw. A refusal returned by the
+use case therefore undoes every write made before it, exactly as a thrown failure would. Only the
+value `work` returns is looked at, not what it contains: a use case that carries the
+refusal in a value of its own (a private "saved or refused" type around the result) lets the
+refusing case of that type implement `Refusal` as well. Nested, a refusal behaves like a
+failure: an inner block that returns one marks the shared transaction rollback-only; the
+outermost block rolls back cleanly when it returns a refusal too, and throws, like after a caught
+inner failure, when it returns a success. The outermost block that returns a refusal after an
+inner failure was caught rolls back without throwing - the refusal is the answer.
+
 **Rules of thumb:**
 
 - No remote call inside a transaction — neither in an annotated use case nor inside `inTransaction`.

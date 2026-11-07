@@ -33,7 +33,8 @@ public final class ReserveStockUseCase implements ReserveStockInputPort {
             if (processedEvents.contains(EFFECT, command.eventId())) {
                 return ReserveStockResult.alreadyReserved();   // duplicate delivery — this effect happened
             }
-            final Stock stock = stockRepository.findByProduct(command.productId()).orElseThrow();
+            final Stock stock = stockRepository.findByProduct(command.productId())
+                    .orElseThrow(() -> new StockNotFoundException(command.productId()));   // refused before any write
             stock.reserve(command.orderId(), command.quantity());
             stockRepository.save(stock);
             processedEvents.markProcessed(EFFECT, command.eventId());

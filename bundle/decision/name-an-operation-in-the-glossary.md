@@ -27,7 +27,7 @@ Ask, for every operation a story's `When` names:
 Enter the operation beside the term it acts on, in the domain's word and the code's word: `anlegen (create)`, `erledigen (complete)`, `leeren (clear)`, each with one line that says what it means where the language does not. Then every name follows mechanically:
 
 - the use case is the code word plus the term: `CreateEntry`, `CompleteEntry`
-- its command or query follows the use case's name
+- its command or query follows the use case's name, and a page's form follows the command: `CreateEntryForm` (see [Form template](/template/page-form.md))
 - its domain event is the term plus the past participle: `EntryCreated`, `EntryCompleted`
 - a read model is named by what the person looks at to decide, and is a glossary line of its own; the verb for looking at it is an operation like the others, with its code word: `anzeigen (list)`
 

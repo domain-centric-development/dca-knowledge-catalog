@@ -1,10 +1,10 @@
 ---
 type: Rule
 id: DCA-ERR-005
-title: Domain and use-case exception names must stay in the language of their layer
+title: Domain and port exception names must stay in the language of their layer
 rule: "A failure named after a transport concept is a decision about the answer, taken in a layer that does not know the protocol; the name should say what went wrong, not what the caller should be told."
-constraint: Domain and use-case exception names must stay in the language of their layer.
-selects: "Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded."
+constraint: Domain and port exception names must stay in the language of their layer.
+selects: Classes anywhere on the classpath under scan that are assignable to DomainException or to PortException - UseCaseException and OutputPortException included - the vocabulary's own packages excluded.
 checks: "The simple name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-005"
 status: enforced
@@ -16,11 +16,11 @@ tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
 ---
 
-# Domain and use-case exception names must stay in the language of their layer
+# Domain and port exception names must stay in the language of their layer
 
 ## Selection
 
-Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded.
+Classes anywhere on the classpath under scan that are assignable to DomainException or to PortException - UseCaseException and OutputPortException included - the vocabulary's own packages excluded.
 
 ## Check
 
@@ -28,7 +28,7 @@ The simple name ends with none of Error, Fault, Failure and contains none of Htt
 
 ## .NET reading
 
-**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
+**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the port-exception role - UseCaseException and OutputPortException included - the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
 **Check.** The type name ends with none of Error, Fault, Failure and contains none of Http, StatusCode, ResponseStatus, ResponseEntity. The bare words Status and Response are not matched: they are transport words and domain words, and the name alone does not tell them apart, so OrderStatusInvalidException passes. Whether the remaining name is a term of the Ubiquitous Language is not decidable here and stays with review. An empty selection passes.
 
@@ -36,7 +36,7 @@ The simple name ends with none of Error, Fault, Failure and contains none of Htt
 
 Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulated for Rust (source-test).
 
-**Selection.** Types that implement DomainFailure or UseCaseFailure.
+**Selection.** Types that implement DomainFailure or a port failure (UseCaseFailure, OutputPortFailure).
 
 **Check.** The name contains none of Http, StatusCode, ResponseStatus, Response. The suffix part of the Java rule does not apply: Rust names a failure ...Error by convention.
 
@@ -45,7 +45,7 @@ Unpublished (dca-rust); the suite implements it. **Held by** a test, reformulate
 ```java
 DcaRule.check(
         "DCA-ERR-005",
-        "Domain and use-case exception names must stay in the language of their layer",
+        "Domain and port exception names must stay in the language of their layer",
         "A failure named after a transport concept is a decision about the answer, taken in a"
             + " layer that does not know the protocol; the name should say what went wrong, not"
             + " what the caller should be told",
@@ -73,7 +73,8 @@ DcaRule.check(
         })
     .selecting(
         "Classes anywhere on the classpath under scan that are assignable to DomainException or"
-            + " to UseCaseException, the building-blocks package excluded.")
+            + " to PortException - UseCaseException and OutputPortException included - the"
+            + " vocabulary's own packages excluded.")
     .checking(
         "The simple name ends with none of Error, Fault, Failure and contains none of Http,"
             + " StatusCode, ResponseStatus, ResponseEntity. The bare words Status and"
@@ -90,7 +91,7 @@ DcaRule.check(
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
   private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
-    return (markers.is("domainException").test(type) || markers.is("useCaseException").test(type))
+    return (markers.is("domainException").test(type) || markers.is("portException").test(type))
         && !markers.declaresTypesIn(type.getPackageName());
   }
 ```
@@ -193,7 +194,7 @@ boolean isEmpty() {
 ```csharp
 DcaRule.Check(
     "DCA-ERR-005",
-    "Domain and use-case exception names must stay in the language of their layer",
+    "Domain and port exception names must stay in the language of their layer",
     "A failure named after a transport concept is a decision about the answer, taken in a layer"
         + " that does not know the protocol; the name should say what went wrong, not what the"
         + " caller should be told",
@@ -217,7 +218,8 @@ DcaRule.Check(
     })
     .Selecting(
         "Types anywhere under the root namespace that are assignable to the domain-exception or the "
-        + "use-case-exception role, the vocabulary's own code excluded: the namespaces the configured "
+        + "port-exception role - UseCaseException and OutputPortException included - the vocabulary's own "
+        + "code excluded: the namespaces the configured "
         + "role types live in are not selected, so a project's own base type is not reported as "
         + "residing outside a layer it never claimed.")
     .Checking(
@@ -232,6 +234,8 @@ DcaRule.Check(
 ## Related mentions (heuristic)
 
 - [DomainException](/marker/tactical/domainexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 
 ## Configured by

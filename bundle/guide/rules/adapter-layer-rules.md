@@ -19,7 +19,8 @@ tags: [guide, section]
   decides: is the body JSON, does a number or an id parse, is a path segment there. A rule is what a domain expert
   could change: length, blank, range, a format with a meaning. A field the request leaves out reaches the value
   object as absent — `@RequestParam(required = false)` without a `defaultValue`, a nullable property — and is refused
-  there; the adapter answers that refusal at the context's translation site like any other
+  there; the adapter answers that refusal like any other — as a case of the use case's result, where the context
+  returns results
 - Controller delegates to use case
 - Controller is thin, no business logic
 - Controller handles framework-specific concerns
@@ -40,8 +41,9 @@ tags: [guide, section]
 - Where no cookie may be set, the code travels in the redirect address (`?notice=saved`). The address is
   forgeable — a crafted link shows any notice and any number — and every redirect on the way must forward it
 - A page adapter translates a refusal in one place: one method of the adapter turns the refusal and its notice
-  code into the redirect, and every handler that can meet the refusal calls it — never the same `catch` in each
-  handler. A handler repeats only the use-case call; what a refusal looks like to the user is decided once
+  code into the redirect, and every handler that can meet the refusal calls it — from its switch arm, or from its
+  `catch` where the context throws — never the same redirect written out in each handler. A handler repeats only
+  the use-case call and the switch or the `catch`; what a refusal looks like to the user is decided once
 - Every browser form that changes state carries a CSRF token; cookie-authenticated endpoints without one are a defect. Token-authenticated APIs (`Authorization: Bearer`) are exempt only if they neither read nor issue cookies
 
 ### Output Adapter Rules

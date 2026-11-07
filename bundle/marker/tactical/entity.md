@@ -15,7 +15,7 @@ Marker interface for Entities.
 
 An Entity is a domain object defined by its identity, not by its attributes: a line item stays
 the same line item while its quantity changes, and two line items with equal attributes are still
-two. Every Entity carries a typed identifier (`d`) that is stable for its whole life.
+two. Every Entity carries a typed identifier (`Id`) that is stable for its whole life.
 
 An Entity that is not itself an Aggregate Root lives inside exactly one aggregate. It is
 created, changed and removed only through its root, is never loaded or saved on its own, and is

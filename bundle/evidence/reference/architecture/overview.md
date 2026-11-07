@@ -7,7 +7,7 @@ evidence_for: /reference/architecture.md
 
 [Full node and context](/reference/architecture.md). This is an evidence excerpt; retain the parent selection and caveats.
 
-The classes under test together with the `t` that describes them, plus the
+The classes under test together with the `DcaLayout` that describes them, plus the
 discovery helpers every DCA rule builds on: which packages are bounded contexts, where the shared
 kernel lives, which annotations a `package-info` carries.
 

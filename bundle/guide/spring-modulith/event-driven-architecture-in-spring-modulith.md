@@ -244,7 +244,8 @@ public final class ReserveStockUseCase implements ReserveStockInputPort {
             if (processedEvents.contains(EFFECT, command.eventId())) {
                 return ReserveStockResult.alreadyReserved();   // duplicate delivery — this effect happened
             }
-            final Stock stock = stockRepository.findByProduct(command.productId()).orElseThrow();
+            final Stock stock = stockRepository.findByProduct(command.productId())
+                    .orElseThrow(() -> new StockNotFoundException(command.productId()));   // refused before any write
             stock.reserve(command.orderId(), command.quantity());
             stockRepository.save(stock);
             processedEvents.markProcessed(EFFECT, command.eventId());
@@ -448,14 +449,17 @@ public class ReserveStockUseCase implements ReserveStockInputPort {
         // Work with Inventory's domain language and rules
         // No knowledge of Order module's structure
 
+        // Decide, then write: every stock is loaded and asked before the first save,
+        // so a refusal never follows a write
+        List<Stock> reserved = new ArrayList<>();
         for (StockReservationItem item : command.items()) {
             Stock stock = stockRepository.findBySku(item.sku())
                 .orElseThrow(() -> new StockNotFoundException(item.sku()));
 
-            stock.reserve(item.quantity(), command.orderReference());
-
-            stockRepository.save(stock);
+            stock.reserve(item.quantity(), command.orderReference());   // may refuse: InsufficientStockException
+            reserved.add(stock);
         }
+        reserved.forEach(stockRepository::save);
 
         return new ReserveStockResult(true);
     }

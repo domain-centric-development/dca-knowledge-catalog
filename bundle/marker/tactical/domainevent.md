@@ -39,7 +39,7 @@ deployment reads what the previous one wrote, so a change follows what a databas
 - `eventId()` - Unique identifier for this event instance
 - `occurredOn()` - When the event occurred
 
-For events that cross bounded context boundaries, see `t` which adds
+For events that cross bounded context boundaries, see `IntegrationEvent` which adds
 versioning for backward compatibility.
 
 **Example:**

@@ -24,3 +24,4 @@ further language is one more file rather than a second copy of this node.
 - Guide: [Layer elements](/guide/elements.md) · [Layer rules](/guide/rules.md)
 - Recipe: [Add an aggregate](/recipe/add-an-aggregate.md)
 - Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md)
+- Decision: [Ownership as a marker](/decision/ownership-as-a-marker.md) — an aggregate that belongs to someone also implements `Owned<OwnerId>`

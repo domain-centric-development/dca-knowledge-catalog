@@ -15,8 +15,9 @@ The application layer organizes business operations using a structured **Use Cas
 - **Use Case** - Implements business operation (orchestrates domain objects)
 - **Input Port** - Interface defining use case contract (`extends UseCase<INPUT, OUTPUT>`)
 - **Command/Query** - Input model (Command for writes, Query for reads)
-- **Result** - Output model (standardized return type)
-- **Use-Case Exception** - A request the use case cannot serve, named by what it could not get hold of
+- **Result** - Output model (standardized return type); where the context returns its refusals, sealed, with a success case and one case per expected refusal, when the operation can be refused
+- **Use-Case Exception** - A failure a use case throws (`UseCaseException`, under `InputPortException`): an expected refusal where the context throws its refusals
+- **Output-Port Exception** - A failure an output port's contract declares (`OutputPortException`), thrown by its adapter and caught by the use case — an expected conflict the store sees, or a foreign system behind the port that refused or did not answer; never a failure of the system's own infrastructure
 - **Output Port** - Interface for a capability the application needs but does not own (repositories, other contexts, external systems, publishers, the caller's identity)
 
 **Organization:**
@@ -162,6 +163,13 @@ carry, who assembles it and how big it should be — follows seven sentences.
    Mediator/double-dispatch rendering are not taken, also for in-process UIs — see
    [Deviations from the literature](/guide/readme/deviations-from-the-literature.md).
 
+In a context that returns its refusals, an operation that can be refused returns a sealed result: a success case
+named for what happened and one case per expected refusal. The sentences above hold for every case of it. A context
+that throws its refusals keeps a plain result and raises a use-case exception instead. In either context, an
+operation that ends in several successes — `Sent` or `AlreadySent` — may seal its result for those alone; none of
+its cases is a refusal, and none carries the marker. The choice and what each form
+costs are in [An expected refusal, thrown or returned](/guide/rules/error-handling-rules.md).
+
 **Snapshot as the result field:**
 ```java
 // domain/readmodel — a Value built from the aggregate, no identity of its own
@@ -224,7 +232,10 @@ maps the answer to a route.
 
 ## Related mentions (heuristic)
 
+- [InputPortException](/marker/application/inputportexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
 - [TransactionBoundary](/marker/application/transactionboundary.md)
+- [UseCaseException](/marker/application/usecaseexception.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)

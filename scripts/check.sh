@@ -17,8 +17,13 @@ export PYTHONPATH=src
 # sibling checkouts) and would inherit that variable, corrupting the pending commit and failing on
 # trees the fixture repository does not have. Only the freshness diff below may see the hook's
 # index: it is the state about to be committed.
+#
+# In a linked worktree git also exports GIT_DIR (and may export GIT_WORK_TREE) to the hook. Inherited,
+# they make every `git -C <sibling checkout>` of the generator answer for this repository instead —
+# wrong commit ids, or no history at all. They are dropped for the same reason and the freshness
+# diff below runs with `git -C "$ROOT"`, which finds the worktree on its own.
 HOOK_INDEX="${GIT_INDEX_FILE:-}"
-unset GIT_INDEX_FILE
+unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE
 
 echo "==> generate (no mirror)"
 python3 -m dca_catalog.generate --no-default-mirror

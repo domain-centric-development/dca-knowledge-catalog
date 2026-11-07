@@ -42,6 +42,12 @@ package com.company.project.checkout;
 | `@OpenHostService` | this adapter is a published API for other contexts | on the adapter class, not the package |
 | `@SharedKernel` | the package is the shared kernel | on `package-info.java` |
 
+**`@ExternalUpstream` also decides how a failure travels.** A system declared there is foreign: that it refuses,
+times out or cannot be reached is expected behaviour of the integration, so the output port that reaches it declares
+the failure as an `OutputPortException`, and the use case answers it as a refusal. Every other piece of
+infrastructure — the context's database, its broker — is the system's own, and its failure stays an exception. See
+[Own infrastructure, a foreign system](/guide/rules/error-handling-rules.md).
+
 **What `translation` is, and what it is not.** It states how *this* context protects its own
 model — `ANTI_CORRUPTION_LAYER` or `CONFORMIST` — and nothing else. Three questions are
 easily collapsed into one and must not be:
@@ -75,6 +81,7 @@ Rules the declarations enable (see [ArchUnit Governance](/guide/archunit-governa
 
 ## Related mentions (heuristic)
 
+- [OutputPortException](/marker/application/outputportexception.md)
 - [@BoundedContext](/marker/strategic/boundedcontext.md)
 - [@ExternalUpstream](/marker/strategic/externalupstream.md)
 - [@OpenHostService](/marker/strategic/openhostservice.md)

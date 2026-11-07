@@ -10,7 +10,7 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [tactical, marker]
 ---
 
-The mandatory contract identity every `t` carries: a stable logical type
+The mandatory contract identity every `IntegrationEvent` carries: a stable logical type
 name plus schema version, decoupled from the Java class name.
 
 Decoupling name and version from the class means a breaking schema change ships as a new V2

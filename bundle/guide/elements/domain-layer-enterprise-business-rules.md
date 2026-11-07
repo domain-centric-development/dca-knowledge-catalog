@@ -12,6 +12,8 @@ tags: [guide, section]
 - **Value Object** - Immutable object without identity
 - **Aggregate** - Transactional consistency boundary
 - **Aggregate Root** - Entry point entity for aggregate access
+- **Owned** - An aggregate root that belongs to someone: its repository looks it up by its id and the owner's id
+  (see *Owned aggregates* in the rules)
 - **Domain Service** - Stateless operation on domain objects
 - **Domain Event** - Immutable record of domain occurrence (internal to bounded context)
 - **Specification** - Encapsulated business rule

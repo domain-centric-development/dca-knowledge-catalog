@@ -3,10 +3,10 @@ type: Marker
 title: UseCaseException
 category: application
 kind: class
-signature: public abstract class UseCaseException extends RuntimeException
+signature: public abstract class UseCaseException extends InputPortException
 package: dev.domaincentric.dca.buildingblocks.application
 modifiers: [public, abstract]
-extends: [RuntimeException]
+extends: [InputPortException]
 resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/buildingblocks/application/UseCaseException.java
 tags: [application, marker]
 ---
@@ -19,7 +19,19 @@ may not act on it, or a precondition on a second aggregate does not hold. Those 
 to the application layer, which knows the request, and they get a name that says which of them
 happened — one type per outcome, so a caller can tell them apart without reading a message.
 
-**What is not a use-case failure.** A broken rule of the model is a `n` and stays in the domain layer;
+**Who declares, raises and catches it.** It is the failure of an input port's contract (see
+`InputPortException`): the input port declares it, *only the use case* raises it,
+and the incoming adapter catches each named subtype and answers it. An outgoing adapter never
+raises it — a failure an output port declares is an `OutputPortException`, which the use
+case catches.
+
+**Thrown or returned - per bounded context.** A use case answers its expected refusals (not
+found, not owned, a precondition) in one of two styles, chosen per bounded context and uniform
+within it: it throws them as subtypes of this class, or it returns them as cases of a closed
+result, each marked `Refusal`. Both styles are equally valid. In a context that returns
+results, not-found and not-owned are cases of the result, not exceptions.
+
+**What is not a use-case failure.** A broken rule of the model is a `DomainException` and stays in the domain layer;
 an argument guard stays the platform's own argument exception. A use-case failure is raised by
 the use case, never by the model.
 
@@ -31,6 +43,10 @@ case serve several protocols at once.
 
 **Unchecked on purpose.** A failure the caller cannot repair by retrying with the same
 request is not an alternative return value; it travels to the boundary that can answer it.
+
+## Extends
+
+- [InputPortException](/marker/application/inputportexception.md)
 
 ## Related mentions in guides (heuristic)
 

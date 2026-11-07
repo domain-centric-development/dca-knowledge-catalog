@@ -10,6 +10,6 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [strategic, marker]
 ---
 
-Container annotation for repeatable `m` declarations.
+Container annotation for repeatable `Upstream` declarations.
 
 Not used directly — apply multiple `@Upstream` annotations instead.

@@ -36,7 +36,7 @@ com.company.project.shared/
 ```
 
 > **The architectural markers are not in here.** `AggregateRoot`, `Entity`, `Value`, `DomainEvent`,
-> `InputPort`, `OutputPort`, `DomainException`, `UseCaseException` come from the `dca-building-blocks`
+> `InputPort`, `OutputPort`, `DomainException`, `UseCaseException`, `OutputPortException`, `Refusal` come from the `dca-building-blocks`
 > dependency — writing them into a shared module duplicates a library the project already has on its
 > class path, under names the rule suite does not recognise. The shared module holds what is *yours*
 > and universal: value objects and shared application ports. A named failure belongs to the context
@@ -64,6 +64,7 @@ package com.company.project.order;
 
 ## Related mentions (heuristic)
 
+- [OutputPortException](/marker/application/outputportexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [OutputPort](/marker/port-out/outputport.md)

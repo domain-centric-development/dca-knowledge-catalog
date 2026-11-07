@@ -24,5 +24,5 @@ further language is one more file rather than a second copy of this node.
 
 - Guide: [Java package structure](/guide/package-structure.md) · [Layer rules](/guide/rules.md)
 - Rule: [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
-- Related templates: [Enriched domain model](/template/enriched-domain-model.md) · [REST resource](/template/rest-resource.md)
+- Related templates: [Form](/template/page-form.md) · [Enriched domain model](/template/enriched-domain-model.md) · [REST resource](/template/rest-resource.md)
 - Related decision: [Plain query use case or a dedicated read model](/decision/read-model-vs-domain-query.md)

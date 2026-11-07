@@ -149,6 +149,7 @@ Annotations are matched by fully qualified name and grouped by *role*; the rule 
 | `transportStatus` | `org.springframework.web.bind.annotation.ResponseStatus` | — | — | `io.micronaut.http.annotation.Status` | annotations that fix the protocol answer of the type they sit on |
 | `getMapping` | `org.springframework.web.bind.annotation.GetMapping`<br>`org.springframework.web.bind.annotation.RequestMapping` with `method=GET`<br>`org.springframework.web.bind.annotation.RequestMapping` without `method` | `jakarta.ws.rs.GET`<br>`jakarta.ws.rs.HttpMethod` with `value=GET` | `jakarta.ws.rs.GET`<br>`jakarta.ws.rs.HttpMethod` with `value=GET` | `io.micronaut.http.annotation.Get` | annotations that bind a handler method to the HTTP method GET, or a general mapping annotation with the attribute value that makes it GET (`<annotation>#<attribute>=<value>`) or with no value (`<annotation>#<attribute>=`, a mapping that names no HTTP method and answers GET too) |
 | `transactionalEventListener` | `org.springframework.transaction.event.TransactionalEventListener` | `jakarta.enterprise.event.Observes` with `during=AFTER_SUCCESS` | `jakarta.enterprise.event.Observes` with `during=AFTER_SUCCESS` | `io.micronaut.transaction.annotation.TransactionalEventListener` | annotations that deliver an event to a listener method after the publishing transaction committed |
+| `authorizationAnnotation` | `org.springframework.security.access.prepost.PreAuthorize`<br>`org.springframework.security.access.annotation.Secured`<br>`jakarta.annotation.security.RolesAllowed` | `jakarta.annotation.security.RolesAllowed`<br>`jakarta.annotation.security.PermitAll`<br>`jakarta.annotation.security.DenyAll` | `jakarta.annotation.security.RolesAllowed`<br>`jakarta.annotation.security.PermitAll`<br>`jakarta.annotation.security.DenyAll` | `io.micronaut.security.annotation.Secured`<br>`jakarta.annotation.security.RolesAllowed` | annotations that declare a claims-only authorization on a route or a handler class - read by `DCA-HEX-020` |
 
 ## Building-block types the rules select on (`DcaMarkers`)
 
@@ -159,6 +160,7 @@ A role names exactly one type and must not be blank - an empty role would select
 | Role | Default (Java) | Selects |
 |---|---|---|
 | `aggregateRoot` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.AggregateRoot` | the marker of an aggregate root |
+| `owned` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Owned` | the marker of an aggregate root that belongs to someone, whose type argument names the owner's id type - read by `DCA-TAC-026`, which asks the aggregate's repository for a lookup by the aggregate's id and the owner's id |
 | `entity` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Entity` | the marker of an entity |
 | `value` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Value` | the marker of a value object |
 | `id` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Id` | the marker of an identifier |
@@ -169,7 +171,11 @@ A role names exactly one type and must not be blank - an empty role would select
 | `specification` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.Specification` | the marker of a specification — a predicate over a domain object, selected by `DCA-ADV-017` and `DCA-ADV-018` alongside the name suffix |
 | `domainException` | `dev.domaincentric.dca.buildingblocks.ddd.tactical.DomainException` | the base type of a domain failure |
 | `useCaseException` | `dev.domaincentric.dca.buildingblocks.application.UseCaseException` | the base type of a use-case failure |
+| `portException` | `dev.domaincentric.dca.buildingblocks.application.PortException` | the base type of every failure a port's contract declares - read by `DCA-ERR-002`, which places every subtype in the application layer, and by the rules that tell a project's failures from other exceptions |
+| `inputPortException` | `dev.domaincentric.dca.buildingblocks.application.InputPortException` | the base type of a failure an input port declares - read by `DCA-ERR-006`, which lists an incoming adapter that names it |
+| `outputPortException` | `dev.domaincentric.dca.buildingblocks.application.OutputPortException` | the base type of a failure an output port declares, raised by its adapter and caught by the use case - read by `DCA-ERR-003` |
 | `transactionBoundary` | `dev.domaincentric.dca.buildingblocks.application.TransactionBoundary` | the explicit transaction boundary of the application layer |
+| `refusal` | `dev.domaincentric.dca.buildingblocks.application.Refusal` | the marker on a case of a closed use-case result that refuses the request - read by `DCA-ERR-008`, which lists every closed result an input port answers with that has no such case |
 | `inputPort` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.in.InputPort` | the base type of every incoming (driving) port |
 | `useCase` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.in.UseCase` | the input port that takes a command or query and answers with a result - read only by `DCA-NAM-001`; every other use-case rule selects through `inputPort` or the use-case suffix. A vocabulary with several use-case shapes (one that answers, one that answers nothing) points this role at their common supertype, which may be the input port |
 | `outputPort` | `dev.domaincentric.dca.buildingblocks.hexagonal.port.out.OutputPort` | the base type of every outgoing (driven) port |

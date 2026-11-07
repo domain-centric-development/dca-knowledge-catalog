@@ -4,12 +4,14 @@ title: "Page controller skeleton (server-rendered web adapter)"
 tags: [template, adapter, spring, use-case, security]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-005.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-011.md, /rule/hexagonal/dca-hex-012.md, /rule/naming/dca-nam-011.md, /rule/usecase/dca-use-008.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /marker/application/refusal.md, /marker/application/portexception.md, /marker/application/inputportexception.md, /rule/naming/dca-nam-005.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-011.md, /rule/hexagonal/dca-hex-012.md, /rule/naming/dca-nam-011.md, /rule/usecase/dca-use-008.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
 
-Domain-free skeleton for a **page controller**: a primary (incoming) adapter that drives use cases from a server-rendered browser page. One controller per page: a page's reads, its forms and the translation of its refusals sit in one class with one view model, also when several pages belong to one feature. It lives in `adapter/incoming/web/`, is named `{Name}PageController`, and depends only on **input port interfaces** — never on a repository, a use-case class or a domain service. Reads are `@GetMapping` methods that map a query `*Result` to a page-specific [ViewModel](/template/view-model.md); every state change is a `@PostMapping` on a form record that answers with a `redirect:` (POST–redirect–GET), and a notice for the next page is a code from the page's enum, carried to that one page in a cookie sealed with a key every instance shares. The page works without JavaScript: plain HTML forms, a CSRF token in each of them, validation messages rendered by the server. Replace `{Name}` / `{name}` / `{usecasename}` / `{context}` / `{basePackage}`.
+Domain-free skeleton for a **page controller**: a primary (incoming) adapter that drives use cases from a server-rendered browser page. One controller per page: a page's reads, its forms and the translation of its refusals sit in one class with one view model, also when several pages belong to one feature. It lives in `adapter/incoming/web/`, is named `{Name}PageController`, and depends only on **input port interfaces** — never on a repository, a use-case class or a domain service. Reads are `@GetMapping` methods that map a query `*Result` to a page-specific [ViewModel](/template/view-model.md); every state change is a `@PostMapping` on a [form record](/template/page-form.md) named after its command (`{Name}Command` → `{Name}Form`) that answers with a `redirect:` (POST–redirect–GET), and a notice for the next page is a code from the page's enum, carried to that one page in a cookie sealed with a key every instance shares. The page works without JavaScript: plain HTML forms, a CSRF token in each of them, validation messages rendered by the server. Replace `{Name}` / `{name}` / `{usecasename}` / `{context}` / `{basePackage}`.
+
+A refusal is translated in one place per refusal, whichever way the context carries it: an `@ExceptionHandler` where the context throws its refusals, a switch over the sealed result — no `default` — where it returns them; the Java node shows both. Never a `catch` of `PortException` or `InputPortException`.
 
 This is the browser sibling of the [REST resource](/template/rest-resource.md): the same input ports, the same rule that the adapter converts at the edge and decides nothing, but the edge types are a form record and a ViewModel instead of a `*Request`/`*Response` pair.
 
@@ -22,8 +24,8 @@ further language is one more file rather than a second copy of this node.
 
 ## Realizes / governed by
 
-- Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
+- Markers: [InputPort](/marker/port-in/inputport.md) · [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md) · [Refusal](/marker/application/refusal.md) · [PortException](/marker/application/portexception.md) · [InputPortException](/marker/application/inputportexception.md)
 - Rules: [Controller classes must end with 'Controller'](/rule/naming/dca-nam-005.md) · [Controllers and Resources must never access repositories directly](/rule/hexagonal/dca-hex-003.md) · [Incoming Adapters must depend on input port interfaces, not on use case classes](/rule/hexagonal/dca-hex-011.md) · [Incoming Adapters must not depend on domain services](/rule/hexagonal/dca-hex-012.md) · [ViewModels must reside in the configured web adapter package](/rule/naming/dca-nam-011.md) · [Types named *Response reside in an adapter](/rule/usecase/dca-use-008.md) · [DTOs must reside in the adapter layer, not in domain or application](/rule/naming/dca-nam-007.md)
 - Guide: [Layer rules](/guide/rules.md) (input adapter rules, exception flow) · [Port placement](/guide/quick-reference/port-placement.md)
 - Pitfalls: [State-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) · [Business logic in adapter](/pitfall/business-logic-in-adapter.md) · [State kept in one instance](/pitfall/state-kept-in-one-instance.md)
-- Related templates: [ViewModel](/template/view-model.md) · [Domain exception](/template/domain-exception.md) · [REST resource](/template/rest-resource.md)
+- Related templates: [ViewModel](/template/view-model.md) · [Form](/template/page-form.md) · [Domain exception](/template/domain-exception.md) · [REST resource](/template/rest-resource.md)

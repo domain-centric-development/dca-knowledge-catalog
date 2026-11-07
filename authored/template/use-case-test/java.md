@@ -5,7 +5,7 @@ parent: /template/use-case-test.md
 tags: [template, testing, use-case]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/usecase.md, /marker/port-out/repository.md, /marker/port-out/domaineventpublisher.md]
+evidence: [/marker/port-in/usecase.md, /marker/port-out/repository.md, /marker/port-out/domaineventpublisher.md, /marker/application/refusal.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -64,6 +64,32 @@ class {Name}UseCaseTest {
   }
 }
 ```
+
+## Testing a refusal — two variants
+
+The test asserts the refusal with its values, in the form the context carries it.
+
+```java
+    @Test
+    @DisplayName("refuses {a missing aggregate}")
+    void refusesMissing() {
+      {Name}Command command = new {Name}Command(/* an id nobody stored */);
+
+      // Thrown: the exact type, never a parent
+      {Aggregate}NotFound refusal = assertThrows({Aggregate}NotFound.class, () -> useCase.execute(command));
+      assertEquals(command.id(), refusal.id());
+
+      // Returned: the exact case and its values
+      // {Name}Result.{Aggregate}NotFound refusal =
+      //     assertInstanceOf({Name}Result.{Aggregate}NotFound.class, useCase.execute(command));
+      // assertEquals(command.id(), refusal.id());
+
+      // Either way nothing was written
+      assertTrue(eventPublisher.published().isEmpty());
+    }
+```
+
+Keep the variant of the context and drop the other. Where the context returns, a helper that runs the use case to arrange state asserts the success case (`assertInstanceOf({Name}Result.{Done}.class, …)`) — an ignored result swallows a refusal, and the next assertion then tests a state that never came about.
 
 ## Shared test doubles (`src/test/java/.../{context}/application/shared/`)
 

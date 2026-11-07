@@ -17,10 +17,10 @@ Use cases publish boundary-crossing facts through this port; the implementation 
 transactional-outbox adapter) decides how the event becomes durable and reaches external
 consumers. This keeps the application layer free of delivery concerns.
 
-Distinct from `r`: that port publishes in-context `DomainEvent`s after persistence; this one publishes the versioned, serializable `t` contract to other contexts or systems.
+Distinct from `DomainEventPublisher`: that port publishes in-context `DomainEvent`s after persistence; this one publishes the versioned, serializable `IntegrationEvent` contract to other contexts or systems.
 
 Note the two-level port distinction of the outbox subsystem: this interface is an
-**application output port** (used by use cases) and therefore carries the `t`
+**application output port** (used by use cases) and therefore carries the `OutputPort`
 marker. The outbox *store* behind it is an internal port of the outbox adapter subsystem —
 no use case depends on it, so it deliberately carries no marker.
 

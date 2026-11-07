@@ -21,6 +21,8 @@ tags: [guide, section]
 
 6. **Progressive Complexity** - Start simple with flat structures, add complexity only when needed based on actual pain points.
 
+7. **Explicit over Implicit** - DCA takes the decisions from the framework, not the work. What a framework would decide out of sight — which failure rolls a transaction back, which refusal becomes which answer, when a change is stored — is written where it is decided: a refusal as a case of the result, a transaction boundary in the use case, a save through a port. The framework still does the work. What is expressed can be checked by the compiler or a rule; what happens implicitly can only be believed. Explicit code is cheap to check, and checking is what limits how fast software can change.
+
 ### Four Layers
 
 ```mermaid

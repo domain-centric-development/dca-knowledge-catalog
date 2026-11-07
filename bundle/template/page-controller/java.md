@@ -5,7 +5,7 @@ parent: /template/page-controller.md
 tags: [template, adapter, spring, use-case, security]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-005.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-011.md, /rule/hexagonal/dca-hex-012.md, /rule/naming/dca-nam-011.md, /rule/usecase/dca-use-008.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /marker/application/refusal.md, /marker/application/portexception.md, /marker/application/inputportexception.md, /rule/naming/dca-nam-005.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-011.md, /rule/hexagonal/dca-hex-012.md, /rule/naming/dca-nam-011.md, /rule/usecase/dca-use-008.md]
 applies_to: [java]
 framework: [framework-neutral]
 ---
@@ -24,7 +24,7 @@ import {basePackage}.{context}.application.{usecasename}.{Name}Result;
 import {basePackage}.{context}.application.show{name}.Show{Name}InputPort;
 import {basePackage}.{context}.application.show{name}.Show{Name}Query;
 import {basePackage}.{context}.domain.model.{Name}Id;
-import {basePackage}.{context}.domain.model.{Name}NotFound;
+import {basePackage}.{context}.application.{usecasename}.{Name}NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,7 +86,7 @@ public class {Name}PageController {
         return "redirect:/{context}/{name}s/" + id;
     }
 
-    /** Domain exception → transport: a missing aggregate is a 404 page, not a stack trace. */
+    /** Use-case exception → transport: a missing aggregate is a 404 page, not a stack trace (a context that throws). */
     @ExceptionHandler({Name}NotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFound(final {Name}NotFound ex, final Model model) {
@@ -99,6 +99,24 @@ public class {Name}PageController {
 The two `show{Name}.execute(...)` calls are the read path — a re-render after a validation failure asks the same query the GET does. An `@GetMapping` never calls a command port: a link that creates, cancels or deletes is the [state-changing GET endpoint](/pitfall/state-changing-get-endpoint.md) pitfall. Mapping and formatting is all the controller does; combining fields into a new business fact or checking an invariant here is [business logic in the adapter](/pitfall/business-logic-in-adapter.md).
 
 The notice after the redirect is a flash attribute that holds the code, never the sentence; a notice whose sentence names a number carries that number as a second flash attribute. Spring MVC binds a flash map to the redirect's target path, so only that page reads it, and reading removes it. By default it keeps the flash maps in the session of the instance that wrote them. Where the application runs as several instances behind a load balancer without sticky sessions, the GET may reach another one — see [State kept in one instance](/pitfall/state-kept-in-one-instance.md). Such a project registers a bean named `flashMapManager`, a subclass of `AbstractFlashMapManager` that keeps the flash maps in one cookie, encrypted and signed (for example AES-GCM) with a key from configuration that every instance shares. Where no cookie may be set, the code travels in the redirect address (`?notice=done`) instead: forgeable, and every redirect on the way must forward it.
+
+### In a context that returns its refusals
+
+The POST handler switches over the result instead, without a `default`, and the `@ExceptionHandler` for `{Name}NotFound` goes: the refusal is a case. The answer to each case is one method of the controller — or of a class the context's controllers share — that every handler meeting the case calls:
+
+```java
+        // 2. drive the use case through its input port; 3. answer every case
+        return switch ({usecasename}.execute(command)) {
+            case {Name}Result.{Done} done -> {
+                redirect.addFlashAttribute("noticeCode", {Name}PageNotice.DONE.code());
+                yield "redirect:/{context}/{name}s/" + id;
+            }
+            case {Name}Result.{Name}NotFound refusal -> notFound(refusal.{name}Id(), model);
+            case {Name}Result.{Rule}Violated refusal -> refused(id, {Name}PageNotice.{RULE}_VIOLATED, redirect);
+        };
+```
+
+A domain exception that still reaches the controller is unexpected — the use case catches the ones it can raise — and goes to the generic error page, never to words of its own.
 
 ## `{Name}PageNotice.java` — the codes a redirect may carry (web adapter)
 
@@ -141,6 +159,8 @@ public enum {Name}PageNotice {
 One value per notice the pages of this controller show, each with its code and its text — here a message key the translations resolve. A code names *which* notice, never data, and an unknown or expired one is ignored rather than rendered.
 
 ## `{Name}Form.java` — form record (web adapter)
+
+One form per command, named after it: `{Name}Command` → `{Name}Form` (see [the form template](/template/page-form.md)).
 
 ```java
 package {basePackage}.{context}.adapter.incoming.web;

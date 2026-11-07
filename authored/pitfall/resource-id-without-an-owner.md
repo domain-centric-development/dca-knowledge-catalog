@@ -4,12 +4,14 @@ title: "Resource id without an owner: a command that says which, never whose"
 tags: [pitfall, application, security, adapter, use-case]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/usecase.md, /marker/port-out/repository.md]
+evidence: [/marker/port-in/usecase.md, /marker/port-out/repository.md, /marker/tactical/owned.md, /rule/tactical/dca-tac-026.md, /decision/ownership-as-a-marker.md]
 ---
 
 A command or query that identifies a resource belonging to somebody — `CheckoutCartCommand(cartId)`, `GetOrderQuery(orderId)`, `DownloadInvoiceQuery(invoiceId)` — and says nothing about on whose behalf it runs. The id reaches the use case straight from the outside: a path segment, a hidden form field, a request parameter. The use case loads the aggregate by that id and acts on it.
 
 The ownership check, if it exists at all, sits in one incoming adapter, which reads the aggregate first and compares.
+
+OWASP Top 10: **A01 Broken Access Control** (insecure direct object reference).
 
 ## Why it is wrong
 
@@ -33,10 +35,11 @@ Put the caller into the command, next to the id, and let the use case ask a **sc
 - `GetCartByIdQuery(cartId, customerId)`, `CheckoutCartCommand(cartId, customerId)`.
 - A repository method that cannot answer wrongly — `findByIdForCustomer(cartId, customerId)` beside the plain `findById`. A relational adapter expresses it as a single `WHERE id = ? AND customer_id = ?`; "not there" and "not yours" become the same answer, which is exactly what a caller should be told.
 - Keep the unscoped `findById` for the paths that genuinely act on nobody's behalf, and say so where it is used.
+- Mark the aggregate `Owned<OwnerId>`: `DCA-TAC-026` (experimental) then holds its repository to the scoped lookup — see [Ownership as a marker](/decision/ownership-as-a-marker.md).
 
 **An Open Host Service inherits the duty.** If another context may fetch the resource by id, make it name the party it is acting for; otherwise the rule holds inside the owning context and evaporates at the boundary, and the consuming context re-implements it — or forgets to.
 
-**A use case with no caller is fine.** An event consumer reacting to the system's own event acts on nobody's behalf, at least once, with no identity to check. Leave it unscoped and write down why, or the next reader will "fix" it.
+**A use case with no caller still loads through the owner.** An event consumer reacting to the system's own event acts on nobody's behalf, at least once, with no identity to check — but an event that asks for an effect on somebody's aggregate carries whose it is. Put the owner into the event's contract and load through it. Only a path that holds no owner to name stays unscoped; write down why, or the next reader will "fix" it.
 
 **Render the refusal at the edge.** The use case answers "nothing here for you"; the adapter decides whether that is a `404` or a `403` — and for a resource the caller does not own it is a `404`, because a `403` confirms the id exists.
 
@@ -45,4 +48,5 @@ Put the caller into the command, next to the id, and let the use case ask a **sc
 ## Anchors
 
 - Markers: [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md) · [Repository&lt;T, ID&gt;](/marker/port-out/repository.md)
-- Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
+- Rule: [The repository of an owned aggregate declares a lookup by the aggregate's id and the owner's id](/rule/tactical/dca-tac-026.md) · Marker: [Owned&lt;OWNER&gt;](/marker/tactical/owned.md)
+- Decisions: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md) · [Ownership as a marker](/decision/ownership-as-a-marker.md)

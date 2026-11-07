@@ -41,6 +41,7 @@ Add one application-layer use case (a single intention: place an order, add an i
 - Guide: [Layer rules](/guide/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/elements.md)
 - If the use case must notify another context: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)
 - Shaping the answer: [Result shape and assembly](/decision/result-shape-and-assembly.md)
+- If the operation can be refused: throw its refusals or return them as cases, the way the context does — [Return expected refusals as a sealed result](/recipe/return-expected-refusals-as-a-sealed-result.md) · [Domain exception skeleton](/template/domain-exception.md)
 - If the flat list has grown long: [Group use cases into features or split the bounded context](/decision/group-use-cases-vs-split-context.md) — migrate the whole context in one move, never one use case at a time
 - Pitfall: [The god port](/pitfall/god-port.md) — one InputPort per use case, never one fat interface for many
 - Pitfalls: [Remote call inside a transaction](/pitfall/remote-call-inside-a-transaction.md) · [Publishing domain events without a transaction](/pitfall/publishing-domain-events-without-a-transaction.md) · [Clearing domain events before dispatch](/pitfall/clearing-domain-events-before-dispatch.md)

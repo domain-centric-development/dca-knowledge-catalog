@@ -5,7 +5,7 @@ parent: /template/use-case.md
 tags: [template, application, use-case]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /guide/rules.md, /guide/elements.md]
+evidence: [/rule/usecase/dca-use-009.md, /marker/port-in/usecase.md, /marker/port-in/inputport.md, /marker/application/refusal.md, /marker/application/usecaseexception.md, /rule/errors/dca-err-008.md, /guide/rules.md, /guide/elements.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -101,6 +101,69 @@ remote-capable port, drop the annotation, do the remote reads first and wrap ste
 blocks' `application` package — it is not an output port). See
 [Declarative or explicit transaction boundary](/decision/declarative-vs-explicit-transaction-boundary.md).
 
+## A use case that can be refused — two variants
+
+The context decides once which one all its use cases take.
+
+**Thrown.** `{Name}Result` stays the plain record above. The use case throws its own refusals as `UseCaseException` subtypes and lets the model's pass to the context's exception handler:
+
+```java
+@Override
+public {Name}Result execute({Name}Command input) {
+    {Aggregate} aggregate = repository.findById(input.id())
+            .orElseThrow(() -> new {Aggregate}NotFound(input.id()));      // refused before anything is written
+    aggregate.{behaviour}(input.amount());                                // may throw {Rule}Violated — passes through
+    repository.save(aggregate);
+    eventPublisher.publishAndClearEvents(aggregate);
+    return {Name}Result.from(aggregate);
+}
+```
+
+**Returned.** `{Name}Result` is sealed, each refusal case a nested record implementing `Refusal`:
+
+```java
+package {basePackage}.{context}.application.{usecasename};
+
+import dev.domaincentric.dca.buildingblocks.application.Refusal;
+
+public sealed interface {Name}Result
+        permits {Name}Result.{Done}, {Name}Result.{Aggregate}NotFound, {Name}Result.{Rule}Violated {
+
+    record {Done}({Aggregate}Id id) implements {Name}Result {}
+
+    record {Aggregate}NotFound({Aggregate}Id id) implements {Name}Result, Refusal {}
+
+    record {Rule}Violated({Aggregate}Id id, int limit, int requested) implements {Name}Result, Refusal {}
+}
+```
+
+```java
+@Override
+public {Name}Result execute({Name}Command input) {
+    Optional<{Aggregate}> found = repository.findById(input.id());
+    if (found.isEmpty()) {
+        return new {Aggregate}NotFound(input.id());                      // refused before anything is written
+    }
+    {Aggregate} aggregate = found.get();
+    try {
+        aggregate.{behaviour}(input.amount());
+    } catch ({Rule}ViolatedException violated) {                         // the concrete type, never DomainException
+        return new {Rule}Violated(violated.id(), violated.limit(), violated.requested());
+    }
+    repository.save(aggregate);
+    eventPublisher.publishAndClearEvents(aggregate);
+    return new {Done}(aggregate.id());
+}
+```
+
+A foreign system behind an output port — an external system on the context map — that refuses, times out or cannot
+be reached is a refusal too: the port declares `{System}UnavailableException extends OutputPortException`, the adapter
+throws it, and the use case catches it and throws a use-case exception of its own (thrown) or returns its
+`{System}Unavailable` case (returned). A failure of the own database or broker is not caught here; it
+stays an exception.
+
+In both, every refusal comes before `save`. The transaction boundary — `@Transactional` through its interceptor, or `transactionBoundary.inTransaction` — rolls back when the work returns a `Refusal`, as it does when it throws, so a refusal that slipped behind a write still undoes it. The package of `Refusal` follows the building blocks' release. See [Return expected refusals as a sealed result](/recipe/return-expected-refusals-as-a-sealed-result.md).
+
 ## Read-only variant (`{Name}Query`)
 
 A query use case answers a question and changes nothing. It carries no `@Transactional` and no
@@ -154,6 +217,16 @@ public class {Name}UseCase implements {Name}InputPort {
 
 The `{Name}Result` record is the same as above. If the projection outgrows the aggregate, read from a
 read model instead ([Add a read model](/recipe/add-a-read-model.md)).
+
+**Absence: empty or refused.** A query that asks whether there is one — "which one, if any" — answers *none* with
+an empty value in its plain result, in both styles: no refusal case, no exception.
+
+```java
+public record {Name}Result(Optional<{Aggregate}Summary> current) {}       // none is a normal answer
+```
+
+A query that names one thing by its id — `Get{Aggregate}ById` — is refused when it does not exist:
+`{Aggregate}NotFound`, thrown or returned as the context does it, exactly as in the command above.
 
 > **Bulk command without `save`.** A command that calls a set-level method on the port — `repository.deleteAll()`,
 > `repository.archiveAllBefore(cutoff)` — loads and saves no aggregate and registers no domain event, so it needs

@@ -12,11 +12,11 @@ resource: dca-java/dca-building-blocks/src/main/java/dev/domaincentric/dca/build
 tags: [port-in, marker]
 ---
 
-The most common kind of `t`: one operation that takes a command or query and
+The most common kind of `InputPort`: one operation that takes a command or query and
 answers with a result - a Use Case in Clean Architecture terms.
 
 Every use case is an input port; not every input port is a use case. An input port that only
-receives an incoming event or serves operations without a result model extends `t`
+receives an incoming event or serves operations without a result model extends `InputPort`
 directly. A use case is called by primary/driving adapters (e.g., REST controllers, event
 consumers, CLI handlers).
 
@@ -68,6 +68,6 @@ and needs no method of its own.
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
 - [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
-- [Operation boundaries and declared contracts](/guide/rules/operation-boundaries-and-declared-contracts.md)
+- [TRANSACTION RULES](/guide/rules/transaction-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
 - [The use case once, each adapter its translation](/guide/testing-levels/the-use-case-once-each-adapter-its-translation.md)

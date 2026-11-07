@@ -5,7 +5,7 @@ parent: /template/rest-resource.md
 tags: [template, adapter, rest]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/quick-reference/port-placement.md]
+evidence: [/marker/port-in/inputport.md, /marker/port-in/usecase.md, /marker/application/refusal.md, /marker/application/portexception.md, /marker/application/inputportexception.md, /rule/naming/dca-nam-006.md, /rule/hexagonal/dca-hex-003.md, /rule/hexagonal/dca-hex-004.md, /rule/naming/dca-nam-007.md, /guide/quick-reference/port-placement.md]
 applies_to: [java]
 framework: [spring]
 ---
@@ -54,6 +54,46 @@ public class {Name}Resource {
     }
 }
 ```
+
+### Answering refusals — two variants
+
+**Thrown.** The resource stays as above; the context's one `@RestControllerAdvice` maps each refusal type to its problem document:
+
+```java
+@RestControllerAdvice(basePackages = "{basePackage}.{context}.adapter.incoming.api")
+public class {Context}ApiExceptionHandler {
+
+    @ExceptionHandler({Name}NotFound.class)
+    public ProblemDetail notFound(final {Name}NotFound exception) {
+        return {Context}Problems.notFound(exception.{name}Id());
+    }
+
+    @ExceptionHandler({Rule}Violated.class)
+    public ProblemDetail violated(final {Rule}Violated exception) {
+        return {Context}Problems.violated(exception.{name}Id(), exception.requested(), exception.available());
+    }
+}
+```
+
+**Returned.** The resource switches over the sealed result, without a `default`; the answers live in one class of the context's adapter, so every call site answers a case the same way:
+
+```java
+    @PostMapping
+    public ResponseEntity<?> {usecasename}(@RequestBody final {Name}Request request) {
+        final {Name}Command command = new {Name}Command(/* request.field(), ... */);
+        return switch ({usecasename}InputPort.execute(command)) {
+            case {Name}Result.{Done} done ->
+                    ResponseEntity.status(HttpStatus.CREATED).body({Name}Response.from(done));
+            case {Name}Result.{Name}NotFound refusal ->
+                    ResponseEntity.of({Context}Problems.notFound(refusal.{name}Id())).build();
+            case {Name}Result.{Rule}Violated refusal ->
+                    ResponseEntity.of({Context}Problems.violated(refusal.{name}Id(), refusal.requested(),
+                            refusal.available())).build();
+        };
+    }
+```
+
+The handler stays in both for malformed input and the unexpected — a domain exception the use case does not name included, answered generically. Neither variant has a handler for `PortException` or `InputPortException`.
 
 ## `{Name}Request.java` / `{Name}Response.java` — edge DTOs
 

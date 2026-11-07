@@ -1,0 +1,3 @@
+# page-form
+
+- [Form skeleton (the form object of a page adapter, named after its command) — Java](java.md) — The Java code of Form skeleton (the form object of a page adapter, named after its command). The prose, the evidence ...

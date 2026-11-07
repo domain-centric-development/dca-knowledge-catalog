@@ -4,7 +4,7 @@ title: "Where authorization and validation live: adapter, use case, or aggregate
 tags: [decision, security, layered, adapter, application, domain]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-out/outputport.md, /marker/port-in/usecase.md, /rule/onion/dca-oni-003.md, /rule/layered/dca-lay-002.md, /guide/jwt-implementation-guide/7-cookie-requirements.md]
+evidence: [/marker/port-out/outputport.md, /marker/port-in/usecase.md, /rule/onion/dca-oni-003.md, /rule/layered/dca-lay-002.md, /rule/hexagonal/dca-hex-020.md, /rule/tactical/dca-tac-026.md, /guide/jwt-implementation-guide/7-cookie-requirements.md]
 ---
 
 You have a check to place that guards an operation, and "check" hides three different concerns that are routinely confused: **structural validation** (is the input well-formed?), **authorization** (may *this caller* perform this action?), and **business invariants** (is this action legal for the current state?). Each belongs on a different layer, and collapsing them is how you get controllers that enforce business rules, aggregates that know about roles, and duplicated guards that disagree. This decision sits alongside [Where does the logic live](/decision/where-does-the-logic-live.md) — that one places *behaviour*; this one places *guards*.
@@ -26,13 +26,13 @@ Do **not** use "is it business or is it technical" as the discriminator. It spli
 Split authorization once more, by whether the check needs the **resource**:
 
 - **It needs the aggregate** — is this cart the caller's, is this order theirs, may they see this invoice? Then it belongs to the *operation* and lives in the use case. It can never be a property of one exposure: no caller may act on a stranger's cart, through any adapter, ever. So the caller becomes part of the command (`GetCartByIdQuery(cartId, customerId)`), and the repository is asked a scoped question (`findByIdForCustomer`) rather than an open one plus an `if`.
-- **It reads only the caller's claims** — does this token carry an operator role? Then it is a coarse gate on the *exposure*, and the incoming adapter is a legitimate home for it. The same use case may be perfectly reachable from a batch job or an operator console with no end user at all, and forcing an identity port into it to satisfy a rule about one HTTP route would make it unusable there.
+- **It reads only the caller's claims** — does this token carry an operator role? Then it is a coarse gate on the *exposure*, and the incoming adapter is a legitimate home for it. The same use case may be perfectly reachable from a batch job or an operator console with no end user at all, and forcing an identity port into it to satisfy a rule about one HTTP route would make it unusable there. Say it on the route, in the framework's own declarative form — an authorization annotation or attribute, or an extractor or a route layer where the stack has no annotations — never as a role branch in the handler; `DCA-HEX-020` lists an adapter that asks for roles in its own code.
 
 **Challenged or forbidden.** A refusal also states something about the caller, so state the true one: `401` for a caller who has not authenticated, naming the scheme they should use, and `403` for one who authenticated and still lacks the role. The split only survives if an anonymous visitor is *not* authenticated — see [Authenticated is not authorized](/pitfall/authenticated-is-not-authorized.md) — and it is easiest to get right by declaring the claims-only gate as the framework's annotation instead of branching on the role inside the handler.
 
 **The decision belongs to the use case; its rendering belongs to the adapter.** Whether a refusal appears as `403` or as `404` is a protocol question — and it matters, because a `403` on a resource the caller does not own *confirms that the id exists*. The use case answers "nothing here for you"; the adapter chooses how to say it.
 
-**A use case with no caller is not under-specified.** An event consumer completing a cart after a confirmed checkout acts on nobody's behalf, at least once, with no identity to check. Leave it unscoped and say so — otherwise the next reader "fixes" it.
+**A use case with no caller is not under-specified.** An event consumer reacting to the system's own event acts on nobody's behalf, at least once, with no identity to check — say so, otherwise the next reader "fixes" it. It still loads an aggregate that belongs to someone through the owner the event names: see [Ownership as a marker](/decision/ownership-as-a-marker.md).
 
 ## Options
 
@@ -59,7 +59,7 @@ Split authorization once more, by whether the check needs the **resource**:
 ## Anchors
 
 - Markers: [OutputPort](/marker/port-out/outputport.md) · [UseCase&lt;INPUT, OUTPUT&gt;](/marker/port-in/usecase.md)
-- Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/dca-oni-003.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/dca-lay-002.md)
+- Rules: [Domain Models must not have Spring/JPA annotations](/rule/onion/dca-oni-003.md) · [Domain must not have dependencies on Infrastructure](/rule/layered/dca-lay-002.md) · [Diagnostic: incoming adapters that read the caller's roles in their own code](/rule/hexagonal/dca-hex-020.md) · [The repository of an owned aggregate declares a lookup by the aggregate's id and the owner's id](/rule/tactical/dca-tac-026.md)
 - Guide: [Cookie requirements](/guide/jwt-implementation-guide/7-cookie-requirements.md)
 - Recipe: [Add an identity port](/recipe/add-an-identity-port.md) — the port, the command field, the scoped repository question
 - Related decision: [Where does the logic live](/decision/where-does-the-logic-live.md)

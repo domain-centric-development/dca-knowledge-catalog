@@ -26,8 +26,8 @@ Architecture terms, output ports sit on the "right side" of the hexagon.
 
 **Common Output Port Types:**
 
-- `y` - Aggregate persistence
-- `r` - Event publication
+- `Repository` - Aggregate persistence
+- `DomainEventPublisher` - Event publication
 - External service ports - Integration with external systems
 
 **Key Characteristics:**
@@ -60,5 +60,5 @@ interface), and the infrastructure provides concrete implementations.
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
-- [Operation boundaries and declared contracts](/guide/rules/operation-boundaries-and-declared-contracts.md)
+- [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

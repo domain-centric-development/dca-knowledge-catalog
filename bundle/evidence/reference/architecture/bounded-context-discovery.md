@@ -11,7 +11,7 @@ evidence_for: "/reference/architecture.md#bounded-context-discovery"
 
 #### `Map<String, BoundedContext> boundedContexts()`
 
-All packages whose `package-info` carries `t`, keyed by package name,
+All packages whose `package-info` carries `BoundedContext`, keyed by package name,
 in encounter order. Discovery is by annotation, so a context may sit at any depth below the
 base package — see `rootContextPackage(String)`.
 
@@ -29,7 +29,7 @@ Bounded-context patterns without the given context package.
 
 #### `Optional<String> sharedKernelPackage()`
 
-The package annotated with `l` — or with the annotation the `sharedKernel` marker role names — at whatever depth below the base package it sits. Where no
+The package annotated with `SharedKernel` — or with the annotation the `sharedKernel` marker role names — at whatever depth below the base package it sits. Where no
 package carries it, the conventional package `.` is the
 shared kernel when it holds classes: a project that has not declared its kernel yet still gets
 the kernel's exemption from module isolation.
@@ -38,7 +38,7 @@ the kernel's exemption from module isolation.
 
 The root package of the bounded context (or shared kernel) that a fully qualified package
 belongs to — the nearest ancestor at or below the base package whose `package-info`
-carries `t` or `l`.
+carries `BoundedContext` or `SharedKernel`.
 
 Because the declaration is the annotation and not the position in the tree, a context may
 sit at any depth: `com.acme.shop.cart.domain.model → com.acme.shop.cart` when `cart` is annotated, and `com.acme.shop.sales.order.domain.model → com.acme.shop.sales.order` when `sales.order` is. A single-context application may

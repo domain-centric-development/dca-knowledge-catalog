@@ -34,7 +34,7 @@ If the concept has a lifecycle and identity that must be tracked over time, it i
 ## Anchors
 
 - Template: [Value object skeleton](/template/value-object.md)
-- Decision: [Entity vs. value object](/decision/entity-vs-value-object.md)
+- Decision: [Entity vs. value object](/decision/entity-vs-value-object.md) · [A yes/no fact or a state](/decision/a-yes-no-fact-or-a-state.md) — a fact with two values stays a `boolean` field of its aggregate
 - Marker: [Value](/marker/tactical/value.md)
 - Guide: [Layer elements](/guide/elements.md) · [Shared kernel](/guide/spring-modulith/shared-kernel-in-spring-modulith.md)
 - Used inside an [aggregate](/recipe/add-an-aggregate.md)

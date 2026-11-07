@@ -4,7 +4,7 @@ title: Add an anti-corruption layer
 tags: [recipe, strategic, anti-corruption-layer]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /guide/integration-patterns.md, /guide/package-structure.md]
+evidence: [/rule/strategic/dca-str-006.md, /rule/strategic/dca-str-010.md, /rule/hexagonal/dca-hex-005.md, /marker/tactical/domaingateway.md, /marker/strategic/openhostservice.md, /marker/application/outputportexception.md, /decision/failure-channel-exception-or-result.md, /guide/integration-patterns.md, /guide/package-structure.md]
 ---
 
 Protect your domain from a foreign model — another bounded context or an external system. An anti-corruption layer (ACL) is a translation boundary: your context speaks its own ubiquitous language, and the ACL adapter converts to and from the foreign contract so the foreign model never leaks inward.
@@ -18,6 +18,7 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 1. **Consume through the provider's contract** — for a peer context, go through its Open Host Service (`@OpenHostService`), never its internals. For an external system, treat its API/wire format as the foreign contract.
 2. **Define an output port** in your `application/shared/` in *your* terms (a `DomainGateway`-style interface); your use cases depend on this, not on the foreign types.
 3. **Implement the ACL in an outgoing adapter** in an `acl` package under `adapter/outgoing/` — it calls the foreign contract and maps the foreign model to your domain types (and your requests to theirs). All translation lives here.
+   For an external system, the failure is part of the translation: that it refuses, times out or cannot be reached is expected behaviour of the integration. The port declares it as an `OutputPortException` subtype in your terms (`{System}UnavailableException`), the adapter catches the client's own failure and throws the declared one, and the use case answers it as a refusal — see [Failure channel](/decision/failure-channel-exception-or-result.md). A failure of your own database or broker is not translated this way; it stays an exception.
 4. **For event-driven integration**, consume the other context's integration event in `adapter/incoming/messaging/`, translate it through the ACL, then invoke your own use case ([Publish a cross-context event](/recipe/publish-a-cross-context-event.md)).
 5. **Declare the relationship** — a new external system gets its declaration on the context: `@ExternalUpstream` on
    `package-info.java` (C#: `[ExternalUpstream]` on the context's marker class) with the translation, the interaction and
@@ -36,7 +37,7 @@ An ACL is the answer when the foreign model differs from yours and you must not 
 
 ## Anchors
 
-- Decision: [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md)
+- Decision: [Shared kernel vs. duplication](/decision/shared-kernel-vs-duplication.md) · [Failure channel: exception or a case of the use case's result](/decision/failure-channel-exception-or-result.md)
 - Markers: [DomainGateway](/marker/tactical/domaingateway.md) · [@OpenHostService](/marker/strategic/openhostservice.md)
 - Guide: [Integration patterns](/guide/integration-patterns.md) · [Java package structure](/guide/package-structure.md) · [Port placement](/guide/quick-reference/port-placement.md)
 - To emit events across the boundary from the other side: [Publish a cross-context event](/recipe/publish-a-cross-context-event.md)

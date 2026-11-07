@@ -26,7 +26,7 @@ input ports sit on the "left side" of the hexagon.
 
 **Common Input Port Types:**
 
-- `e` - Command/Query pattern with INPUT and OUTPUT types
+- `UseCase` - Command/Query pattern with INPUT and OUTPUT types
 - Event Handlers - Process incoming events from other systems
 
 **Key Characteristics:**
@@ -52,9 +52,11 @@ InputPort (marker)
 
 - [Core Rule Categories](/guide/archunit-governance/core-rule-categories.md)
 - [Application Layer (Use Cases / Application Business Rules)](/guide/elements/application-layer-use-cases-application-business-rules.md)
+- [Building blocks, as the library defines them](/guide/elements/building-blocks-as-the-library-defines-them.md)
 - [Reacting to an event](/guide/integration-patterns/reacting-to-an-event.md)
 - [Structure Evolution Example: From Startup to Maturity](/guide/package-structure/structure-evolution-example-from-startup-to-maturity.md)
 - [APPLICATION LAYER RULES](/guide/rules/application-layer-rules.md)
+- [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
 - [Operation boundaries and declared contracts](/guide/rules/operation-boundaries-and-declared-contracts.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)
 - [The use case once, each adapter its translation](/guide/testing-levels/the-use-case-once-each-adapter-its-translation.md)

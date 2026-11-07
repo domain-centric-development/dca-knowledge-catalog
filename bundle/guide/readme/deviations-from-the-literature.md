@@ -31,7 +31,9 @@ The restriction is deliberately asymmetric. An incoming adapter reads and format
 
 ### A Failure Type per Layer
 
-The literature has no settled answer here. Evans and Vernon discuss invariant enforcement without naming an exception model, and Clean Architecture leaves error transport to the interface adapters. DCA fixes three layers: `DomainException` for a broken business rule of the model, `UseCaseException` for a request the use case cannot serve, and translation to a protocol answer in the incoming adapter. Neither base type carries a code or a status — which status a failure earns is the adapter's decision, and the same failure may earn different ones at different edges.
+The literature has no settled answer here. Evans and Vernon discuss invariant enforcement without naming an exception model, and Clean Architecture leaves error transport to the interface adapters. DCA fixes three layers: `DomainException` for a broken business rule of the model, a `PortException` for a failure a port's contract declares — `UseCaseException` for one a use case throws, `OutputPortException` for one an output port's adapter throws and the use case catches — and translation to a protocol answer in the incoming adapter. An expected refusal the caller answers travels one of two equal ways, chosen once per bounded context: thrown as an exception, or returned as a case of a sealed use-case result. Neither base type nor any case carries a code or a status — which status a failure earns is the adapter's decision, and the same failure may earn different ones at different edges.
+
+The returned form follows Wlaschin's own limit on railway-oriented programming: a result for what the domain models and a caller handles, exceptions for what nobody handles where it happens. DCA does not rank it above the thrown form; a context picks one and keeps it. In both, the model keeps throwing, because a value object's constructor can only throw and an aggregate's behaviour method would otherwise pass an outcome through every caller; a context that returns catches the model's refusal once in the use case and returns it as a case. A returned refusal rolls the transaction back like a thrown one: its case carries the `Refusal` marker, and the transaction boundary rolls back on it.
 
 Argument guards keep the platform's own exceptions. A null check or a range check on a value only code passes is not a domain statement, and wrapping it in a domain type would make the vocabulary say less, not more. A value built from input is the other case: its bounds are the rule the product names, and the value object refuses a missing value with that rule's failure — checked there once, not again at the adapter.
 
@@ -43,6 +45,8 @@ This is DCA's own, enforced by `DCA-ERR-001` … `DCA-ERR-006`. The word is `Use
 
 ## Related mentions (heuristic)
 
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)

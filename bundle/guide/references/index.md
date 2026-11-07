@@ -9,7 +9,7 @@
 - [Influential Blogs & Communities](influential-blogs-communities.md) — Influential Blogs & Communities
 - [Microservices & Distributed Systems](microservices-distributed-systems.md) — Microservices & Distributed Systems
 - [Onion Architecture](onion-architecture.md) — The `onion` rule set (`DCA-ONI-*`) is named after this pattern. DCA keeps its central claim — all
-- [Related Patterns & Practices](related-patterns-practices.md) — Related Patterns & Practices
+- [Related Patterns & Practices](related-patterns-practices.md) — caller handles, exceptions for what nobody handles where it happens
 - [Self-Contained Systems (SCS)](self-contained-systems-scs.md) — Self-Contained Systems (SCS)
 - [Software Architecture Patterns](software-architecture-patterns.md) — Software Architecture Patterns
 - [Spring Modulith](spring-modulith.md) — Spring Modulith

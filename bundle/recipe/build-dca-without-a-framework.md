@@ -20,13 +20,16 @@ Python package as its worked case; the steps hold for any language.
    finding, with one exception per recorded reason (a version stamp other tools read by path).
 2. **Write the building blocks once, by the names the libraries use.** `Value`, `Id`, `Entity`, `AggregateRoot`,
    `DomainEvent`, `DomainService`, `DomainException`, `UseCase`, `OutputPort`, `Repository`, `Store`,
-   `UseCaseException`. In Python:
+   `PortException`, `InputPortException`, `UseCaseException`, `OutputPortException`, `Refusal`. In Python:
    - a value is a frozen dataclass by its base — `Value.__init_subclass__` applies `dataclasses.dataclass(frozen=True)`
      and `typing.dataclass_transform(frozen_default=True)` tells the type checker; a subclass declares its fields and
      carries no decorator of its own, the closest form to Java's `record … implements Value`;
    - a port is a `typing.Protocol` (structural) or an `abc.ABC` (nominal); an adapter satisfies a protocol by shape.
-3. **Keep the domain free of bare primitives where they carry meaning.** A string with a format is a value, a flag
-   is an enum, a moment is a value — the libraries' domain rules, held by review or by the project's own check.
+3. **Keep the domain free of bare primitives where they carry meaning.** A string with a format is a value, a moment
+   is a value, a state with three or more values is an enum. A single yes/no fact stays a `bool` field the aggregate
+   changes by its operation and answers by a predicate; a `bool` parameter is a flag argument and is not
+   ([A yes/no fact or a state](/decision/a-yes-no-fact-or-a-state.md)) — the libraries' domain rules, held by review
+   or by the project's own check.
 4. **Write the composition root by hand — Pure DI.** One module in `infrastructure/` constructs the outgoing
    adapters, passes them to the use cases' constructors, passes the use cases to the incoming adapters, and calls the
    entry point. It holds no rule and no condition over a business value. Where a use case needs a second operation,

@@ -26,3 +26,4 @@ further language is one more file rather than a second copy of this node.
 - Recipe: [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md) · [Add a bulk operation](/recipe/add-a-bulk-operation.md)
 - Sibling template: [Aggregate root skeleton](/template/aggregate-root.md) — where `reconstitute` comes from
 - Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md) · [Ordering by timestamp](/pitfall/ordering-by-timestamp.md)
+- Decision: [Ownership as a marker](/decision/ownership-as-a-marker.md) — the repository of an owned aggregate adds a lookup by id and owner (`DCA-TAC-026`)

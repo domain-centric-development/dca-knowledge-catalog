@@ -1,0 +1,14 @@
+# dca-err-006
+
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — C# expression](c-expression.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `casesOfClosedResults`](casesofclosedresults.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `collectCases`](collectcases.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `dependsOnAssignableTo`](dependsonassignableto.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `namesAnyOf`](namesanyof.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.collect`](typeinspection-collect.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.collectInputs`](typeinspection-collectinputs.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.involvedTypes`](typeinspection-involvedtypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.outputTypes`](typeinspection-outputtypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.typeArgumentBindings`](typeinspection-typeargumentbindings.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Diagnostic: incoming adapter packages that drive a use case without translating its failures — `TypeInspection.variableKey`](typeinspection-variablekey.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

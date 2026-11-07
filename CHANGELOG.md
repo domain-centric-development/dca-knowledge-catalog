@@ -6,6 +6,30 @@ every regeneration.
 
 ## [Unreleased]
 
+- Added (WP-121): decision *Ownership as a marker* — an aggregate that belongs to someone implements `Owned<OwnerId>`
+  and is loaded through its owner (`DCA-TAC-026`, experimental); the owner changes only through an explicit operation
+  after the use case proved the right to it, a guest with a pseudonymous identity is an owner, and where the id itself
+  is the secret the aggregate is not `Owned`. *Resource id without an owner* links it and no longer leaves an event
+  consumer unscoped; *Where authorization and validation live* and *Add an identity port* say the same. The two
+  security pitfalls name their OWASP Top 10 category (A01). The aggregate-root and repository templates link the
+  decision. One marker node more (`Owned`).
+- Added (WP-121 decision 2): `DCA-HEX-020`, the diagnostic for a role read in an incoming adapter's own code, linked
+  from *Authenticated is not authorized* and *Where authorization and validation live*; the decision says the
+  claims-only gate is declared on the route in the framework's own form.
+
+- Added (WP-186): decision *A yes/no fact or a state* — a single yes/no fact of an aggregate is a `boolean` field it
+  changes by its operation and answers by a predicate; a `boolean` parameter is a flag argument; three or more
+  states, or transitions with rules, are an enum or a value; independent facts are separate fields; the glossary may
+  decide otherwise. *Build DCA without a framework* no longer says a flag is an enum; *Add an aggregate* and *Add a
+  value object* link the decision. `DCA-TAC-025` passes a `boolean` field.
+
+- Changed (WP-171): *Failure channel* and *Return expected refusals as a sealed result* separate the system's own
+  infrastructure from a foreign system. The own database or broker failing stays an exception; a foreign system — an
+  external system on the context map — that refuses, times out or cannot be reached is declared by its output port as
+  an `OutputPortException` and answered as a refusal. A "which one, if any" query answers *none* with an empty value;
+  "not found" is a refusal only where the caller names a specific thing. The domain-exception and use-case templates
+  and *Add an anti-corruption layer* say the same.
+
 - Added (WP-151): pitfall *A command decided on an earlier read* — a choice shown on one request and acted on by the
   next without the command asking the aggregate again; linked from *Where authorization and validation live*
   (discriminator 3 now says the invariant is asked again at the change) and *Remote effect before local preconditions*.

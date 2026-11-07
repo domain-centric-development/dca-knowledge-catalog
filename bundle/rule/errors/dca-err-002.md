@@ -1,11 +1,11 @@
 ---
 type: Rule
 id: DCA-ERR-002
-title: Domain and use-case exceptions reside in the layer whose failure they name
+title: Domain and port exceptions reside in the layer whose failure they name
 rule: The base type states which layer owns the failure; declaring it elsewhere puts the vocabulary of that layer outside it and lets an adapter invent failures the application never reports.
-constraint: Domain and use-case exceptions reside in the layer whose failure they name.
-selects: "Classes anywhere on the classpath under scan that are assignable to the domain-exception or the use-case-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed."
-checks: "A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of UseCaseException in <module>.application... Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes."
+constraint: Domain and port exceptions reside in the layer whose failure they name.
+selects: "Classes anywhere on the classpath under scan that are assignable to the domain-exception or the port-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed."
+checks: "A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of PortException - UseCaseException, OutputPortException and any other port failure - in <module>.application... An output port's failure is declared beside the port, even though the adapter that implements the port raises it. Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-002"
 status: enforced
 maturity: released
@@ -16,36 +16,36 @@ tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
 ---
 
-# Domain and use-case exceptions reside in the layer whose failure they name
+# Domain and port exceptions reside in the layer whose failure they name
 
 ## Selection
 
-Classes anywhere on the classpath under scan that are assignable to the domain-exception or the use-case-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed.
+Classes anywhere on the classpath under scan that are assignable to the domain-exception or the port-exception role, except the vocabulary's own code: the packages the configured role types live in are excluded, so a project's own base class is not reported as residing outside a layer it never claimed.
 
 ## Check
 
-A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of UseCaseException in <module>.application... Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes.
+A subtype of DomainException resides in <module>.domain.. of some module root, a subtype of PortException - UseCaseException, OutputPortException and any other port failure - in <module>.application... An output port's failure is declared beside the port, even though the adapter that implements the port raises it. Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes.
 
 ## .NET reading
 
-**Selection.** Types anywhere under the root namespace that are assignable to DomainException or to UseCaseException, except the two base types themselves and anything else in the building-blocks namespace.
+**Selection.** Types anywhere under the root namespace that are assignable to DomainException or to PortException, except the base types themselves and anything else in the building-blocks namespace.
 
-**Check.** A subtype of DomainException resides under <Module>.Domain of some module root, a subtype of UseCaseException under <Module>.Application. Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes.
+**Check.** A subtype of DomainException resides under <Module>.Domain of some module root, a subtype of PortException - UseCaseException, OutputPortException and any other port failure - under <Module>.Application. An output port's failure is declared beside the port, even though the adapter that implements the port raises it. Both findings are collected into one violation. Which of the two a given failure should have been is not checked here. An empty selection passes.
 
 ## Rust reading
 
 Unpublished (dca-rust); the suite implements it. **Held by** a lint or a test (source-test).
 
-**Selection.** Types that implement DomainFailure or UseCaseFailure.
+**Selection.** Types that implement DomainFailure or a port failure (UseCaseFailure, OutputPortFailure, or the classification traits PortFailure and InputPortFailure).
 
-**Check.** A DomainFailure sits in a domain crate, a UseCaseFailure in an application crate.
+**Check.** A DomainFailure sits in a domain crate, a port failure in an application crate - an output port's failure beside the port, although the adapter that implements the port returns it.
 
 ## Implementation
 
 ```java
 DcaRule.check(
         "DCA-ERR-002",
-        "Domain and use-case exceptions reside in the layer whose failure they name",
+        "Domain and port exceptions reside in the layer whose failure they name",
         "The base type states which layer owns the failure; declaring it elsewhere puts the"
             + " vocabulary of that layer outside it and lets an adapter invent failures the"
             + " application never reports",
@@ -65,24 +65,27 @@ DcaRule.check(
               "a domain exception belongs to the domain layer");
           collected.addAll(
               classes()
-                  .that(arch.layout().markers().is("useCaseException"))
+                  .that(arch.layout().markers().is("portException"))
                   .and()
                   .resideOutsideOfPackages(
                       arch.layout().markers().declaringPackagePatterns().toArray(String[]::new))
                   .should(LayerConditions.be(arch.inApplication()))
                   .allowEmptyShould(true),
               arch.classes(),
-              "a use-case exception belongs to the application layer");
+              "a port exception - use-case or output-port - belongs to the application layer");
           collected.throwIfAny();
         })
     .selecting(
         "Classes anywhere on the classpath under scan that are assignable to the domain-exception"
-            + " or the use-case-exception role, except the vocabulary's own code: the packages the"
+            + " or the port-exception role, except the vocabulary's own code: the packages the"
             + " configured role types live in are excluded, so a project's own base class is not"
             + " reported as residing outside a layer it never claimed.")
     .checking(
         "A subtype of DomainException resides in <module>.domain.. of some module root, a"
-            + " subtype of UseCaseException in <module>.application... Both findings are"
+            + " subtype of PortException - UseCaseException, OutputPortException and any other"
+            + " port failure - in <module>.application... An output port's failure is declared"
+            + " beside the port, even though the adapter that implements the port raises it."
+            + " Both findings are"
             + " collected into one violation. Which of the two a given failure should have been"
             + " is not checked here. An empty selection passes.")
 ```
@@ -176,7 +179,7 @@ boolean isEmpty() {
 ```csharp
 DcaRule.Check(
     "DCA-ERR-002",
-    "Domain and use-case exceptions reside in the layer whose failure they name",
+    "Domain and port exceptions reside in the layer whose failure they name",
     "The base type states which layer owns the failure; declaring it elsewhere puts the vocabulary"
         + " of that layer outside it and lets an adapter invent failures the application never"
         + " reports",
@@ -190,9 +193,9 @@ DcaRule.Check(
                 violations.Add($"{type.FullName} is a domain exception outside the domain layer");
             }
 
-            if (arch.Layout.Markers.Is(nameof(DcaMarkers.UseCaseException), type) && !arch.InApplication(type))
+            if (arch.Layout.Markers.Is(nameof(DcaMarkers.PortException), type) && !arch.InApplication(type))
             {
-                violations.Add($"{type.FullName} is a use-case exception outside the application layer");
+                violations.Add($"{type.FullName} is a port exception - use-case or output-port - outside the application layer");
             }
         }
 
@@ -200,11 +203,13 @@ DcaRule.Check(
     })
     .Selecting(
         "Types anywhere under the root namespace that are assignable to DomainException or to "
-        + "UseCaseException, except the two base types themselves and anything else in the "
+        + "PortException, except the base types themselves and anything else in the "
         + "building-blocks namespace.")
     .Checking(
         "A subtype of DomainException resides under <Module>.Domain of some module root, a subtype "
-        + "of UseCaseException under <Module>.Application. Both findings are collected into one "
+        + "of PortException - UseCaseException, OutputPortException and any other port failure - under "
+        + "<Module>.Application. An output port's failure is declared beside the port, even though the "
+        + "adapter that implements the port raises it. Both findings are collected into one "
         + "violation. Which of the two a given failure should have been is not checked here. An "
         + "empty selection passes.")
 ```
@@ -212,6 +217,8 @@ DcaRule.Check(
 ## Related mentions (heuristic)
 
 - [DomainException](/marker/tactical/domainexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 
 ## Configured by

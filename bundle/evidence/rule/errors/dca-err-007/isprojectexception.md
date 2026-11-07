@@ -12,7 +12,7 @@ evidence_for: "/rule/errors/dca-err-007.md#isprojectexception"
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
   private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
-    return (markers.is("domainException").test(type) || markers.is("useCaseException").test(type))
+    return (markers.is("domainException").test(type) || markers.is("portException").test(type))
         && !markers.declaresTypesIn(type.getPackageName());
   }
 ```

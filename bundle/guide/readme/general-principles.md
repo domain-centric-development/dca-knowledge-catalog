@@ -25,3 +25,4 @@ tags: [guide, section]
 - **Protection** - Protect domain from external changes
 - **Delay Decisions** - Defer infrastructure choices
 - **Business Focus** - Code reflects business, not technology
+- **Explicit over Implicit** - Decisions in the code, mechanics in the framework

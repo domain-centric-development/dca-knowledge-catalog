@@ -12,6 +12,7 @@ tags: [guide, section]
 - Domain tests require no frameworks
 - Use cases tested with port mocks
 - Use cases tested in isolation
+- A refusal test asserts the refusal with its values — the case the use case returns, or the exception it throws
 - Adapters tested with integration tests
 - Full system tested with acceptance tests
 - Test pyramid: many unit, fewer integration, few E2E

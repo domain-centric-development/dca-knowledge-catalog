@@ -58,6 +58,8 @@ APPLICATION LAYER
 - **Commands**: `*Command` (e.g., `CreateOrderCommand`)
 - **Queries**: `*Query` (e.g., `OrderQuery`)
 - **Results**: `*Result` (e.g., `CreateOrderResult`) — top level only; part records nested in the result are named by content (`CartItemSummary`, `LineItemData`, `ProfileView`), never `*Result`
+- **Failures**: a domain exception extends `DomainException`, a use-case exception `UseCaseException`, a failure an output port declares `OutputPortException` — never `PortException` or `InputPortException` directly; the name is the broken rule, the suffix the project's (`Exception` by default)
+- **Result cases** (a context that returns its refusals): nested in a sealed `*Result` — the success case named for what happened (`Created`, `Cancelled`), each refusal named after the refusal (`CustomerNotActive`, `OrderNotFound`) and marked `Refusal`; no `Exception` suffix and no `*Exception` file for an expected refusal. A context that throws names the same refusal `CustomerNotActiveException`
 - **Assemblers**: `*Assembler` when result assembly outgrows a static factory or is shared by several use cases (e.g., `ProductArticleAssembler` in `application/shared`) — never `*Mapper`, `*Converter` or `*Helper` in the application layer
 - **Adapters**: `*Adapter` or specific suffixes (e.g., `InMemoryOrderRepository`, `OrderPageController`, `OrderMcpToolProvider`)
 - **Host-language spelling**: marker and port names follow the host language's convention — Java `AggregateRoot`, `UseCase<I, O>`, `OrderRepository`; C# `IAggregateRoot`, `IUseCase<TIn, TOut>`, `IOrderRepository` with `ExecuteAsync`/`FindByIdAsync`. The roles, folders and rule ids are the same; see [Language Mappings](/guide/language-mappings.md)
@@ -102,8 +104,13 @@ adapter, incoming or outgoing: a provider response is an outgoing adapter model.
 
 ## Related mentions (heuristic)
 
+- [InputPortException](/marker/application/inputportexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
+- [UseCaseException](/marker/application/usecaseexception.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [Repository<T, ID>](/marker/port-out/repository.md)
 - [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md)
+- [DomainException](/marker/tactical/domainexception.md)

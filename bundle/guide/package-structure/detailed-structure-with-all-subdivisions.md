@@ -31,8 +31,8 @@ com.company.project
 │   │   │   ├── CreateOrderUseCase.java
 │   │   │   │   @Service class CreateOrderUseCase implements CreateOrderInputPort { }
 │   │   │   ├── CreateOrderCommand.java
-│   │   │   ├── CreateOrderResult.java
-│   │   │   └── CustomerNotActiveException.java (Use-Case Exception)
+│   │   │   ├── CreateOrderResult.java (returning context: sealed, Created | CustomerNotActive)
+│   │   │   └── CustomerNotActiveException.java (throwing context: Use-Case Exception, plain CreateOrderResult)
 │   │   │
 │   │   ├── findorder/ (use case folder - lowercase, contains ALL related files)
 │   │   │   ├── FindOrderInputPort.java
@@ -59,7 +59,7 @@ com.company.project
 │   │   │   └── UpdateOrderResult.java
 │   │   │
 │   │   └── shared/ (SHARED OUTPUT PORTS - infrastructure dependencies)
-│   │       ├── DuplicateOrderNumberException.java (Use-Case Exception - declared by the repository)
+│   │       ├── DuplicateOrderNumberException.java (Output-Port Exception - declared by the repository, thrown by its adapter, caught by the use case)
 │   │       ├── OrderRepository.java (Output Port)
 │   │       ├── PaymentGateway.java (Output Port)
 │   │       ├── InventoryService.java (Output Port)

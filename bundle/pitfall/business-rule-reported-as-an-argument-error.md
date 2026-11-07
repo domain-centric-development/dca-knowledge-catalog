@@ -25,7 +25,7 @@ A broken rule of the model leaves the domain as the platform's own argument or s
 
 ## Do instead
 
-Give each outcome a type in the layer that owns it: a `DomainException` subtype for a rule of the model, a `UseCaseException` subtype for a failure of the request (not found, not owned by this caller, a precondition elsewhere). Let the incoming adapter map type to answer in one place, and let everything it does not know become a server fault with no message.
+Give each outcome a type in the layer that owns it: a `DomainException` subtype for a rule of the model; for a refusal of the request (not found, not owned by this caller, a precondition elsewhere) a `UseCaseException` subtype where the context throws its refusals, or a case of the use case's sealed result, marked `Refusal`, where it returns them; for a conflict only the store sees an `OutputPortException` subtype its port declares. Let the incoming adapter answer each type or case, the answer written once per context, and let everything it does not know become a server fault with no message.
 
 Argument guards stay as they are. A null check or a range check on a value only code passes is a contract for the caller, not a rule of the model, and the platform's argument exception is the right answer there. A value built from input is the other case: its bounds are the rule the product names, and the value object refuses a missing value with that rule's failure — see [A rule checked at the edge and again in the value object](/pitfall/a-rule-checked-at-the-edge-and-in-the-value-object.md). The test is the name: if a domain expert has a word for the failure, it is a domain exception with that word in its name.
 
@@ -33,5 +33,5 @@ Argument guards stay as they are. A null check or a range check on a value only 
 
 - Markers: [DomainException](/marker/tactical/domainexception.md) · [UseCaseException](/marker/application/usecaseexception.md)
 - Template: [Domain exception skeleton](/template/domain-exception.md)
-- Related decision: [Failure channel: exception or a closed set of result variants](/decision/failure-channel-exception-or-result.md)
+- Related decision: [Failure channel: exception or a case of the use case's result](/decision/failure-channel-exception-or-result.md)
 - Related pitfall: [Business logic in an adapter](/pitfall/business-logic-in-adapter.md) · [Anemic domain model](/pitfall/anemic-domain-model.md) · [A reference in the request body answered as not found](/pitfall/a-reference-in-the-body-answered-as-not-found.md)

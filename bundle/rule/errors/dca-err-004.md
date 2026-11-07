@@ -1,10 +1,10 @@
 ---
 type: Rule
 id: DCA-ERR-004
-title: Domain and use-case exceptions must not carry prohibited framework metadata
+title: Domain and port exceptions must not carry prohibited framework metadata
 rule: "An exception of an inner layer that carries container, persistence or protocol metadata has decided how the outside answers it, which is the incoming adapter's decision and only its; an annotation that fixes the answer's status decides it for every protocol at once, including the ones the exception knows nothing about."
-constraint: Domain and use-case exceptions must not carry prohibited framework metadata.
-selects: "Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded."
+constraint: Domain and port exceptions must not carry prohibited framework metadata.
+selects: Classes anywhere on the classpath under scan that are assignable to DomainException or to PortException - UseCaseException and OutputPortException included - the vocabulary's own packages excluded.
 checks: "The type carries none of the configured injectable, persistence-entity, transactional, web-controller, REST-controller, event-listener or transport-status annotations, directly or as a meta-annotation. The transport-status role is the one that fixes the protocol answer on the exception itself; where the framework answers through a mapper class instead of an annotation the role is empty and nothing is selected for it. Fields and methods are not inspected, and an annotation the layout classifies into no role is allowed. With those roles empty the rule selects no metadata and passes."
 enforced_by: "ErrorHandlingRules#DCA-ERR-004"
 status: enforced
@@ -16,11 +16,11 @@ tags: [errors, archunit]
 resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/Rules/ErrorHandlingRules.cs
 ---
 
-# Domain and use-case exceptions must not carry prohibited framework metadata
+# Domain and port exceptions must not carry prohibited framework metadata
 
 ## Selection
 
-Classes anywhere on the classpath under scan that are assignable to DomainException or to UseCaseException, the building-blocks package excluded.
+Classes anywhere on the classpath under scan that are assignable to DomainException or to PortException - UseCaseException and OutputPortException included - the vocabulary's own packages excluded.
 
 ## Check
 
@@ -28,7 +28,7 @@ The type carries none of the configured injectable, persistence-entity, transact
 
 ## .NET reading
 
-**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the use-case-exception role, the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
+**Selection.** Types anywhere under the root namespace that are assignable to the domain-exception or the port-exception role - UseCaseException and OutputPortException included - the vocabulary's own code excluded: the namespaces the configured role types live in are not selected, so a project's own base type is not reported as residing outside a layer it never claimed.
 
 **Check.** The type carries no attribute the layout classifies into the container, persistence, transaction, transport-status, web-controller, REST-controller or event-listener role, neither directly nor through a base attribute type - the same seven roles the Java twin forbids. Four of them are empty in every preset: the platform has no container stereotype, no controller attribute a failure could carry and no event-listener attribute, and it answers a failure through a mapper type rather than through an attribute on it. They exist so the id has one contract in both languages and a project whose framework does have such an attribute names it. Fields, properties and methods are not inspected, and an attribute the layout classifies into no role is allowed. A type whose runtime reflection is unavailable is not inspected; it is counted and named in the rule's own outcome rather than passing silently. With the roles empty the rule selects no metadata and passes.
 
@@ -36,7 +36,7 @@ The type carries none of the configured injectable, persistence-entity, transact
 
 Unpublished (dca-rust); held without a test of the suite. **Held by** the compiler (workspace, graph-test).
 
-**Selection.** Types that implement DomainFailure or UseCaseFailure.
+**Selection.** Types that implement DomainFailure or a port failure.
 
 **Check.** None implements a web framework's response trait (for example axum's IntoResponse): the domain and application crates do not depend on the framework, and the orphan rule refuses the impl in the adapters crate, where both trait and type are foreign. The adapter translates through its own type.
 
@@ -45,7 +45,7 @@ Unpublished (dca-rust); held without a test of the suite. **Held by** the compil
 ```java
 DcaRule.check(
         "DCA-ERR-004",
-        "Domain and use-case exceptions must not carry prohibited framework metadata",
+        "Domain and port exceptions must not carry prohibited framework metadata",
         "An exception of an inner layer that carries container, persistence or protocol"
             + " metadata has decided how the outside answers it, which is the incoming"
             + " adapter's decision and only its; an annotation that fixes the answer's status"
@@ -79,7 +79,8 @@ DcaRule.check(
         })
     .selecting(
         "Classes anywhere on the classpath under scan that are assignable to DomainException or"
-            + " to UseCaseException, the building-blocks package excluded.")
+            + " to PortException - UseCaseException and OutputPortException included - the"
+            + " vocabulary's own packages excluded.")
     .checking(
         "The type carries none of the configured injectable, persistence-entity, transactional,"
             + " web-controller, REST-controller, event-listener or transport-status"
@@ -98,7 +99,7 @@ DcaRule.check(
 ```java
 /** A project's own exception type: assignable to a base type, outside the building blocks. */
   private static boolean isProjectException(JavaClass type, DcaMarkers markers) {
-    return (markers.is("domainException").test(type) || markers.is("useCaseException").test(type))
+    return (markers.is("domainException").test(type) || markers.is("portException").test(type))
         && !markers.declaresTypesIn(type.getPackageName());
   }
 ```
@@ -201,7 +202,7 @@ boolean isEmpty() {
 ```csharp
 DcaRule.Check(
     "DCA-ERR-004",
-    "Domain and use-case exceptions must not carry prohibited framework metadata",
+    "Domain and port exceptions must not carry prohibited framework metadata",
     "An exception of an inner layer that carries container, persistence or protocol metadata has"
         + " decided how the outside answers it, which is the incoming adapter's decision and only"
         + " its; an attribute that fixes the answer's status decides it for every protocol at once,"
@@ -256,7 +257,8 @@ DcaRule.Check(
     })
     .Selecting(
         "Types anywhere under the root namespace that are assignable to the domain-exception or the "
-        + "use-case-exception role, the vocabulary's own code excluded: the namespaces the configured "
+        + "port-exception role - UseCaseException and OutputPortException included - the vocabulary's own "
+        + "code excluded: the namespaces the configured "
         + "role types live in are not selected, so a project's own base type is not reported as "
         + "residing outside a layer it never claimed.")
     .Checking(
@@ -277,6 +279,8 @@ DcaRule.Check(
 ## Related mentions (heuristic)
 
 - [DomainException](/marker/tactical/domainexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 
 ## Configured by

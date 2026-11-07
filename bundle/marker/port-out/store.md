@@ -15,9 +15,9 @@ aggregate lifecycle.
 
 **Repository vs. Store:**
 
-- Use `y` for **Aggregate Roots** with identity and lifecycle (findById,
+- Use `Repository` for **Aggregate Roots** with identity and lifecycle (findById,
 save, delete).
-- Use `e` for **Value Objects, Events, or operational data** without aggregate
+- Use `Store` for **Value Objects, Events, or operational data** without aggregate
 lifecycle (record, count, exists, lookup by key).
 
 **Examples of Stores:**
@@ -30,7 +30,7 @@ lifecycle (record, count, exists, lookup by key).
 
 - Lookup by key (`findById()`) is allowed on a Store; aggregate lifecycle requires a
 Repository
-- Need `record()` or `count()`? → `e` (object is recorded, not managed)
+- Need `record()` or `count()`? → `Store` (object is recorded, not managed)
 - In doubt: if the stored object is a `Value` or a record, it's almost always a Store.
 
 ## Extends
@@ -43,4 +43,5 @@ Repository
 - [Deviations from the literature](/guide/readme/deviations-from-the-literature.md)
 - [Rules of thumb](/guide/repository-vs-store/rules-of-thumb.md)
 - [Store](/guide/repository-vs-store/store.md)
+- [ERROR HANDLING RULES](/guide/rules/error-handling-rules.md)
 - [Shared Kernel Pattern (Strategic DDD)](/guide/strategic-design/shared-kernel-pattern-strategic-ddd.md)

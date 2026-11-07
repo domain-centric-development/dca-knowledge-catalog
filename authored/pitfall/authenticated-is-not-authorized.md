@@ -4,10 +4,12 @@ title: "Authenticated is not authorized: a filter that enriches every request"
 tags: [pitfall, security, adapter, application, infrastructure]
 review: draft
 owner: DCA catalog maintainers
-evidence: [/marker/port-out/outputport.md]
+evidence: [/marker/port-out/outputport.md, /rule/hexagonal/dca-hex-020.md]
 ---
 
 An authentication filter or middleware that resolves an identity for *every* request — minting an anonymous one for a first-time visitor so the cart survives — sitting under a blanket rule such as `anyRequest().authenticated()` or a globally applied authorize attribute. The rule reads like a gate and is treated as one: the endpoints behind it carry no check of their own.
+
+OWASP Top 10: **A01 Broken Access Control**.
 
 ## Why it is wrong
 
@@ -26,7 +28,7 @@ Say what the filter does in its own documentation: *it enriches, it does not gat
 
 Mark the visitor's principal as anonymous while you are there. A filter that hands every request an *authenticated* principal also destroys the difference between the two refusals: a caller who never authenticated gets `403` ("you are known, this is not yours") instead of `401` with the scheme they should use. The identity still travels to the use cases — it carries the visitor's cart — but the security context stops claiming they logged in, and the framework can tell a stranger from a customer.
 
-For the same reason, say a claims-only gate declaratively — the framework's annotation on the route — rather than as a role branch inside the handler. A branch renders one status code, and the one that gets written is `403`.
+For the same reason, say a claims-only gate declaratively — the framework's annotation on the route — rather than as a role branch inside the handler. A branch renders one status code, and the one that gets written is `403`. `DCA-HEX-020` (experimental, informational) lists an incoming adapter that asks for the caller's roles in its own code.
 
 Test the refusals, not only the successes: for every guarded operation, one case per role that must be turned away. A test that only exercises the happy path passes just as happily against an open endpoint.
 
@@ -36,3 +38,4 @@ Test the refusals, not only the successes: for every guarded operation, one case
 
 - Markers: [OutputPort](/marker/port-out/outputport.md)
 - Decision: [Where authorization and validation live](/decision/where-authorization-and-validation-live.md)
+- Rule: [Diagnostic: incoming adapters that read the caller's roles in their own code](/rule/hexagonal/dca-hex-020.md)

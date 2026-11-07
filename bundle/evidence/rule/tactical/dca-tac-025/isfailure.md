@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Domain types must not hold bare primitives, strings or time types — `isFailure`"
+title: "Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isFailure`"
 tags: [reference]
 evidence_for: "/rule/tactical/dca-tac-025.md#isfailure"
 ---
@@ -12,6 +12,6 @@ evidence_for: "/rule/tactical/dca-tac-025.md#isfailure"
 ```java
 /** A failure reports what was refused - the raw input included - and is no value itself. */
   private static boolean isFailure(JavaClass type, DcaMarkers markers) {
-    return markers.is("domainException").test(type) || markers.is("useCaseException").test(type);
+    return markers.is("domainException").test(type) || markers.is("portException").test(type);
   }
 ```

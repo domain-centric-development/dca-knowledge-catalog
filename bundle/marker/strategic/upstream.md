@@ -15,7 +15,7 @@ Declares that this bounded context consumes another bounded context as its upstr
 Placed on the *downstream* side because that is where the dependency originates and
 where the translation decision is made. The upstream's publication style is not declared here —
 it is expressed by the upstream itself through its `api`/`events` named interfaces
-and `e`.
+and `OpenHostService`.
 
 `@Upstream` declares only the directed dependency and how the downstream protects its
 model. Organizational patterns such as Customer–Supplier are not machine-classified; document
@@ -39,7 +39,7 @@ package com.acme.shop.cart;
 
 **Architectural rules** (enforced by `ContextMapArchUnitTest`):
 
-- Only packages annotated with `t` may
+- Only packages annotated with `BoundedContext` may
 declare `@Upstream`
 - The target context must exist and must not be the declaring context itself
 - `(context, via)` must be unique across all declarations of one context

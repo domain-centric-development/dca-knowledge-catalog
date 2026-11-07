@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: "Domain types must not hold bare primitives, strings or time types — `classesMatching`"
+title: "Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `classesMatching`"
 tags: [reference]
 evidence_for: "/rule/tactical/dca-tac-025.md#classesmatching"
 ---

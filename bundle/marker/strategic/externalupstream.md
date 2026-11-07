@@ -13,7 +13,7 @@ tags: [strategic, marker]
 Declares that this bounded context consumes an *external system* — one that lives outside
 this codebase — as its upstream.
 
-Like `m`, this is declared on the downstream side, because an external system has
+Like `Upstream`, this is declared on the downstream side, because an external system has
 no side in this codebase that could declare anything. The model dependency always points to the
 external system, regardless of who initiates the exchange: a webhook the external system calls is
 still *its* contract that this context conforms to or translates.
@@ -36,7 +36,7 @@ package com.acme.shop.checkout;
 
 **Architectural rules** (enforced by `ContextMapArchUnitTest`):
 
-- Only packages annotated with `t` may
+- Only packages annotated with `BoundedContext` may
 declare `@ExternalUpstream`
 - `name` must not be blank and must not collide with an internal context's name
 - `(name, interaction)` must be unique per declaring context
@@ -47,3 +47,7 @@ adapter matching the interaction (outgoing for `OUTBOUND`, incoming for `INBOUND
 Without `contractPackages()` (plain HTTP, no vendor SDK) the translation rules have
 nothing to check — the declaration then documents the relationship and feeds the generated
 context map.
+
+## Related mentions in guides (heuristic)
+
+- [Declaring Context Relationships in Code](/guide/integration-patterns/declaring-context-relationships-in-code.md)

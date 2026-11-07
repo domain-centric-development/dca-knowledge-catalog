@@ -17,8 +17,11 @@ tags: [guide, section]
 | Use-case implementations | Application — the use-case package | `CreateOrderUseCase` |
 | Commands, Queries, Results | Application — the use-case package | `CreateOrderCommand`, `CreateOrderResult` |
 | Output Ports | Application — the use-case package, or `application/shared` when reused | `OrderRepository`, `LoginProtectionStore` |
-| Use-case exceptions | Application — beside the use case, or `application/shared` when reused or declared by a port | `OrderNotFoundException` |
-| Exception handlers | `adapter/incoming` — one per context | `OrderApiExceptionHandler` |
+| Expected refusals | Application — cases nested in the use case's sealed `*Result`, or use-case exceptions beside the use case; one way per context | `CancelOrderResult.OrderNotFound`, `OrderNotFoundException` |
+| Use-case exceptions (extend `UseCaseException`) | Application — beside the use case, or `application/shared` when reused | `PaymentProviderUnavailableException` |
+| Output-port exceptions (extend `OutputPortException`) | Application — beside the port whose contract declares them | `DuplicateOrderNumberException`, `PaymentGatewayUnavailableException` |
+| Answers to result cases | `adapter/incoming` — written once per context, called from each switch (a returning context) | `OrderProblems` |
+| Exception handlers | `adapter/incoming` — one per context, for what is thrown | `OrderApiExceptionHandler` |
 | REST controllers | `adapter/incoming` | `OrderRestController` |
 | Message listeners | `adapter/incoming` | `OrderCommandListener` |
 | Persistence adapters, ORM entities | `adapter/outgoing` | `JpaOrderRepository`, `OrderEntity` |
@@ -28,3 +31,8 @@ tags: [guide, section]
 | Process manager — executive and tracker | Application (use case) and Domain (tracker aggregate) | `BookTripUseCase`, `TripBooking` |
 | Universal value objects | `sharedkernel/domain/model` | `Money`, `Address` |
 | Shared application ports | `sharedkernel/application/shared` | `IdentityProvider` |
+
+## Related mentions (heuristic)
+
+- [OutputPortException](/marker/application/outputportexception.md)
+- [UseCaseException](/marker/application/usecaseexception.md)

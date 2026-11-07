@@ -4,12 +4,12 @@
 - [APPLICATION LAYER RULES](application-layer-rules.md) — the consumer that calls it; the same effect reached from a second trigger is the same use case
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
 - [DOMAIN LAYER RULES](domain-layer-rules.md) — refuses, null included, with the rule's named failure. The incoming adapter hands it the raw value and does not
-- [ERROR HANDLING RULES](error-handling-rules.md) — Every failure carries its own type, and only the adapter turns it into an answer.
+- [ERROR HANDLING RULES](error-handling-rules.md) — Every failure carries its own type, and only the adapter turns it into an answer. An expected refusal a caller
 - [INFRASTRUCTURE LAYER RULES](infrastructure-layer-rules.md) — rule (see The composition root)
 - [Operation boundaries and declared contracts](operation-boundaries-and-declared-contracts.md) — Ordinary use cases do not invoke other use cases, whether directly, through an
 - [PACKAGING RULES](packaging-rules.md) — features (see Grouping use cases into features)
 - [STRATEGIC DESIGN RULES](strategic-design-rules.md) — (`@Upstream`, `@ExternalUpstream`, `@Partnership`, see Declaring Context Relationships in Code)
 - [TESTING RULES](testing-rules.md) — TESTING RULES
 - [THE FUNDAMENTAL DEPENDENCY RULE](the-fundamental-dependency-rule.md) — THE FUNDAMENTAL DEPENDENCY RULE
-- [TRANSACTION RULES](transaction-rules.md) — @Service
+- [TRANSACTION RULES](transaction-rules.md) — comes before the first `save`. A refusal that can only come after a write is a wrong cut, two aggregates changed
 - [Wiring and domain metadata](wiring-and-domain-metadata.md) — Use cases may be registered by configuration or carry an injectable stereotype. A

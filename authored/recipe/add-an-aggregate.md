@@ -13,7 +13,7 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 
 1. **Model the boundary** — one aggregate = one consistency boundary. Keep it small; reference other aggregates by their `Id`, never by object.
 2. **Generate from the [aggregate template](/template/aggregate-root.md)**: `{Name}Id` (typed identity) and `{Name}` (root extends `BaseAggregateRoot`) in the domain model package `domain/model/`, `{Name}Created` (domain event) in `domain/event/`.
-3. **Enforce invariants in a factory** — `static {Name} create(...)` validates and registers the creation event. No public setters; mutate via intention-revealing methods that re-check invariants.
+3. **Enforce invariants in a factory** — `static {Name} create(...)` validates and registers the creation event. No public setters; mutate via intention-revealing methods that re-check invariants. A single yes/no fact is a private `boolean` field changed by its operation (`complete()`) and read by a predicate (`isCompleted()`), never a `boolean` parameter; a state with three or more values is an enum ([A yes/no fact or a state](/decision/a-yes-no-fact-or-a-state.md)).
 4. **Register domain events** on every meaningful state change; the use case publishes + clears them after save.
 5. **Add the repository** — interface `{Name}Repository extends Repository<{Name}, {Name}Id>` in `application/shared/` (output port), implementation in `adapter/outgoing/` ([Deviations from the literature](/guide/readme/deviations-from-the-literature.md)). One repository per aggregate root only.
 6. **Verify** — the project's architecture suite (`./gradlew test-architecture`, or `dotnet test -c Debug` against the architecture-test project).
@@ -31,6 +31,7 @@ Add an aggregate root: the transactional consistency boundary that owns its inva
 ## Anchors
 
 - Template: [Aggregate root skeleton](/template/aggregate-root.md)
+- Decision: [A yes/no fact or a state](/decision/a-yes-no-fact-or-a-state.md)
 - Markers: [AggregateRoot<T, ID>](/marker/tactical/aggregateroot.md) · [BaseAggregateRoot<T, ID>](/marker/tactical/baseaggregateroot.md) · [DomainEvent](/marker/tactical/domainevent.md) · [Repository<T, ID>](/marker/port-out/repository.md)
 - Guide: [Layer elements](/guide/elements.md) · [Layer rules](/guide/rules.md)
 - Then expose behavior via [Add a use case](/recipe/add-a-use-case.md)

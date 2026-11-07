@@ -7,7 +7,7 @@ resource_dotnet: dca-dotnet/src/DomainCentric.ArchRules/DcaArchitecture.cs
 tags: [reference, archunit, archunitnet]
 ---
 
-The classes under test together with the `t` that describes them, plus the
+The classes under test together with the `DcaLayout` that describes them, plus the
 discovery helpers every DCA rule builds on: which packages are bounded contexts, where the shared
 kernel lives, which annotations a `package-info` carries.
 
@@ -57,7 +57,7 @@ Wraps already imported classes — for tests and custom importers.
 
 #### `Map<String, BoundedContext> boundedContexts()`
 
-All packages whose `package-info` carries `t`, keyed by package name,
+All packages whose `package-info` carries `BoundedContext`, keyed by package name,
 in encounter order. Discovery is by annotation, so a context may sit at any depth below the
 base package — see `rootContextPackage(String)`.
 
@@ -75,7 +75,7 @@ Bounded-context patterns without the given context package.
 
 #### `Optional<String> sharedKernelPackage()`
 
-The package annotated with `l` — or with the annotation the `sharedKernel` marker role names — at whatever depth below the base package it sits. Where no
+The package annotated with `SharedKernel` — or with the annotation the `sharedKernel` marker role names — at whatever depth below the base package it sits. Where no
 package carries it, the conventional package `.` is the
 shared kernel when it holds classes: a project that has not declared its kernel yet still gets
 the kernel's exemption from module isolation.
@@ -84,7 +84,7 @@ the kernel's exemption from module isolation.
 
 The root package of the bounded context (or shared kernel) that a fully qualified package
 belongs to — the nearest ancestor at or below the base package whose `package-info`
-carries `t` or `l`.
+carries `BoundedContext` or `SharedKernel`.
 
 Because the declaration is the annotation and not the position in the tree, a context may
 sit at any depth: `com.acme.shop.cart.domain.model → com.acme.shop.cart` when `cart` is annotated, and `com.acme.shop.sales.order.domain.model → com.acme.shop.sales.order` when `sales.order` is. A single-context application may
@@ -119,7 +119,7 @@ A single annotation from the package's `package-info`, if present.
 
 Read from the imported bytecode, never by loading the `package-info` class: the
 classes under test need not be loadable, and an annotation retained only in the class file is
-enough. For `t` and `l` the annotation looked for is the
+enough. For `BoundedContext` and `SharedKernel` the annotation looked for is the
 one the layout's marker role names (`boundedContext()`, `sharedKernel()`); a project's own annotation is then answered as the library type,
 its members read by name.
 

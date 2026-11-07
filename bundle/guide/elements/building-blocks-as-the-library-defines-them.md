@@ -26,15 +26,38 @@ public interface AggregateRoot<T extends AggregateRoot<T, ID>, ID extends Id>
     // Marker interface - identifies aggregate roots for all contexts
 }
 
+public interface Owned<OWNER extends Id> {
+    // Marker for an aggregate root that belongs to someone; OWNER is the owner's id type.
+    // Its repository declares a lookup by the aggregate's id and the owner's id (DCA-TAC-026).
+}
+
 public abstract class DomainException extends RuntimeException {
     // Base of every business-rule violation the model raises; carries no code and no status
 }
 ```
 
 ```java
-// dev.domaincentric.dca.buildingblocks.application — the failure channel of the layer above
-public abstract class UseCaseException extends RuntimeException {
-    // Base of every use-case failure the application layer reports to its callers
+// dev.domaincentric.dca.buildingblocks.application — the failures a port's contract declares
+public abstract class PortException extends RuntimeException { }
+
+public abstract class InputPortException extends PortException {
+    // Declared by an input port, caught by its caller; never extended directly
+}
+
+public abstract class UseCaseException extends InputPortException {
+    // Thrown only by a use case: an expected refusal where the context throws its refusals.
+    // Concrete use-case failures extend this.
+}
+
+public abstract class OutputPortException extends PortException {
+    // Declared by an output port's contract, thrown by its adapter, caught by the use case:
+    // an expected conflict the store sees, or a foreign system that refused or did not answer.
+    // A failure of the system's own infrastructure is not one.
+}
+
+public interface Refusal {
+    // Marker for a refusal case of a sealed use-case result; the transaction boundary rolls back on it.
+    // A success case never carries it, and a sealed result of successes alone has none.
 }
 ```
 
@@ -44,10 +67,15 @@ public interface IId { }
 public interface IEntity<TSelf, TId> : IEntity where TSelf : IEntity<TSelf, TId> where TId : IId { TId Id { get; } }
 public interface IAggregateRoot<TSelf, TId> : IEntity<TSelf, TId>, IAggregateRoot
     where TSelf : IAggregateRoot<TSelf, TId> where TId : IId { }
+public interface IOwned<TOwnerId> : IOwned where TOwnerId : IId { }   // IOwned: the non-generic base the rules select on
 public abstract class DomainException : Exception { }
 
 // DomainCentric.BuildingBlocks.Application
-public abstract class UseCaseException : Exception { }
+public abstract class PortException : Exception { }
+public abstract class InputPortException : PortException { }
+public abstract class UseCaseException : InputPortException { }
+public abstract class OutputPortException : PortException { }
+public interface IRefusal { }
 ```
 
 **The port hierarchy, as the library defines it — and how a context uses it:**
@@ -87,6 +115,9 @@ public interface OrderRepository extends Repository<Order, OrderId> {
 
 ## Related mentions (heuristic)
 
+- [InputPortException](/marker/application/inputportexception.md)
+- [OutputPortException](/marker/application/outputportexception.md)
+- [PortException](/marker/application/portexception.md)
 - [UseCaseException](/marker/application/usecaseexception.md)
 - [InputPort](/marker/port-in/inputport.md)
 - [UseCase<INPUT, OUTPUT>](/marker/port-in/usecase.md)
