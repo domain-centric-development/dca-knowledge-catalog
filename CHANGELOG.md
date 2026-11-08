@@ -6,6 +6,14 @@ every regeneration.
 
 ## [Unreleased]
 
+- Added (WP-189): decision *Who uses a domain service — and where a read model computes* — the use case calls a
+  domain service and carries its outcome in the result, another domain service may use one, the composition root
+  only constructs it; a model type, a read model and an adapter of either direction call none, and a read model
+  computes on query through the aggregate and its values. Anchored to the new `DCA-ADV-021` (experimental) beside
+  `DCA-ADV-019` and `DCA-HEX-012`; *Reading an aggregate* links it. One rule node more after regeneration.
+- Changed (WP-194 item 5): *A yes/no fact or a state* — the factory that rebuilds a stored aggregate takes the stored
+  fact as the `boolean` it was; `DCA-TAC-025` recognises it by name (`reconstitute`, `restore`, configurable).
+
 - Added (WP-121): decision *Ownership as a marker* — an aggregate that belongs to someone implements `Owned<OwnerId>`
   and is loaded through its owner (`DCA-TAC-026`, experimental); the owner changes only through an explicit operation
   after the use case proved the right to it, a guest with a pseudonymous identity is an owner, and where the id itself

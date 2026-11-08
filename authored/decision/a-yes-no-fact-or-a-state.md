@@ -37,6 +37,18 @@ public boolean isCompleted() { return completed; }
 
 The field stays internal: no setter, and no domain method takes a `boolean`. `setCompleted(true)` — a flag argument — would let the caller set the state instead of triggering the behaviour, and the rule the aggregate guards in `complete()` would be bypassed. A reverse operation, where the domain has one, is an operation of its own with its own name: `reopen()`, not `setCompleted(false)`.
 
+A persisted aggregate keeps the same shape. The factory that rebuilds it from storage hands the stored fact back as the `boolean` it was — that is no flag argument, because nothing is triggered and no caller decides the state:
+
+```java
+static Entry reconstitute(EntryId id, Title title, boolean completed) {
+    Entry entry = new Entry(id, title);
+    entry.completed = completed;
+    return entry;
+}
+```
+
+Only that factory may take the `boolean`; every operation still names what happens.
+
 ### Three or more states, or transitions with rules: an enum or a value
 
 ```java
@@ -56,7 +68,7 @@ The operations stay named after what happens; the status is never set from outsi
 
 ## Consequences
 
-- The rule `DCA-TAC-025` (experimental) holds the shape: a `boolean` field and a `boolean` returned pass; a `boolean` parameter of a domain method, and a `boolean` the caller can set from outside, are reported as flag arguments.
+- The rule `DCA-TAC-025` (experimental) holds the shape: a `boolean` field and a `boolean` returned pass; a `boolean` parameter of a domain method, and a `boolean` the caller can set from outside, are reported as flag arguments. The factory that rebuilds a stored aggregate is the exception, recognised by its name — `reconstitute` or `restore` by default, configurable where a project names it otherwise; its other parameters are checked as usual.
 - Whether a fact has two values or more is a question about the domain, not about the code. A rule cannot answer it; the glossary can.
 - A two-valued fact that later gains a third value becomes an enum then — the operations keep their names, only the field changes.
 
