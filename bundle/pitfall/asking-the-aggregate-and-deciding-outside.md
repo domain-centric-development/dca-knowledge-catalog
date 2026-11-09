@@ -28,6 +28,14 @@ account.recordLogin(clock.now());
 - **It reads like a rich model.** The aggregate has behaviour methods, so a review sees no anemic model — yet the
   decision is outside it, as in the anemic case.
 
+## The same move with a loop
+
+The aggregate has the operation, and the use case does it again by hand: a `merge(other)` exists, and the use case
+loops over the other's parts calling `add` for each. The two stay alike until the aggregate's operation learns a
+rule — a limit, a de-duplication, an event of its own — and the loop does not. Two writers of the same use case
+then build two behaviours, one through the operation and one beside it. Where the aggregate names the operation,
+the use case calls it.
+
 ## How to spot it
 
 Two or more predicates of one aggregate in one use case, followed by a call on the same aggregate or by a failure the
