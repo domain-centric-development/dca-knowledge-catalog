@@ -13,9 +13,9 @@ Generated bundle: the DCA implementation guide (full text, as Guide containers +
 - Reference: 325
 
 ### Extensible zone (authored, preserved across regeneration)
-- Recipe: 27
+- Recipe: 28
 - Decision: 37
-- Pitfall: 55
+- Pitfall: 58
 - Template: 51
 - Note: 1
-- Total authored: 171
+- Total authored: 175

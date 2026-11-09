@@ -25,4 +25,4 @@ further language is one more file rather than a second copy of this node.
 - Guide: [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer rules](/guide/rules.md)
 - Sibling templates: [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md) · [Aggregate root skeleton](/template/aggregate-root.md) — where `reconstitute` comes from
 - Pitfall: [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md) · [Ordering by timestamp](/pitfall/ordering-by-timestamp.md)
-- Recipe: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)
+- Recipe: [Move a repository from memory to a database](/recipe/move-a-repository-to-a-database.md) · [Add a repository with adapter](/recipe/add-a-repository-with-adapter.md)

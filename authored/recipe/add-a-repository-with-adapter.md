@@ -39,6 +39,6 @@ Give an aggregate root a persistence port: an interface in the application layer
 - Markers: [Repository<T, ID>](/marker/port-out/repository.md) · [OutputPort](/marker/port-out/outputport.md)
 - Guide: [Layer rules](/guide/rules.md) · [Deviations from the literature](/guide/readme/deviations-from-the-literature.md) · [Layer elements](/guide/elements.md) · [Port placement](/guide/quick-reference/port-placement.md)
 - The aggregate this repository serves: [Add an aggregate](/recipe/add-an-aggregate.md)
-- Going to a database later: [Swap the in-memory adapter for JPA](/recipe/swap-in-memory-for-jpa.md)
+- Going to a database later: [Move a repository from memory to a database](/recipe/move-a-repository-to-a-database.md)
 - Bulk methods on the port: [Add a bulk operation](/recipe/add-a-bulk-operation.md)
 - Pitfalls: [Repository name does not match the aggregate](/pitfall/repository-name-does-not-match-aggregate.md) · [Reconstitution raises the creation event](/pitfall/reconstitution-raises-creation-event.md) · [A Repository for a non-aggregate](/pitfall/repository-for-non-aggregate.md) — non-aggregate data gets a Store ([Repository vs Store](/decision/repository-vs-store.md))

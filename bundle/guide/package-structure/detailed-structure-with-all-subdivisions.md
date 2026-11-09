@@ -87,9 +87,9 @@ com.company.project
 │       │
 │       └── outgoing/ (OUTGOING ADAPTERS - implement output ports)
 │           ├── persistence/
-│           │   ├── InMemoryOrderRepository.java (implements OrderRepository)
+│           │   ├── JdbcOrderRepository.java (implements OrderRepository)
 │           │   └── SampleDataInitializer.java (Optional: for demo data)
-│           │   # Note: For production, add JPA/JDBC adapters as needed
+│           │   # Note: an InMemoryOrderRepository that stores copies is a test fake, in the test sources
 │           ├── payment/
 │           │   ├── PaymentGatewayAdapter.java (implements PaymentGateway)
 │           │   └── dto/

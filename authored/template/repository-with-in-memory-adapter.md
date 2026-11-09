@@ -9,7 +9,7 @@ applies_to: [java]
 framework: [framework-neutral]
 ---
 
-Domain-free skeleton for a repository: the collection-like output port for one aggregate root. The **interface** is an output port that lives in `application/shared/` and extends `Repository<T, ID>`; the **implementation** is a secondary (outgoing) adapter in `adapter/outgoing/persistence/`. One repository per aggregate root — never per entity. Method names use the ubiquitous language, not generic CRUD. Replace `{Name}` (aggregate) / `{context}` / `{basePackage}`. This template uses a `ConcurrentHashMap` store to match the reference implementation; swap it for a database adapter without touching the port.
+Domain-free skeleton for a repository: the collection-like output port for one aggregate root. The **interface** is an output port that lives in `application/shared/` and extends `Repository<T, ID>`; the **implementation** is a secondary (outgoing) adapter in `adapter/outgoing/persistence/`. One repository per aggregate root — never per entity. Method names use the ubiquitous language, not generic CRUD. Replace `{Name}` (aggregate) / `{context}` / `{basePackage}`. The `ConcurrentHashMap` adapter stores copies; it is the first adapter before a database and, once a database adapter stands behind the port, the unit tests' fake ([move a repository from memory to a database](/recipe/move-a-repository-to-a-database.md)).
 
 ## Languages
 
