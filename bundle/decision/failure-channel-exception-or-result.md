@@ -41,6 +41,20 @@ Ask, in order:
 4. **Is absence a normal answer?** A query that asks whether there is one ("which one, if any") answers *none* with an empty value, never a refusal. "Not found" is a refusal only where the caller names a specific thing — by its id.
 5. **Is it a caller contract rather than a failure?** An argument guard on a value only code passes stays the platform's argument exception. On a value built from input the same check is the rule the product names, and its refusal is expected.
 
+## Who owns "not found"
+
+Whoever searches owns the failure. The repository is an output port of the application, and its lookup by id answers
+an empty optional; only the use case sees that answer, so only the use case can say "this id does not exist". The
+domain never takes part in the lookup — a domain service is handed its aggregates — so a missing aggregate is never a
+domain failure: it is the use case's refusal, a `UseCaseException` subtype or a `Refusal` case of its result. Classic
+DDD places the repository in the domain, which is why it may answer differently; here, where the repository lives
+decides where "not found" lives.
+
+The boundary: a part *inside* an aggregate, named by its local id, is searched by the aggregate in its own state.
+"Only what the aggregate holds can be removed" is a rule of the model, so its absence is a `DomainException`
+the use case catches by its concrete type and answers in the context's style. A name cannot tell the two apart —
+`{Part}NotFound` is right in the domain, `{Aggregate}NotFound` in the application.
+
 ## Per bounded context, not per use case
 
 **Every use case of a context carries its refusals the same way. No context mixes a returned refusal with a thrown one.** The context's adapters then have one style at the call site, a review checks one shape, and a rule could check it. Deciding per use case gives every adapter two styles for the same kind of failure and leaves the next reader guessing which one a new use case takes. Two contexts of one project may choose differently.
