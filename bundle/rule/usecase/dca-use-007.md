@@ -135,14 +135,15 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-USE-007",
         "Use Case Result Models should be immutable (sealed or records)",
         "Use case result models should be immutable (value objects)",
         arch => ImmutableApplicationModels(arch, "Result", t => t.Name.EndsWith("Result", StringComparison.Ordinal)))
     .Selecting("Classes and structs in each module application namespace with the corresponding Command, Query or Result suffix, including record classes and record structs.")
     .Checking(
-        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")
+        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.",
+        "declare *Result types with immutable instance state")
 ```
 
 ## Configured by

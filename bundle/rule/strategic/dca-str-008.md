@@ -126,29 +126,23 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-STR-008",
         "Integration Events should have immutable shape",
         "An integration event is a published contract: once another context has read it, its shape may only grow, never change under an existing reader. A mutable event cannot make that promise - any holder can rewrite what a second consumer will read",
-        arch =>
-        {
-            var violations = arch.Types
+        arch => SelectionArchRule.ForEach(
+            "integration events should have immutable shape",
+            () => arch.Types
                 .Where(t => t is not Interface && !t.IsCompilerGenerated)
-                .Where(t => arch.Layout.Markers.Is(nameof(DcaMarkers.IntegrationEvent), t))
-                .Where(t => !TacticalPatternRules.IsImmutableShape(t))
-                .Select(t => "Integration event " + t.FullName + " has mutable shape")
-                .ToList();
-            DcaRule.Fail(
-                "Integration Events should have immutable shape",
-                violations,
-                "declare the event as a sealed record (or record struct)");
-        })
+                .Where(t => arch.Layout.Markers.Is(nameof(DcaMarkers.IntegrationEvent), t)),
+            t => TacticalPatternRules.IsImmutableShape(t) ? [] : ["Integration event " + t.FullName + " has mutable shape"]))
     .Selecting(
         "Non-interface types below the root namespace whose implemented interfaces include"
             + " IIntegrationEvent - directly or through a derived interface; classes, records and structs"
             + " alike, compiler-generated types excluded.")
     .Checking(
-        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")
+        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.",
+        "declare the event as a sealed record (or record struct)")
 ```
 
 ## Related mentions (heuristic)

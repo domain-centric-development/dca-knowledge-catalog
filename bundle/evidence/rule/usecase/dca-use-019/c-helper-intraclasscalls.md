@@ -221,8 +221,9 @@ internal sealed class IntraClassCalls
 
     /// <summary>
     /// The instructions of a unit's IL in order, each with its resolved operand where it names a method
-    /// (<c>InlineMethod</c>) or a type (<c>InlineType</c>, such as <c>box</c> and <c>constrained.</c>); other operands
-    /// are skipped and yield <c>null</c>. A token that does not resolve yields <c>null</c> as well.
+    /// (<c>InlineMethod</c>), a type (<c>InlineType</c>, such as <c>box</c> and <c>constrained.</c>) or a field
+    /// (<c>InlineField</c>, such as <c>stfld</c>); other operands are skipped and yield <c>null</c>. A token that does
+    /// not resolve yields <c>null</c> as well.
     /// </summary>
     public static IEnumerable<(OpCode Code, object? Operand)> IlInstructions(MethodBase method)
     {
@@ -269,6 +270,19 @@ internal sealed class IntraClassCalls
                         operand = opCode.OperandType == OperandType.InlineMethod
                             ? method.Module.ResolveMethod(token, typeArgs, methodArgs)
                             : method.Module.ResolveType(token, typeArgs, methodArgs);
+                    }
+                    catch (ArgumentException)
+                    {
+                        operand = null;
+                    }
+
+                    break;
+                case OperandType.InlineField:
+                    var fieldToken = BitConverter.ToInt32(il, position);
+                    position += 4;
+                    try
+                    {
+                        operand = method.Module.ResolveField(fieldToken, typeArgs, methodArgs);
                     }
                     catch (ArgumentException)
                     {

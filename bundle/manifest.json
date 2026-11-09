@@ -1,15 +1,15 @@
 {
-  "bundle_sha256": "422059dbd4485ca42a394ea1f60bee592ed9b16cf9e5c0085feabcedeb65edb7",
+  "bundle_sha256": "489a7391c5582f78454399ea57400d58eae028ebbf104a61a83328c63ddb1dea",
   "counts": {
-    "Decision": 36,
+    "Decision": 37,
     "Guide": 21,
     "Marker": 36,
     "Note": 1,
-    "Pitfall": 51,
+    "Pitfall": 55,
     "Process": 1,
-    "Recipe": 26,
-    "Reference": 303,
-    "Rule": 149,
+    "Recipe": 27,
+    "Reference": 325,
+    "Rule": 155,
     "Section": 210,
     "Template": 51
   },
@@ -17,38 +17,38 @@
   "format": "dca-bundle-manifest-v1",
   "library_versions": {
     "dotnet": {
-      "DomainCentric.ArchRules": "0.12.0",
-      "DomainCentric.ArchRules.Xunit": "0.12.0",
+      "DomainCentric.ArchRules": "0.13.0",
+      "DomainCentric.ArchRules.Xunit": "0.13.0",
       "DomainCentric.BuildingBlocks": "0.3.0"
     },
     "java": {
       "archunitSpringModulithVersion": "0.3.0-SNAPSHOT",
-      "archunitVersion": "0.12.0",
+      "archunitVersion": "0.13.0",
       "buildingBlocksVersion": "0.4.0",
       "dcaSpringVersion": "0.3.0"
     }
   },
   "sources": {
     "dca-dotnet": {
-      "revision": "1d1fca16214cef48b6e722674ddc7a22fdf1741a",
-      "source_sha256": "1bd05801bb4cade7d77404628da766db81e12c54cee106ae81296bde6eab5585"
+      "revision": "c431d06a6b514c114302d9cd311dadeb80125bdf",
+      "source_sha256": "8c3c36a09c28400d18af98b62ba4bfbe3955db82283ff58119df01f9fd7f3cad"
     },
     "dca-guide": {
-      "revision": "d4d4cd1d233417588c84aaefea5ebe34dbfd29a2",
-      "source_sha256": "e33a765b8ed5cb4b638c83a6a0b9f13b42bb49d75d2e2a2bfb4aaa58ac057b91"
+      "revision": "de037eea37fcb443eb1632c0ec6027c32b380136",
+      "source_sha256": "3b262c560e1ca2ed4724371239cdd70b0a1b2e24a7647120b367460078c3d14a"
     },
     "dca-java": {
-      "revision": "b209058597ddef3b7ca9b1c04d1d4f0c2d792f1a",
-      "source_sha256": "c7e5dee838a421d5055577c34aeb48e1a9ff4b55138e11b169af933cd32e8df3"
+      "revision": "58292ecb7421fc17b56ed4d8f11499f897e0a914",
+      "source_sha256": "d1ddeb8f6cdb177004618a6e53751781757273ed58d2f86ac0a18e3c0d983340"
     },
     "dca-knowledge-catalog": {
       "note": "own repository: the carrying commit is the revision; content digest only",
       "revision": null,
-      "source_sha256": "47c3f3472fdc80c9b4e96ddebee21b00adcf580a8d1501756ac09499e1c4cb72"
+      "source_sha256": "f4c861b662030cdd3f3854da19c6fad79223bbaf7979be75c1160fbe5c65bc66"
     },
     "dca-rust": {
-      "revision": "04b96385507068adf9582f75517522d6af323a2a",
-      "source_sha256": "cbacd8841fe6dc57f4e3a8fe7f4a626d72513c3521885768e6908b0c719fc473"
+      "revision": "2cbceff6bb321c1e24982b71a7c4d06bcd3862e7",
+      "source_sha256": "e7c6de37f091124803be4eafdaf3e29b7d0b38ebf92c39d2023ed95e7986a29b"
     }
   }
 }

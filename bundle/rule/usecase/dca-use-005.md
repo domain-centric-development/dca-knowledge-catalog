@@ -133,14 +133,15 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-USE-005",
         "Use Case Queries should be immutable (sealed or records)",
         "Use case queries should be immutable (value objects)",
         arch => ImmutableApplicationModels(arch, "Query", t => arch.Layout.Markers.Is("Query", t)))
     .Selecting("Classes and structs, including record classes and record structs, in each module application namespace that the configured query role recognises - by default a simple name ending with Query.")
     .Checking(
-        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.")
+        "Classes are sealed or records; structs are allowed. Every inherited instance field is readonly, every property is get-only or init-only and no instance Set*(x): void method exists. Referenced objects and collection contents are not inspected.",
+        "declare *Query types with immutable instance state")
 ```
 
 ## Configured by

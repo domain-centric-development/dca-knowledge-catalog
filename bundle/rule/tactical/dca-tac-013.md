@@ -72,29 +72,17 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-013",
     "Repository Interfaces should extend the IRepository Marker Interface",
     "Repository interfaces should extend the IRepository marker interface",
-    arch =>
-    {
-        var violations = new List<string>();
-        foreach (var candidate in arch.Interfaces)
-        {
-            if (!arch.InApplication(candidate)
-                || !HasSuffixButIsNotMarker(candidate, arch.Layout.RepositorySuffix))
-            {
-                continue;
-            }
-
-            if (!IsRole(arch, candidate, nameof(DcaMarkers.Repository)))
-            {
-                violations.Add($"{candidate.FullName} is named *Repository but does not extend {nameof(IRepository)}");
-            }
-        }
-
-        DcaRule.Fail("Repository interfaces must extend the IRepository marker.", violations);
-    })
+    arch => SelectionArchRule.ForEach(
+        "interfaces in the application layer named *Repository should extend IRepository",
+        () => arch.Interfaces.Where(candidate => arch.InApplication(candidate)
+            && HasSuffixButIsNotMarker(candidate, arch.Layout.RepositorySuffix)),
+        candidate => IsRole(arch, candidate, nameof(DcaMarkers.Repository))
+            ? []
+            : [$"{candidate.FullName} is named *Repository but does not extend {nameof(IRepository)}"]))
     .Selecting(
         "Interfaces in <module>.Application of every module root whose name ends with "
         + "Repository; interfaces named exactly Repository or IRepository excluded.")

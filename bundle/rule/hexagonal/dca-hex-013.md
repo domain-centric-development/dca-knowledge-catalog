@@ -72,17 +72,17 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-013",
         "Outgoing Adapters must not depend on input ports",
         "An outgoing adapter is driven: the application calls it through an output port. One that"
             + " calls an input port drives the application instead - it is an incoming adapter"
             + " filed on the wrong side, and the call it makes runs a second use case from inside"
             + " the first one's outgoing edge",
-        arch =>
-        {
-            var violations = new List<string>();
-            foreach (var adapter in arch.Classes.Where(arch.InOutgoingAdapter))
+        arch => SelectionArchRule.ForEach(
+            "classes in outgoing adapters should not depend on an input port",
+            () => arch.Classes.Where(arch.InOutgoingAdapter),
+            adapter =>
             {
                 var ports = adapter.Dependencies
                     .Select(d => d.Target)
@@ -99,16 +99,10 @@ DcaRule.Check(
                         .Select(t => t.FullName!));
                 }
 
-                violations.AddRange(ports.Distinct()
-                    .Select(p => $"{adapter.FullName} depends on the input port {p}"));
-            }
-
-            DcaRule.Fail(
-                "Outgoing Adapters must not depend on input ports",
-                violations.Distinct().OrderBy(v => v, StringComparer.Ordinal).ToList(),
-                "move the class to the incoming adapter namespace, or let the use case reach the"
-                    + " capability through an output port");
-        })
+                return ports.Distinct()
+                    .Select(p => $"{adapter.FullName} depends on the input port {p}")
+                    .OrderBy(v => v, StringComparer.Ordinal);
+            }))
     .Selecting("Classes in <module>.Adapter.Outgoing of every module root.")
     .Checking(
         "No dependency on a type assignable to IInputPort - the input port interfaces and the use"
@@ -116,7 +110,9 @@ DcaRule.Check(
             + " api is not a dependency on an input port, even where that api delegates to one"
             + " - only direct dependencies are read; constructor parameters are read from the"
             + " runtime type as well, so a port injected into an adapter whose members are all"
-            + " async is still found. An empty selection passes.")
+            + " async is still found. An empty selection passes.",
+        "move the class to the incoming adapter namespace, or let the use case reach the"
+            + " capability through an output port")
 ```
 
 ## Related mentions (heuristic)

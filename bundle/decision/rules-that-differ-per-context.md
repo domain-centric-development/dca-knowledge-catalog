@@ -41,3 +41,4 @@ look. Until then the cost of the mechanism is higher than the cost of writing th
 - [Pattern style per subdomain](/decision/pattern-style-per-subdomain.md)
 - [Architecture reference](/reference/architecture.md)
 - [ArchUnit governance](/guide/archunit-governance.md)
+- [Adopt the rules on existing code](/recipe/adopt-the-rules-on-existing-code.md)

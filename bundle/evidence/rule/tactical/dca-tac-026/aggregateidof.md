@@ -16,7 +16,7 @@ evidence_for: "/rule/tactical/dca-tac-026.md#aggregateidof"
    */
   private static Optional<JavaClass> aggregateIdOf(
       JavaClass aggregate, JavaClass repository, DcaMarkers markers) {
-    Optional<JavaType> bound = typeArgument(repository, markers.repository(), 1);
+    Optional<JavaType> bound = TypeInspection.typeArgument(repository, markers.repository(), 1);
     if (bound.isPresent() && !(bound.get() instanceof JavaTypeVariable)) {
       return Optional.of(bound.get().toErasure());
     }

@@ -72,19 +72,18 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ADV-005",
     "Integration Events must be annotated with IntegrationEventType",
     "[IntegrationEventType(name, Version)] is the contract identity of every integration event"
         + " — the serializer keys (name, version) to the class and stamps both onto the wire"
         + " envelope",
-    arch => DcaRule.Fail(
-        "Integration Events must be annotated with [IntegrationEventType]:",
-        Violations(
-            arch,
-            t => t is not Interface && IsIntegrationEvent(t, arch.Layout.Markers),
-            t => !t.HasAttribute(arch.Layout.Markers.IntegrationEventType),
-            t => $"{t.FullName} is not annotated with [IntegrationEventType]")))
+    arch => ViolationRule(
+        "integration events should be annotated with the integration-event-type attribute",
+        arch,
+        t => t is not Interface && IsIntegrationEvent(t, arch.Layout.Markers),
+        t => !t.HasAttribute(arch.Layout.Markers.IntegrationEventType),
+        t => $"{t.FullName} is not annotated with [IntegrationEventType]"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IIntegrationEvent - "
         + "records, structs and abstract classes included.")

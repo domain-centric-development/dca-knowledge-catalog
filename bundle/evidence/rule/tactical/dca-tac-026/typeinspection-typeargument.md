@@ -1,13 +1,13 @@
 ---
 type: Reference
-title: "The repository of an owned aggregate declares a lookup by the aggregate's id and the owner's id — `typeArgument`"
+title: "The repository of an owned aggregate declares a lookup by the aggregate's id and the owner's id — `TypeInspection.typeArgument`"
 tags: [reference]
-evidence_for: "/rule/tactical/dca-tac-026.md#typeargument"
+evidence_for: "/rule/tactical/dca-tac-026.md#typeinspectiontypeargument"
 ---
 
-[Full node and context](/rule/tactical/dca-tac-026.md#typeargument). This is an evidence excerpt; retain the parent selection and caveats.
+[Full node and context](/rule/tactical/dca-tac-026.md#typeinspectiontypeargument). This is an evidence excerpt; retain the parent selection and caveats.
 
-### `typeArgument`
+### `TypeInspection.typeArgument`
 
 ```java
 /**
@@ -16,7 +16,7 @@ evidence_for: "/rule/tactical/dca-tac-026.md#typeargument"
    * type is substituted by the argument the type binds for it. Empty where the marker is used raw
    * or not at all.
    */
-  private static Optional<JavaType> typeArgument(JavaClass type, String markerName, int index) {
+  static Optional<JavaType> typeArgument(JavaClass type, String markerName, int index) {
     List<JavaType> candidates = new ArrayList<>(type.getInterfaces());
     type.getSuperclass().ifPresent(candidates::add);
     for (JavaType candidate : candidates) {

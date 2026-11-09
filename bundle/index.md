@@ -6,14 +6,14 @@ Knowledge for building Domain-Centric Architecture applications. **Generated zon
 
 **What `review:` means on an authored node.** `reviewed` — an owner and evidence have been verified. `draft` — written and wired into the graph, not yet through a review pass: usable, and it never overrides a generated node, because rules, markers and guide text are derived from the code and win on every contradiction. `superseded` — history; follow `superseded_by`. Most construction guidance is currently `draft`.
 
-- [decision/](decision/index.md) (36) — Decision guides for design forks (which pattern, when).
-- [evidence/](evidence/index.md) (300)
+- [decision/](decision/index.md) (37) — Decision guides for design forks (which pattern, when).
+- [evidence/](evidence/index.md) (322)
 - [guide/](guide/index.md) (231) — The compact implementation guide — patterns, governance, supplementary guides (full text).
 - [marker/](marker/index.md) (36) — Architectural marker interfaces — the contracts a new application implements.
 - [note/](note/index.md) (1) — Compounded query answers — synthesis made permanent.
-- [pitfall/](pitfall/index.md) (51) — Anti-patterns and the rules that forbid them.
+- [pitfall/](pitfall/index.md) (55) — Anti-patterns and the rules that forbid them.
 - [process/](process/index.md) (1) — How-to processes for keeping the architecture's conventions.
-- [recipe/](recipe/index.md) (26) — Task playbooks — ordered steps to build a DCA construct.
+- [recipe/](recipe/index.md) (27) — Task playbooks — ordered steps to build a DCA construct.
 - [reference/](reference/index.md) (2) — The two classes every rule is parameterised by — DcaLayout (settings, defaults, patterns) and DcaArchitecture (how contexts and modules are discovered).
-- [rule/](rule/index.md) (150) — ArchUnit rules — the enforceable, machine-checkable architecture.
+- [rule/](rule/index.md) (156) — ArchUnit rules — the enforceable, machine-checkable architecture.
 - [template/](template/index.md) (51) — Domain-free code skeletons to fill in.

@@ -60,7 +60,10 @@ tags: [guide, section]
   ```
 
   `setCompleted(true)` would let the caller set the state instead of triggering the behaviour, so no domain method
-  takes a `boolean`, and nothing outside sets the field. A `boolean` returned is a question to the object and fine,
+  takes a `boolean`, and nothing outside sets the field. The one exception is the factory that rebuilds a stored
+  aggregate — `reconstitute(...)`, or `restore(...)`: it hands the stored fact back to the type that holds it and
+  triggers nothing, so it takes the `boolean` as it was stored. The rule recognises that factory by its name; a
+  project that names it otherwise configures its own. A `boolean` returned is a question to the object and fine,
   though an aggregate is told what to do rather than asked and then decided about from outside. Three or more
   states, or transitions with rules of their own, are an enum or a value. Facts that hold independently — completed,
   archived, deleted — are separate fields, never one status. A project's glossary may decide otherwise; then the
@@ -77,6 +80,13 @@ tags: [guide, section]
 - Eventual consistency between aggregates
 - Delete aggregate deletes all contained entities
 - Never inject repositories or remote services into aggregates. Use cases retrieve facts; domain services calculate over supplied snapshots. A callback parameter does not make external-data responsibility belong on the aggregate.
+- Every change of state is a method of the root, named after what it means (`complete()`, `reopen()`). No adapter
+  writes a lifecycle field — a status, a delivered flag, an applied mark — straight into storage: such a change has no
+  guard and raises no event, and the state now has two ways in. The repository's adapter writes only what the
+  aggregate holds. A store whose port takes a status to set is the same lifecycle without its aggregate
+- A decision asks the aggregate. A copy of its state — a read model, a list of accepted words, a prefix check on a
+  stored field — answers for display only and never decides: it decides the same thing a second time and drifts
+  from the aggregate the first time a rule changes
 - Two factories, two purposes: `create(...)` enforces creation invariants and registers the creation event; `reconstitute(...)` rebuilds a stored aggregate from persisted state and registers nothing. Persistence adapters use only the latter — rebuilding through `create` publishes a phantom creation on the next save
 - Domain events leave the aggregate through one call, `DomainEventPublisher.publishAndClearEvents(aggregate)`, after the save: dispatch everything, clear only when every listener returned. Iterating `domainEvents()` and calling `publish` per event is not the sanctioned form
 - Protect against lost updates with optimistic concurrency: version field on the root, incremented per state change; persistence rejects saves with a stale expected version
@@ -88,6 +98,13 @@ tags: [guide, section]
 - Domain Service operates in domain language
 - Domain Service is part of domain layer
 - No dependencies on application or outer layers
+- **A domain service is used by the application and by other domain services only.** The use case calls it
+  and carries its outcome in the result. An aggregate, an entity or a value does not call it, nor does a read
+  model, an adapter of either direction or the composition root — the composition root only constructs it and
+  hands it to a use case. A read model computes on query through the aggregate and its values, never through a
+  domain service: a decision belongs to the aggregate, or to the use case that asks the service
+  (`DCA-ADV-021`, experimental; `DCA-ADV-019` holds the model's part of it, `DCA-HEX-012` the incoming
+  adapter's)
 
 ### Domain Event Rules (Internal to Bounded Context)
 - Domain Events are immutable
@@ -184,6 +201,10 @@ adapter behind it does. Nothing above this line depends on the answer.
 - ACL converts events to domain commands; it belongs to the incoming adapter, and an own
   `acl/` package there is a convention, not a rule
 - Event Consumer calls Input Port, never domain directly
+- A request is not an event. A press, a request file or a message that asks for something can be refused, can wait
+  and can fail, so it is a command: it gets a lifecycle — an aggregate, or a process manager — and its outcomes raise
+  the events. An event is a fact nobody refuses. A file or a queue as an inbox is a legitimate transport for
+  commands; the port does not change with the transport
 - Consuming bounded context maintains its own model
 - Eventual consistency between bounded contexts via events
 - Assume at-least-once delivery: consumers deduplicate per effect (the effect and the event ID, recorded in the effect's transaction) or make the operation naturally idempotent
@@ -213,3 +234,15 @@ adapter behind it does. Nothing above this line depends on the answer.
 
 - [DomainEventPublisher](/marker/port-out/domaineventpublisher.md)
 - [@IntegrationEventType](/marker/tactical/integrationeventtype.md)
+
+## Evidence slices
+
+- [Entity Rules](/evidence/guide/rules/domain-layer-rules/entity-rules.md)
+- [Value Object Rules](/evidence/guide/rules/domain-layer-rules/value-object-rules.md)
+- [Aggregate Rules](/evidence/guide/rules/domain-layer-rules/aggregate-rules.md)
+- [Domain Service Rules](/evidence/guide/rules/domain-layer-rules/domain-service-rules.md)
+- [Domain Event Rules (Internal to Bounded Context)](/evidence/guide/rules/domain-layer-rules/domain-event-rules-internal-to-bounded-context.md)
+- [Integration Event Rules (Cross-Bounded Context)](/evidence/guide/rules/domain-layer-rules/integration-event-rules-cross-bounded-context.md)
+- [Event Publishing Rules](/evidence/guide/rules/domain-layer-rules/event-publishing-rules.md)
+- [Event Consumption Rules](/evidence/guide/rules/domain-layer-rules/event-consumption-rules.md)
+- [General Domain Rules](/evidence/guide/rules/domain-layer-rules/general-domain-rules.md)

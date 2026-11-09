@@ -1,6 +1,6 @@
 # rules
 
-- [ADAPTER LAYER RULES](adapter-layer-rules.md) — value type, parsed at the edge (or by the value type's own factory), never as text the use case parses. Text
+- [ADAPTER LAYER RULES](adapter-layer-rules.md) — incoming adapter like a controller: it translates and calls an input port. It does not load an aggregate, change
 - [APPLICATION LAYER RULES](application-layer-rules.md) — the consumer that calls it; the same effect reached from a second trigger is the same use case
 - [BOUNDARY CROSSING RULES](boundary-crossing-rules.md) — BOUNDARY CROSSING RULES
 - [DOMAIN LAYER RULES](domain-layer-rules.md) — refuses, null included, with the rule's named failure. The incoming adapter hands it the raw value and does not

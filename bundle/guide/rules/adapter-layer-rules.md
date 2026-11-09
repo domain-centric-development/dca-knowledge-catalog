@@ -10,6 +10,10 @@ tags: [guide, section]
 ### Input Adapter Rules
 - Input Adapter calls Input Port
 - Input Adapter uses no infrastructure (`DCA-HEX-004`) — a capability the use case needs is declared as an Output Port there; the adapter may use the identity port to resolve the caller; its own mechanics stay inside the adapter
+- A callback the framework or a pipeline calls — a listener, a scheduled job, a hook run after a step — is an
+  incoming adapter like a controller: it translates and calls an input port. It does not load an aggregate, change
+  it and save it itself; that is a use case living in the hook, out of reach of the transaction and of every other
+  caller
 - Controller extracts data from HTTP request
 - Controller creates Input Data/DTO
 - The adapter turns raw input into the types the input port takes: an id arrives in the command as the id's
@@ -50,6 +54,8 @@ tags: [guide, section]
 - Output Adapter implements Output Port
 - Output Adapter may use global and own-module infrastructure, never another module's (`DCA-HEX-005`)
 - Repository Adapter implements Repository Interface
+- An output adapter calls no method of an aggregate root that changes its state. It stores and loads what the
+  aggregate holds; a change it makes on its own bypasses the guard, the event and the use case that owns it
 - Adapter translates between domain and external world
 - Adapter contains framework-specific code
 - Adapter handles data transformation

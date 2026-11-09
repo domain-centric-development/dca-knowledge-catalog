@@ -78,24 +78,16 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-NAM-001",
         $"Application layer InputPort implementations must end with '{layout.UseCaseSuffix}'",
         "InputPort implementations (use cases) should follow consistent naming conventions (Hexagonal Architecture)",
-        arch =>
-        {
-            var violations = arch.Classes
-                .Where(c => arch.InApplication(c)
-                    && c.IsRecord != true
-                    && ImplementsUseCase(arch, c)
-                    && !c.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal))
-                .Select(c => $"{c.FullName} implements an input port but does not end with '{arch.Layout.UseCaseSuffix}'")
-                .ToList();
-            DcaRule.Fail(
-                $"Application layer InputPort implementations must end with '{arch.Layout.UseCaseSuffix}'",
-                violations,
-                $"rename the class to *{arch.Layout.UseCaseSuffix}");
-        })
+        arch => SelectionArchRule.ForEach(
+            "input port implementations in the application layer should end with the use-case suffix",
+            () => arch.Classes.Where(c => arch.InApplication(c) && c.IsRecord != true && ImplementsUseCase(arch, c)),
+            c => c.Name.EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)
+                ? []
+                : [$"{c.FullName} implements an input port but does not end with '{arch.Layout.UseCaseSuffix}'"]))
     .Selecting(
         "Non-record classes in <module>.Application of every module root that implement"
             + " IUseCase<TInput, TOutput> - directly or through an I*InputPort interface that"
@@ -103,7 +95,8 @@ DcaRule.Check(
     .Checking(
         "The name ends with the configured use-case suffix. Interfaces and records are"
             + " not selected; a class implementing only IInputPort without IUseCase is not"
-            + " selected either. An empty selection passes.")
+            + " selected either. An empty selection passes.",
+        $"rename the class to *{layout.UseCaseSuffix}")
 ```
 
 ## Related mentions (heuristic)

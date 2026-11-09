@@ -123,18 +123,17 @@ static com.tngtech.archunit.lang.ArchCondition<JavaClass> haveImmutableShape() {
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ADV-001",
     "Domain Events must implement IDomainEvent and have immutable shape",
     "Domain events should be immutable records implementing IDomainEvent (named in past tense,"
         + " e.g., ProductCreated, CartCleared)",
-    arch => DcaRule.Fail(
-        "Domain Events must have immutable instance state:",
-        Violations(
-            arch,
-            t => t is not Interface && IsDomainEvent(t, arch.Layout.Markers),
-            t => !TacticalPatternRules.IsImmutableShape(t),
-            t => $"{t.FullName} implements IDomainEvent but has mutable shape")))
+    arch => ViolationRule(
+        "domain events should have immutable shape",
+        arch,
+        t => t is not Interface && IsDomainEvent(t, arch.Layout.Markers),
+        t => !TacticalPatternRules.IsImmutableShape(t),
+        t => $"{t.FullName} implements IDomainEvent but has mutable shape"))
     .Selecting(
         "Non-interface types anywhere under scan that are assignable to IDomainEvent - directly "
         + "or through a supertype.")

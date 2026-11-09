@@ -72,13 +72,15 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-015",
     "Repository Implementations must reside in the Adapter.Outgoing namespace",
     "Repository implementations are outgoing adapters in bounded contexts",
-    arch => RequireNamespace(
-        ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.Repository)),
-        arch.InOutgoingAdapter, "Repository implementations", "the outgoing adapter namespace"))
+    arch => NamespaceRule(
+        arch,
+        a => ConcreteTypesAssignableTo(a, nameof(DcaMarkers.Repository)),
+        arch.InOutgoingAdapter,
+        "repository implementations should reside in the outgoing adapter namespace"))
     .Selecting(
         "Non-interface types below the root namespace assignable to IRepository, "
         + "abstract base classes included.")

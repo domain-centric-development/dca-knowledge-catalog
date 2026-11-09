@@ -75,30 +75,18 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-001",
     "Aggregate Roots must implement IAggregateRoot",
     "Classes named *AggregateRoot must implement the IAggregateRoot interface (DDD pattern)",
-    arch =>
-    {
-        var violations = new List<string>();
-        foreach (var type in NonInterfaceTypes(arch))
-        {
-            if (!type.Name.EndsWith(arch.Layout.AggregateRootSuffix, StringComparison.Ordinal)
-                || type.Name == arch.Layout.AggregateRootSuffix
-                || !arch.InDomainModel(type))
-            {
-                continue;
-            }
-
-            if (!IsRole(arch, type, nameof(DcaMarkers.AggregateRoot)))
-            {
-                violations.Add($"{type.FullName} is named *AggregateRoot but does not implement {nameof(IAggregateRoot)}");
-            }
-        }
-
-        DcaRule.Fail("Classes named *AggregateRoot must implement the IAggregateRoot marker.", violations);
-    })
+    arch => SelectionArchRule.ForEach(
+        "types in the domain model named *AggregateRoot should implement IAggregateRoot",
+        () => NonInterfaceTypes(arch).Where(type => type.Name.EndsWith(arch.Layout.AggregateRootSuffix, StringComparison.Ordinal)
+            && type.Name != arch.Layout.AggregateRootSuffix
+            && arch.InDomainModel(type)),
+        type => IsRole(arch, type, nameof(DcaMarkers.AggregateRoot))
+            ? []
+            : [$"{type.FullName} is named *AggregateRoot but does not implement {nameof(IAggregateRoot)}"]))
     .Selecting(
         "Non-interface types - classes, structs and enums - in <module>.Domain.Model of "
         + "every module root whose name ends with AggregateRoot; the type named exactly "

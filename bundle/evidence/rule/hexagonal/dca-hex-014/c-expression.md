@@ -10,22 +10,23 @@ evidence_for: "/rule/hexagonal/dca-hex-014.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-014",
         "GET handlers must not drive an input port that takes a command",
         "A state-changing use case is reached only by an unsafe HTTP method, never by GET; links do not"
             + " create state. Prefetching, crawlers and cross-site navigation follow a link without asking,"
             + " and would otherwise trigger the change. A handler that names no HTTP method answers GET as well",
-        arch =>
-        {
-            var roles = arch.Layout.FrameworkTypes;
-            var violations = new List<string>();
-            foreach (var adapter in arch.Classes.Where(c => !c.IsCompilerGenerated && arch.InIncomingAdapter(c)).OrderBy(c => c.FullName, StringComparer.Ordinal))
+        arch => SelectionArchRule.ForEach(
+            "GET handlers in incoming adapters should not drive an input port that takes a command",
+            () => arch.Classes.Where(c => !c.IsCompilerGenerated && arch.InIncomingAdapter(c)),
+            adapter =>
             {
+                var roles = arch.Layout.FrameworkTypes;
+                var violations = new List<string>();
                 var runtime = arch.RuntimeType(adapter);
                 if (runtime is null)
                 {
-                    continue;
+                    return violations;
                 }
 
                 var byPrefix = IsController(adapter, arch.Layout);
@@ -44,13 +45,9 @@ DcaRule.Check(
                         }
                     }
                 }
-            }
 
-            DcaRule.Fail(
-                "GET handlers must not drive an input port that takes a command",
-                violations.Distinct().ToList(),
-                "map the handler to POST, PUT or DELETE, or let the GET handler ask a query");
-        })
+                return violations;
+            }))
     .Experimental()
     .Selecting(
         "Methods declared by classes in <module>.Adapter.Incoming of every module root that carry an"
@@ -71,5 +68,6 @@ DcaRule.Check(
             + " parameter. A mapping that names no HTTP method is checked like"
             + " a GET handler. A handler mapped by a routing call rather than"
             + " by an attribute or a name is not seen, and a command reached through a second class is"
-            + " not followed. An empty selection passes.")
+            + " not followed. An empty selection passes.",
+        "map the handler to POST, PUT or DELETE, or let the GET handler ask a query")
 ```

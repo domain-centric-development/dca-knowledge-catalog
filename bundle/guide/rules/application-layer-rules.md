@@ -20,6 +20,8 @@ tags: [guide, section]
 - Use case implements Input Port interface
 - Use case orchestrates domain objects
 - Use case is thin, delegates to domain
+- A use case keeps no state between calls: what it holds is set once, by its constructor — the ports and services
+  it is wired with. A field it writes while it runs is shared by every caller of the one instance
 - Use case calls Output Ports for infrastructure
 - Use case handles transaction boundaries
 - Use case transforms DTOs to domain objects

@@ -5,7 +5,7 @@ title: Domain layer must stay synchronous
 rule: "Async is an I/O concern of ports and adapters; a synchronous domain model stays testable, deterministic and free of sync-over-async hazards."
 constraint: Domain layer must stay synchronous.
 selects: "Types in <module>.Domain of every module root."
-checks: "No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken - in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T> are not checked. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, and CompletableFuture or Flow.Publisher in a domain model is reported by no rule there."
+checks: "No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken - in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T> are not checked. An empty selection passes. The statement is language-neutral: its shared twin is DCA-ONI-004 (experimental), with the types as a layout setting, and this id retires with DCA-ONI-004 as replacement once that one is released."
 enforced_by: "DotnetRules#DCA-NET-001"
 status: enforced
 maturity: released
@@ -21,7 +21,7 @@ Types in <module>.Domain of every module root.
 
 ## Check
 
-No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken - in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T> are not checked. An empty selection passes. The statement is language-neutral, but it is carried under a dotnet id: Java has no twin, and CompletableFuture or Flow.Publisher in a domain model is reported by no rule there.
+No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken - in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T> are not checked. An empty selection passes. The statement is language-neutral: its shared twin is DCA-ONI-004 (experimental), with the types as a layout setting, and this id retires with DCA-ONI-004 as replacement once that one is released.
 
 ### C# expression
 
@@ -57,9 +57,9 @@ DcaRule.Check(
     .Checking(
         "No dependency on Task, Task<T>, ValueTask, ValueTask<T> or CancellationToken -"
             + " in a signature, a field or a method body. Other awaitables and IAsyncEnumerable<T>"
-            + " are not checked. An empty selection passes. The statement is language-neutral, but"
-            + " it is carried under a dotnet id: Java has no twin, and CompletableFuture or"
-            + " Flow.Publisher in a domain model is reported by no rule there.")
+            + " are not checked. An empty selection passes. The statement is language-neutral: its"
+            + " shared twin is DCA-ONI-004 (experimental), with the types as a layout setting, and"
+            + " this id retires with DCA-ONI-004 as replacement once that one is released.")
 ```
 
 ## Configured by

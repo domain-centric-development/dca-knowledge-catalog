@@ -111,11 +111,11 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-CYC-002",
     "Application Layer must not have cyclic dependencies (package-based slice discovery)",
     "Application services should have clear boundaries and no cycles",
-    arch => CheckSlices(arch, layout, layout.ApplicationSegment, "Application Layer must not have cyclic dependencies"))
+    arch => SliceRule(arch, layout, layout.ApplicationSegment, "the application layers of the modules should be free of cycles"))
     .Selecting(
         "One slice per module root, holding the types in <module>.Application of that module and "
         + "below (Application.Shared included); types outside every module or outside the "
@@ -124,7 +124,8 @@ DcaRule.Check(
         "The slices form no dependency cycle between modules' application layers. Slices are per "
         + "module root, so a cycle between use cases or features inside one module is not detected "
         + "here - DCA-CYC-005 covers the application layer per operation - and dependencies into "
-        + "domain or adapter types do not count.")
+        + "domain or adapter types do not count.",
+        "break the cycle by moving the shared concept into one slice or behind a port")
 ```
 
 ## Configured by

@@ -10,7 +10,7 @@ evidence_for: "/rule/hexagonal/dca-hex-017.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-017",
         "Event listeners that drive an input port must run after the commit in their own transaction",
         "A reaction to an event changes state or performs an external effect through a use case. Run inside"
@@ -21,22 +21,19 @@ DcaRule.Check(
         arch =>
         {
             var roles = arch.Layout.FrameworkTypes;
-            var violations = new List<string>();
-            if (roles.EventListenerTypes.Count > 0 && roles.TransactionalEventListenerTypes.Count > 0)
-            {
-                foreach (var listener in arch.Classes
-                    .Where(c => !c.IsCompilerGenerated && roles.EventListenerTypes.Any(t => c.IsAssignableTo(t)))
-                    .OrderBy(c => c.FullName, StringComparer.Ordinal))
+            return SelectionArchRule.ForEach(
+                "event listeners that run in the raising transaction should not drive an input port",
+                () => roles.EventListenerTypes.Count > 0 && roles.TransactionalEventListenerTypes.Count > 0
+                    ? arch.Classes.Where(c => !c.IsCompilerGenerated
+                        && roles.EventListenerTypes.Any(t => c.IsAssignableTo(t))
+                        && !roles.TransactionalEventListenerTypes.Any(t => c.IsAssignableTo(t)))
+                    : [],
+                listener =>
                 {
-                    if (roles.TransactionalEventListenerTypes.Any(t => listener.IsAssignableTo(t)))
-                    {
-                        continue;
-                    }
-
                     var runtime = arch.RuntimeType(listener);
                     if (runtime is null)
                     {
-                        continue;
+                        return [];
                     }
 
                     var ports = new IntraClassCalls(runtime).Units
@@ -46,18 +43,10 @@ DcaRule.Check(
                         .Distinct()
                         .OrderBy(name => name, StringComparer.Ordinal)
                         .ToList();
-                    if (ports.Count > 0)
-                    {
-                        violations.Add($"{listener.FullName} drives {string.Join(", ", ports)} inside the transaction that raised the event");
-                    }
-                }
-            }
-
-            DcaRule.Fail(
-                "Event listeners that drive an input port must run after the commit in their own transaction",
-                violations,
-                "deliver the reaction after the commit in its own transaction - a transactional listener backed"
-                    + " by an outbox - or let the listener call only output ports");
+                    return ports.Count > 0
+                        ? [$"{listener.FullName} drives {string.Join(", ", ports)} inside the transaction that raised the event"]
+                        : (IEnumerable<string>)[];
+                });
         })
     .Experimental()
     .Selecting(
@@ -67,5 +56,7 @@ DcaRule.Check(
     .Checking(
         "No method of such a class - async state machines and lambdas included - calls a method of a type"
             + " assignable to IInputPort. The rule reads the listener's kind, not whether an outbox backs it; an"
-            + " input port reached through a second class is not followed. An empty selection passes.")
+            + " input port reached through a second class is not followed. An empty selection passes.",
+        "deliver the reaction after the commit in its own transaction - a transactional listener backed"
+            + " by an outbox - or let the listener call only output ports")
 ```

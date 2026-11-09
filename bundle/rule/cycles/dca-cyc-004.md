@@ -117,11 +117,11 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-CYC-004",
     "Incoming Adapter Namespaces must not have cyclic dependencies",
     "Incoming adapters should have clear boundaries and no cycles",
-    arch => CheckSlices(arch, layout, $"{layout.AdapterSegment}.{layout.IncomingSegment}", "Incoming Adapter Namespaces must not have cyclic dependencies"))
+    arch => SliceRule(arch, layout, $"{layout.AdapterSegment}.{layout.IncomingSegment}", "the incoming adapters of the modules should be free of cycles"))
     .Selecting(
         "One slice per module root, holding the types in <module>.Adapter.Incoming of that module "
         + "and below; everything else is ignored.")
@@ -129,7 +129,8 @@ DcaRule.Check(
         "The slices form no dependency cycle between modules' incoming adapters. Slices are per "
         + "module root, so a cycle inside one module's incoming adapters is not detected here, and "
         + "dependencies into other layers do not count. DCA-CYC-005 covers the application layer "
-        + "per operation; no rule slices the adapters within a module.")
+        + "per operation; no rule slices the adapters within a module.",
+        "break the cycle by moving the shared concept into one slice or behind a port")
 ```
 
 ## Configured by

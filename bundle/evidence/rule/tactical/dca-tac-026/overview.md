@@ -52,7 +52,8 @@ DcaRule.check(
           List<String> violations = new ArrayList<>();
           List<JavaClass> repositories = repositoryInterfaces(arch);
           for (JavaClass aggregate : ownedAggregateRoots(arch)) {
-            Optional<JavaType> owner = typeArgument(aggregate, markers.owned(), 0);
+            Optional<JavaType> owner =
+                TypeInspection.typeArgument(aggregate, markers.owned(), 0);
             if (owner.isEmpty() || owner.get() instanceof JavaTypeVariable) {
               violations.add(
                   aggregate.getName()

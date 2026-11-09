@@ -102,7 +102,7 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ONI-002",
     title,
     rationale,
@@ -121,16 +121,14 @@ DcaRule.Check(
         bool Allowed(IType target) =>
             arch.InDomain(target) || allowedPrefixes.Any(p => DcaLayout.IsBelow(target.Namespace.FullName, p));
 
-        var violations = arch.Types
-            .Where(t => t.Namespace is not null && arch.InDomain(t))
-            .SelectMany(t => t.Dependencies
+        return SelectionArchRule.ForEach(
+            "types in the domain should depend only on the domain and the allowed namespaces",
+            () => arch.Types.Where(t => t.Namespace is not null && arch.InDomain(t)),
+            t => t.Dependencies
                 .Select(d => d.Target)
                 .Where(target => target.Namespace is not null && !string.IsNullOrEmpty(target.Namespace.FullName))
                 .Where(target => !Allowed(target))
-                .Select(target => $"{t.FullName} depends on {target.FullName}"))
-            .Distinct()
-            .ToList();
-        DcaRule.Fail($"{title}\nbecause {rationale}", violations);
+                .Select(target => $"{t.FullName} depends on {target.FullName}"));
     })
     .Selecting(
         "Types below the root namespace whose namespace lies under <Module>.Domain of "

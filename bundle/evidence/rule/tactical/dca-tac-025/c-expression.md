@@ -19,10 +19,12 @@ DcaRule.Check(
         + " value of exactly one component - holds the primitive it wraps. A single yes/no fact may stay a"
         + " bool field: the type is told (Complete()) and answers (IsCompleted). A bool parameter is a flag"
         + " argument - SetCompleted(true) lets the caller set the state instead of triggering the behaviour -"
-        + " and three or more states, or transitions with rules, are an enum or a value",
+        + " except in the factory that rebuilds a stored object, which hands the stored fact back to the type"
+        + " that holds it. Three or more states, or transitions with rules, are an enum or a value",
     arch =>
     {
         var markers = arch.Layout.Markers;
+        var reconstituting = arch.Layout.ReconstitutingFactories.ToHashSet(StringComparer.OrdinalIgnoreCase);
         var blockNamespaces = new[]
             {
                 markers.AggregateRoot, markers.Entity, markers.Value, markers.Id, markers.DomainEvent,
@@ -49,6 +51,11 @@ DcaRule.Check(
                 | BindingFlags.Static | BindingFlags.DeclaredOnly;
             var bare = new List<string>();
             var stateReported = false;
+            if (runtime.IsEnum && NegationPair(runtime) is { } pair)
+            {
+                bare.Add($"enum of {pair} names one fact and its negation - a Boolean in disguise");
+            }
+
             foreach (var field in runtime.GetFields(declared & ~BindingFlags.Static))
             {
                 if (field.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))
@@ -116,9 +123,16 @@ DcaRule.Check(
                     bare.Add($"{method.Name}() returns {returned}");
                 }
 
+                var rebuilds = method.IsStatic && method.ReturnType == runtime
+                    && reconstituting.Contains(method.Name);
                 var parameters = method.GetParameters();
                 for (var i = 0; i < parameters.Length; i++)
                 {
+                    if (rebuilds && IsBoolean(parameters[i].ParameterType))
+                    {
+                        continue;
+                    }
+
                     var taken = BareTypesIn(parameters[i].ParameterType);
                     if (taken.Length > 0)
                     {
@@ -140,7 +154,8 @@ DcaRule.Check(
             "Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate",
             violations,
             "wrap each in a value object that carries its rules - a value of one component may hold the primitive it wraps;"
-            + " replace a bool parameter or a public bool setter by a method that names the behaviour - Complete() instead of SetCompleted(true)");
+            + " replace a bool parameter or a public bool setter by a method that names the behaviour - Complete() instead of SetCompleted(true);"
+            + " hold a two-member enum of a fact and its negation as a bool field with a predicate");
     })
     .Experimental()
     .Selecting(
@@ -157,7 +172,9 @@ DcaRule.Check(
         + " and EventId. A field typed bool or bool? - a single yes/no fact - and a bool return - a question to"
         + " the object, a predicate - pass, and so does a bool property without a public setter (get-only, a"
         + " private or init setter); a bool parameter, a bool property with a public setter and a public non-readonly bool field are flag"
-        + " arguments and do not.")
+        + " arguments and do not. A bool parameter of the factory that rebuilds a stored object - a static"
+        + " method returning its own type and named as configured, Reconstitute or Restore by default, case"
+        + " ignored - passes.")
     .Checking(
         "No selected field, property, return type or parameter type involves string, bool, a numeric"
         + " primitive or char, a point in time (DateTime, DateTimeOffset, DateOnly, TimeOnly), or a bare Guid -"
@@ -165,8 +182,13 @@ DcaRule.Check(
         + " and generic arguments and arrays included, so IReadOnlyList<string> counts. decimal, TimeSpan"
         + " and the project's own types pass. A field or a property typed bool or bool? and a method"
         + " returning one pass, unless anyone may set it - a public setter, a public non-readonly field; a bool among the parameters is a"
-        + " flag argument and counts, and so does an IReadOnlyList<bool>. A value object with several components is checked like"
+        + " flag argument and counts - except in the reconstituting factory, whose other parameters are checked"
+        + " like any other - and so does an IReadOnlyList<bool>. A value object with several components is checked like"
         + " any other type: each component is a value object itself. A reported type with exactly one"
         + " instance field that is no value or id is told to carry the value or id role to count as a"
-        + " wrapper. An empty selection passes.")
+        + " wrapper. A domain enum with exactly two members that name one fact and its negation is a boolean in"
+        + " disguise and is reported where it is declared: the pairs Yes/No, True/False, On/Off, Present/Absent,"
+        + " Enabled/Disabled, and any X with NotX, NoX, NonX or UnX (compared case-insensitively, underscores"
+        + " ignored). A two-member enum whose members have names of their own (for example Open/Closed) passes."
+        + " An empty selection passes.")
 ```

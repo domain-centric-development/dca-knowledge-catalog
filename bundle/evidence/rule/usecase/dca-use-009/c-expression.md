@@ -10,7 +10,7 @@ evidence_for: "/rule/usecase/dca-use-009.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-USE-009",
         "Use cases that save an aggregate must publish its domain events",
         "A saved aggregate must not keep its events: unpublished, they are lost, and stored on the"
@@ -27,46 +27,46 @@ DcaRule.Check(
             + " ClearDomainEvents(), separates dispatch from acknowledgement and is not accepted",
         arch =>
         {
-            var violations = new List<string>();
             var useCases = arch.Classes
                 .Where(c => c.Namespace is not null
                     && arch.InApplication(c)
                     && (IsRole(arch, c, nameof(DcaMarkers.InputPort)) || c.Name.Split('`')[0].EndsWith(arch.Layout.UseCaseSuffix, StringComparison.Ordinal)))
                 .OrderBy(c => c.FullName, StringComparer.Ordinal);
-            foreach (var useCase in useCases)
-            {
-                var runtime = arch.RuntimeType(useCase);
-                if (runtime is null)
+            return SelectionArchRule.ForEach(
+                "use cases that save an aggregate should publish its domain events on every entry path",
+                () => useCases,
+                useCase =>
                 {
-                    continue;
-                }
-
-                var calls = new IntraClassCalls(runtime);
-                foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), t))))
-                {
-                    if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), m.DeclaringType))
-                        .All(m => EventFreeAggregate.Repository(m, arch)))
+                    var violations = new List<string>();
+                    var runtime = arch.RuntimeType(useCase);
+                    if (runtime is null)
                     {
-                        continue;
+                        return violations;
                     }
 
-                    foreach (var entry in calls.EntryPointsOf(unit))
+                    var calls = new IntraClassCalls(runtime);
+                    foreach (var unit in calls.Units.Where(u => IntraClassCalls.Calls(u, "SaveAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), t))))
                     {
-                        var publishes = calls.ReachableFrom(entry)
-                            .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainEventPublisher), t)));
-                        if (!publishes)
+                        if (IntraClassCalls.IlCalls(unit).Where(m => m.Name == "SaveAsync" && m.DeclaringType is not null && arch.Layout.Markers.Is(nameof(DcaMarkers.Repository), m.DeclaringType))
+                            .All(m => EventFreeAggregate.Repository(m, arch)))
                         {
-                            violations.Add($"{useCase.FullName}.{IntraClassCalls.PathName(entry, unit)} saves an aggregate without"
-                                + " publishing its domain events - no method reached from there calls PublishAndClearEventsAsync");
+                            continue;
+                        }
+
+                        foreach (var entry in calls.EntryPointsOf(unit))
+                        {
+                            var publishes = calls.ReachableFrom(entry)
+                                .Any(u => IntraClassCalls.Calls(u, "PublishAndClearEventsAsync", t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainEventPublisher), t)));
+                            if (!publishes)
+                            {
+                                violations.Add($"{useCase.FullName}.{IntraClassCalls.PathName(entry, unit)} saves an aggregate without"
+                                    + " publishing its domain events - no method reached from there calls PublishAndClearEventsAsync");
+                            }
                         }
                     }
-                }
-            }
 
-            DcaRule.Fail(
-                "Use cases that save an aggregate must publish its domain events",
-                violations.Distinct().ToList(),
-                "call IDomainEventPublisher.PublishAndClearEventsAsync(aggregate) after IRepository.SaveAsync(aggregate) on every path that saves");
+                    return violations;
+                });
         })
     .Selecting(
         "Classes in <module>.Application of every module root selected by IInputPort assignability or the"
@@ -79,5 +79,6 @@ DcaRule.Check(
             + " the class and its nested state-machine and closure types, so async methods and"
             + " lambdas are followed. Only PublishAndClearEventsAsync counts - PublishAsync(event),"
             + " even followed by ClearDomainEvents(), does not. A use case without a save (a query,"
-            + " a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.")
+            + " a bulk delete) is selected but has nothing to check and passes. The method names are fixed and are not part of the marker roles: a vocabulary whose repository writes under another name is selected and then found to save nothing, so this rule passes over it.",
+        "call IDomainEventPublisher.PublishAndClearEventsAsync(aggregate) after IRepository.SaveAsync(aggregate) on every path that saves")
 ```

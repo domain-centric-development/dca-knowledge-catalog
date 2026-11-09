@@ -163,7 +163,7 @@ static boolean operation(JavaClass type, DcaArchitecture arch) {
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-CYC-005",
     "Feature and use case namespaces within a module's application layer must not have cyclic dependencies",
     "The namespaces directly below a module's application namespace are its features"
@@ -173,10 +173,10 @@ DcaRule.Check(
         + " the shared concept belongs in Application.Shared, in the domain, or in one of the two."
         + " Application.Shared is the context-wide port namespace and is not a slice. The rule does not infer"
         + " bounded contexts or aggregate ownership from the namespaces it slices",
-    arch => CheckSlices(
+    arch => SliceRule(
         arch,
         ns => ApplicationChildSlice(arch, layout, ns),
-        "Feature and use case namespaces within a module's application layer must not have cyclic dependencies"))
+        "the feature and use case namespaces of the application layers should be free of cycles"))
     .Selecting(
         "One slice per operation-root namespace selected by marker or suffix, configured containers stripped; supporting sub-namespaces join their nearest operation root. Classes directly in a feature namespace form its feature slice. Shared and direct application types are ignored.")
     .Checking(
@@ -184,7 +184,8 @@ DcaRule.Check(
         + "other, directly or through further slices, are reported. Dependencies on "
         + "Application.Shared, the domain or an adapter do not count. Slices of all modules are "
         + "checked together, so a cycle through another module's use-case namespace is reported "
-        + "here as well.")
+        + "here as well.",
+        "break the cycle by moving the shared concept into one slice or behind a port")
 ```
 
 ## Configured by

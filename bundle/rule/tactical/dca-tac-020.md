@@ -68,13 +68,15 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-020",
     "Store implementations must reside in the Adapter.Outgoing namespace",
     "Store implementations are outgoing adapters in bounded contexts",
-    arch => RequireNamespace(
-        ConcreteTypesAssignableTo(arch, nameof(DcaMarkers.Store)),
-        arch.InOutgoingAdapter, "Store implementations", "the outgoing adapter namespace"))
+    arch => NamespaceRule(
+        arch,
+        a => ConcreteTypesAssignableTo(a, nameof(DcaMarkers.Store)),
+        arch.InOutgoingAdapter,
+        "store implementations should reside in the outgoing adapter namespace"))
     .Selecting(
         "Non-interface types below the root namespace assignable to IStore, abstract "
         + "base classes included.")

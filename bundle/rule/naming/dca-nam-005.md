@@ -100,20 +100,16 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-NAM-005",
         $"Controller classes must end with '{layout.ControllerSuffix}'",
         "MVC controller and page model classes should follow naming conventions",
-        arch =>
-        {
-            var violations = arch.Classes
-                .Where(c => arch.InIncomingAdapter(c)
-                    && IsMvcController(arch, c)
-                    && !c.Name.EndsWith(arch.Layout.ControllerSuffix, StringComparison.Ordinal))
-                .Select(c => $"{c.FullName} is a controller but does not end with '{arch.Layout.ControllerSuffix}'")
-                .ToList();
-            DcaRule.Fail($"Controller classes must end with '{arch.Layout.ControllerSuffix}'", violations, $"rename the class to *{arch.Layout.ControllerSuffix}");
-        })
+        arch => SelectionArchRule.ForEach(
+            "controllers in incoming adapters should end with the controller suffix",
+            () => arch.Classes.Where(c => arch.InIncomingAdapter(c) && IsMvcController(arch, c)),
+            c => c.Name.EndsWith(arch.Layout.ControllerSuffix, StringComparison.Ordinal)
+                ? []
+                : [$"{c.FullName} is a controller but does not end with '{arch.Layout.ControllerSuffix}'"]))
     .Selecting(
         "Classes in <module>.Adapter.Incoming of every module root that derive from the"
             + " configured controller base class without carrying the configured API-controller"
@@ -122,7 +118,8 @@ DcaRule.Check(
         "The name ends with the configured controller suffix (default Controller). A"
             + " class carrying the API-controller attribute is not selected here, and a"
             + " controller outside an incoming-adapter namespace is not checked. An empty"
-            + " selection passes.")
+            + " selection passes.",
+        $"rename the class to *{layout.ControllerSuffix}")
 ```
 
 ## Configured by

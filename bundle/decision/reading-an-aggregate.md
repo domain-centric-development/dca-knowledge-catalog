@@ -30,5 +30,5 @@ predicate is the one bare return that passes.
 ## Anchors
 
 - Guide: [Domain layer rules](/guide/rules/domain-layer-rules.md)
-- Decision: [Result shape and assembly](/decision/result-shape-and-assembly.md)
+- Decision: [Result shape and assembly](/decision/result-shape-and-assembly.md) · [Who uses a domain service — and where a read model computes](/decision/who-uses-a-domain-service.md)
 - Markers: [AggregateRoot](/marker/tactical/aggregateroot.md) · [Value](/marker/tactical/value.md)

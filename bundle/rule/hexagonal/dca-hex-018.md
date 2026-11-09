@@ -112,7 +112,7 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-018",
         "Controllers must reside in an incoming adapter package",
         "A controller turns a request into a command or a query and is an incoming adapter. Outside the incoming"
@@ -121,19 +121,14 @@ DcaRule.Check(
         arch =>
         {
             var roles = arch.Layout.FrameworkTypes;
-            var violations = arch.Classes
-                .Where(c => !c.IsCompilerGenerated && c.IsAbstract != true
-                    && ((FrameworkTypes.IsSet(roles.ControllerBase) && c.IsAssignableTo(roles.ControllerBase))
-                        || (FrameworkTypes.IsSet(roles.PageModelBase) && c.IsAssignableTo(roles.PageModelBase))
-                        || (FrameworkTypes.IsSet(roles.ApiControllerAttribute) && c.Attributes.Any(a => a.FullName == roles.ApiControllerAttribute))))
-                .Where(c => !arch.InIncomingAdapter(c))
-                .Select(c => $"{c.FullName} is a controller outside the incoming adapters")
-                .OrderBy(v => v, StringComparer.Ordinal)
-                .ToList();
-            DcaRule.Fail(
-                "Controllers must reside in an incoming adapter package",
-                violations,
-                "move the controller into the incoming adapter namespace of its module");
+            return SelectionArchRule.ForEach(
+                "controllers should reside in an incoming adapter namespace",
+                () => arch.Classes
+                    .Where(c => !c.IsCompilerGenerated && c.IsAbstract != true
+                        && ((FrameworkTypes.IsSet(roles.ControllerBase) && c.IsAssignableTo(roles.ControllerBase))
+                            || (FrameworkTypes.IsSet(roles.PageModelBase) && c.IsAssignableTo(roles.PageModelBase))
+                            || (FrameworkTypes.IsSet(roles.ApiControllerAttribute) && c.Attributes.Any(a => a.FullName == roles.ApiControllerAttribute)))),
+                c => arch.InIncomingAdapter(c) ? [] : [$"{c.FullName} is a controller outside the incoming adapters"]);
         })
     .Experimental()
     .Selecting(
@@ -142,7 +137,8 @@ DcaRule.Check(
             + " every role is empty and nothing is selected.")
     .Checking(
         "Each resides in <Module>.Adapter.Incoming of some module root. Where in the incoming adapters it sits -"
-            + " which protocol segment - is not checked.")
+            + " which protocol segment - is not checked.",
+        "move the controller into the incoming adapter namespace of its module")
 ```
 
 ## Configured by

@@ -13,7 +13,7 @@ evidence_for: "/guide/archunit-governance/setup-and-configuration.md#maven-depen
 <dependency>
     <groupId>dev.domaincentric</groupId>
     <artifactId>dca-archunit</artifactId>
-    <version>0.3.0</version>
+    <version>0.13.0</version>
     <scope>test</scope>
 </dependency>
 ```

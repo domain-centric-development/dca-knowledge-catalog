@@ -65,7 +65,8 @@ DcaRule.of(
             + " domain-service role. Holding one as a parameter or a field type is not an"
             + " access and is not reported. A domain service calling another domain service is"
             + " outside this selection. An empty selection passes.",
-        "let the use case call the domain service and hand the model the result")
+        "let the use case call the domain service and hand the model the result; DCA-ADV-021"
+            + " holds the same for every caller outside the application")
 ```
 
 ## Architecture queries
@@ -74,36 +75,27 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ADV-019",
     "Aggregates, entities and value objects must not use domain services",
     "A domain service exists for logic that spans several aggregates, so the application calls it; "
         + "a model type that reaches for one would drive another aggregate from inside its own",
-    arch =>
-    {
-        var violations = new List<string>();
-        foreach (var type in arch.Types.Where(t => IsModelType(arch, t)))
-        {
-            foreach (var target in type.Dependencies
-                .Where(d => d is MethodCallDependency)
-                .Select(d => d.Target)
-                .Distinct())
-            {
-                if (arch.Layout.Markers.Is(nameof(DcaMarkers.DomainService), target))
-                {
-                    violations.Add($"{type.FullName} uses {target.FullName}");
-                }
-            }
-        }
-
-        DcaRule.Fail("A model type reaches for a domain service", violations.Distinct().ToList(),
-            "let the use case call the domain service and hand the model the result");
-    })
+    arch => SelectionArchRule.ForEach(
+        "aggregates, entities and value objects should not call a domain service",
+        () => arch.Types.Where(t => IsModelType(arch, t)),
+        type => type.Dependencies
+            .Where(d => d is MethodCallDependency)
+            .Select(d => d.Target)
+            .Distinct()
+            .Where(target => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainService), target))
+            .Select(target => $"{type.FullName} uses {target.FullName}")))
     .Selecting("Types anywhere under scan that carry the aggregate-root, entity or value role.")
     .Checking(
         "None of them calls a method of, or constructs, a type carrying the domain-service role. "
         + "Holding one as a parameter or a field type is not a call and is not reported. A domain "
-        + "service calling another domain service is outside this selection. An empty selection passes.")
+        + "service calling another domain service is outside this selection. An empty selection passes.",
+    "let the use case call the domain service and hand the model the result; DCA-ADV-021 holds the"
+    + " same for every caller outside the application")
 ```
 
 ## Configured by

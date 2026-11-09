@@ -73,21 +73,16 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ERR-001",
     "Exceptions declared in the domain layer must extend DomainException",
     "A failure the model raises is a broken business rule and says so through its type; a caller"
         + " that cannot tell one from the platform's own failures cannot answer either of them"
         + " properly",
-    arch =>
-    {
-        var violations = ProjectExceptions(arch)
-            .Where(arch.InDomain)
-            .Where(t => !arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t))
-            .Select(t => $"{t.FullName} does not extend DomainException")
-            .ToList();
-        DcaRule.Fail("A domain failure without the domain base type", violations);
-    })
+    arch => SelectionArchRule.ForEach(
+        "exceptions declared in the domain layer should extend DomainException",
+        () => ProjectExceptions(arch).Where(arch.InDomain),
+        t => arch.Layout.Markers.Is(nameof(DcaMarkers.DomainException), t) ? [] : [$"{t.FullName} does not extend DomainException"]))
     .Selecting(
         "Types under <Module>.Domain of every module root that are assignable to Exception - the "
         + "exception types the domain layer declares itself. The base type DomainException lives in "

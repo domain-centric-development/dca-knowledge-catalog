@@ -10,7 +10,7 @@ evidence_for: "/rule/usecase/dca-use-019.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-USE-019",
         "Query use cases must not write or publish",
         "A read never creates. A query has no side effect: it does not create, save or publish, and when"
@@ -18,34 +18,34 @@ DcaRule.Check(
             + " to change state; a caller that only shows what exists asks the query",
         arch =>
         {
-            var violations = new List<string>();
             var markers = arch.Layout.Markers;
-            foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch)).OrderBy(t => t.FullName, StringComparer.Ordinal))
-            {
-                var runtime = arch.RuntimeType(type)!;
-                if (!InputTypesOf(runtime, markers).Any(t => markers.Is("Query", t)))
+            return SelectionArchRule.ForEach(
+                "operations that take a query should not write or publish",
+                () => arch.Types.Where(t => OperationPolicy.Operation(t, arch)).OrderBy(t => t.FullName, StringComparer.Ordinal),
+                type =>
                 {
-                    continue;
-                }
-
-                foreach (var unit in new IntraClassCalls(runtime).Units)
-                {
-                    foreach (var call in IntraClassCalls.IlCalls(unit))
+                    var violations = new List<string>();
+                    var runtime = arch.RuntimeType(type)!;
+                    if (!InputTypesOf(runtime, markers).Any(t => markers.Is("Query", t)))
                     {
-                        var effect = WriteEffectOf(call, markers);
-                        if (effect is not null)
+                        return violations;
+                    }
+
+                    foreach (var unit in new IntraClassCalls(runtime).Units)
+                    {
+                        foreach (var call in IntraClassCalls.IlCalls(unit))
                         {
-                            violations.Add($"{type.FullName}.{IntraClassCalls.DisplayName(unit)} takes a query and {effect}"
-                                + $" ({call.DeclaringType!.Name.Split('`')[0]}.{call.Name})");
+                            var effect = WriteEffectOf(call, markers);
+                            if (effect is not null)
+                            {
+                                violations.Add($"{type.FullName}.{IntraClassCalls.DisplayName(unit)} takes a query and {effect}"
+                                    + $" ({call.DeclaringType!.Name.Split('`')[0]}.{call.Name})");
+                            }
                         }
                     }
-                }
-            }
 
-            DcaRule.Fail(
-                "Query use cases must not write or publish",
-                violations.Distinct().ToList(),
-                "answer none when nothing exists, and move the write into a command use case the caller runs where it is about to change state");
+                    return violations;
+                });
         })
     .Experimental()
     .Selecting(
@@ -61,5 +61,6 @@ DcaRule.Check(
             + " Create, Append, Archive, Purge, Clear, Set or Mark), or any method of the domain-event or"
             + " integration-event publisher. Only the class's own calls are read: a write reached through"
             + " a helper class or a second port is not seen, and a store write under another verb passes."
-            + " An empty selection passes.")
+            + " An empty selection passes.",
+        "answer none when nothing exists, and move the write into a command use case the caller runs where it is about to change state")
 ```

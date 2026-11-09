@@ -1,6 +1,7 @@
 # dca-tac-025
 
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `bareTypesIn`](baretypesin.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `booleanInDisguise`](booleanindisguise.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `buildingBlockTypes`](buildingblocktypes.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — C# expression](c-expression.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `classesMatching`](classesmatching.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
@@ -11,6 +12,9 @@
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isEnumImplicit`](isenumimplicit.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isEnumValueOf`](isenumvalueof.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isFailure`](isfailure.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isReconstitutingFactory`](isreconstitutingfactory.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `isWrapperValue`](iswrappervalue.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `negates`](negates.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `nestedInWrapperOrValue`](nestedinwrapperorvalue.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
+- [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — `normalisedConstant`](normalisedconstant.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.
 - [Domain types must not hold bare primitives, strings or time types; a boolean only as a field or a predicate — Overview](overview.md) — Full node and context. This is an evidence excerpt; retain the parent selection and caveats.

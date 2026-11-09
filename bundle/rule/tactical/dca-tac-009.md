@@ -70,31 +70,19 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-009",
     "Value Object classes should be sealed (immutability)",
     "Value objects should be immutable and not extensible - Vernon's DDD recommendation;"
     + " .NET: a sealed class, a sealed record, or a struct",
-    arch =>
-    {
-        var violations = new List<string>();
-        foreach (var valueObject in arch.Classes)
-        {
-            if (valueObject.IsCompilerGenerated
-                || !arch.InDomainModel(valueObject)
-                || !IsRole(arch, valueObject, nameof(DcaMarkers.Value)))
-            {
-                continue;
-            }
-
-            if (valueObject.IsSealed != true && valueObject.IsAbstract != true)
-            {
-                violations.Add($"{valueObject.FullName} is a Value Object {(valueObject.IsRecord == true ? "record" : "class")} that is not sealed");
-            }
-        }
-
-        DcaRule.Fail("Value Object classes and records must be sealed (or be structs).", violations);
-    })
+    arch => SelectionArchRule.ForEach(
+        "value object classes and records in the domain model should be sealed",
+        () => arch.Classes.Where(valueObject => !valueObject.IsCompilerGenerated
+            && arch.InDomainModel(valueObject)
+            && IsRole(arch, valueObject, nameof(DcaMarkers.Value))),
+        valueObject => valueObject.IsSealed != true && valueObject.IsAbstract != true
+            ? [$"{valueObject.FullName} is a Value Object {(valueObject.IsRecord == true ? "record" : "class")} that is not sealed"]
+            : []))
     .Selecting(
         "Classes - record classes included, structs and enums not - in "
         + "<module>.Domain.Model of every module root that are assignable to IValue; "

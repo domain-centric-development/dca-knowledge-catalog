@@ -38,3 +38,4 @@ such rather than emerging by accident.
 - [Aggregate root](/marker/tactical/aggregateroot.md)
 - [Domain event vs integration event](/decision/domain-event-vs-integration-event.md)
 - [Event delivery: sync, async, and when you need an outbox](/decision/event-delivery-sync-async-and-outbox.md)
+- [A request modelled as an event](/pitfall/a-request-modelled-as-an-event.md)

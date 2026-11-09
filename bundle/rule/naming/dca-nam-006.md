@@ -104,30 +104,24 @@ static DescribedPredicate<CanBeAnnotated> annotatedWithAny(List<String>... roles
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-NAM-006",
         $"REST Controllers must end with '{layout.RestControllerSuffix}' (REST best practice)",
         $"[ApiController] classes should end with '{layout.RestControllerSuffix}' following RESTful naming conventions",
-        arch =>
-        {
-            var violations = arch.Classes
-                .Where(c => arch.InIncomingAdapter(c)
-                    && IsApiController(arch, c)
-                    && !c.Name.EndsWith(arch.Layout.RestControllerSuffix, StringComparison.Ordinal))
-                .Select(c => $"{c.FullName} is an API controller but does not end with '{arch.Layout.RestControllerSuffix}'")
-                .ToList();
-            DcaRule.Fail(
-                $"REST Controllers must end with '{arch.Layout.RestControllerSuffix}'",
-                violations,
-                $"rename the class to *{arch.Layout.RestControllerSuffix}");
-        })
+        arch => SelectionArchRule.ForEach(
+            "API controllers in incoming adapters should end with the REST-controller suffix",
+            () => arch.Classes.Where(c => arch.InIncomingAdapter(c) && IsApiController(arch, c)),
+            c => c.Name.EndsWith(arch.Layout.RestControllerSuffix, StringComparison.Ordinal)
+                ? []
+                : [$"{c.FullName} is an API controller but does not end with '{arch.Layout.RestControllerSuffix}'"]))
     .Selecting(
         "Classes in <module>.Adapter.Incoming of every module root that carry the"
             + " configured API-controller attribute ([ApiController] by default).")
     .Checking(
         "The name ends with the configured REST-controller suffix. Controllers without the"
             + " attribute are not selected, and an API controller outside an incoming-adapter"
-            + " namespace is not checked. An empty selection passes.")
+            + " namespace is not checked. An empty selection passes.",
+        $"rename the class to *{layout.RestControllerSuffix}")
 ```
 
 ## Configured by

@@ -10,7 +10,7 @@ evidence_for: "/rule/usecase/dca-use-013.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check("DCA-USE-013", "Declaratively transactional use cases must not call remote-capable output ports",
+DcaRule.Of("DCA-USE-013", "Declaratively transactional use cases must not call remote-capable output ports",
         "A declaratively transactional use case holds a database connection for its whole run. Calling an output port"
         + " that may leave the process (another context's API, a payment provider, a mail gateway) inside it blocks"
         + " that connection for the remote round trip; under load the pool runs dry, and a rollback cannot undo the"
@@ -22,11 +22,12 @@ DcaRule.Check("DCA-USE-013", "Declaratively transactional use cases must not cal
         arch =>
         {
             var attribute = layout.FrameworkTypes.TransactionalAttribute;
-            var violations = new List<string>();
-            if (FrameworkTypes.IsSet(attribute))
-            {
-                foreach (var type in arch.Types.Where(t => OperationPolicy.Operation(t, arch)))
+            return SelectionArchRule.ForEach(
+                "declaratively transactional operations should not call a remote-capable output port inside the transaction",
+                () => FrameworkTypes.IsSet(attribute) ? arch.Types.Where(t => OperationPolicy.Operation(t, arch)) : [],
+                type =>
                 {
+                    var violations = new List<string>();
                     var runtime = arch.RuntimeType(type)!;
                     var graph = new IntraClassCalls(runtime);
                     foreach (var unit in graph.Units)
@@ -51,15 +52,12 @@ DcaRule.Check("DCA-USE-013", "Declaratively transactional use cases must not cal
                             + " inside the transaction - call it before, or draw the boundary with"
                             + " ITransactionBoundary.InTransactionAsync(...)");
                     }
-                }
-            }
 
-            DcaRule.Fail(
-                "Declaratively transactional use cases must not call remote-capable output ports",
-                violations.Distinct().ToList(),
-                "call the remote port before the transaction, or draw the boundary explicitly with"
-                + " ITransactionBoundary.InTransactionAsync(...) around the transactional part only");
+                    return violations;
+                });
         })
     .Selecting("Concrete application operations selected by IInputPort marker or configured use-case suffix, with loadable runtime types. Nothing at all while no transactional attribute is configured, which is the default: neither .NET preset names one, because ASP.NET Core has no ambient transaction attribute.")
-    .Checking("Every code unit that runs under the configured transactional attribute - on the class, on itself, or on an entry point that reaches it within the class - calls no output port other than IRepository, IStore, IDomainEventPublisher, IIntegrationEventPublisher or a port the layout declares local (a hasher, a clock, an id source - DcaLayout.WithLocalOutputPorts). A use case without such an attribute (an explicit ITransactionBoundary, or none) is selected but never reported, and with no attribute configured nothing is ever reported - the rule then carries the id without checking anything, as the Java twin does where no framework annotation is on the class path. What happens inside an InTransactionAsync block is not inspected; the explicit boundary is the developer's own and its extent is visible at the call site.")
+    .Checking("Every code unit that runs under the configured transactional attribute - on the class, on itself, or on an entry point that reaches it within the class - calls no output port other than IRepository, IStore, IDomainEventPublisher, IIntegrationEventPublisher or a port the layout declares local (a hasher, a clock, an id source - DcaLayout.WithLocalOutputPorts). A use case without such an attribute (an explicit ITransactionBoundary, or none) is selected but never reported, and with no attribute configured nothing is ever reported - the rule then carries the id without checking anything, as the Java twin does where no framework annotation is on the class path. What happens inside an InTransactionAsync block is not inspected; the explicit boundary is the developer's own and its extent is visible at the call site.",
+        "call the remote port before the transaction, or draw the boundary explicitly with"
+            + " ITransactionBoundary.InTransactionAsync(...) around the transactional part only")
 ```

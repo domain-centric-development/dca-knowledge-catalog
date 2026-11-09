@@ -10,7 +10,7 @@ evidence_for: "/rule/usecase/dca-use-020.md#c-expression"
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-USE-020",
         "Use cases must not parse raw input into an id",
         "The adapter turns raw input into the types the input port takes: an id arrives in the command as"
@@ -19,30 +19,30 @@ DcaRule.Check(
             + " the use case never sees it",
         arch =>
         {
-            var violations = new List<string>();
-            foreach (var type in arch.Types
+            return SelectionArchRule.ForEach(
+                "types in the application layer should not parse raw input into an id",
+                () => arch.Types
                 .Where(t => t.Namespace is not null && arch.InApplication(t))
-                .OrderBy(t => t.FullName, StringComparer.Ordinal))
-            {
-                var runtime = arch.RuntimeType(type);
-                if (runtime is null || runtime.IsNested)
+                .OrderBy(t => t.FullName, StringComparer.Ordinal),
+                type =>
                 {
-                    continue;
-                }
-
-                foreach (var unit in new IntraClassCalls(runtime).Units)
-                {
-                    foreach (var call in IntraClassCalls.IlCalls(unit).Where(c => c.DeclaringType == typeof(Guid) && IdParseMethods.Contains(c.Name)))
+                    var violations = new List<string>();
+                    var runtime = arch.RuntimeType(type);
+                    if (runtime is null || runtime.IsNested)
                     {
-                        violations.Add($"{type.FullName}.{IntraClassCalls.DisplayName(unit)} parses an id with Guid.{call.Name}");
+                        return violations;
                     }
-                }
-            }
 
-            DcaRule.Fail(
-                "Use cases must not parse raw input into an id",
-                violations.Distinct().ToList(),
-                "let the input port take the id's value type and parse the text in the adapter, or in the value type's own factory");
+                    foreach (var unit in new IntraClassCalls(runtime).Units)
+                    {
+                        foreach (var call in IntraClassCalls.IlCalls(unit).Where(c => c.DeclaringType == typeof(Guid) && IdParseMethods.Contains(c.Name)))
+                        {
+                            violations.Add($"{type.FullName}.{IntraClassCalls.DisplayName(unit)} parses an id with Guid.{call.Name}");
+                        }
+                    }
+
+                    return violations;
+                });
         })
     .Experimental()
     .Selecting(
@@ -53,5 +53,6 @@ DcaRule.Check(
         "No method calls the platform's parse API for a unique identifier: System.Guid.Parse, TryParse,"
             + " ParseExact or TryParseExact, in any overload. Parsing a project's own id type, or an id"
             + " held as a number or another text format, is not seen; the value type's own factory in the"
-            + " domain is outside the selection and may parse. An empty selection passes.")
+            + " domain is outside the selection and may parse. An empty selection passes.",
+        "let the input port take the id's value type and parse the text in the adapter, or in the value type's own factory")
 ```

@@ -67,20 +67,18 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-LAY-005",
     title,
     rationale,
-    arch =>
-    {
-        var violations = arch.Architecture.Types.Select(arch.RuntimeType).Where(t => t is not null).Cast<Type>()
-            .Where(t => t.Namespace == DcaLayout.BuildingBlocksPortsOutNamespace && !t.IsInterface)
+    arch => SelectionArchRule.ForEach(
+        "types in the building blocks' outgoing-port namespace should be interfaces",
+        () => arch.Architecture.Types.Select(arch.RuntimeType).Where(t => t is not null).Cast<Type>()
+            .Where(t => t.Namespace == DcaLayout.BuildingBlocksPortsOutNamespace)
             // closures and async state machines of default interface methods are not port types
-            .Where(t => !t.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false) && !t.Name.Contains('<'))
-            .Select(t => $"{t.FullName} is not an interface")
-            .ToList();
-        DcaRule.Fail($"{title}\nbecause {rationale}", violations);
-    })
+            .Where(t => !t.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false) && !t.Name.Contains('<')),
+        t => t.FullName!,
+        t => t.IsInterface ? [] : [$"{t.FullName} is not an interface"]))
     .Selecting(
         "Types declared in the building-blocks namespace "
         + "DomainCentric.BuildingBlocks.Hexagonal.Ports.Out, read from types imported in the architecture, including consumer assemblies. Compiler-generated "

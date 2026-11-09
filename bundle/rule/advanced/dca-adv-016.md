@@ -102,15 +102,14 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-ADV-016",
     "Factories should be stateless (only readonly fields for dependencies)",
     "Factories should be stateless (only readonly fields for dependencies)",
-    arch => DcaRule.Fail(
-        "Factories must have only readonly fields:",
-        NonReadonlyFieldViolations(
-            arch,
-            t => t is not Interface && InDomain(arch, t) && arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), t))))
+    arch => NonReadonlyFieldRule(
+        "factories should have only readonly fields",
+        arch,
+        t => t is not Interface && InDomain(arch, t) && arch.Layout.Markers.Is(nameof(DcaMarkers.Factory), t)))
     .Selecting(
         "Non-interface types in <module>.Domain of every module root that are assignable to "
         + "IFactory.")

@@ -66,7 +66,8 @@ DcaRule.of(
             + " class without the marker is not a domain service by this rule. Injecting it,"
             + " calling it or naming it in a signature all count as a dependency. An empty"
             + " selection passes.",
-        "move the collaboration into the use case and carry its outcome in the result")
+        "move the collaboration into the use case and carry its outcome in the result;"
+            + " DCA-ADV-021 holds the same for every caller outside the application")
 ```
 
 ## Architecture queries
@@ -75,7 +76,7 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-012",
         "Incoming Adapters must not depend on domain services",
         "An incoming adapter translates external input, calls an input port and formats its result."
@@ -83,10 +84,10 @@ DcaRule.Check(
             + " that collaboration and puts its outcome into the result. Outgoing adapters are outside this"
             + " rule - repositories and other driven adapters may construct or reconstitute domain objects"
             + " while implementing output ports",
-        arch =>
-        {
-            var violations = new List<string>();
-            foreach (var adapter in arch.Classes.Where(arch.InIncomingAdapter))
+        arch => SelectionArchRule.ForEach(
+            "classes in incoming adapters should not depend on a domain service",
+            () => arch.Classes.Where(arch.InIncomingAdapter),
+            adapter =>
             {
                 var services = adapter.Dependencies
                     .Select(d => d.Target)
@@ -103,15 +104,10 @@ DcaRule.Check(
                         .Select(t => t.FullName!));
                 }
 
-                violations.AddRange(services.Distinct()
-                    .Select(s => $"{adapter.FullName} depends on the domain service {s}"));
-            }
-
-            DcaRule.Fail(
-                "Incoming Adapters must not depend on domain services",
-                violations.Distinct().OrderBy(v => v, StringComparer.Ordinal).ToList(),
-                "move the collaboration into the use case and carry its outcome in the result");
-        })
+                return services.Distinct()
+                    .Select(s => $"{adapter.FullName} depends on the domain service {s}")
+                    .OrderBy(v => v, StringComparer.Ordinal);
+            }))
     .Selecting(
         "Classes in <module>.Adapter.Incoming of every module root, event consumers"
             + " included. Outgoing adapters are not selected.")
@@ -121,7 +117,9 @@ DcaRule.Check(
             + " class without the marker is not a domain service by this rule. Injecting it,"
             + " calling it or naming it in a signature all count as a dependency; constructor"
             + " parameters are read from the runtime type as well, so a service injected into an"
-            + " adapter whose members are all async is still found. An empty selection passes.")
+            + " adapter whose members are all async is still found. An empty selection passes.",
+        "move the collaboration into the use case and carry its outcome in the result; DCA-ADV-021 holds"
+            + " the same for every caller outside the application")
 ```
 
 ## Related mentions (heuristic)

@@ -85,28 +85,20 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-NAM-003",
         $"InputPort interfaces must end with '{layout.InputPortSuffix}'",
         "Input port interfaces should follow consistent naming conventions (Hexagonal Architecture)",
-        arch =>
-        {
-            var suffix = arch.Layout.InputPortSuffix;
-            var markers = arch.Layout.Markers;
-            var violations = arch.Interfaces
-                .Where(i => arch.InApplication(i)
-                    && IsRole(arch, i, nameof(DcaMarkers.InputPort))
-                    && !IsBaseInputPortName(i.Name)
-                    && !IsRoleType(i, markers.InputPort)
-                    && !IsRoleType(i, markers.UseCase)
-                    && !(i.Name.StartsWith("I", StringComparison.Ordinal) && i.Name.Split('`')[0].EndsWith(suffix, StringComparison.Ordinal)))
-                .Select(i => $"{i.FullName} is an input port but is not named I*{suffix}")
-                .ToList();
-            DcaRule.Fail(
-                $"InputPort interfaces must end with '{suffix}'",
-                violations,
-                $"rename the interface to I<UseCaseName>{suffix}");
-        })
+        arch => SelectionArchRule.ForEach(
+            "input port interfaces in the application layer should be named I*<input-port suffix>",
+            () => arch.Interfaces.Where(i => arch.InApplication(i)
+                && IsRole(arch, i, nameof(DcaMarkers.InputPort))
+                && !IsBaseInputPortName(i.Name)
+                && !IsRoleType(i, arch.Layout.Markers.InputPort)
+                && !IsRoleType(i, arch.Layout.Markers.UseCase)),
+            i => i.Name.StartsWith("I", StringComparison.Ordinal) && i.Name.Split('`')[0].EndsWith(arch.Layout.InputPortSuffix, StringComparison.Ordinal)
+                ? []
+                : [$"{i.FullName} is an input port but is not named I*{arch.Layout.InputPortSuffix}"]))
     .Selecting(
         "Interfaces in <module>.Application of every module root that are assignable to"
             + " IInputPort, except the types the InputPort and UseCase roles name and those named"
@@ -118,7 +110,8 @@ DcaRule.Check(
             + " platform convention and is checked here only: the Java twin requires the suffix and"
             + " nothing else, because Java interfaces carry no prefix. Classes and records are not"
             + " selected, and an interface extending IInputPort outside an application namespace is"
-            + " not checked. An empty selection passes.")
+            + " not checked. An empty selection passes.",
+        $"rename the interface to I<UseCaseName>{layout.InputPortSuffix}")
 ```
 
 ## Related mentions (heuristic)

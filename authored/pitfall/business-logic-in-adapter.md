@@ -29,6 +29,23 @@ Keep the adapter thin: map the request to a `Command`/`Query`, call the input po
 
 `OrderResource` → `PlaceOrderInputPort.execute(command)` → `PlaceOrderUseCase` (loads aggregate, calls `order.place()`, saves) — the controller decides nothing.
 
+### The same in a callback
+
+A controller is easy to recognise as an adapter. A callback the framework or a pipeline calls is not: an event listener, a scheduled job, a hook that runs after a step. It is tempting to do the work right there — load the aggregate, call a method, save, publish — because the callback already has the moment and the data.
+
+```java
+@Scheduled(cron = "0 0 2 * * *")
+void expireOverdue() {                          // a use case living in the hook
+    for (Order order : orders.findOverdue(clock.now())) {
+        order.expire();
+        orders.save(order);
+        events.publishAndClearEvents(order);
+    }
+}
+```
+
+The callback is an incoming adapter like the controller: it translates its trigger into a command and calls an input port (`ExpireOverdueOrdersInputPort`). The use case owns the transaction, the order of the steps and the events, and the second trigger — an operator's button, an API call — reaches the same use case instead of a copy of the loop. For an event listener, which input port it may call is decided in [Reacting to an event](/decision/reacting-to-an-event.md).
+
 - [Recipe: add a use case](/recipe/add-a-use-case.md) · [Template: use case](/template/use-case.md)
 - Decision: [Where does the logic live?](/decision/where-does-the-logic-live.md)
 

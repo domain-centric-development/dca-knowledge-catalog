@@ -76,22 +76,17 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-NAM-004",
         "Repository Interfaces must end with 'Repository' (name-based discovery)",
         "Repository interfaces should follow consistent naming conventions (DDD pattern)",
-        arch =>
-        {
-            var violations = arch.Interfaces
-                .Where(i => arch.InApplication(i)
-                    && i.Name.Contains("Repository", StringComparison.Ordinal)
-                    && i.Name != "Repository"
-                    && i.Name != "IRepository"
-                    && !i.Name.EndsWith("Repository", StringComparison.Ordinal))
-                .Select(i => $"{i.FullName} does not end with 'Repository'")
-                .ToList();
-            DcaRule.Fail("Repository Interfaces must end with 'Repository'", violations, "rename the interface to I<Aggregate>Repository");
-        })
+        arch => SelectionArchRule.ForEach(
+            "interfaces in the application layer named after a repository should end with 'Repository'",
+            () => arch.Interfaces.Where(i => arch.InApplication(i)
+                && i.Name.Contains("Repository", StringComparison.Ordinal)
+                && i.Name != "Repository"
+                && i.Name != "IRepository"),
+            i => i.Name.EndsWith("Repository", StringComparison.Ordinal) ? [] : [$"{i.FullName} does not end with 'Repository'"]))
     .Selecting(
         "Interfaces in <module>.Application of every module root whose name contains"
             + " Repository, except one named exactly Repository or IRepository.")
@@ -99,7 +94,8 @@ DcaRule.Check(
         "The name ends with Repository (IRepositoryPort or IProductRepositoryAdapter is"
             + " reported). Selection is by name only - whether the interface extends the"
             + " IRepository marker is not checked, and classes are not selected. An empty"
-            + " selection passes.")
+            + " selection passes.",
+        "rename the interface to I<Aggregate>Repository")
 ```
 
 ## Related mentions (heuristic)

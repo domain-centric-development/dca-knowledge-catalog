@@ -71,11 +71,11 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-019",
     "Store interfaces must reside in the application layer (local to a use case or shared)",
     "Store interfaces are output ports in the application layer (Hexagonal Architecture)",
-    arch => RequireNamespace(StoreInterfaces(arch), arch.InApplication, "Store interfaces", "an application namespace of its module (use-case-local or Shared)"))
+    arch => NamespaceRule(arch, StoreInterfaces, arch.InApplication, "store interfaces should reside in an application namespace of their module"))
     .Selecting(
         "Interfaces below the root namespace assignable to IStore, whatever their "
         + "name; an interface named exactly Store excluded.")

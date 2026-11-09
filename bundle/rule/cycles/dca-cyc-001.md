@@ -113,11 +113,11 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-CYC-001",
     "Domain Namespaces must not have cyclic dependencies (package-based slice discovery)",
     "Domain model namespaces should have clear boundaries and no cycles (Acyclic Dependencies Principle)",
-    arch => CheckSlices(arch, layout, $"{layout.DomainSegment}.{layout.ModelSegment}", "Domain Namespaces must not have cyclic dependencies"))
+    arch => SliceRule(arch, layout, $"{layout.DomainSegment}.{layout.ModelSegment}", "the domain models of the modules should be free of cycles"))
     .Selecting(
         "One slice per module root, holding the types in <module>.Domain.Model of that module and "
         + "below (segment names from the layout). A module root is the shortest namespace prefix "
@@ -128,7 +128,8 @@ DcaRule.Check(
         + "other, directly or via further modules' domain models. Slices are per module root, so a "
         + "cycle between types inside one module's domain model is not detected here, and "
         + "dependencies into other layers do not count. DCA-CYC-005 covers the application layer "
-        + "per operation; no rule slices the domain model within a module. Fewer than two slices pass.")
+        + "per operation; no rule slices the domain model within a module. Fewer than two slices pass.",
+        "break the cycle by moving the shared concept into one slice or behind a port")
 ```
 
 ## Configured by

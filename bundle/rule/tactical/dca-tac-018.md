@@ -79,23 +79,19 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
     "DCA-TAC-018",
     "Store interfaces must extend the IStore marker, not IRepository",
     "Stores extend the IStore marker; IRepository is reserved for Aggregate Roots",
-    arch =>
-    {
-        var violations = new List<string>();
-        foreach (var candidate in arch.Interfaces)
+    arch => SelectionArchRule.ForEach(
+        "interfaces named *Store outside adapters and infrastructure should extend IStore and not IRepository",
+        () => arch.Interfaces.Where(candidate => HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix)
+            && candidate.FullName != arch.Layout.Markers.Store
+            && !arch.InAdapter(candidate)
+            && !arch.InInfrastructure(candidate)),
+        candidate =>
         {
-            if (!HasSuffixButIsNotMarker(candidate, arch.Layout.StoreSuffix)
-                || candidate.FullName == arch.Layout.Markers.Store
-                || arch.InAdapter(candidate)
-                || arch.InInfrastructure(candidate))
-            {
-                continue;
-            }
-
+            var violations = new List<string>();
             if (!IsRole(arch, candidate, nameof(DcaMarkers.Store)))
             {
                 violations.Add($"{candidate.FullName} is named *Store but does not extend {nameof(IStore)}");
@@ -105,10 +101,9 @@ DcaRule.Check(
             {
                 violations.Add($"{candidate.FullName} is named *Store but extends {nameof(IRepository)}");
             }
-        }
 
-        DcaRule.Fail("Store interfaces must extend IStore and must not extend IRepository.", violations);
-    })
+            return violations;
+        }))
     .Selecting(
         "Interfaces below the root namespace whose name ends with Store, those named exactly Store or"
         + " IStore and the type the Store role names excluded, outside every adapter and"

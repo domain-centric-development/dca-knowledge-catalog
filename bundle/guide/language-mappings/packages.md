@@ -16,8 +16,8 @@ tags: [guide, section]
 
 ```kotlin
 // Gradle
-implementation("dev.domaincentric:dca-building-blocks:0.1.2")
-testImplementation("dev.domaincentric:dca-archunit:0.3.0")
+implementation("dev.domaincentric:dca-building-blocks:0.4.0")
+testImplementation("dev.domaincentric:dca-archunit:0.13.0")
 ```
 
 ```text

@@ -23,6 +23,8 @@ No rule catches it statically. [Use cases that save an aggregate must publish it
 
 Give the aggregate two factories for two moments in its life: `create(...)` for the birth of a new fact, which validates and registers `{Name}Created`; `reconstitute(...)` for a repository handing back what it stored, which takes the persisted state as-is and registers nothing. Adapters call only `reconstitute` — the JDBC row mapper, the JPA entity mapper, the in-memory copy. Clearing the events after calling `create` is the wrong cure: it runs the creation validation against already-valid state and still hides that the factory was misused.
 
+**Does `reconstitute` check the invariants?** Tempting — the stored state could be inconsistent, so check on the way in what the transitions guarantee on the way out. As a rule, no: the transitions guard the state, and reading tolerates what was stored. A check on read turns one odd row — written by an older version, imported, kept on purpose — into a failure of every view that lists it, and the aggregate cannot be loaded to repair it. Where stored data from outside the model can break an invariant and nothing else catches it, check it once where the data enters (the import, the migration), not on every load.
+
 - Skeleton with both factories: [Aggregate root skeleton](/template/aggregate-root.md)
 - Adapters that reconstitute: [JDBC repository adapter](/template/jdbc-repository-adapter.md) · [JPA repository adapter](/template/jpa-repository-adapter.md) · [Repository + in-memory adapter](/template/repository-with-in-memory-adapter.md)
 

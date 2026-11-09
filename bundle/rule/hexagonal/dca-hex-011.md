@@ -88,29 +88,21 @@ DcaRule.of(
 ### C# expression
 
 ```csharp
-DcaRule.Check(
+DcaRule.Of(
         "DCA-HEX-011",
         "Incoming Adapters must depend on input port interfaces, not on use case classes",
         "A driving adapter drives the application through its port. Injecting the concrete"
             + " implementation instead couples the adapter to one realisation of the use case,"
             + " defeats the Dependency Inversion Principle the port exists for, and makes the"
             + " adapter untestable without the real use case and everything it depends on",
-        arch =>
-        {
-            var violations = arch.Classes
-                .Where(arch.InIncomingAdapter)
-                .SelectMany(c => c.Dependencies
-                    .Select(d => d.Target)
-                    .Where(t => IsUseCaseImplementation(arch, t))
-                    .Select(t => $"{c.FullName} depends on the use case class {t.FullName}"))
-                .Distinct()
-                .OrderBy(v => v, StringComparer.Ordinal)
-                .ToList();
-            DcaRule.Fail(
-                "Incoming Adapters must depend on input port interfaces, not on use case classes",
-                violations,
-                "inject the I<UseCaseName>InputPort interface instead of the <UseCaseName> class");
-        })
+        arch => SelectionArchRule.ForEach(
+            "classes in incoming adapters should not depend on a use case class",
+            () => arch.Classes.Where(arch.InIncomingAdapter),
+            c => c.Dependencies
+                .Select(d => d.Target)
+                .Where(t => IsUseCaseImplementation(arch, t))
+                .Select(t => $"{c.FullName} depends on the use case class {t.FullName}")
+                .OrderBy(v => v, StringComparer.Ordinal)))
     .Selecting(
         "Classes in <module>.Adapter.Incoming of every module root, event consumers"
             + " included.")
@@ -118,7 +110,8 @@ DcaRule.Check(
         "No dependency on a use case implementation: a class assignable to"
             + " IInputPort, directly or through an I*InputPort interface - abstract base classes"
             + " included. Depending on the input port interfaces themselves is what the rule"
-            + " expects. An empty selection passes.")
+            + " expects. An empty selection passes.",
+        "inject the I<UseCaseName>InputPort interface instead of the <UseCaseName> class")
 ```
 
 ## Related mentions (heuristic)
